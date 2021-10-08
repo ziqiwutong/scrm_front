@@ -1,0 +1,114 @@
+{
+  "id": "2849451",
+  "name": "SCRM",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-third-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "7316190",
+      "name": "订单",
+      "font_class": "order",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "4300107",
+      "name": "我的客户",
+      "font_class": "customer",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "8156758",
+      "name": "分享",
+      "font_class": "share",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "680974",
+      "name": "产品2",
+      "font_class": "product",
+      "unicode": "e71a",
+      "unicode_decimal": 59162
+    },
+    {
+      "icon_id": "21771351",
+      "name": "分销管理",
+      "font_class": "fenxiao",
+      "unicode": "e76c",
+      "unicode_decimal": 59244
+    },
+    {
+      "icon_id": "4614353",
+      "name": "商机管理",
+      "font_class": "biz",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "9396357",
+      "name": "线索管理",
+      "font_class": "clue",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "10603103",
+      "name": "沟通管理-双色",
+      "font_class": "com",
+      "unicode": "e6ac",
+      "unicode_decimal": 59052
+    },
+    {
+      "icon_id": "22922189",
+      "name": "个人",
+      "font_class": "person",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "936192",
+      "name": "关系",
+      "font_class": "relationship",
+      "unicode": "e727",
+      "unicode_decimal": 59175
+    },
+    {
+      "icon_id": "14319261",
+      "name": "潜在客户",
+      "font_class": "potential",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
+      "icon_id": "22043275",
+      "name": "查企业",
+      "font_class": "company",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "11882935",
+      "name": "bg-application",
+      "font_class": "application",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "7239492",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "1475008",
+      "name": "客户",
+      "font_class": "kehu",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}
