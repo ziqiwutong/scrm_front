@@ -23,17 +23,25 @@ export default {
       userImgUrl: ''
     }
   },
-  created: function (){
+  created: function () {
     this.getUserMessage();
   },
   methods: {
-    async getUserMessage(){
-      let url = "/api/doLogin";
-      const result = (await this.$http.get(url)).data.data
-      this.username = result.username;
-      this.userCompany = result.userCompany;
-      this.userImgUrl = result.userImgUrl;
-    },
+    async getUserMessage() {
+      // 当vuex中没有用户信息时才去请求，减少网络请求的次数
+      if (this.$store.state.userMessage.username == "") {
+        let url = "/api/doLogin";
+        const result = (await this.$http.get(url)).data.data
+        this.username = result.username;
+        this.userCompany = result.userCompany;
+        this.userImgUrl = result.userImgUrl;
+        this.$store.commit("updateUserMessage", result);
+      } else {
+        this.username = this.$store.state.userMessage.username
+        this.userCompany = this.$store.state.userMessage.userCompany
+        this.userImgUrl = this.$store.state.userMessage.userImgUrl
+      }
+    }
   }
 }
 </script>

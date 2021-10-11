@@ -1,9 +1,9 @@
 <template>
   <!--底部标题栏-->
   <van-tabbar v-model="active" active-color="#3333cc">
-    <van-tabbar-item :icon="tabBarIcon[0].imgUrl" icon-prefix="icon-third">首页</van-tabbar-item>
-    <van-tabbar-item :icon="tabBarIcon[1].imgUrl" icon-prefix="icon-third">客户</van-tabbar-item>
-    <van-tabbar-item :icon="tabBarIcon[2].imgUrl" icon-prefix="icon-third">应用</van-tabbar-item>
+    <van-tabbar-item :icon="tabBarIcon[0].imgUrl" icon-prefix="icon-third" @click="toHome">首页</van-tabbar-item>
+    <van-tabbar-item :icon="tabBarIcon[1].imgUrl" icon-prefix="icon-third" @click="toCustomer">客户</van-tabbar-item>
+    <van-tabbar-item :icon="tabBarIcon[2].imgUrl" icon-prefix="icon-third" @click="toApplication">应用</van-tabbar-item>
   </van-tabbar>
 </template>
 
@@ -20,9 +20,25 @@ export default {
       ]
     }
   },
+  created() {
+    this.active = this.$store.state.tabBarActive;
+  },
+  methods:{
+    toHome(){
+      this.$router.push("/home")
+    },
+    toCustomer(){
+
+    },
+    toApplication(){
+      this.$router.push("/contextShare")
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-
+.van-tabbar{
+  border-top: 1px solid #f7f8fa;
+}
 </style>
