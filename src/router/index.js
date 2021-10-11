@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from "../components/view/home"
-
+import orderList from "../components/view/order/orderList"
 Vue.use(Router)
 
 const routes = [
@@ -9,8 +9,9 @@ const routes = [
   {
     path: '/home',
     component: home
-  }
-]
+  },
+  {path:'/orderList',component:orderList}
+  ]
 
 const router = new Router({
   routes
