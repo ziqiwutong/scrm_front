@@ -20,9 +20,15 @@ import {
   List,
   Image as VanImage,
   ShareSheet,
-  ActionSheet
+  ActionSheet,
+  Search,
+  Card
 } from "vant";
 
+Vue.use(Card);
+Vue.use(Tab);
+Vue.use(Tabs);
+Vue.use(Search)
 Vue.use(VButton)
 Vue.use(NavBar)
 Vue.use(Grid)

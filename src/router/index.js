@@ -4,6 +4,7 @@ import home from "../components/view/home";
 import contextShare from "../components/view/contextShare/contextShareList";
 import store from "../store";
 import {Toast} from "vant";
+import orderList from "../components/view/order/orderList"
 
 Vue.use(Router)
 
@@ -16,8 +17,11 @@ const routes = [
   {
     path: '/contextShare',
     component: contextShare
-  }
-]
+  },
+  {
+    path:'/orderList',
+    component:orderList
+  }];
 
 const router = new Router({
   routes
