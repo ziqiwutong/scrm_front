@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from "../components/view/home"
+import Customer from "../components/customer/Customer"
+import Perinfor from "../components/customer/Perinfor"
+import Potential from "../components/customer/Potential"
 
 Vue.use(Router)
 
@@ -9,7 +12,19 @@ const routes = [
   {
     path: '/home',
     component: home
-  }
+  },
+  {
+    path: '/customer',
+    component: Customer
+  },
+  {
+    path: '/perinfor',
+    component: Perinfor
+  },
+  {
+    path: '/potential',
+    component: Potential
+  },
 ]
 
 const router = new Router({
