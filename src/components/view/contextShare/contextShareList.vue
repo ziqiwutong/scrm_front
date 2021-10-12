@@ -152,8 +152,8 @@ export default {
     },
     // 跳转至文章详情页
     async toArticleDetail(articleID) {
-      // 带着articleID去请求文章详情页
-
+      // 带着articleID&shareID去请求文章详情页
+      this.$router.push('/articleDetail');
     }
   }
 }
@@ -213,7 +213,7 @@ p {
   margin-bottom: 15px;
 }
 
-.right-top p{
+.right-top p {
   width: 75vw;
   overflow: hidden;
   text-overflow: ellipsis;
