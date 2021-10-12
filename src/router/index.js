@@ -18,15 +18,14 @@ const routes = [
     component: home
   },
   {
-<<<<<<< HEAD
     path: '/contextShare',
     component: contextShare
   },
   {
     path:'/orderList',
     component:orderList
-  }];
-=======
+  },
+  {
     path: '/customer',
     component: Customer
   },
@@ -37,9 +36,9 @@ const routes = [
   {
     path: '/potential',
     component: Potential
-  },
+  }
 ]
->>>>>>> zjs
+
 
 const router = new Router({
   routes
