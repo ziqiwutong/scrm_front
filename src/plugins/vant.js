@@ -1,6 +1,19 @@
 import Vue from 'vue'
 
 import {
+<<<<<<< HEAD
+=======
+  Button as VButton,
+  NavBar,
+  Toast,
+  Grid,
+  GridItem,
+  Tabbar,
+  TabbarItem,
+  Col,
+  Row,
+  Card,
+>>>>>>> sweet
   DropdownMenu,
   DropdownItem,
   Search,
@@ -21,16 +34,25 @@ import {
   Radio,
   Checkbox,
   CheckboxGroup,
+<<<<<<< HEAD
+=======
+  ShareSheet,
+>>>>>>> sweet
   ActionSheet,
   Form,
   Field,
   Uploader
 } from "vant";
+<<<<<<< HEAD
 Vue.use(Icon)
 Vue.use(Tag)
+=======
+
+>>>>>>> sweet
 Vue.use(Uploader);
 Vue.use(Form);
 Vue.use(Field);
+Vue.use(ShareSheet);
 Vue.use(ActionSheet);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
@@ -45,6 +67,7 @@ Vue.use(Dialog);
 Vue.use(VanImage);
 Vue.use(List);
 Vue.use(SwipeCell);
+<<<<<<< HEAD
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(Checkbox)
@@ -60,3 +83,22 @@ Vue.use(Toast)
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
 Vue.prototype.$toast = Toast
+=======
+Vue.use(Tab);
+Vue.use(Tabs);
+Vue.use(Tag);
+Vue.use(Icon);
+Vue.use(Search);
+Vue.use(VButton)
+Vue.use(Card)
+Vue.use(Grid)
+Vue.use(GridItem)
+Vue.use(Tabbar)
+Vue.use(TabbarItem)
+Vue.use(Col)
+Vue.use(Row)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(VanImage)
+
+>>>>>>> sweet

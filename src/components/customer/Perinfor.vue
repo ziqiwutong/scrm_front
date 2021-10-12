@@ -129,7 +129,7 @@
 export default {
   data() {
     return {
-      active: 0,
+      active: 0
       list: [],
       loading: false,
       finished: false,
