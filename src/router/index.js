@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import home from "../components/view/home";
 import contextShare from "../components/view/contextShare/contextShareList";
+import articleDetail from "../components/view/contextShare/articleDetail";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
@@ -19,9 +20,15 @@ const routes = [
     component: contextShare
   },
   {
-    path:'/orderList',
-    component:orderList
-  }];
+
+    path: '/orderList',
+    component: orderList
+  },
+  {
+    path: '/articleDetail',
+    component: articleDetail
+  }
+]
 
 const router = new Router({
   routes
