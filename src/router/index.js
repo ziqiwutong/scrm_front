@@ -5,7 +5,7 @@ import contextShare from "../components/view/contextShare/contextShareList";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
-import Customer from "../components/customer/Customer"
+import customer from "../components/customer/customer";
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
 
@@ -27,7 +27,7 @@ const routes = [
   }, {
 
     path: '/customer',
-    component: Customer
+    component: customer
   },
   {
     path: '/perinfor',

@@ -246,6 +246,7 @@
 
 <script>
 export default {
+  name: "customer",
   data() {
     return {
       // 列表信息-展示
@@ -274,8 +275,6 @@ export default {
       cheShow: false,
       // 标签栏绑定标识符
       barAct: 0,
-
-      addShow: false,
       // 多选-记录选中客户的数量
       scrnum: 0,
       value: "",
