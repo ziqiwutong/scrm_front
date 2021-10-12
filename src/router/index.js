@@ -5,6 +5,9 @@ import contextShare from "../components/view/contextShare/contextShareList";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
+import Customer from "../components/customer/Customer"
+import Perinfor from "../components/customer/Perinfor"
+import Potential from "../components/customer/Potential"
 
 Vue.use(Router)
 
@@ -15,6 +18,7 @@ const routes = [
     component: home
   },
   {
+<<<<<<< HEAD
     path: '/contextShare',
     component: contextShare
   },
@@ -22,6 +26,20 @@ const routes = [
     path:'/orderList',
     component:orderList
   }];
+=======
+    path: '/customer',
+    component: Customer
+  },
+  {
+    path: '/perinfor',
+    component: Perinfor
+  },
+  {
+    path: '/potential',
+    component: Potential
+  },
+]
+>>>>>>> zjs
 
 const router = new Router({
   routes

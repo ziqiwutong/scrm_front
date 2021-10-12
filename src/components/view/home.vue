@@ -4,9 +4,9 @@
     <div class="main">
       <van-grid clickable :column-num="2" :border="false">
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
-                       to="/httTest02"/>
+                       to="/customer"/>
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                       url="/"/>
+                       to="potential"/>
       </van-grid>
       <van-grid clickable :column-num="2" :border="false">
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
