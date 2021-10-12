@@ -36,7 +36,7 @@
     <div class="main">
       <van-grid clickable :column-num="2" :border="false">
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
-                       to="/"/>
+                       to="/contextShare"/>
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
                        url="/"/>
       </van-grid>
@@ -56,7 +56,7 @@
 <script>
 import NavBar from "../component/NavBar";
 import TabBar from "../component/TabBar";
-import {getToken} from "@/network/getToken";
+// import {getToken} from "@/network/getToken";
 
 export default {
   name: "home",
@@ -67,6 +67,7 @@ export default {
   data() {
     return {
       name: "sweet",
+      active:0,
       components: {
         NavBar,
         TabBar
@@ -111,9 +112,11 @@ export default {
     // let query=this.$route.query;
     // let userID = query.userID;
     let userID = "scrm123";
-    if (userID){// userID 不为空时才获取
-      getToken(userID);
+    if (userID){// userID 不为空时才获取，这里的userID是从URL里获取的
+      this.getToken(userID);
     }
+    // 修改tabbar被选中状态
+    this.$store.commit('updateTabBarActive',0);
   },
   methods: {
     onClickLeft() {
@@ -121,12 +124,24 @@ export default {
     },
     onClickRight() {
       this.$toast('按钮');
+    },
+    getToken(userID) {
+      const jwt = require("jsonwebtoken");// 引入jwt
+      const secret = "scrm";// 设置秘钥
+      const token = jwt.sign({userID: userID}, secret, {// 设置加密内容及有限时间
+        expiresIn: "2h"
+      })
+      const isValid = jwt.verify(token, secret, (err, decoded) => { // 权限验证
+        if (err) {
+          return false;
+        }
+        return true
+      });
+      let hasToken = this.$store.state.token;
+      if (!hasToken || !isValid) {// 缓存中没有token，或者token已失效时才生成新的token
+        this.$store.commit('updateToken', token);
+      }
     }
-    // async login() {
-    //   console.log("hello");
-    //   const result = (await this.$http.get('/api/doLogin')).data
-    //   console.log(result);
-    // }
   }
 }
 </script>

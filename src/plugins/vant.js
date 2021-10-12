@@ -10,6 +10,7 @@ import {
   TabbarItem,
   Col,
   Row,
+  Card,
   DropdownMenu,
   DropdownItem,
   Search,
@@ -21,23 +22,26 @@ import {
   List,
   Image as VanImage,
   Dialog,
-  Cell, 
+  Cell,
   CellGroup,
-  Step, 
+  Step,
   Steps,
   Popup,
   RadioGroup,
   Radio,
-  Checkbox, 
+  Checkbox,
   CheckboxGroup,
-  ActionSheet,  
+  ShareSheet,
+  ActionSheet,
   Form,
   Field,
-  Uploader 
+  Uploader
 } from "vant";
+
 Vue.use(Uploader);
 Vue.use(Form);
 Vue.use(Field);
+Vue.use(ShareSheet);
 Vue.use(ActionSheet);
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
@@ -57,14 +61,15 @@ Vue.use(Tabs);
 Vue.use(Tag);
 Vue.use(Icon);
 Vue.use(Search);
-Vue.use(VButton)  
-Vue.use(NavBar)
+Vue.use(VButton)
+Vue.use(Card)
 Vue.use(Grid)
 Vue.use(GridItem)
 Vue.use(Tabbar)
 Vue.use(TabbarItem)
 Vue.use(Col)
 Vue.use(Row)
-Vue.use(DropdownMenu);
-Vue.use(DropdownItem);
-Vue.prototype.$toast = Toast
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(VanImage)
+
