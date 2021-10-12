@@ -24,12 +24,8 @@ const routes = [
   {
     path:'/orderList',
     component:orderList
-<<<<<<< HEAD
-  },
-  {
-=======
   }, {
->>>>>>> sweet
+
     path: '/customer',
     component: Customer
   },
@@ -42,10 +38,6 @@ const routes = [
     component: Potential
   }
 ]
-<<<<<<< HEAD
-
-=======
->>>>>>> sweet
 
 const router = new Router({
   routes
