@@ -21,15 +21,15 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <div class="list" v-for="(item,i) in list" @click="toArticleDetail(item.articleID)">
-        <div class="left">
+      <div class="list" v-for="(item,i) in list">
+        <div class="left" @click="toArticleDetail(item.articleID)">
           <van-image
             width="50"
             height="50"
             :src="item.articleIcon"
           />
         </div>
-        <div class="right">
+        <div class="right" @click="toArticleDetail(item.articleID)">
           <div class="right-top">
             <p>{{ item.articleTitle }}</p>
           </div>
