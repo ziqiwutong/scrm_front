@@ -35,9 +35,15 @@ import {
   ActionSheet,
   Form,
   Field,
-  Uploader
+  Uploader,
+  DatetimePicker,
+  Area,
+  Divider  
 } from "vant";
-
+Vue.use(Divider);
+Vue.use(Area);
+Vue.use(DatetimePicker);
+Vue.use(NavBar);
 Vue.use(Uploader);
 Vue.use(Form);
 Vue.use(Field);
