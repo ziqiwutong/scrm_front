@@ -6,6 +6,9 @@ import articleDetail from "../components/view/contextShare/articleDetail";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
+import clue from "../components/view/clue/clue"
+import product from "../components/view/product"
+
 
 Vue.use(Router)
 
@@ -27,6 +30,14 @@ const routes = [
   {
     path: '/articleDetail',
     component: articleDetail
+  },
+  {
+    path: '/clue',
+    component: clue
+  },
+  {
+    path: '/product',
+    component: product
   }
 ]
 
