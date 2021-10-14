@@ -8,6 +8,7 @@ import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
 import axios from 'axios'
 
+
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
