@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1304883",
+      "name": "筛选",
+      "font_class": "filter",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "16218109",
+      "name": "61-多选-选中",
+      "font_class": "mul-choice",
+      "unicode": "e873",
+      "unicode_decimal": 59507
+    },
+    {
       "icon_id": "6311925",
       "name": "个人中心",
       "font_class": "userInfo",

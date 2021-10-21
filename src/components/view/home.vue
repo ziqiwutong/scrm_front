@@ -37,7 +37,7 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
-                           to="/contextShare"/>
+                           to="/contextShareList"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
                            url="/"/>
           </van-grid>
@@ -128,7 +128,7 @@ export default {
       const jwt = require("jsonwebtoken");// 引入jwt
       const secret = "scrm";// 设置秘钥
       const token = jwt.sign({userID: userID}, secret, {// 设置加密内容及有限时间
-        expiresIn: "2h"
+        expiresIn: "7d"
       })
       const isValid = jwt.verify(token, secret, (err, decoded) => { // 权限验证
         if (err) {
