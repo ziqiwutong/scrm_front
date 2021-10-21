@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from "../components/view/home";
-import contextShare from "../components/view/contextShare/contextShareList";
+import contextShareList from "../components/view/contextShare/contextShareList";
 import articleDetail from "../components/view/contextShare/articleDetail";
+import readRecord from "../components/view/contextShare/readRecord";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
@@ -19,16 +20,16 @@ const routes = [
     component: home
   },
   {
-    path: '/contextShare',
-    component: contextShare
+    path: '/contextShareList',
+    component: contextShareList
   },
   {
-
     path: '/orderList',
     component: orderList
   },
   {
     path: '/articleDetail',
+    name:'articleDetail',
     component: articleDetail
   },
   {
@@ -38,6 +39,11 @@ const routes = [
   {
     path: '/product',
     component: product
+  },
+  {
+    path: '/readRecord',
+    name:'readRecord',
+    component: readRecord
   }
 ]
 

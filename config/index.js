@@ -12,6 +12,7 @@ module.exports = {
     proxyTable: {
       '/api': {
         // target: 'http://101.132.148.145/', // 要访问的接口域名
+        // target: 'https://www.fzk-tx.top/', // 要访问的接口域名
         target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api/', // 要访问的接口域名
         // target: 'http://127.0.0.1:3000/', // 要访问的接口域名
         // target: 'http://127.0.0.1:40001/', // 要访问的接口域名

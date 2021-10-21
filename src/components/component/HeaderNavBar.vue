@@ -1,7 +1,7 @@
 <template>
   <div class="header">
-    <span class="returnIcon"></span>
-    <span class="return">返回</span>
+    <span class="returnIcon" @click="returnClick"></span>
+    <span class="return" @click="returnClick">返回</span>
     <span>{{ title }}</span>
   </div>
 </template>
@@ -11,7 +11,12 @@ export default {
   name: "HeaderNavBar",
   props:[
     "title"
-  ]
+  ],
+  methods:{
+    returnClick(){
+      this.$emit("returnClick");
+    }
+  }
 }
 </script>
 
