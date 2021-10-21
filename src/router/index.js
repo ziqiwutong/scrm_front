@@ -5,7 +5,8 @@ import contextShare from "../components/view/contextShare/contextShareList";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
-
+import orderCreate from "../components/view/order/orderCreate";
+import orderDetail from "../components/view/order/orderDetail";
 Vue.use(Router)
 
 const routes = [
@@ -21,7 +22,16 @@ const routes = [
   {
     path:'/orderList',
     component:orderList
-  }];
+  },
+  {
+    path:'/orderCreate',
+    component:orderCreate
+  },
+  {
+    path:'/orderDetail',
+    component:orderDetail
+  }
+  ];
 
 const router = new Router({
   routes

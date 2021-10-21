@@ -46,7 +46,7 @@
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
                        to="/"/>
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
-                       url="/"/>
+                       to="/orderList"/>
       </van-grid>
     </div>
     <TabBar/>

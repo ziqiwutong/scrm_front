@@ -21,10 +21,21 @@ import {
   Image as VanImage,
   ShareSheet,
   ActionSheet,
-  Search,
-  Card
+  Card,
+  SwipeCell,
+  Popup,
+  Field,
+  Form,
+  Uploader,
+  Dialog
 } from "vant";
 
+Vue.use(Dialog);
+Vue.use(Uploader);
+Vue.use(Form);
+Vue.use(Field);
+Vue.use(Popup);
+Vue.use(SwipeCell);
 Vue.use(Card);
 Vue.use(Tab);
 Vue.use(Tabs);
@@ -43,7 +54,6 @@ Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(Cell)
 Vue.use(CellGroup)
-Vue.use(Search)
 Vue.use(List)
 Vue.use(VanImage)
 Vue.use(ShareSheet)

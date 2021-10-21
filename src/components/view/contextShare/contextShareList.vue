@@ -41,6 +41,7 @@
       </div>
     </van-list>
     <van-share-sheet v-model="showShare" :options="options"/>
+
     <van-action-sheet v-if="show"
                       v-model="show"
                       :actions="actions"
@@ -48,7 +49,7 @@
                       close-on-click-action
                       @cancel="onCancel"
     />
-    <CreateContext @ifShow="ifShowDialog" v-else/>
+    <CreateContext @ifShow="ifShowDialog" :text="createContext" v-else/>
     <TabBar/>
   </div>
 </template>
@@ -67,6 +68,7 @@ export default {
   },
   data() {
     return {
+      createContext:'+创建素材',
       searchValue: '',
       active: 2,
       activeName: 'article',
@@ -151,7 +153,7 @@ export default {
       this.show = true;
     },
     // 跳转至文章详情页
-    async toArticleDetail(articleID) {
+    toArticleDetail(ID) {
       // 带着articleID去请求文章详情页
 
     }
