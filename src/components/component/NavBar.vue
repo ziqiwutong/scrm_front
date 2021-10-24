@@ -1,4 +1,4 @@
-<template>
+y<template>
   <!--顶部导航栏-->
   <div class="header">
     <div class="left">
