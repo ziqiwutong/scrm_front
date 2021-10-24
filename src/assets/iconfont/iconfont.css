@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
-  src: url('iconfont.woff2?t=1633444012719') format('woff2'),
-       url('iconfont.woff?t=1633444012719') format('woff'),
-       url('iconfont.ttf?t=1633444012719') format('truetype');
+  src: url('iconfont.woff2?t=1633682522247') format('woff2'),
+       url('iconfont.woff?t=1633682522247') format('woff'),
+       url('iconfont.ttf?t=1633682522247') format('truetype');
 }
 
 [class^="icon-third"], [class*="icon-third"]/*这里有空格*/
@@ -12,6 +12,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-third-userInfo:before {
+  content: "\e60f";
 }
 
 .icon-third-order:before {
