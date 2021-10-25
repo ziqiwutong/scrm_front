@@ -8,6 +8,7 @@ import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
 import clue from "../components/view/clue/clue"
 import product from "../components/view/product"
+import searchRelationship from "../components/view/relationship/searchRelationship";
 
 
 Vue.use(Router)
@@ -38,6 +39,10 @@ const routes = [
   {
     path: '/product',
     component: product
+  },
+  {
+    path: '/relationship',
+    component: searchRelationship
   }
 ]
 

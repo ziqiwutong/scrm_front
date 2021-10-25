@@ -17,7 +17,7 @@
           </van-grid>
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
-                           url="/"/>
+                           to="/relationship"/>
             <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
           </van-grid>
         </div>
