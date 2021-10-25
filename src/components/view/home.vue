@@ -10,7 +10,7 @@
       </van-grid>
       <van-grid clickable :column-num="2" :border="false">
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
-                       to="/"/>
+                       to="/potentialdetail"/>
         <van-grid-item icon-prefix="icon-third" :icon="iconArray[3]" style="color:#1296db;" :text="textArray[3]"
                        url="/"/>
       </van-grid>

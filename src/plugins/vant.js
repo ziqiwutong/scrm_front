@@ -38,8 +38,12 @@ import {
   Uploader,
   DatetimePicker,
   Area,
-  Divider  
+  Divider,
+  Overlay, 
+  Picker, 
 } from "vant";
+Vue.use(Picker);
+Vue.use(Overlay);
 Vue.use(Divider);
 Vue.use(Area);
 Vue.use(DatetimePicker);

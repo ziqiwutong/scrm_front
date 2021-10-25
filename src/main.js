@@ -5,14 +5,19 @@ import App from './App'
 import axios from 'axios'
 import router from './router'
 import store from "./store/index"
+// import Vant from 'vant'
 import './plugins/vant.js'
 import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
-
+// import Vant from 'vant'
+// import 'vant/lib/index.css'
+// Vue.use(Vant)
+// Vue.prototype.$toast = Toast
+// Vue.prototype.$loading = Loading
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
-
+// Vue.use(Vant)
 // 请求头里配置token
 axios.interceptors.request.use(config => {
   // console.log(config)

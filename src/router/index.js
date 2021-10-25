@@ -8,6 +8,7 @@ import orderList from "../components/view/order/orderList"
 import customer from "../components/customer/Customer"
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
+import PotentDetail from "../components/customer/potentialdetail"
 
 Vue.use(Router)
 
@@ -35,6 +36,10 @@ const routes = [
   {
     path: '/potential',
     component: Potential
+  },
+  {
+    path: '/potentialdetail',
+    component: PotentDetail
   },
 ]
 
