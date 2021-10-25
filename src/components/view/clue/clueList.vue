@@ -169,7 +169,7 @@ export  default  {
     },
     // 关键字搜索
     async onSearch() {
-      let url = "/api/queryClueList";
+      let url = "/api/clue/queryClue";
       let postData = {
         keySearch: this.searchValue
       }
@@ -184,7 +184,7 @@ export  default  {
       this.loading = false;
     },
     async onLoad() {
-      let url = "/api/queryClueList";
+      let url = "/api/clue/queryClue";
       let postData = {
         pageCount: this.pageProps.pageCount++,
         currentPage: this.pageProps.currentPage,

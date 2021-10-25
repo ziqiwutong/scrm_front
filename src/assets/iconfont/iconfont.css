@@ -1,14 +1,11 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
-<<<<<<< HEAD
   src: url('//at.alicdn.com/t/font_2849451_y80n06udxl.woff2?t=1634372159625') format('woff2'),
   url('//at.alicdn.com/t/font_2849451_y80n06udxl.woff?t=1634372159625') format('woff'),
   url('//at.alicdn.com/t/font_2849451_y80n06udxl.ttf?t=1634372159625') format('truetype');
-=======
   src: url('iconfont.woff2?t=1635162541460') format('woff2'),
        url('iconfont.woff?t=1635162541460') format('woff'),
        url('iconfont.ttf?t=1635162541460') format('truetype');
->>>>>>> liboyuan
 }
 [class^="icon-third"], [class*="icon-third"] /*这里有空格*/
 .iconfont {
@@ -19,8 +16,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-<<<<<<< HEAD
-=======
 .icon-third-add:before {
   content: "\e726";
 }
@@ -33,7 +28,6 @@
   content: "\ec46";
 }
 
->>>>>>> liboyuan
 .icon-third-filter:before {
   content: "\e621";
 }
