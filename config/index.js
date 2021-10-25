@@ -14,6 +14,7 @@ module.exports = {
         // target: 'http://101.132.148.145/', // 要访问的接口域名
         // target: 'https://www.fzk-tx.top/', // 要访问的接口域名
         target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api/', // 要访问的接口域名
+        // target: 'http://192.168.43.25:30002/',
         // target: 'http://127.0.0.1:3000/', // 要访问的接口域名
         // target: 'http://127.0.0.1:40001/', // 要访问的接口域名
         ws: true, // 是否启用websockets
@@ -27,6 +28,8 @@ module.exports = {
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    //  host:192.168.43.25;
+    // port:3002;
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

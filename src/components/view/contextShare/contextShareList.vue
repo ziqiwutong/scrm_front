@@ -1,3 +1,4 @@
+```
 <template>
   <div>
     <van-tabs v-model="activeName" class="scrm-tab">
@@ -245,3 +246,5 @@ p {
   background-color: rgba(0, 0, 0, .3);
 }
 </style>
+
+```
