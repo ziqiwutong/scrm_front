@@ -132,9 +132,9 @@ export default {
 }
 
 .editBtn1 {
-  position: fixed;
-  right: 30px;
-  top: 65px;
+  position: absolute;
+  right: 0px;
+  top: 20%;
 }
 
 .editBtn2 {

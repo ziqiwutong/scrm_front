@@ -42,15 +42,24 @@
       <van-tabbar v-model="barAct" :fixed="false">
         <!-- 最近浏览 -->
         <van-tabbar-item class="navopt" @click="sortPop">
-          <van-icon name="chat-o" />最近浏览
+          <van-icon
+            :name="cus_new"
+            :class="barAct == 0 ? 'colorful' : ''"
+          />最近浏览
         </van-tabbar-item>
         <!-- 筛选 -->
         <van-tabbar-item class="navopt" @click="toScreen"
-        ><van-icon name="chat-o" />筛选</van-tabbar-item
+        ><van-icon
+          :name="cus_scr"
+          :class="barAct == 1 ? 'colorful' : ''"
+        />筛选</van-tabbar-item
         >
         <!-- 多选 -->
         <van-tabbar-item class="navopt" @click="toCheckbox"
-        ><van-icon name="chat-o" />多选</van-tabbar-item
+        ><van-icon
+          :name="cus_chc"
+          :class="barAct == 2 ? 'colorful' : ''"
+        />多选</van-tabbar-item
         >
       </van-tabbar>
     </van-row>
@@ -63,11 +72,11 @@
         @load="onLoad"
       >
         <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i"  class="van_swipe_cell">
-          <van-row class="van_row" @click="toCLueDetail(item.clueID)" type="flex" justify="space-between" >
+          <van-row class="van_row" @click="toCLueDetail(item.id)" type="flex" justify="space-between" >
             <van-col span="12" class="clueName"><div class="van-ellipsis" >{{item.clueName}}</div></van-col>
             <van-col span="8" offset="4" class="clueDate">{{item.clueDate}}</van-col>
           </van-row>
-          <van-row  @click="toCLueDetail(item.clueID)" >
+          <van-row  @click="toCLueDetail(item.id)" >
             <van-col span="10" class="clueStatus">     线索状态：<van-tag  :class="item.statusClass">{{item.clueStatus}}</van-tag></van-col>
             <van-col span="8" offset="6" class="clueEditor">     录入人：{{item.clueEditor}}</van-col>
           </van-row>
@@ -79,6 +88,12 @@
       </van-list>
     </div>
     <TabBar/>
+    <!-- 筛选内容 -->
+    <van-popup v-model="scrShow" closeable position="right" class="scrpop">
+      <van-row>
+        <p class="scrname">跟进人</p>
+      </van-row>
+    </van-popup>
   </div>
 </template>
 
@@ -126,6 +141,12 @@ export  default  {
       result: [],
       // 标签栏-绑定标识符
       barAct: 0,
+      // 图标
+      cus_new: require("../../../assets/cusicon/cus_new.png"),
+      cus_scr: require("../../../assets/cusicon/cus_scr.png"),
+      cus_chc: require("../../../assets/cusicon/cus_ckc.png"),
+      // 筛选-弹出层界面
+      scrShow: false,
     };
   },
   methods: {
@@ -169,7 +190,7 @@ export  default  {
     },
     // 关键字搜索
     async onSearch() {
-      let url = "/api/queryClueList";
+      let url = "/api/clue/queryClue";
       let postData = {
         keySearch: this.searchValue
       }
@@ -184,7 +205,7 @@ export  default  {
       this.loading = false;
     },
     async onLoad() {
-      let url = "/api/queryClueList";
+      let url = "/api/clue/queryClue";
       let postData = {
         pageCount: this.pageProps.pageCount++,
         currentPage: this.pageProps.currentPage,
@@ -242,8 +263,8 @@ export  default  {
     onDetail() {
     },
     // 跳转至线索详情页
-    toCLueDetail(clueID) {
-      // 带着clueID去请求线索详情页
+    toCLueDetail(id) {
+      // 带着id去请求线索详情页
       this.$router.push('/clueDetail');
     },
     // 跳转至新建线索页
@@ -339,5 +360,10 @@ export  default  {
 .toBizOppStatus {
   color:#1047D9 ;
   background-color:#C1D1FC;
+}
+// 标签栏颜色改变
+.colorful {
+  filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
+  brightness(97%) contrast(95%);
 }
 </style>
