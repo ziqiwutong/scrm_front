@@ -110,7 +110,7 @@
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
 export default {
-  name: "/orderCreate",
+  name: "orderCreate",
   data() {
     return {
       productName: '',
@@ -127,7 +127,7 @@ export default {
   },
   methods: {
    async onSubmit() {
-      let url = "/api/addOrder";
+      let url = "/api/order/addOrder";
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,

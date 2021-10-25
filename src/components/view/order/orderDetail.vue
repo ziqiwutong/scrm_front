@@ -10,17 +10,16 @@
     />
     <div class="order_status" v-if="orderType" >
       <div class="img-group1">
-        <img
-        width="40"
-        height="40"
-        src="https://d1icd6shlvmxi6.cloudfront.net/gsc/EOJKUZ/a8/01/ce/a801ce22fb4243439dcf7a3846b37518/images/订单管理-详情/u1138.png?token=a0d397c27ebf113d8795a7891303dd167bab5ef4f4a186b856828b1c63e0ac2f">
+        <div class="sphere"></div>
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
-        <img
-          width="40"
-          height="40"
-          src="https://d1icd6shlvmxi6.cloudfront.net/gsc/EOJKUZ/a8/01/ce/a801ce22fb4243439dcf7a3846b37518/images/订单管理-详情/u1138.png?token=a0d397c27ebf113d8795a7891303dd167bab5ef4f4a186b856828b1c63e0ac2f">
+<!--        <img-->
+<!--          width="40"-->
+<!--          height="40"-->
+<!--          src="../../../assets/地图-圆 (1).png">-->
+        <div class="sphere"></div>
+<!--        <van-icon class-prefix="icon-third" name="ditu-yuan-copy" color="#5252cc"/>-->
         <div class="img-tip">2</div>
       </div>
       <div class="line"></div>
@@ -37,17 +36,12 @@
 
     <div class="order_status" v-else >
       <div class="img-group1">
-        <img
-          width="40"
-          height="40"
-          src="https://d1icd6shlvmxi6.cloudfront.net/gsc/EOJKUZ/a8/01/ce/a801ce22fb4243439dcf7a3846b37518/images/订单管理-详情/u1138.png?token=a0d397c27ebf113d8795a7891303dd167bab5ef4f4a186b856828b1c63e0ac2f">
+        <div class="sphere"></div>
+
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
-        <img
-          width="40"
-          height="40"
-          src="https://d1icd6shlvmxi6.cloudfront.net/gsc/EOJKUZ/a8/01/ce/a801ce22fb4243439dcf7a3846b37518/images/订单管理-详情/u1138.png?token=a0d397c27ebf113d8795a7891303dd167bab5ef4f4a186b856828b1c63e0ac2f">
+        <div class="sphere1"></div>
         <div class="img-tip">2</div>
       </div>
       <div class="line-post"></div>
@@ -56,8 +50,7 @@
         <p>{{ orderTime }}</p>
       </div>
       <div class="finish_time" >
-        <p>交易成功</p>
-        <p>{{ orderFinish }}</p>
+        <p>待付款</p>
       </div>
     </div>
 
@@ -65,15 +58,15 @@
     <div class="order_detail" >
       <van-row>
         <van-col class="top" span="6" offset="1">买家</van-col>
-        <van-col class="top" span="17">{{ orderBuyer }}</van-col>
+        <van-col class="top2"  span="15">{{ orderBuyer }}</van-col>
         <van-col span="6" offset="1">成交员工</van-col>
-        <van-col span="17">{{ orderStaff }}</van-col>
+        <van-col span="15" class="detail_right">{{ orderStaff }}</van-col>
         <van-col span="6" offset="1">订单号</van-col>
-        <van-col span="17">{{ orderID }}</van-col>
+        <van-col span="15" class="detail_right">{{ orderID }}</van-col>
         <van-col span="6" offset="1">备注</van-col>
-        <van-col span="17">{{ notes }}</van-col>
+        <van-col span="15"class="detail_right">{{ notes }}</van-col>
         <van-col span="6" offset="1">订单来源</van-col>
-        <van-col span="17">{{ orderSource }}</van-col>
+        <van-col span="15"class="detail_right">{{ orderSource }}</van-col>
       </van-row>
     </div>
 
@@ -81,7 +74,7 @@
     <div class="price_left">
       <van-row class="van-row2" >
         <van-col span="4" offset="1">
-          <van-image
+          <van-image class="img1"
             round
             width="60"
             height="60"
@@ -99,12 +92,13 @@
           <van-col span="10" offset="1">改价</van-col>
           <van-col span="13">￥{{ priceChange }}</van-col>
           <van-col class="real1" span="10" offset="1">实收金额</van-col>
-          <van-col class="real2" span="13">￥{{  }}</van-col>
+          <van-col class="real2" span="13">￥{{realPrice}}</van-col>
         </van-row>
         <div class="button1">
-        <van-button  color="#5252cc" size="small" type="info">编辑</van-button>
-        <van-button  size="small" type="default">退款</van-button>
-      </div>
+        <van-button class="button-1" block  @click="orderEdit1" color="#5252cc"  type="info">编辑</van-button>
+          <van-button class="button-1" block @click="orderDelete1" type="danger">删除</van-button>
+        </div>
+
       </div>
     </div>
 
@@ -133,15 +127,7 @@ export default {
       orderTime:'',
       orderFinish:'',
       priceChange:'',
-
-      // productName:result[0].productName,
-      // productPrice:result[0].productPrice,
-      // orderBuyer:result[0].orderBuyer,
-      // orderStaff:result[0].orderStaff,
-      // notes:result[0].notes,
-      // orderSource:result[0].orderSource,
-      // orderTime:result[0].orderTime,
-      // orderFinish:result[0].orderFinish,
+      realPrice:'',
     };
     },
  created () {
@@ -155,23 +141,54 @@ export default {
    async test(){
      this.orderID=this.$route.query.orderID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-     let url = "/api/orderDetail";
+     let url = "/api/order/queryOrderById";
      let postData = {
-       orderID:this.orderID
+       orderId:this.orderID
      }
      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
-     this.productName=result.productName,
-       this.productPrice=result.productPrice;
+     this.productName=result.productName;
+     this.productPrice=result.productPrice;
      this.orderBuyer=result.orderBuyer;
      this.orderStaff=result.orderStaff;
      this.notes=result.notes;
      this.orderSource=result.orderSource;
      this.orderTime=result.orderTime;
      this.orderFinish=result.orderFinish;
+     this.productBuyAmount=result.productBuyAmount;
+     this.priceChange=result.priceChange;
+     this.realPrice=this.productPrice - this.priceChange;
    },
    onClickLeft() {
      this.$router.push('orderList')
    },
+   orderEdit1(orderID){
+     // console.log(123123);
+     this.$router.push({
+       path: '/orderEdit',
+       query: {
+         orderID: this.orderID
+       }
+     });
+   },
+   orderDelete1() {
+     this.$dialog.confirm({
+       message: '确定删除吗？',
+     }).then(() => {
+       this.sendDelete();
+     });
+   },
+   async sendDelete() {
+     let url = "/api/order/deleteOrder";
+     let postData = {
+       orderID: this.orderID
+     }
+     const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
+     if (result1.code === 200) {
+       Toast('订单删除成功');
+         this.$router.push('orderList');
+     } else
+       Toast('订单删除失败,错误码' + result1.code);
+   }
  }
 
 }
@@ -184,7 +201,8 @@ export default {
   background-color: rgba(215, 215, 215, 0.129411764705882);
 }
 .order_status{
-  background-color: white;
+  //background: url(../../../assets/底纹@3x.png);
+  background-color: white ;
   height:30%;
   padding--top: 60px;
   border-top:5px solid rgba(215, 215, 215, 0.12941176) ;
@@ -195,6 +213,13 @@ export default {
   position: absolute;
   top:110px;
   left:70px;
+  .sphere{
+    width: 40px;
+    height: 40px;
+    background-color: #5252cc;
+    border-radius: 50%;
+  }
+
 }
 .img-group2{
   height: 40px;
@@ -202,6 +227,18 @@ export default {
   position: absolute;
   top:110px;
   right:70px;
+  .sphere{
+    width: 40px;
+    height: 40px;
+    background-color: #5252cc;
+    border-radius: 50%;
+  }
+}
+.sphere1{
+  width: 40px;
+  height: 40px;
+  background-color: lightgray;
+  border-radius: 50%;
 }
 .img-tip {
   position: absolute;
@@ -213,17 +250,18 @@ export default {
 .line{
   position: absolute;
   top:130px;
-  left:125px;
+  left:110px;
   height: 4px;
-  width: 165px;
+  right:110px;
+  //width: 43%;
   background-color: #5252cc;
 }
 .line-post{
   position: absolute;
   top:130px;
-  left:125px;
+  left:110px;
   height: 4px;
-  width: 165px;
+  right:110px;
   background-color: lightgray;
 }
 .order_time{
@@ -255,15 +293,23 @@ export default {
 
 }
 /deep/ .van-row {
-  height: 100%;
+  //height: 100%;
 .top{
-margin-top: 10%;
+margin-top: 20px;
 }
+  .top2{
+    text-align: right;
+    margin-top: 20px;
+  }
+  .detail_right {
+    text-align: right;
+  }
 .van-col{
   height: 30px;
-  font-size: 18px;
+  font-size: 1rem;
 }
 }
+
 .nav-bar{
   height:48px;
 }
@@ -272,6 +318,9 @@ margin-top: 10%;
   height:30%;
   padding-top: 10px;
   background-color: white;
+  .van-row{
+
+  }
 }
 .order_price{
   border-top:10px solid rgba(215, 215, 215, 0.129411764705882) ;
@@ -285,14 +334,21 @@ margin-top: 10%;
   float: left;
 }
 /deep/.van-row2{
+  position: relative;
+  .img1{
+    position:absolute;
+    top:80px;
+  }
   .van-col{
   margin-top: 35%;
   }
   .words1{
+    width: 100px;
     margin-top: 40%;
   }
   .words2{
-    margin-left: 30%;
+    width: 100px;
+    margin-left: 40%;
     margin-top: 0;
   }
 }
@@ -303,7 +359,7 @@ margin-top: 10%;
   .right_row{
     //padding-top: 30%;
     .van-col{
-      font-size: 19px;
+      font-size: 1rem;
     }
   .top{
     margin-top: 32%;
@@ -337,7 +393,16 @@ margin-top: 10%;
 
 }
 .button1{
+  //margin-top: 10px;
+  height: 35px;
+  width: 140px;
+  display: flex;
   margin-top: 10px;
-  margin-left: 80px;
+  margin-right:10px;
+}
+.button-1{
+  height:35px;
+  width: 70px;
+  margin-left:10px;
 }
 </style>

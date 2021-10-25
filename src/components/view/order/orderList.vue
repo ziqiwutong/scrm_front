@@ -1,6 +1,7 @@
 <template>
 <div class="orderList_container">
 <!--以下为搜索栏-->
+  <h3>订单管理</h3>
  <div class="surf">
    <form action="/" v-if="searchShow">
      <van-search
@@ -17,16 +18,16 @@
  </div>
 <!--  以下为标签页切换  -->
   <div class="orderList_tab">
-    <van-tabs class="vant-tab-wrap" type="card"  color="#5252cc"  v-model="active" animated>
+    <van-tabs class="vant-tab-wrap" title-active-color="#5252cc"	  color="#5252cc"  v-model="active" animated>
       <van-tab  title="全部" >
 <!--        <div class="content1">-->
 <!--          <div class="tab-nav1"><p class="nav-p">商品 价格(元)/数量(件) 买家  订单号</p></div>-->
 <!--        </div>-->
         <van-row class="content1">
           <van-col span="4">商品</van-col>
-          <van-col span="8" >价格(元)/数量(件)</van-col>
-          <van-col span="4" >买家</van-col>
-          <van-col span="6">订单号</van-col>
+          <van-col span="5" >价格(元)</van-col>
+          <van-col span="4" offset="4" >数量(件)</van-col>
+          <van-col span="5" offset="2">买家</van-col>
         </van-row>
 <!--        以下为列表栏-->
         <div class="tab-list1">
@@ -36,7 +37,7 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="item" :title="item" >
+            <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
               <van-row class="van-row1" @click="onDetail(item.orderID)" >
                 <van-col span="4" offset="1">
                   <van-image
@@ -46,10 +47,11 @@
                     src="https://img01.yzcdn.cn/vant/cat.jpeg"
                   />
                 </van-col>
-                <van-col span="8" >￥{{item.productPrice}}×{{item.productBuyAmount}}</van-col>
-                <van-col span="8">{{item.orderBuyer}}</van-col>
-                <van-col span="8">{{item.productName}}</van-col>
-                <van-col span="8">{{item.orderID}}</van-col>
+                <van-col span="6" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" offset="3">×{{item.productBuyAmount}}</van-col>
+                <van-col span="4" offset="2" class="second">{{item.orderBuyer}}</van-col>
+                <van-col span="6" >{{item.productName}}</van-col>
+                <van-col span="12" class="order1" >订单号  {{item.orderID}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -63,9 +65,9 @@
       <van-tab  title="待付款">
         <van-row class="content1">
           <van-col span="4">商品</van-col>
-          <van-col span="8" >价格(元)/数量(件)</van-col>
-          <van-col span="4" >买家</van-col>
-          <van-col span="6">订单号</van-col>
+          <van-col span="5" >价格(元)</van-col>
+          <van-col span="4" offset="4" >数量(件)</van-col>
+          <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
         <div class="tab-list1">
@@ -75,7 +77,7 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="item" :title="item" >
+            <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key=i :title="item" >
               <van-row class="van-row1" @click="onDetail" >
                 <van-col span="4" offset="1">
                   <van-image
@@ -85,10 +87,11 @@
                     src="https://img01.yzcdn.cn/vant/cat.jpeg"
                   />
                 </van-col>
-                <van-col span="8" >￥{{item.productPrice}}×{{item.productBuyAmount}}</van-col>
-                <van-col span="8">{{item.orderBuyer}}</van-col>
-                <van-col span="8">{{item.productName}}</van-col>
-                <van-col span="8">{{item.orderID}}</van-col>
+                <van-col span="6" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" offset="3">×{{item.productBuyAmount}}</van-col>
+                <van-col span="4" offset="2" class="second">{{item.orderBuyer}}</van-col>
+                <van-col span="6" >{{item.productName}}</van-col>
+                <van-col span="12" class="order1" >订单号  {{item.orderID}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -101,9 +104,9 @@
       <van-tab title="交易成功">
         <van-row class="content1">
           <van-col span="4">商品</van-col>
-          <van-col span="8" >价格(元)/数量(件)</van-col>
-          <van-col span="4" >买家</van-col>
-          <van-col span="6">订单号</van-col>
+          <van-col span="5" >价格(元)</van-col>
+          <van-col span="4" offset="4" >数量(件)</van-col>
+          <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
         <div class="tab-list1">
@@ -113,7 +116,7 @@
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="item" :title="item" >
+            <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
               <van-row class="van-row1" @click="onDetail" >
                 <van-col span="4" offset="1">
                   <van-image
@@ -123,10 +126,11 @@
                     src="https://img01.yzcdn.cn/vant/cat.jpeg"
                   />
                 </van-col>
-                <van-col span="8" >￥{{item.productPrice}}×{{item.productBuyAmount}}</van-col>
-                <van-col span="8">{{item.orderBuyer}}</van-col>
-                <van-col span="8">{{item.productName}}</van-col>
-                <van-col span="8">{{item.orderID}}</van-col>
+                <van-col span="6" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" offset="3">×{{item.productBuyAmount}}</van-col>
+                <van-col span="4" offset="2" class="second">{{item.orderBuyer}}</van-col>
+                <van-col span="6" >{{item.productName}}</van-col>
+                <van-col span="12" class="order1" >订单号  {{item.orderID}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -193,10 +197,10 @@ export default {
       });
     },
     async onSearch() {
-      let url = "/api/queryOrderByKey";
+      let url = "/api/order/queryOrderByKey";
       let postData = {
         keySearch: this.searchValue,
-        active: this.active
+        orderType: this.active
       }
       this.list = [];
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
@@ -215,11 +219,11 @@ export default {
     },
 
     async onLoad() {
-      let url = "/api/queryOrderList";
+      let url = "/api/order/queryOrder";
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
-        active: this.active
+        orderType: this.active,
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       if (result.length == 0) {
@@ -248,37 +252,39 @@ export default {
             message: '确定删除吗？',
           }).then(() => {
             instance.close();
-            //
-            // let url = "/api/deleteOrder";
-            // let postData = {
-            //
-            // }
-            // const result = (await this.$http.post(url, qs.stringify(postData))).data
-            //
-            // if(result.code === 200) {
-            //   Toast('订单创建成功');
-            //   this.$router.push('orderList');
-            // }
-            // else
-            //   Toast('订单创建失败,错误码' + result.code);
+             this.deletefun();
+                                       //此处需要刷新页面
           });
           break;
       }
+    },
+   async deletefun(){
+     let url = "/api/order/deleteOrder";
+     let postData = {
+          orderID:this.orderID
+     }
+     const result = (await this.$http.post(url, qs.stringify(postData))).data
+     if(result.code === 200) {
+       Toast('订单删除成功');
+       this.$router.push('orderList');
+     }
+     else
+       Toast('订单删除失败,错误码' + result.code);
     },
     ifShowDialog()
     {
       this.$router.push('orderCreate')
     }
-
-    // formClick() {
-    //   this.showform = !this.showform;
-    // },
-
   },
 }
 </script>
 
 <style lang="less" scoped>
+h3{
+  background-color: white;
+  text-align: center;
+  margin-bottom: 0;
+}
 .orderList_container{
   height:100%;
   //margin-bottom: 40px;
@@ -289,7 +295,7 @@ export default {
 }
 /deep/ .vant-tab-wrap{
 .van-tabs__wrap{
-  width: 65%;
+  width: 100%;
 }
 }
 /deep/ .van-tabs__content {
@@ -305,11 +311,14 @@ export default {
 
 /deep/ .content1 {
   height:30px;
-  border:1px solid gray;
-  background-color: whitesmoke;
+  //border:1px solid gray;
+  background-color: white;
   text-align: center;
   margin-top: 5px;
-
+ font-weight: bold;
+  .van-col{
+    font-size: 14px;
+  }
 }
 .tab-nav1{
   background-color: lightblue;
@@ -333,11 +342,21 @@ export default {
   height:80px;
   //justify-content: center;
   border:1px solid lightgray;
+  .van-col{
+    margin-top: 12px;
+  }
+  .second{
+    text-align: right;
+  }
+  .order1{
+    text-align: right;
+    font-size: 13px;
+  }
 }
 /deep/ .van-row1 .van-col--8{
  // display: flex;
   height:40px;
-  font-size:18px;
+  font-size:16px;
 
 }
 

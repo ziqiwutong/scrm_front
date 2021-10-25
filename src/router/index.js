@@ -7,6 +7,7 @@ import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
 import orderCreate from "../components/view/order/orderCreate";
 import orderDetail from "../components/view/order/orderDetail";
+import orderEdit from "../components/view/order/orderEdit";
 Vue.use(Router)
 
 const routes = [
@@ -30,6 +31,10 @@ const routes = [
   {
     path:'/orderDetail',
     component:orderDetail
+  },
+  {
+    path:'/orderEdit',
+    component:orderEdit
   }
   ];
 
