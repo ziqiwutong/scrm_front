@@ -1,16 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from "../components/view/home";
-import contextShare from "../components/view/contextShare/contextShareList";
+import contextShareList from "../components/view/contextShare/contextShareList";
 import articleDetail from "../components/view/contextShare/articleDetail";
+import readRecord from "../components/view/contextShare/readRecord";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
 import clue from "../components/view/clue/clueList"
+import customer from "../components/customer/customer";
+import Perinfor from "../components/customer/Perinfor"
+import Potential from "../components/customer/Potential"
 import product from "../components/view/product"
 import clueDetail from "../components/view/clue/clueDetail";
 import addClue from "../components/view/clue/addClue";
 import editClueStatus from "../components/view/clue/editClueStatus";
+import PotentDetail from "../components/customer/potentialdetail"
+
 
 Vue.use(Router)
 
@@ -21,21 +27,37 @@ const routes = [
     component: home
   },
   {
-    path: '/contextShare',
-    component: contextShare
+    path: '/contextShareList',
+    component: contextShareList
   },
   {
-
     path: '/orderList',
     component: orderList
   },
   {
     path: '/articleDetail',
+    name:'articleDetail',
     component: articleDetail
   },
   {
     path: '/clueList',
-    component: clue
+    component: clueList
+  },
+  {
+    path:'/orderList',
+    component:orderList
+  },
+  {
+    path: '/customer',
+    component: customer
+  },
+  {
+    path: '/perinfor',
+    component: Perinfor
+  },
+  {
+    path: '/potential',
+    component: Potential
   },
   {
     path: '/product',
@@ -53,6 +75,16 @@ const routes = [
     path: '/editClueStatus',
     component: editClueStatus
   },
+  {
+    path: '/readRecord',
+    name:'readRecord',
+    component: readRecord
+  },
+    {
+    path: '/potentialdetail',
+    component: PotentDetail
+  },
+
 ]
 
 const router = new Router({

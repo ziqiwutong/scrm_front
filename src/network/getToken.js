@@ -1,6 +1,8 @@
+import store from "../store";
+const jwt = require("jsonwebtoken");//引入jwt
+const secret = "scrm";// 设置秘钥
+
 export function getToken(userID) {
-  const jwt = require("jsonwebtoken");//引入jwt
-  const secret = "scrm";// 设置秘钥
   const token = jwt.sign({userID: userID}, secret, {// 设置加密内容及有限时间
     expiresIn: "2h"
   })
@@ -16,4 +18,12 @@ export function getToken(userID) {
   if (!hasToken || !isValid) {// 缓存中没有token，或者token已失效时才生成新的token
     window.sessionStorage.setItem("token", token);
   }
+}
+
+export function getUserId() {
+  const token = store.state.token;
+  const userId = jwt.verify(token, secret, (err, decoded) => { // 权限验证
+    return `${JSON.stringify(decoded)}`
+  });
+  return userId
 }

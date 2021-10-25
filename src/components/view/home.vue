@@ -5,9 +5,9 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
-                           to="/httTest02"/>
+                           to="/customer"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                           url="/"/>
+                           url="/potential"/>
           </van-grid>
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
@@ -37,7 +37,7 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
-                           to="/contextShare"/>
+                           to="/contextShareList"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
                            url="/"/>
           </van-grid>
@@ -128,7 +128,7 @@ export default {
       const jwt = require("jsonwebtoken");// 引入jwt
       const secret = "scrm";// 设置秘钥
       const token = jwt.sign({userID: userID}, secret, {// 设置加密内容及有限时间
-        expiresIn: "2h"
+        expiresIn: "7d"
       })
       const isValid = jwt.verify(token, secret, (err, decoded) => { // 权限验证
         if (err) {

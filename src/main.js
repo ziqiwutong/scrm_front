@@ -15,7 +15,7 @@ import 'vant/lib/index.css'
 Vue.use(Vant)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
-
+// Vue.use(Vant)
 // 请求头里配置token
 axios.interceptors.request.use(config => {
   // console.log(config)
