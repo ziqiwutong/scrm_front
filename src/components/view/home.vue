@@ -24,9 +24,9 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
-                           to="/"/>
+                           to="/clueList"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
-                           url="/"/>
+                           to="/"/>
           </van-grid>
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"

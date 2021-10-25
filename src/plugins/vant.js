@@ -10,20 +10,15 @@ import {
   TabbarItem,
   Col,
   Row,
-
   Tab,
   Tabs,
   Checkbox,
   CheckboxGroup,
-
-
   List,
   Image as VanImage,
   ShareSheet,
-
   Search,
   Card,
-
   Search,
   DropdownMenu,
   DropdownItem,
@@ -35,14 +30,14 @@ import {
   Cell,
   CellGroup,
   ContactEdit,
-  DatetimePicker
-
+  DatetimePicker,
+  Step,
+  Steps,
 } from "vant";
 
 Vue.use(Card);
 Vue.use(Tab);
 Vue.use(Tabs);
-
 Vue.use(VButton)
 Vue.use(NavBar)
 Vue.use(Grid)
@@ -71,5 +66,6 @@ Vue.use(Cell)
 Vue.use(CellGroup)
 Vue.use(ContactEdit)
 Vue.use(DatetimePicker)
-
+Vue.use(Step)
+Vue.use(Steps)
 

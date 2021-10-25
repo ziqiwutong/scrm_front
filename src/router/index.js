@@ -6,9 +6,11 @@ import articleDetail from "../components/view/contextShare/articleDetail";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
-import clue from "../components/view/clue/clue"
+import clue from "../components/view/clue/clueList"
 import product from "../components/view/product"
-
+import clueDetail from "../components/view/clue/clueDetail";
+import addClue from "../components/view/clue/addClue";
+import editClueStatus from "../components/view/clue/editClueStatus";
 
 Vue.use(Router)
 
@@ -32,13 +34,25 @@ const routes = [
     component: articleDetail
   },
   {
-    path: '/clue',
+    path: '/clueList',
     component: clue
   },
   {
     path: '/product',
     component: product
-  }
+  },
+  {
+    path: '/clueDetail',
+    component: clueDetail
+  },
+  {
+    path: '/addClue',
+    component: addClue
+  },
+  {
+    path: '/editClueStatus',
+    component: editClueStatus
+  },
 ]
 
 const router = new Router({
