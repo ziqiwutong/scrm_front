@@ -5,7 +5,7 @@
   url('//at.alicdn.com/t/font_2849451_y80n06udxl.ttf?t=1634372159625') format('truetype');
 }
 
-git push origin[class^="icon-third"], [class*="icon-third"]/*这里有空格*/
+[class^="icon-third"], [class*="icon-third"]/*这里有空格*/
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
