@@ -7,7 +7,7 @@ import readRecord from "../components/view/contextShare/readRecord";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList"
-import clue from "../components/view/clue/clueList"
+import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer";
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
