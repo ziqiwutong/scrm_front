@@ -35,23 +35,19 @@ import {
   Icon,
   Form,
   Field,
-  Popup,
-  ActionSheet,
-  Cell,
-  CellGroup,
-  ContactEdit,
-  DatetimePicker
-
+  Uploader,
+  DatetimePicker,
+  Area,
+  Divider,
+  Overlay, 
+  Picker, 
 } from "vant";
-
-Vue.use(Card);
-Vue.use(Tab);
-Vue.use(Tabs);
-
-Vue.use(VButton)
-Vue.use(NavBar)
-Vue.use(Icon)
-Vue.use(Tag)
+Vue.use(Picker);
+Vue.use(Overlay);
+Vue.use(Divider);
+Vue.use(Area);
+Vue.use(DatetimePicker);
+Vue.use(NavBar);
 Vue.use(Uploader);
 Vue.use(Form);
 Vue.use(Field);

@@ -10,10 +10,14 @@ import orderList from "../components/view/order/orderList"
 import customer from "../components/customer/customer";
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
+<<<<<<< HEAD
 import clue from "../components/view/clue/clue"
 import product from "../components/view/product"
 
 
+=======
+import PotentDetail from "../components/customer/potentialdetail"
+>>>>>>> zjs
 
 Vue.use(Router)
 
@@ -53,6 +57,7 @@ const routes = [
     component: Potential
   },
   {
+<<<<<<< HEAD
     path: '/clue',
     component: clue
   },
@@ -66,6 +71,11 @@ const routes = [
     component: readRecord
 
   }
+=======
+    path: '/potentialdetail',
+    component: PotentDetail
+  },
+>>>>>>> zjs
 ]
 
 const router = new Router({
