@@ -21,15 +21,15 @@
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <div class="list" v-for="(item,i) in list" @click="toArticleDetail(item.articleID)">
-        <div class="left">
+      <div class="list" v-for="(item,i) in list">
+        <div class="left" @click="toArticleDetail(item.articleId)">
           <van-image
             width="50"
             height="50"
             :src="item.articleIcon"
           />
         </div>
-        <div class="right">
+        <div class="right" @click="toArticleDetail(item.articleId)">
           <div class="right-top">
             <p>{{ item.articleTitle }}</p>
           </div>
@@ -58,6 +58,7 @@ import qs from 'qs'// axios参数包
 import TabBar from "../..//component/TabBar";
 import CreateContext from "../../component/CreateContext";
 import {Toast} from "vant";
+import {getUserId} from "../../../network/getToken";
 
 export default {
   name: "contextShareList",
@@ -90,7 +91,7 @@ export default {
         }
       ],
       show: false,
-      actions: [{name: '拍照创建内容海报'}, {name: '上传图片创建内容海报'}, {name: '转载公众号文章'}]
+      actions: [{name: '转载公众号文章'}]
     };
   },
   created() {
@@ -108,7 +109,7 @@ export default {
     },
     // 关键字搜索
     async onSearch() {
-      let url = "/api//queryArticleByKey";
+      let url = "/api/queryArticleByKey";
       let postData = {
         keySearch: this.searchValue
       }
@@ -151,9 +152,17 @@ export default {
       this.show = true;
     },
     // 跳转至文章详情页
-    async toArticleDetail(articleID) {
-      // 带着articleID去请求文章详情页
-
+    toArticleDetail(articleId) {
+      // 带着articleId&shareId去请求文章详情页
+      let shareId = JSON.parse(getUserId()).userID;
+      this.$router.push({
+        name:'articleDetail',
+        query:{
+          articleId:articleId,
+          shareId:shareId,
+          ifShowShareMan:true
+        }
+      });
     }
   }
 }
@@ -213,7 +222,7 @@ p {
   margin-bottom: 15px;
 }
 
-.right-top p{
+.right-top p {
   width: 75vw;
   overflow: hidden;
   text-overflow: ellipsis;
