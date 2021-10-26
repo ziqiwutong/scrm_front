@@ -4,6 +4,7 @@ import home from "../components/view/home";
 import contextShareList from "../components/view/contextShare/contextShareList";
 import articleDetail from "../components/view/contextShare/articleDetail";
 import readRecord from "../components/view/contextShare/readRecord";
+import reprintArticle from "../components/view/contextShare/reprintArticle";
 import store from "../store";
 import {Toast} from "vant";
 
@@ -28,6 +29,11 @@ const routes = [
     path: '/readRecord',
     name:'readRecord',
     component: readRecord
+  },
+  {
+    path: '/reprintArticle',
+    name:'reprintArticle',
+    component: reprintArticle
   }
 ]
 
