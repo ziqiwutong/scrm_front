@@ -276,11 +276,11 @@
       <!-- 多选内容标签栏 -->
       <van-tabbar active-color="#7d7e80">
         <van-checkbox v-model="checked" @click="checkAll">全选</van-checkbox>
-        <van-tabbar-item icon="search" @click="showCh">打标签</van-tabbar-item>
-        <van-tabbar-item icon="setting-o" @click="toShrtMsg"
+        <van-tabbar-item :icon="cus_lable" @click="showCh">打标签</van-tabbar-item>
+        <van-tabbar-item :icon="cus_msg" @click="toShrtMsg"
           >发短信</van-tabbar-item
         >
-        <van-tabbar-item icon="setting-o" @click="toAllDelete"
+        <van-tabbar-item :icon="cus_delete" @click="toAllDelete"
           >批量删除</van-tabbar-item
         >
       </van-tabbar>
@@ -1487,6 +1487,9 @@ export default {
       cus_new: require("../../assets/cusicon/cus_new.png"),
       cus_scr: require("../../assets/cusicon/cus_scr.png"),
       cus_chc: require("../../assets/cusicon/cus_ckc.png"),
+      cus_delete: require("../../assets/cusicon/cus_delete.png"),
+      cus_lable: require("../../assets/cusicon/cus_lable.png"),
+      cus_msg: require("../../assets/cusicon/cus_msg.png"),
     };
   },
   methods: {
