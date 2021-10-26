@@ -4,17 +4,30 @@ import home from "../components/view/home";
 import contextShareList from "../components/view/contextShare/contextShareList";
 import articleDetail from "../components/view/contextShare/articleDetail";
 import readRecord from "../components/view/contextShare/readRecord";
+import reprintArticle from "../components/view/contextShare/reprintArticle";
 import store from "../store";
 import {Toast} from "vant";
-import orderList from "../components/view/order/orderList"
-import customer from "../components/customer/customer";
+import orderList from "../components/view/order/orderList";
+import clueList from "../components/view/clue/clueList"
+import customer from "../components/customer/customer"
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
+
 import clue from "../components/view/clue/clue"
 import product from "../components/view/product"
 
 
 import PotentDetail from "../components/customer/potentialdetail"
+
+
+import product from "../components/view/product"
+import clueDetail from "../components/view/clue/clueDetail";
+import addClue from "../components/view/clue/addClue";
+import editClueStatus from "../components/view/clue/editClueStatus";
+import PotentDetail from "../components/customer/potentialdetail"
+import orderCreate from "../components/view/order/orderCreate";
+import orderDetail from "../components/view/order/orderDetail";
+import orderEdit from "../components/view/order/orderEdit";
 
 
 Vue.use(Router)
@@ -35,14 +48,18 @@ const routes = [
   },
   {
     path: '/articleDetail',
-    name:'articleDetail',
+    name: 'articleDetail',
     component: articleDetail
   },
   {
-    path:'/orderList',
-    component:orderList
-  }, {
-
+    path: '/clueList',
+    component: clueList
+  },
+  {
+    path: '/orderList',
+    component: orderList
+  },
+  {
     path: '/customer',
     component: customer
   },
@@ -55,16 +72,30 @@ const routes = [
     component: Potential
   },
   {
+
     path: '/clue',
     component: clue
   },
   {
+
     path: '/product',
     component: product
   },
   {
+    path: '/clueDetail',
+    component: clueDetail
+  },
+  {
+    path: '/addClue',
+    component: addClue
+  },
+  {
+    path: '/editClueStatus',
+    component: editClueStatus
+  },
+  {
     path: '/readRecord',
-    name:'readRecord',
+    name: 'readRecord',
     component: readRecord
 
   },
@@ -73,7 +104,26 @@ const routes = [
     component: PotentDetail
   },
 
-]
+  {
+    path: '/orderCreate',
+    component: orderCreate
+  },
+  {
+    path: '/orderDetail',
+    component: orderDetail
+  },
+  {
+    path: '/orderEdit',
+    component: orderEdit
+  },
+  {
+    path: '/reprintArticle',
+    name: 'reprintArticle',
+    component: reprintArticle
+  }
+];
+
+
 
 const router = new Router({
   routes

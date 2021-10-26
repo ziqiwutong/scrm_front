@@ -12,7 +12,6 @@ import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
 import 'vant/lib/index.css'
 
-
 Vue.use(Vant)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
