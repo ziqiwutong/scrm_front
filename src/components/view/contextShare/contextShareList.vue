@@ -1,4 +1,3 @@
-```
 <template>
   <div>
     <van-tabs v-model="activeName" class="scrm-tab">
@@ -46,7 +45,7 @@
                       v-model="show"
                       :actions="actions"
                       cancel-text="取消"
-                      close-on-click-action
+                      @select="reprintArticle"
                       @cancel="onCancel"
     />
     <CreateContext @ifShow="ifShowDialog" v-else/>
@@ -157,13 +156,17 @@ export default {
       // 带着articleId&shareId去请求文章详情页
       let shareId = JSON.parse(getUserId()).userID;
       this.$router.push({
-        name:'articleDetail',
-        query:{
-          articleId:articleId,
-          shareId:shareId,
-          ifShowShareMan:true
+        name: 'articleDetail',
+        query: {
+          articleId: articleId,
+          shareId: shareId,
+          ifShowShareMan: true
         }
       });
+    },
+    // 转载公众号
+    reprintArticle(item) {
+      this.$router.push('/reprintArticle');
     }
   }
 }
@@ -246,5 +249,3 @@ p {
   background-color: rgba(0, 0, 0, .3);
 }
 </style>
-
-```

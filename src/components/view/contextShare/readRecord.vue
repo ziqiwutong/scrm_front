@@ -66,7 +66,7 @@
       </div>
     </van-popup>
     <van-checkbox-group v-model="checkResultT" v-show="!mainPage" class="checkList" ref="checkboxGroup">
-      <van-cell-group class="cellList">
+      <van-cell-group class="cellList" id="cellList">
         <van-cell
           clickable
           :key="index"
@@ -147,14 +147,14 @@ export default {
       deep: true,
       handler: function () {
         if (!this.mainPage) {
+          // document.getElementById("cellList").addEventListener('scroll', this.checkBoxLoad);
           window.addEventListener('scroll', this.checkBoxLoad, true)
         } else {
+          // document.getElementById("cellList").removeEventListener('scroll', this.checkBoxLoad);
           window.removeEventListener('scroll', this.checkBoxLoad, true)
         }
       }
     }
-  },
-  beforeDestroy() {
   },
   methods: {
     returnClick() {
