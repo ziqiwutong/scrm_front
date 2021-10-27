@@ -48,7 +48,7 @@
                       @select="reprintArticle"
                       @cancel="onCancel"
     />
-    <CreateContext @ifShow="ifShowDialog" v-else/>
+    <CreateContext @ifShow="ifShowDialog" :text="createContext" v-else/>
     <TabBar/>
   </div>
 </template>
@@ -91,7 +91,8 @@ export default {
         }
       ],
       show: false,
-      actions: [{name: '转载公众号文章'}]
+      actions: [{name: '转载公众号文章'}],
+      createContext:'+创建素材'
     };
   },
   created() {
