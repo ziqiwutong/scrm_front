@@ -6,7 +6,7 @@ y<template>
         {{ userImgUrl }}
       </div>
     </div>
-    <div class="right">
+    <div class="center">
       <p>{{ username }}</p>
       <p>{{ userCompany }}</p>
     </div>
@@ -79,11 +79,11 @@ export default {
   line-height: 40px;
 }
 
-.right {
+.center {
   padding-top: 10px;
 }
 
-.right p {
+.center p {
   font-size: 13px;
   color: white;
   line-height: 20px;
