@@ -10,7 +10,7 @@
 
     <div class="search1">
       <div class="search1_left">
-        <van-icon class-prefix="icon-third" name="person"/>
+        <van-icon class-prefix="icon-third" name="customer-relationship"/>
       </div>
       <div class="search1_right">
         <van-field v-model="value1" placeholder="请输入您想要检索的客户/公司"/>
@@ -19,7 +19,7 @@
 
     <div class="search2">
       <div class="search2_left">
-        <van-icon class-prefix="icon-third" name="person"/>
+        <van-icon class-prefix="icon-third" name="customer-relationship"/>
       </div>
       <div class="search2_right">
         <van-field v-model="value2" placeholder="请输入您想要检索的客户/公司"/>
@@ -32,7 +32,7 @@
         round
         type="info"
         @click="sendSearchMessage">
-        查询关系
+        查询
       </van-button>
     </div>
     <TabBar/>
@@ -63,8 +63,8 @@ export default {
       this.$router.push({
         name:'relationshipDetail',
         query:{
-          searchData1: '123',
-          searchData2: 'htt'
+          searchData1: this.value1,
+          searchData2: this.value2
         }
       });
     },
@@ -75,9 +75,10 @@ export default {
 
 <style lang="less" scoped>
 .company_logo_block {
-  padding-top: 300px;
+  margin-top: 160px;
+  margin-bottom: 100px;
   width: 100vw;
-  height: 60px;
+  height: 100px;
   position: relative;
 
   .company_logo {
@@ -139,7 +140,7 @@ export default {
 
   .search_button {
     position: absolute;
-    width: 180px;
+    width: 250px;
     height: 50px;
     top: 0;
     bottom: 0;
