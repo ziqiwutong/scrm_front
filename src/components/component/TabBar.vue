@@ -40,5 +40,6 @@ export default {
 <style lang="less" scoped>
 .van-tabbar{
   border-top: 1px solid #f7f8fa;
+  z-index: 100;
 }
 </style>

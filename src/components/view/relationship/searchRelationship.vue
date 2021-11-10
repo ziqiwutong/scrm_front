@@ -8,22 +8,27 @@
 
     <p class="tip">请输入双方关系</p>
 
-    <div class="search1">
-      <div class="search1_left">
-        <van-icon class-prefix="icon-third" name="customer-relationship"/>
-      </div>
-      <div class="search1_right">
-        <van-field v-model="value1" placeholder="请输入您想要检索的客户/公司"/>
-      </div>
+    <div class="search1_block">
+      <van-field
+        class="search1"
+        v-model="value1"
+        left-icon="customer-relationship"
+        placeholder="请输入您想要检索的客户/公司"
+        border=border
+      >
+        <van-icon class-prefix="icon-third" slot="left-icon" name="customer-relationship"/>
+      </van-field>
     </div>
 
-    <div class="search2">
-      <div class="search2_left">
-        <van-icon class-prefix="icon-third" name="customer-relationship"/>
-      </div>
-      <div class="search2_right">
-        <van-field v-model="value2" placeholder="请输入您想要检索的客户/公司"/>
-      </div>
+    <div class="search2_block">
+      <van-field
+        class="search2"
+        v-model="value2"
+        left-icon="customer-relationship"
+        placeholder="请输入您想要检索的客户/公司"
+      >
+        <van-icon class-prefix="icon-third" slot="left-icon" name="customer-relationship"/>
+      </van-field>
     </div>
 
     <div class="search_button_block">
@@ -75,8 +80,8 @@ export default {
 
 <style lang="less" scoped>
 .company_logo_block {
-  margin-top: 160px;
-  margin-bottom: 100px;
+  padding-top: 140px;
+  padding-bottom: 60px;
   width: 100vw;
   height: 100px;
   position: relative;
@@ -85,6 +90,28 @@ export default {
     position: absolute;
     width: 220px;
     height: 80px;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+}
+
+.tip {
+  width: 60vw;
+  font-weight: bolder;
+  font-size: small;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.search1_block {
+  padding-top: 20px;
+  height: 40px;
+  .search1 {
+    width: 70vw;
     top: 0;
     bottom: 0;
     left: 0;
@@ -93,55 +120,28 @@ export default {
   }
 }
 
-.tip {
-  padding-left: 60px;
-  font-weight: bolder;
-}
-
-.search1 {
-  padding-top: 20px;
+.search2_block {
+  padding-top: 10px;
   height: 40px;
-  .search1_left {
-    width: 5%;
-    float: left;
-    padding-top: 12px;
-    padding-bottom: 10px;
-    padding-left: 60px;
-  }
-
-  .search1_right {
-    width: 60%;
-    float: left;
-  }
-}
-
-.search2 {
-  padding-top: 20px;
-  height: 40px;
-  .search2_left {
-    width: 5%;
-    float: left;
-    padding-top: 12px;
-    padding-bottom: 10px;
-    padding-left: 60px;
-  }
-
-  .search2_right {
-    width: 60%;
-    float: left;
+  .search2 {
+    width: 70vw;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
   }
 }
 
 .search_button_block {
-  margin-top: 60px;
-  width: 100vw;
+  position: relative;
+  padding-top: 80px;
   height: 60px;
-  position: absolute;
 
   .search_button {
     position: absolute;
-    width: 250px;
-    height: 50px;
+    width: 64vw;
+    height: 46px;
     top: 0;
     bottom: 0;
     left: 0;
