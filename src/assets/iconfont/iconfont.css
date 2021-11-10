@@ -1,19 +1,39 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
+
   src: url('//at.alicdn.com/t/font_2849451_y80n06udxl.woff2?t=1634372159625') format('woff2'),
   url('//at.alicdn.com/t/font_2849451_y80n06udxl.woff?t=1634372159625') format('woff'),
   url('//at.alicdn.com/t/font_2849451_y80n06udxl.ttf?t=1634372159625') format('truetype');
-  src: url('iconfont.woff2?t=1635162541460') format('woff2'),
-       url('iconfont.woff?t=1635162541460') format('woff'),
-       url('iconfont.ttf?t=1635162541460') format('truetype');
+  src: url('iconfont.woff2?t=1635772933871') format('woff2'),
+  url('iconfont.woff?t=1635772933871') format('woff'),
+  url('iconfont.ttf?t=1635772933871') format('truetype');
 }
-[class^="icon-third"], [class*="icon-third"] /*这里有空格*/
+
+[class^="icon-third"], [class*="icon-third"]/*这里有空格*/
+
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+
+.icon-third-circle-company:before {
+  content: "\e71e";
+}
+
+.icon-third-down-arrow:before {
+  content: "\eb6d";
+}
+
+.icon-third-up-arrow:before {
+  content: "\eb6e";
+}
+
+.icon-third-customer-relationship:before {
+  content: "\e626";
 }
 
 .icon-third-add:before {

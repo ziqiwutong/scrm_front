@@ -28,13 +28,13 @@
       </form>
       <!-- 导航-搜索-搜索图标 -->
       <van-col class="schbtn" span="2" offset="12" v-if="isSearch"
-        ><van-icon name="search" size="30" @click="toSearch"
+      ><van-icon name="search" size="30" @click="toSearch"
       /></van-col>
       <!-- 导航-分割线 -->
       <van-col class="separate" v-if="isSearch">|</van-col>
       <!-- 导航-新建 -->
       <van-col class="addbtn" span="2" v-if="isSearch"
-        ><van-icon name="plus" size="30" @click="toAdd" />
+      ><van-icon name="plus" size="30" @click="toAdd" />
       </van-col>
     </van-row>
     <!-- 标签栏 -->
@@ -49,17 +49,17 @@
         </van-tabbar-item>
         <!-- 筛选 -->
         <van-tabbar-item class="navopt" @click="toScreen"
-          ><van-icon
-            :name="cus_scr"
-            :class="barAct == 1 ? 'colorful' : ''"
-          />筛选</van-tabbar-item
+        ><van-icon
+          :name="cus_scr"
+          :class="barAct == 1 ? 'colorful' : ''"
+        />筛选</van-tabbar-item
         >
         <!-- 多选 -->
         <van-tabbar-item class="navopt" @click="toCheckbox"
-          ><van-icon
-            :name="cus_chc"
-            :class="barAct == 2 ? 'colorful' : ''"
-          />多选</van-tabbar-item
+        ><van-icon
+          :name="cus_chc"
+          :class="barAct == 2 ? 'colorful' : ''"
+        />多选</van-tabbar-item
         >
       </van-tabbar>
     </van-row>
@@ -83,30 +83,30 @@
               />
             </van-col>
             <van-col span="12" class="cusname"
-              ><div class="van-ellipsis">
-                {{ item.basicMsg[0].customerName }}
-              </div></van-col
+            ><div class="van-ellipsis">
+              {{ item.basicMsg[0].customerName }}
+            </div></van-col
             >
             <van-col span="7" class="custime"
-              >{{ item.distributeMsg[0].enterPoolDate }}进入客户池</van-col
+            >{{ item.distributeMsg[0].enterPoolDate }}进入客户池</van-col
             >
             <van-col span="16" class="cusmsg">{{
-              item.companyMsg[0].company
-            }}</van-col>
+                item.companyMsg[0].company
+              }}</van-col>
           </van-row>
           <van-row>
             <van-col span="3" offset="5" class="tagmar"
-              ><van-tag color="#E7F7E3" text-color="#67C74D">{{
+            ><van-tag color="#E7F7E3" text-color="#67C74D">{{
                 item.distributeMsg[0].cuostomerStatus
               }}</van-tag></van-col
             >
             <van-col span="3"
-              ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
+            ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
                 item.contactMsg[0].ageRange
               }}</van-tag></van-col
             >
             <van-col span="4"
-              ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
+            ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
                 item.contactMsg[0].source
               }}</van-tag></van-col
             >
@@ -194,11 +194,11 @@
       </van-row>
       <!-- 筛选内容重置 -->
       <van-button type="default" @click="reset" class="scrresbtn" hairline
-        >重置</van-button
+      >重置</van-button
       >
       <!-- 筛选内容提交 -->
       <van-button type="info" @click="screen" class="scrfirbtn"
-        >确定</van-button
+      >确定</van-button
       >
     </van-popup>
 
@@ -240,31 +240,31 @@
                   />
                 </van-col>
                 <van-col span="12" class="cusname"
-                  ><div class="van-ellipsis">
-                    {{ item.basicMsg[0].customerName }}
-                  </div></van-col
+                ><div class="van-ellipsis">
+                  {{ item.basicMsg[0].customerName }}
+                </div></van-col
                 >
                 <van-col span="8" class="custime"
-                  >{{ item.distributeMsg[0].enterPoolDate }}进入客户池</van-col
+                >{{ item.distributeMsg[0].enterPoolDate }}进入客户池</van-col
                 >
                 <van-col span="16" class="cusmsg">{{
-                  item.companyMsg[0].company
-                }}</van-col>
+                    item.companyMsg[0].company
+                  }}</van-col>
               </van-row>
 
               <van-row>
                 <van-col span="3" offset="4" class="tagmar"
-                  ><van-tag color="#E7F7E3" text-color="#67C74D">{{
+                ><van-tag color="#E7F7E3" text-color="#67C74D">{{
                     item.distributeMsg[0].cuostomerStatus
                   }}</van-tag></van-col
                 >
                 <van-col span="4"
-                  ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
+                ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
                     item.contactMsg[0].ageRange
                   }}</van-tag></van-col
                 >
                 <van-col span="5"
-                  ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
+                ><van-tag color="#F5F5F5" text-color="#B1B1B1">{{
                     item.contactMsg[0].source
                   }}</van-tag></van-col
                 >
@@ -278,10 +278,10 @@
         <van-checkbox v-model="checked" @click="checkAll">全选</van-checkbox>
         <van-tabbar-item icon="search" @click="showCh">打标签</van-tabbar-item>
         <van-tabbar-item icon="setting-o" @click="toShrtMsg"
-          >发短信</van-tabbar-item
+        >发短信</van-tabbar-item
         >
         <van-tabbar-item icon="setting-o" @click="toAllDelete"
-          >批量删除</van-tabbar-item
+        >批量删除</van-tabbar-item
         >
       </van-tabbar>
     </van-popup>
@@ -345,7 +345,7 @@
               :key="item.name"
               :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
               @click="cutTabClick(item)"
-              >{{ item.name }}
+            >{{ item.name }}
             </van-button>
           </template>
         </van-field>
@@ -361,7 +361,7 @@
               :key="item.name"
               :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
               @click="cutTabClick(item)"
-              >{{ item.name }}
+            >{{ item.name }}
             </van-button>
           </template>
         </van-field>
@@ -381,7 +381,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -399,7 +399,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -455,7 +455,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -473,7 +473,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -491,7 +491,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -509,7 +509,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -527,7 +527,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'actscrbtn' : 'scrbtn'"
                 @click="cutTabClick(item)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -597,7 +597,7 @@
         />
         <div style="margin: 16px">
           <van-button round block type="info" native-type="submit"
-            >提交</van-button
+          >提交</van-button
           >
         </div>
       </van-form>
@@ -642,14 +642,14 @@
 
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-      ><van-datetime-picker
-        v-model="dateVal"
-        type="date"
-        title="选择年月日"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @cancel="dateCancel"
-        @confirm="dateConfirm"
+    ><van-datetime-picker
+      v-model="dateVal"
+      type="date"
+      title="选择年月日"
+      :min-date="minDate"
+      :max-date="maxDate"
+      @cancel="dateCancel"
+      @confirm="dateConfirm"
     /></van-popup>
     <!-- 新建客户-地区弹窗 -->
     <van-popup v-model="showArea" position="bottom">
@@ -719,20 +719,20 @@
         >
           <van-row>
             <van-col span="4"
-              ><van-image
-                round
-                width="40"
-                height="40"
-                :src="item.basicMsg[0].customerPhoto"
+            ><van-image
+              round
+              width="40"
+              height="40"
+              :src="item.basicMsg[0].customerPhoto"
             /></van-col>
             <van-col span="4" class="cusname"
-              ><div class="van-ellipsis">
-                {{ item.basicMsg[0].customerName }}
-              </div></van-col
+            ><div class="van-ellipsis">
+              {{ item.basicMsg[0].customerName }}
+            </div></van-col
             >
             <van-col offset="2" class="cusmsg">{{
-              item.basicMsg[0].customerName
-            }}</van-col>
+                item.basicMsg[0].customerName
+              }}</van-col>
           </van-row>
         </van-cell>
       </van-cell-group>
@@ -1972,6 +1972,6 @@ export default {
 // 标签栏颜色改变
 .colorful {
   filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
-    brightness(97%) contrast(95%);
+  brightness(97%) contrast(95%);
 }
 </style>
