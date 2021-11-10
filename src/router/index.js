@@ -4,6 +4,7 @@ import home from "../components/view/home";
 import contextShareList from "../components/view/contextShare/contextShareList";
 import articleDetail from "../components/view/contextShare/articleDetail";
 import readRecord from "../components/view/contextShare/readRecord";
+import reprintArticle from "../components/view/contextShare/reprintArticle";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList";
@@ -11,6 +12,9 @@ import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
+import clue from "../components/view/clue/clue"
+import product from "../components/view/product"
+import PotentDetail from "../components/customer/potentialdetail"
 import product from "../components/view/product"
 import clueDetail from "../components/view/clue/clueDetail";
 import addClue from "../components/view/clue/addClue";
@@ -21,6 +25,7 @@ import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
 import editClue from "../components/view/clue/editClue";
 import addClueStatus from "../components/view/clue/addClueStatus";
+
 
 Vue.use(Router)
 
@@ -40,7 +45,7 @@ const routes = [
   },
   {
     path: '/articleDetail',
-    name:'articleDetail',
+    name: 'articleDetail',
     component: articleDetail
   },
   {
@@ -48,8 +53,8 @@ const routes = [
     component: clueList
   },
   {
-    path:'/orderList',
-    component:orderList
+    path: '/orderList',
+    component: orderList
   },
   {
     path: '/customer',
@@ -64,6 +69,12 @@ const routes = [
     component: Potential
   },
   {
+
+    path: '/clue',
+    component: clue
+  },
+  {
+
     path: '/product',
     component: product
   },
@@ -89,26 +100,34 @@ const routes = [
   },
   {
     path: '/readRecord',
-    name:'readRecord',
+    name: 'readRecord',
     component: readRecord
+
   },
-    {
+  {
     path: '/potentialdetail',
     component: PotentDetail
   },
+
   {
-    path:'/orderCreate',
-    component:orderCreate
+    path: '/orderCreate',
+    component: orderCreate
   },
   {
-    path:'/orderDetail',
-    component:orderDetail
+    path: '/orderDetail',
+    component: orderDetail
   },
   {
-    path:'/orderEdit',
-    component:orderEdit
+    path: '/orderEdit',
+    component: orderEdit
+  },
+  {
+    path: '/reprintArticle',
+    name: 'reprintArticle',
+    component: reprintArticle
   }
-  ];
+];
+
 
 
 const router = new Router({
