@@ -7,11 +7,14 @@
     </div>
     <!--竖向进度条-->
     <div class="Step">
-      <van-steps direction="vertical" :active="0" active-color="#3D7AF5">
+      <van-steps direction="vertical"  :active="list.length" active-color="#cccccc">
         <van-step >
+          <template v-slot:inactive-icon>
+            <van-icon class-prefix="icon-third" name="circle-company" color="#3490f4"/>
+          </template>
           <p>线索</p>
           <p>{{ list[0].clueName }}</p>
-          <div class="edit" @click="toEditClueStatus">
+          <div class="edit" @click="toEditClue(list[0].id)">
             <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
           </div>
           <div class="cluedetail">
@@ -22,32 +25,39 @@
           </div>
         </van-step >
         <van-step v-for="(item,i) in list.slice(1)"  :key="i" class="van_step">
+          <template v-slot:inactive-icon>
+            <van-icon class-prefix="icon-third" name="circle-company" color="#3490f4"/>
+          </template>
           <p>更新</p>
           <p>{{ item.clueNotes }}</p>
-          <van-button plain type="info" size="mini" class="editBtn2">编辑</van-button>
+          <div class="edit" @click="toEditClueStatus(item.id)">
+            <van-button plain type="info" size="mini" class="editBtn2">编辑</van-button>
+          </div>
           <div class="cluedetail">
             <p>录入人：{{ item.clueEditor }}</p>
             <p>时 间： {{ item.createTime }}</p>
           </div>
         </van-step>
       </van-steps>
+      <!--转换为商机-->
+      <div class="toBizOpp">
+        <van-button round size="normal" type="info" @click="toBizOpp"> 转换为商机</van-button>
+      </div>
+      <!--删除线索-->
+      <div class="deleteClue">
+        <van-button plain round size="normal" type="info" @click="clueDelete1"> 删除线索</van-button>
+      </div>
+      <!--新增线索更新-->
+      <div class="addUpdate">
+        <van-image
+          width="21"
+          height="20"
+          :src="require('./add.png')"
+          @click="addClueStatus()"
+        />
+      </div>
     </div>
-    <!--转换为商机-->
-    <div class="toBizOpp">
-      <van-button round size="normal" type="info"> 转换为商机</van-button>
-    </div>
-    <!--删除线索-->
-    <div class="deleteClue">
-      <van-button plain round size="normal" type="info"> 删除线索</van-button>
-    </div>
-    <!--新增线索更新-->
-    <div class="addUpdate">
-      <van-image
-        width="21"
-        height="20"
-        :src="require('./add.png')"
-      />
-    </div>
+
   </div>
 
 </template>
@@ -59,6 +69,8 @@ export default {
   name: "clueDetail",
   data() {
     return {
+      id:'',
+      clueId:'',
       active: 1,
       list: [
         {
@@ -70,16 +82,43 @@ export default {
       ],
     };
   },
+  updated() {
+    this.onLoad();
+  },
   methods: {
     toClueList() {
       this.$router.push('/clueList');
     },
-    toEditClueStatus() {
-      this.$router.push('/editClueStatus');
+    toEditClueStatus(id) {
+      // 带着id去请求编辑线索更新页
+      this.$router.push({
+        path: '/editClueStatus',
+        query: {
+          id: id,
+        }
+      });
+    },
+    toEditClue(id) {
+      // 带着id去请求编辑线索页
+      this.$router.push({
+        path: '/editClue',
+        query: {
+          id: id,
+        }
+      });
+    },
+    addClueStatus() {
+      // 带着id去请求编辑线索页
+      this.$router.push({
+        path: '/addClueStatus',
+        query: {
+          clueId: this.clueId,
+        }
+      });
     },
     async onLoad() {
-      let url = "/api/queryClueStatus";
-      let postData = {};
+      let url = "/api/clue/queryClueStatus";
+      let postData = {clueId:this.$route.query.clueId};
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       this.list = [];
       for (let i = 0; i < result.length; i++) {
@@ -95,16 +134,57 @@ export default {
     ifShowDialog() {
       this.show = true;
     },
+    clueDelete1() {
+      this.$dialog.confirm({
+        message: '确定删除吗？',
+        confirmButtonColor: '#4876F1',
+      }).then(() => {
+        this.sendDelete();
+      });
+    },
+    async sendDelete() {
+      let url = "/api/clue/deleteClue";
+      let postData = {
+        id: this.$route.query.clueId,
+      }
+      const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
+      if (result1.code === 200) {
+        Toast('线索删除成功');
+        this.$router.push('clueList');
+      } else
+        Toast('线索删除失败,错误码' + result1.code);
+    },
+    toBizOpp() {
+      this.$dialog.confirm({
+        message: '确定转换为商机吗？',
+        confirmButtonColor: '#4876F1',
+      }).then(() => {
+        this.sendToBizOpp();
+      });
+    },
+    async sendToBizOpp() {
+      let url = "/api/clue/toBizOpp";
+      let postData = {
+        id: this.id
+      }
+      const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
+      if (result1.code === 200) {
+        Toast('线索转换商机成功');
+        this.$router.push('clueList');
+      } else
+        Toast('线索转换商机,错误码' + result1.code);
+    },
   },
   created() {
     this.onLoad();
+    this.clueId = this.$route.query.clueId;
   }
 }
 </script>
 
 <style lang="less" scoped>
 .back_arrow {
-  border-width: 0px;
+  bclue-width: 0px;
   position: absolute;
   left: 5px;
   top: 13px;
@@ -154,20 +234,21 @@ export default {
 
 .toBizOpp {
   position: absolute;
-  top: 500px;
+  bottom: -55px;
   left: 40px;
 }
 
 .deleteClue {
   position: absolute;
-  top: 500px;
-  left: 250px;
+  bottom: -55px;
+  left: 220px;
+  width:50%;
 }
 
 .addUpdate {
   position: absolute;
-  top: 430px;
-  left: 20px;
+  bottom: -10px;
+  left: 9px;
 }
 
 .van_step {

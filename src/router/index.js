@@ -16,8 +16,8 @@ import clueDetail from "../components/view/clue/clueDetail";
 import addClue from "../components/view/clue/addClue";
 import editClueStatus from "../components/view/clue/editClueStatus";
 import PotentDetail from "../components/customer/potentialdetail"
-
-
+import editClue from "../components/view/clue/editClue";
+import addClueStatus from "../components/view/clue/addClueStatus";
 Vue.use(Router)
 
 const routes = [
@@ -74,6 +74,14 @@ const routes = [
   {
     path: '/editClueStatus',
     component: editClueStatus
+  },
+  {
+    path: '/editClue',
+    component: editClue
+  },
+  {
+    path: '/addClueStatus',
+    component: addClueStatus
   },
   {
     path: '/readRecord',
