@@ -12,9 +12,6 @@ import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
-import clue from "../components/view/clue/clue"
-import product from "../components/view/product"
-import PotentDetail from "../components/customer/potentialdetail"
 import product from "../components/view/product"
 import clueDetail from "../components/view/clue/clueDetail";
 import addClue from "../components/view/clue/addClue";
@@ -25,8 +22,10 @@ import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
 import editClue from "../components/view/clue/editClue";
 import addClueStatus from "../components/view/clue/addClueStatus";
-
-
+import productList from "../components/view/product/productList";
+import productCreate from "../components/view/product/productCreate";
+import productDetail from "../components/view/product/productDetail";
+import productEdit from   "../components/view/product/productEdit";
 Vue.use(Router)
 
 const routes = [
@@ -70,11 +69,6 @@ const routes = [
   },
   {
 
-    path: '/clue',
-    component: clue
-  },
-  {
-
     path: '/product',
     component: product
   },
@@ -98,6 +92,7 @@ const routes = [
     path: '/addClueStatus',
     component: addClueStatus
   },
+
   {
     path: '/readRecord',
     name: 'readRecord',
@@ -125,8 +120,28 @@ const routes = [
     path: '/reprintArticle',
     name: 'reprintArticle',
     component: reprintArticle
+  },{
+    path:'/orderEdit',
+    component:orderEdit
+  },
+  {
+    path:'/productList',
+    component:productList
+  },
+  {
+    path:'/productCreate',
+    component:productCreate
+  },
+  {
+    path:'/productDetail',
+    component:productDetail
+  },
+  {
+    path:'/productEdit',
+    component:productEdit
   }
 ];
+
 
 
 

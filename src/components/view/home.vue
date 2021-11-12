@@ -30,7 +30,7 @@
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
-                         url="/"/>
+                         to="/communicationList"/>
           <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
       </div>
@@ -45,7 +45,7 @@
       <div class="main">
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
-                         to="/"/>
+                         to="/productList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
                          to="/orderList"/>
         </van-grid>
@@ -69,7 +69,7 @@ export default {
   data() {
     return {
       name: "sweet",
-      active: 0,
+      active:0,
       components: {
         NavBar,
         TabBar
@@ -111,16 +111,16 @@ export default {
     // let query=this.$route.query;
     // let userID = query.userID;
     let userID = "scrm123";
-    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+    if (userID){// userID 不为空时才获取，这里的userID是从URL里获取的
       this.getToken(userID);
     }
     // 修改tabbar被选中状态
-    this.$store.commit('updateTabBarActive', 0);
+    this.$store.commit('updateTabBarActive',0);
   },
-  beforeCreate() {
+  beforeCreate () {
     document.querySelector('body').setAttribute('style', 'background:#f6f6f6')
   },
-  beforeDestroy() {
+  beforeDestroy () {
     document.querySelector('body').removeAttribute('style')
   },
   methods: {
@@ -146,7 +146,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.mainArea {
+.mainArea{
   padding-top: 65px;
   padding-bottom: 50px;
 }
