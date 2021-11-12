@@ -39,7 +39,7 @@
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
                            to="/contextShareList"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
-                           url="/"/>
+                           to="/sweetTest"/>
           </van-grid>
         </div>
         <div class="main">
@@ -110,7 +110,7 @@ export default {
   created: function () {
     // let query=this.$route.query;
     // let userID = query.userID;
-    let userID = "scrm123";
+    let userID = "1";
     if (userID){// userID 不为空时才获取，这里的userID是从URL里获取的
       this.getToken(userID);
     }

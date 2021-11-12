@@ -22,19 +22,19 @@
       @load="onLoad"
     >
       <div class="list" v-for="(item,i) in list">
-        <div class="left" @click="toArticleDetail(item.articleId)">
+        <div class="left" @click="toArticleDetail(item.id)">
           <van-image
             width="50"
             height="50"
-            :src="item.articleIcon"
+            :src="item.articleImage"
           />
         </div>
-        <div class="right" @click="toArticleDetail(item.articleId)">
+        <div class="right" @click="toArticleDetail(item.id)">
           <div class="right-top">
             <p>{{ item.articleTitle }}</p>
           </div>
           <div class="right-bottom">
-            <p class="readers">{{ item.articleFrequency }}人已读</p>
+            <p class="readers">{{ item.articleViewTimes }}人已读</p>
           </div>
         </div>
         <van-button type="primary" size="mini" class="shareBtn" @click="showShareDialog">立即分享</van-button>
@@ -48,7 +48,7 @@
                       @select="reprintArticle"
                       @cancel="onCancel"
     />
-    <CreateContext @ifShow="ifShowDialog" v-else/>
+    <CreateContext @ifShow="ifShowDialog" :text="createText" v-else/>
     <TabBar/>
   </div>
 </template>
@@ -59,6 +59,7 @@ import TabBar from "../..//component/TabBar";
 import CreateContext from "../../component/CreateContext";
 import {Toast} from "vant";
 import {getUserId} from "../../../network/getToken";
+import {getUrl} from "../../../utils/replaceUrl";
 
 export default {
   name: "contextShareList",
@@ -91,7 +92,8 @@ export default {
         }
       ],
       show: false,
-      actions: [{name: '转载公众号文章'}]
+      actions: [{name: '转载公众号文章'}],
+      createText: "+创建素材"
     };
   },
   created() {
@@ -109,12 +111,12 @@ export default {
     },
     // 关键字搜索
     async onSearch() {
-      let url = "/api//queryArticleByKey";
+      let url = JSON.parse(getUrl()).contextShare.searchByKey;
       let postData = {
-        keySearch: this.searchValue
+        title: this.searchValue
       }
       this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params: postData})).data.data
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
       }
@@ -125,12 +127,13 @@ export default {
     },
     // 列表加载
     async onLoad() {
-      let url = "/api/queryArticleList";
+      let url = JSON.parse(getUrl()).contextShare.queryList;
       let postData = {
         pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize
+        pageSize: this.pageProps.pageSize,
+        examineFlag: 1
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params: postData})).data.data
       if (result.length == 0) {
         // 已加载全部数据
         this.finished = true;

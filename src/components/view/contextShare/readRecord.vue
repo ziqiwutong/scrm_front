@@ -110,6 +110,7 @@ import qs from 'qs'// axios参数包
 import {Toast} from "vant";
 import axios from "axios";
 import {getUserId} from "../../../network/getToken";
+import {getUrl} from "../../../utils/replaceUrl";
 
 export default {
   name: "readRecord",
@@ -184,14 +185,11 @@ export default {
     },
     // 列表加载
     async onLoad() {
-      let url = "/api/allReadRecord";
+      let url = JSON.parse(getUrl()).contextShare.readRecordList;
       let postData = {
         articleId: this.articleId,
-        shareManId: JSON.stringify(this.shareManCosList),
-        pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params: postData})).data.data
       const readerStatistic = result[0].readerStatistics;
       const readerList = result[1].readerList;
       this.readerStatistic = readerStatistic;
@@ -210,7 +208,7 @@ export default {
     // 展示筛选dialog
     async showFilterDialog() {
       this.filterShow = !this.filterShow;
-      let url = "/api/queryShareMan";
+      let url = JSON.parse(getUrl()).contextShare.queryShareMan;
       let postData = {
         articleId: "1"
       }
@@ -321,7 +319,7 @@ export default {
     },
     // 批量添加reader至客户池
     async batchAddCustomer() {
-      let url = "/api/batchAddReader";
+      JSON.parse(getUrl()).contextShare.batchAddCustomer;
       let postData = {
         articleId: JSON.stringify(this.checkResult)
       }

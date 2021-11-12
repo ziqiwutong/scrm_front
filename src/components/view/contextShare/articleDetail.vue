@@ -7,9 +7,10 @@
         <p>{{ author }}</p>
         <p>{{ date }}</p>
       </div>
+      <!--      <van-button type="primary" @click="shareArticle">主要按钮</van-button>-->
       <div v-html="article" class="article"></div>
     </div>
-    <van-share-sheet v-model="showShare" :options="options"/>
+    <van-share-sheet v-model="showShare" :options="options" @select="shareArticle"/>
     <BusinessCard class="bsCard" :userImgUrl="sharePerImg" :username="sharePerName" :userCompany="sharePerCompany"
                   :userPhone="sharePerPhone"
                   v-show="showCard"/>
@@ -23,12 +24,16 @@
           <van-icon name="todo-list-o" size="19px"/>
           <p>阅读记录</p>
         </div>
+        <div class="bottomTab-left-third" @click="editArticle">
+          <van-icon name="edit" size="19px"/>
+          <p>编辑</p>
+        </div>
         <div class="bottomTab-left-third" @click="deleteArticle">
           <van-icon name="delete-o" size="19px"/>
           <p>删除</p>
         </div>
       </div>
-      <div class="bottomTab-right" @click="shareArticle">
+      <div class="bottomTab-right" @click="showShareArticle">
         <van-button round type="info" size="normal">分&nbsp;&nbsp;享</van-button>
       </div>
     </div>
@@ -42,6 +47,8 @@ import NavBar from "../../component/NavBar";
 import BusinessCard from "../../component/BusinessCard";
 import {Toast} from "vant";
 import {getUserId} from "../../../network/getToken";
+import {getUrl} from "../../../utils/replaceUrl";
+import wxApi from "../../../utils/wxApi";
 
 export default {
   name: "articleDetail",
@@ -62,6 +69,14 @@ export default {
       sharePerCompany: "",
       sharePerPhone: "",
       showShare: false,
+      articleMsg:{
+        articleContext: '',
+        articleTitle: '',
+        articleAuthor: '',
+        articleAccountName: '',
+        articlePower: '',
+        coverImg:''
+      },
       options: [
         {
           name: '微信',
@@ -93,34 +108,44 @@ export default {
       let user = navigator.userAgent.toLowerCase();
       if (user.match(/MicroMessenger/i) == "micromessenger") {
         this.inWX = true;
-        document.getElementsByClassName('article-container').setAttribute('style', 'padding-bottom:0px;');
+        document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-bottom:0px;');
+        // 微信分享文章
+        this.shareArticle();
       } else {
         this.inWX = false;
       }
     },
     async getArticle() {
       let self = this;
-      let url = "/api/queryArticle";
+      let url = JSON.parse(getUrl()).contextShare.articleDetail
       let postData = {
         id: self.articleId,
         shareId: self.shareId
       }
-      const result = (await self.$http.post(url, qs.stringify(postData))).data.data;
-      // const result = (await self.$http.get(url, {params:{id: 1, shareId: 1}})).data.data;
-      self.title = result.title;
-      self.author = result.author;
-      self.date = result.date;
-      self.article = result.article;
-      let lastWord = result.sharePerName.slice(-1);
-      self.sharePerImg = result.sharePerImg == "" ? lastWord : result.sharePerImg;
-      self.sharePerName = result.sharePerName;
-      self.sharePerCompany = result.sharePerCompany;
-      self.sharePerPhone = result.sharePerPhone;
+      const result = (await self.$http.get(url, {params: postData})).data.data;
+      self.title = result.article.articleTitle;
+      if (result.article.articleType === 1) {
+        self.author = result.article.articleOriginAuthor;
+      } else {
+        self.author = result.article.authorName;
+      }
+      self.date = '';
+      self.article = result.article.articleContext;
+      let lastWord = result.user.username.slice(-1);
+      self.sharePerImg = result.user.username == "" ? "酒" : lastWord;
+      self.sharePerName = result.user.username;
+      self.sharePerCompany = '泸州老窖集团有限责任公司';
+      self.sharePerPhone = result.user.telephone;
+
+      self.articleMsg.articleContext = result.article.articleContext;
+      self.articleMsg.articleTitle = result.article.articleTitle;
+      self.articleMsg.articleAuthor = result.article.articleOriginAuthor;
+      self.articleMsg.articleAccountName = result.article.articleAccountName;
+      self.articleMsg.articlePower = result.article.articlePower;
+      self.articleMsg.coverImg = result.article.articleImage;
+      // 页面渲染完成后在执行
       self.$nextTick(() => {
-        let imgArray = document.querySelectorAll('img');
-        for (let index = 0; index < imgArray.length; index++) {
-          imgArray[index].setAttribute('style', 'max-width:100%;');
-        }
+        self.adjustSize();
       })
     },
     onClickLeft() {
@@ -131,14 +156,15 @@ export default {
       this.$dialog.confirm({
         title: '温馨提示',
         message: '您确定删除这篇文章吗',
+        confirmButtonColor:'#645fd7',
       })
         .then(async () => {
           // 向后台发送删除文章的请求
           let postData = {
-            articleId: self.articleId
+            id: self.articleId
           }
-          let url = "/api/deleteArticle";
-          const result = (await this.$http.post(url, qs.stringify(postData))).data;
+          let url = JSON.parse(getUrl()).contextShare.deleteArticle;
+          const result = (await this.$http.delete(url, {params: postData})).data;
           if (result.code == 200) {
             Toast("删除成功！");
             self.$router.push("/contextShareList");
@@ -148,8 +174,32 @@ export default {
           // 不删除文章
         });
     },
-    shareArticle() {
+    showShareArticle() {
       this.showShare = true;
+    },
+    async shareArticle() {
+      // 先去后台拿微信的jsConfig，然后触发分享事件，传给后台的pageUrl不需要编码
+      let postData = {
+        pageUrl: window.location.href.split('#')[0]
+      }
+      let url = JSON.parse(getUrl()).contextShare.wxConfig;
+      const result = (await this.$http.get(url, {params: postData})).data.data.wxJDK;
+      let wxConfig = {
+        appId: result.appId,
+        timestamp: result.timestamp,
+        nonceStr: result.nonceStr,
+        signature: result.signature
+      }
+      console.log("sweet")
+      console.log(wxConfig)
+      let shareMsg = {
+        title: '很高兴认识你',
+        desc: '今天天气真不错~',
+        link: window.location.href,
+        imgUrl: 'https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg'
+      }
+      console.log(shareMsg.link)
+      await wxApi.wxRegister(wxConfig, shareMsg);
     },
     switchBtn(showCard) {
       this.showCard = showCard;
@@ -172,6 +222,57 @@ export default {
           ifShowShareMan: this.showCard
         }
       });
+    },
+    // 调整文章尺寸
+    adjustSize() {
+      let bodyWidth = document.body.clientWidth;
+      let sectionArray = document.getElementsByTagName('section');
+      let pArray = document.getElementsByTagName('p');
+      let imgArray = document.getElementsByTagName('img');
+      if (document.querySelector('#js_pc_qr_code')) {
+        let qrCodeEle = document.querySelector('#js_pc_qr_code');
+        qrCodeEle.setAttribute('style', 'display:none;');
+      }
+      for (let index = 0; index < sectionArray.length; index++) {
+        let eleWidth = parseInt(getComputedStyle(sectionArray[index], null).getPropertyValue('width'));
+        // 如果元素宽度大于页面宽度，则需要进行自适应
+        if (eleWidth > bodyWidth) {
+          sectionArray[index].setAttribute('style', 'max-width:98% !important');
+        }
+      }
+      for (let index = 0; index < pArray.length; index++) {
+        let eleWidth = parseInt(getComputedStyle(pArray[index], null).getPropertyValue('width'));
+        if (eleWidth > bodyWidth) {
+          pArray[index].setAttribute('style', 'max-width:98% !important');
+        }
+      }
+      for (let index = 0; index < imgArray.length; index++) {
+        if (imgArray[index].src.startsWith("https://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("https://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
+        let eleWidth = parseInt(getComputedStyle(imgArray[index], null).getPropertyValue('width'));
+        // eleWidth为0表示图片未显示在页面上（图片懒加载的原因），因此也需要添加最大宽度
+        if (eleWidth > bodyWidth || eleWidth == 0) {
+          imgArray[index].setAttribute('style', 'max-width:98% !important');
+        }
+      }
+    },
+    // 编辑文章
+    editArticle(){
+      let shareId = JSON.parse(getUserId()).userID;
+      this.$store.commit('updateEditReqArticle', this.articleMsg);
+      this.$router.push({
+        name: 'repArticleDetail',
+        query: {
+          type: '1',
+          articleId: this.articleId,
+          shareId: shareId,
+          ifShowShareMan: this.showCard
+        }
+      });
     }
   }
 }
@@ -181,11 +282,13 @@ export default {
 .article-container {
   padding-top: 100px;
   padding-bottom: 60px;
-  background-color: #fafafa;
+  padding-left: 2%;
+  padding-right: 2%;
+  //background-color: #fafafa;
 }
 
 .article {
-  text-align: center;
+  //text-align: center;
 }
 
 h2 {
@@ -210,10 +313,6 @@ h2 {
   margin-right: 10px;
 }
 
-.header {
-  background-color: rgb(245, 245, 245) !important;
-}
-
 .bottomTab {
   display: inline-flex;
   position: fixed;
@@ -236,13 +335,12 @@ h2 {
 .bottomTab-left {
   display: inline-flex;
   text-align: center;
-  width: 40vw;
-  margin-right: 10vw;
+  width: 60vw;
   justify-content: space-around;
 }
 
 .bottomTab-right {
-  width: 50vw;
+  width: 40vw;
   position: relative;
 }
 
@@ -267,5 +365,19 @@ h2 {
 
 /deep/ .van-dialog__confirm {
   color: #645fd7 !important;
+}
+
+/deep/ code {
+  display: block;
+  max-width: 98%;
+}
+
+/deep/ table {
+  border-collapse: collapse;
+}
+
+/deep/ td, th {
+  padding: 8px 10px;
+  border: 1px solid #DDD;
 }
 </style>

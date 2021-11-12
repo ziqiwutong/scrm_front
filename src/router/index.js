@@ -5,6 +5,10 @@ import contextShareList from "../components/view/contextShare/contextShareList";
 import articleDetail from "../components/view/contextShare/articleDetail";
 import readRecord from "../components/view/contextShare/readRecord";
 import reprintArticle from "../components/view/contextShare/reprintArticle";
+import repArticleDetail from "../components/view/contextShare/repArticleDetail";
+import reArticleDes from "../components/view/contextShare/reArticleDes";
+import product2poster from "../components/component/Product2poster";
+import sweetTest from "../components/view/contextShare/sweetTest";
 import store from "../store";
 import {Toast} from "vant";
 
@@ -14,10 +18,12 @@ const routes = [
   {path: '/', redirect: 'home'},
   {
     path: '/home',
+    name: 'home',
     component: home
   },
   {
     path: '/contextShareList',
+    name: 'contextShareList',
     component: contextShareList
   },
   {
@@ -34,10 +40,31 @@ const routes = [
     path: '/reprintArticle',
     name:'reprintArticle',
     component: reprintArticle
+  },
+  {
+    path: '/repArticleDetail',
+    name:'repArticleDetail',
+    component: repArticleDetail
+  },
+  {
+    path: '/reArticleDes',
+    name:'reArticleDes',
+    component: reArticleDes
+  },
+  {
+    path: '/product2poster',
+    name:'product2poster',
+    component: product2poster
+  },
+  {
+    path: '/sweetTest',
+    name:'sweetTest',
+    component: sweetTest
   }
 ]
 
 const router = new Router({
+  mode:'history',
   routes
 })
 
@@ -50,7 +77,7 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 
 const jwt = require("jsonwebtoken");//引入jwt
 const secret = "scrm";// 设置秘钥
-const whiteList = ["/home"]; // 定义一个白名单列表
+const whiteList = ["/home","/product2poster","/sweetTest","/repArticleDetail","/articleDetail"]; // 定义一个白名单列表
 router.beforeEach(async (to, from, next) => {
   if (whiteList.includes(to.path)) { // 如果是访问的白名单中的页面
     return next(); // 不需要校验，直接返回继续访问该页面

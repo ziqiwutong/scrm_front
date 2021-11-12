@@ -1,23 +1,26 @@
 <template>
   <!--创建素材-->
   <div>
-    <button @click="createContext">+创建素材</button>
+    <button @click="createContext">{{ text }}</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "CreateContext",
-  methods:{
-    createContext(){
-      this.$emit('ifShow',true);
+  props: [
+    "text"
+  ],
+  methods: {
+    createContext() {
+      this.$emit('ifShow', true);
     }
   }
 }
 </script>
 
 <style scoped>
-button{
+button {
   position: fixed;
   bottom: 80px;
   right: 0;
