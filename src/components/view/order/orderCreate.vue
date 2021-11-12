@@ -31,7 +31,7 @@
 
     <van-field name="productPic" label="产品图片">
       <template #input>
-        <van-uploader v-model="productPic" />
+        <van-uploader :after-read="afterRead" v-model="productPic"  multiple/>
       </template>
     </van-field>
 
@@ -62,13 +62,22 @@
       :rules="[{ required: true, message: '请填写产品购买数量' }]"
     />
 
+<!--    <van-field-->
+<!--      v-model="orderType"-->
+<!--      type="orderType"-->
+<!--      name="订单状态"-->
+<!--      label="订单状态"-->
+<!--      placeholder="订单状态"-->
+<!--      :rules="[{ required: true, message: '请填写订单状态' }]"-->
+<!--    />-->
     <van-field
-      v-model="orderType"
-      type="orderType"
-      name="订单状态"
+      readonly
+      clickable
+      name="picker"
+      :value="orderType"
       label="订单状态"
-      placeholder="订单状态"
-      :rules="[{ required: true, message: '请填写订单状态' }]"
+      placeholder="点击选择订单状态"
+      @click="showPicker = true"
     />
     <van-field
       v-model="orderSource"
@@ -103,6 +112,14 @@
     </div>
   </van-form>
     </div>
+  <van-popup v-model="showPicker" position="bottom">
+    <van-picker
+      show-toolbar
+      :columns="columns"
+      @confirm="onConfirm"
+      @cancel="showPicker = false"
+    />
+  </van-popup>
 </div>
 </template>
 
@@ -113,6 +130,9 @@ export default {
   name: "orderCreate",
   data() {
     return {
+      columns: ['撤销', '待付款', '待收货', '交易成功', '退款成功'],
+      showPicker: false,
+      orderStatus:'',
       productName: '',
       productPrice: '',
       orderBuyer: '',
@@ -123,34 +143,58 @@ export default {
       notes:'',
       priceChange:'',
       productPic: [],
+      productPic1:''
     };
   },
   methods: {
+    onConfirm(value) {
+      this. orderType = value;
+      this.showPicker = false;
+    },
    async onSubmit() {
       let url = "/api/order/addOrder";
+    if(this.orderType === '撤销')
+       this.orderStatus='-1';
+     if(this.orderType === '代收款')
+       this.orderStatus='0';
+     if(this.orderType === '待收货')
+       this.orderStatus='1';
+     if(this.orderType === '交易成功')
+       this.orderStatus='2';
+     if(this.orderType === '退款成功')
+       this.orderStatus='3';
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,
         orderBuyer: this.orderBuyer,
-        orderType:this.orderType,
         orderStaff:this.orderStaff,
         productBuyAmount: this.productBuyAmount,
         orderSource:this.orderSource,
         notes:this.notes,
         priceChange:this.priceChange,
-        productPic: this.productPic,
+        productPic: this.productPic1,
+        orderStatus:this.orderStatus,
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
+
+      const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
      if(result.code === 200) {
        Toast('订单创建成功');
-       this.$router.push('orderList');
      }
       else
         Toast('订单创建失败,错误码' + result.code);
 
     },
-
+   async afterRead(file) {
+    let url="/fzk/pic/file/base64StrToPic"
+     let postData = {
+       picBase64Str: file.content.substring(22),
+       picFormat:'png',
+       picType: 'productImage',
+     }
+     const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+     this.productPic1= result;
+   },
     onClickLeft() {
       this.$router.push('orderList');
     },

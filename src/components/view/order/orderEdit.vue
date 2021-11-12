@@ -31,7 +31,7 @@
 
         <van-field name="productPic" label="产品图片">
           <template #input>
-            <van-uploader v-model="productPic" />
+            <van-uploader :after-read="afterRead" v-model="productPic"  multiple/>
           </template>
         </van-field>
 
@@ -63,12 +63,13 @@
         />
 
         <van-field
-          v-model="orderType"
-          type="orderType"
-          name="订单状态"
+          readonly
+          clickable
+          name="picker"
+          :value="orderType"
           label="订单状态"
-          placeholder="订单状态"
-          :rules="[{ required: true, message: '请填写订单状态' }]"
+          placeholder="点击选择订单状态"
+          @click="showPicker = true"
         />
         <van-field
           v-model="orderSource"
@@ -103,6 +104,14 @@
         </div>
       </van-form>
     </div>
+    <van-popup v-model="showPicker" position="bottom">
+      <van-picker
+        show-toolbar
+        :columns="columns"
+        @confirm="onConfirm"
+        @cancel="showPicker = false"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -113,6 +122,9 @@ export default {
   name: "orderEdit",
   data() {
     return {
+      columns: ['撤销', '待付款', '待收货', '交易成功', '退款成功'],
+      showPicker: false,
+      orderStatus:'',
       productName: '',
       productPrice: '',
       orderBuyer: '',
@@ -123,22 +135,36 @@ export default {
       notes:'',
       priceChange:'',
       productPic: [],
+      productPic1:''
     };
   },
   created () {
     this.test();
   },
   methods: {
+    async afterRead(file) {
+      let url="/fzk/pic/file/base64StrToPic"
+      let postData = {
+        picBase64Str: file.content.substring(22),
+        picFormat:'png',
+        picType: 'productImage',
+      }
+      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      this.productPic1= result;
+    },
+    onConfirm(value) {
+      this. orderType = value;
+      this.showPicker = false;
+    },
     async test(){
       this.orderID=this.$route.query.orderID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/order/queryOrderById";
+      let url = "/api/order/orderDetail";
       let postData = {
         orderID:this.orderID
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
       this.productName=result.productName;
-      console.log(123)
       this.productPrice=result.productPrice;
       this.orderBuyer=result.orderBuyer;
       this.orderStaff=result.orderStaff;
@@ -148,23 +174,44 @@ export default {
       this.orderFinish=result.orderFinish;
       this.productBuyAmount=result.productBuyAmount;
       this.priceChange=result.priceChange;
+      this.orderStatus='-1';
+        if(this.orderStatus === '-1')
+          this.orderType = '撤销'
+      if(this.orderStatus === '0')
+        this.orderType = '代收款'
+      if(this.orderStatus === '1')
+        this.orderType = '待收货'
+      if(this.orderStatus === '2')
+        this.orderType = '交易成功'
+      if(this.orderStatus === '3')
+        this.orderType = '退款成功'
     },
     async onSubmit() {
-      let url = "/api/order/addEdit";
+      if(this.orderType === '撤销')
+        this.orderStatus='-1';
+      if(this.orderType === '代收款')
+        this.orderStatus='0';
+      if(this.orderType === '待收货')
+        this.orderStatus='1';
+      if(this.orderType === '交易成功')
+        this.orderStatus='2';
+      if(this.orderType === '退款成功')
+        this.orderStatus='3';
+      let url = "/api/order/editOrder";
       let postData = {
-        // orderID:this.orderID;
+        orderID:this.orderID,
         productName: this.productName,
         productPrice: this.productPrice,
         orderBuyer: this.orderBuyer,
-        orderType:this.orderType,
         orderStaff:this.orderStaff,
         productBuyAmount: this.productBuyAmount,
         orderSource:this.orderSource,
         notes:this.notes,
         priceChange:this.priceChange,
-        productPic: this.productPic,
+        productPic: this.productPic1,
+        orderStatus:this.orderStatus
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
+      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
       if(result.code === 200) {
         Toast('订单修改成功');

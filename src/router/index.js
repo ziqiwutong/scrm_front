@@ -8,6 +8,10 @@ import orderList from "../components/view/order/orderList"
 import orderCreate from "../components/view/order/orderCreate";
 import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
+import productList from "../components/view/product/productList";
+import productCreate from "../components/view/product/productCreate";
+import productDetail from "../components/view/product/productDetail";
+import productEdit from   "../components/view/product/productEdit";
 Vue.use(Router)
 
 const routes = [
@@ -24,6 +28,7 @@ const routes = [
     path:'/orderList',
     component:orderList
   },
+
   {
     path:'/orderCreate',
     component:orderCreate
@@ -35,8 +40,25 @@ const routes = [
   {
     path:'/orderEdit',
     component:orderEdit
+  },
+  {
+    path:'/productList',
+    component:productList
+  },
+  {
+    path:'/productCreate',
+    component:productCreate
+  },
+  {
+    path:'/productDetail',
+    component:productDetail
+  },
+  {
+    path:'/productEdit',
+    component:productEdit
   }
   ];
+
 
 const router = new Router({
   routes

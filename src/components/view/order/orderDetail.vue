@@ -8,7 +8,7 @@
                   @click-left="onClickLeft"
 
     />
-    <div class="order_status" v-if="orderType" >
+    <div class="order_status" v-if="orderType === 2" >
       <div class="img-group1">
         <div class="sphere"></div>
         <div class="img-tip">1</div>
@@ -34,7 +34,7 @@
     </div>
 <!---->
 
-    <div class="order_status" v-else >
+    <div class="order_status" v-else-if="orderType === 0" >
       <div class="img-group1">
         <div class="sphere"></div>
 
@@ -54,6 +54,65 @@
       </div>
     </div>
 
+    <div class="order_status" v-else-if="orderType === 1" >
+      <div class="img-group1">
+        <div class="sphere"></div>
+
+        <div class="img-tip">1</div>
+      </div>
+      <div class="img-group2">
+        <div class="sphere1"></div>
+        <div class="img-tip">2</div>
+      </div>
+      <div class="line-post"></div>
+      <div class="order_time">
+        <p>下单</p>
+        <p>{{ orderTime }}</p>
+      </div>
+      <div class="finish_time" >
+        <p>待收货</p>
+      </div>
+    </div>
+
+    <div class="order_status" v-else-if="orderType === -1" >
+      <div class="img-group1">
+        <div class="sphere"></div>
+
+        <div class="img-tip">1</div>
+      </div>
+      <div class="img-group2">
+        <div class="sphere1"></div>
+        <div class="img-tip">2</div>
+      </div>
+      <div class="line-post"></div>
+      <div class="order_time">
+        <p>下单</p>
+        <p>{{ orderTime }}</p>
+      </div>
+      <div class="finish_time" >
+        <p>订单已撤销</p>
+      </div>
+    </div>
+
+    <div class="order_status" v-else >
+      <div class="img-group1">
+        <div class="sphere"></div>
+
+        <div class="img-tip">1</div>
+      </div>
+      <div class="img-group2">
+        <div class="sphere1"></div>
+        <div class="img-tip">2</div>
+      </div>
+      <div class="line-post"></div>
+      <div class="order_time">
+        <p>下单</p>
+        <p>{{ orderTime }}</p>
+      </div>
+      <div class="finish_time" >
+        <p>退款成功</p>
+      </div>
+    </div>
 <!--    -->
     <div class="order_detail" >
       <van-row>
@@ -112,7 +171,7 @@ export default {
   name: "orderDetail",
   data() {
     return {
-      orderType:false,
+      orderType:'',
       active: '',
       orderID:'',
       result:[],
@@ -141,9 +200,9 @@ export default {
    async test(){
      this.orderID=this.$route.query.orderID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-     let url = "/api/order/queryOrderById";
+     let url = "/api/order/orderDetail";
      let postData = {
-       orderId:this.orderID
+       orderID:this.orderID
      }
      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
      this.productName=result.productName;
@@ -157,6 +216,7 @@ export default {
      this.productBuyAmount=result.productBuyAmount;
      this.priceChange=result.priceChange;
      this.realPrice=this.productPrice - this.priceChange;
+     this.orderType=result.orderType;
    },
    onClickLeft() {
      this.$router.push('orderList')
