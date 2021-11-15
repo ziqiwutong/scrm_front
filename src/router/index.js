@@ -61,6 +61,7 @@ const routes = [
   },
   {
     path: '/perinfor',
+    name: 'perinfor',
     component: Perinfor
   },
   {

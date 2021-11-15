@@ -41,7 +41,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
 
+
     disableHostCheck: true,
+
 
     watchOptions: {
       poll: config.dev.poll,
