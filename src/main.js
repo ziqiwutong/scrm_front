@@ -5,6 +5,8 @@ import App from './App'
 import axios from 'axios'
 import router from './router'
 import store from "./store/index"
+import VueClipboard from 'vue-clipboard2'
+
 // import Vant from 'vant'
 import './plugins/vant.js'
 import './plugins/element.js'
@@ -15,6 +17,7 @@ import './assets/css/global.css'
 // Vue.use(Vant)
 // Vue.prototype.$toast = Toast
 // Vue.prototype.$loading = Loading
+Vue.use(VueClipboard)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 // Vue.use(Vant)
