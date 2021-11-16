@@ -11,7 +11,7 @@
     </div>
     <div v-show="mainPage" class="readStatistics">
       <p>阅读人数/阅读次数</p>
-      <p>{{ readerStatistic }}</p>
+      <p>{{ readPeople }}/{{ readTimes }}</p>
     </div>
     <div v-show="mainPage&&allShare" class="filterWrap">
       <div class="filterWrap-item">
@@ -44,7 +44,7 @@
             <p class="readerLabel">{{ item.label }}</p>
           </div>
           <div class="right-bottom">
-            <p class="readers">阅读时长：{{ item.readerTime }}</p>
+            <p class="readers">阅读时长：{{ item.readerTime }}秒</p>
           </div>
         </div>
         <p class="shareBtn">{{ item.readDate }}</p>
@@ -54,9 +54,9 @@
                :overlay-style="{backgroundColor:'rgba(0,0,0,.5)'}" @close="closeDialog">
       <p class="filterTitle">分享人</p>
       <div class="shareMan">
-        <div v-for="item in shareManList" class="shareManItem" :id="item.shareManId"
-             @click="personShare(item.shareManId)">
-          {{ item.shareManName }}
+        <div v-for="item in shareManList" class="shareManItem" :id="item.id"
+             @click="personShare(item.id)">
+          {{ item.username }}
         </div>
       </div>
       <div class="filterBottom">
@@ -110,6 +110,7 @@ import qs from 'qs'// axios参数包
 import {Toast} from "vant";
 import axios from "axios";
 import {getUserId} from "../../../network/getToken";
+import {getUrl} from "../../../utils/replaceUrl";
 
 export default {
   name: "readRecord",
@@ -118,7 +119,6 @@ export default {
       articleId: '',
       shareManId: '',
       activeName: 'allShare',
-      readerStatistic: '',
       list: [],
       loading: false,
       finished: false,
@@ -135,7 +135,9 @@ export default {
       checkResultT: [],
       headerCancelShow: false,
       allChecked: false,
-      cellListLength: []
+      cellListLength: [],
+      readPeople: '',
+      readTimes: ''
     }
   },
   created() {
@@ -165,7 +167,7 @@ export default {
         query: {
           articleId: this.articleId,
           shareId: shareId,
-          ifShowShareMan: this.$route.query.ifShowShareMan
+          ifshowshareman: this.$route.query.ifShowShareMan
         }
       });
     },
@@ -184,37 +186,44 @@ export default {
     },
     // 列表加载
     async onLoad() {
-      let url = "/api/allReadRecord";
-      let postData = {
+      let url = JSON.parse(getUrl()).contextShare.readRecordList;
+      let getData = {
         articleId: this.articleId,
-        shareManId: JSON.stringify(this.shareManCosList),
-        pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize
-      }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-      const readerStatistic = result[0].readerStatistics;
-      const readerList = result[1].readerList;
-      this.readerStatistic = readerStatistic;
-      if (readerList.length == 0) {
-        // 已加载全部数据
-        this.finished = true;
-        Toast('已加载全部数据！');
-      } else {
-        for (let i = 0; i < readerList.length; i++) {
-          this.list.push(readerList[i]);
+        shareId: this.shareManCosList
+      };
+      const result = (await this.$http.get(url + "?" + qs.stringify(getData, {arrayFormat: 'repeat'}))).data.data
+      this.readPeople = result.readPeople;
+      this.readTimes = result.readTimes;
+      let shareList = result.articleShareRecords;
+      if (shareList.length>0){
+        for (let i = 0; i < shareList.length; i++) {// 所有分享人
+          let readerList = JSON.parse(shareList[i].readRecord);// 每个分享人底下的阅读名单
+          if (readerList){
+            for (let j = 0; j < readerList.length; j++) {
+              let readerMsg = {
+                readerIcon: readerList[j].headimgurl,
+                label: '未知',
+                readerName: readerList[j].nickname,
+                readerTime: readerList[j].readTime,
+                readDate: readerList[j].readDate
+              }
+              this.list.push(readerMsg);
+            }
+          }
         }
-        // 加载状态结束
-        this.loading = false;
       }
+      // 加载状态结束
+      this.finished = true;
+      Toast('已加载全部数据！');
     },
     // 展示筛选dialog
     async showFilterDialog() {
       this.filterShow = !this.filterShow;
-      let url = "/api/queryShareMan";
+      let url = JSON.parse(getUrl()).contextShare.queryShareMan;
       let postData = {
-        articleId: "1"
+        articleId: this.articleId
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params: postData})).data.data;
       this.shareManList = result;
     },
     // 选择分享人
@@ -222,10 +231,11 @@ export default {
       let shareManList = this.shareManCosList;
       let shared = false;
       for (let i = 0; i < shareManList.length; i++) {
-        if (shareManList[i].indexOf(shareManId) != -1) {// 取消选中
+        console.log(i+"---"+shareManList[i]+"---"+shareManId)
+        if (shareManList[i] == shareManId) {// 取消选中,id为int型
           shared = true;
           document.getElementById(shareManId).setAttribute("style", "border:none");
-          this.shareManCosList.splice(i);//分享人数组中删除该元素
+          this.shareManCosList.splice(i,1);//分享人数组中删除该元素
           break;
         }
       }
@@ -245,8 +255,6 @@ export default {
     // 分享人提交
     async sureBtn() {
       this.list = [];
-      this.finished = false;
-      this.loading = true;
       // 按选中的分享人加载列表
       this.onLoad();
       this.filterShow = false;
@@ -321,17 +329,19 @@ export default {
     },
     // 批量添加reader至客户池
     async batchAddCustomer() {
-      let url = "/api/batchAddReader";
-      let postData = {
-        articleId: JSON.stringify(this.checkResult)
-      }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
-      if (result.msg == 'ok') {
-        Toast("导入成功！");
-        this.mainPage = true;
-      } else {
-        Toast("导入失败！请再次尝试");
-      }
+      this.$toast("该功能暂未开放~");
+      // 暂不支持批量导入
+      // JSON.parse(getUrl()).contextShare.batchAddCustomer;
+      // let postData = {
+      //   articleId: JSON.stringify(this.checkResult)
+      // }
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data
+      // if (result.msg == 'ok') {
+      //   Toast("导入成功！");
+      //   this.mainPage = true;
+      // } else {
+      //   Toast("导入失败！请再次尝试");
+      // }
     },
     // 多选列表加载
     checkBoxLoad() {
@@ -548,7 +558,7 @@ p {
   flex: 1;
   display: flex;
   flex-wrap: wrap; //允许换行
-  justify-content: space-between;
+  //justify-content: space-between;
   align-content: baseline;
   overflow: auto;
 }
@@ -562,6 +572,7 @@ p {
   line-height: 2.5rem;
   border-radius: 5px;
   font-size: 13px;
+  margin-right: 3%;
   color: #5f6368;
 }
 

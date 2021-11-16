@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="center">
-      <p>{{getUserName}}</p>
+      <p>{{ getUserName }}</p>
       <p>{{ getUserCompany }}</p>
     </div>
     <div class="right">
@@ -26,23 +26,23 @@ export default {
     "userImgUrl",
     "userPhone"
   ],
-  computed:{
-    getUserName(){
+  computed: {
+    getUserName() {
       return this.username
     },
-    getUserCompany(){
+    getUserCompany() {
       return this.userCompany
     },
-    getUserImgUrl(){
+    getUserImgUrl() {
       return this.userImgUrl
     },
-    getUserPhone(){
+    getUserPhone() {
       return this.userPhone
     }
   },
-  methods:{
-    makeCall(){
-      window.location.href = 'tel:'+this.getUserPhone;
+  methods: {
+    makeCall() {
+      window.location.href = 'tel:' + this.getUserPhone;
     }
   }
 }
@@ -57,7 +57,8 @@ export default {
   height: 60px;
   width: 100%;
   display: inline-flex;
-  background-color: white;
+  background-color: #ffffff;
+  border-bottom: 1px solid #fafafa;
 }
 
 .left {

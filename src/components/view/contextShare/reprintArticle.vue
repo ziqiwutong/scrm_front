@@ -18,8 +18,12 @@
 </template>
 
 <script>
+/*
+* author:sweet
+* create Date:2021年10月26日
+* description:转载公众号步骤引导页
+* */
 import HeaderNavBar from "../../component/HeaderNavBar";
-import qs from 'qs'// axios参数包
 
 export default {
   name: "reprintArticle",
@@ -27,26 +31,48 @@ export default {
   data() {
     return {
       navTitle: "转载公众号文章",
-      articleUrl:''
+      articleUrl: ''
     }
   },
-  methods:{
-    onClickLeft(){
+  methods: {
+    onClickLeft() {
       this.$router.push("/contextShareList");
     },
     async reprintArticle() {
+      if (this.articleUrl == '') {
+        this.$toast.fail('请输入\n文章链接！');
+        return;
+      }
       this.$toast.loading({
         message: '文章生成中...',
         forbidClick: true,
-        duration:0
+        duration: 0
       });
-      let url = "/api/reprintArticle";
-      let postData = {
-        articleUrl: this.articleUrl
+      let articleUrl = encodeURIComponent(this.articleUrl);
+      let url = "/test/wxArtilceParse2?articleUrl=" + articleUrl;
+      const response = (await this.$http.get(url)).data;
+      const result = response.data;
+      let repArticleDetail = {
+        articleContext: '',
+        articleTitle: '',
+        articleAuthor: '',
+        articleAccountName: '',
+        articlePower: '',
+        coverImg:''
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
-      if (result){// 表示已经拿到数据了
+      if (response.code == 200) {// 表示已经拿到数据了
+        repArticleDetail.articleContext = result.html;
+        repArticleDetail.articleTitle = result.title;
+        repArticleDetail.articleAuthor = result.account.author;
+        repArticleDetail.articleAccountName = result.account.accountName;
+        repArticleDetail.articlePower = result.url;
+        repArticleDetail.coverImg = result.coverImg;
         this.$toast.clear();
+        this.$store.commit('updateEditReqArticle', repArticleDetail);
+        this.$router.push('/reArticleDes');
+      } else {
+        this.$toast.fail('转载失败,\n请再次尝试！');
+        return;
       }
     }
   }
@@ -54,7 +80,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.context-wrap{
+.context-wrap {
   position: absolute;
   box-sizing: border-box;
   background-color: #f6f6f6;
@@ -65,14 +91,14 @@ export default {
   flex-direction: column;
 }
 
-.reprint{
+.reprint {
   margin-top: 44px;
   margin-bottom: 10px;
   padding: 10px;
   background-color: white;
 }
 
-input{
+input {
   width: 100%;
   box-sizing: border-box;
   line-height: 2rem;
@@ -82,11 +108,11 @@ input{
   padding-left: 10px;
 }
 
-input::-webkit-input-placeholder{
+input::-webkit-input-placeholder {
   color: #e5dddd;
 }
 
-button{
+button {
   margin-top: 10px;
   width: 100%;
   height: 2.5rem;
@@ -96,7 +122,7 @@ button{
   border-radius: 5px;
 }
 
-.title{
+.title {
   font-size: 14px;
 }
 
@@ -110,13 +136,13 @@ p {
   line-height: 2rem;
 }
 
-.introduce{
+.introduce {
   flex: 1;
   background-color: white;
   padding: 10px;
 }
 
-.introduce img{
+.introduce img {
   width: 100%;
 }
 </style>

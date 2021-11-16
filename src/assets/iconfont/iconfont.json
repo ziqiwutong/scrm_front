@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8846759",
+      "name": "排序-升序",
+      "font_class": "sort-down",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "9453306",
+      "name": "排序-升序",
+      "font_class": "paixu-shengxu",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "20255803",
+      "name": "-排序_降序",
+      "font_class": "-paixu_jiangxu",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "20255818",
+      "name": "-排序_升序",
+      "font_class": "-paixu_shengxu",
+      "unicode": "e65f",
+      "unicode_decimal": 58975
+    },
+    {
+      "icon_id": "1718351",
+      "name": "上箭头",
+      "font_class": "shangjiantou",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "1718353",
+      "name": "下箭头",
+      "font_class": "xiajiantou",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
       "icon_id": "422238",
       "name": "居乐乐 筛选",
       "font_class": "shaixuan",

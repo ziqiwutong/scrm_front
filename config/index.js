@@ -11,20 +11,49 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        // target: 'http://101.132.148.145/', // 要访问的接口域名
-        // target: 'https://www.fzk-tx.top/', // 要访问的接口域名
-        target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api', // 要访问的接口域名
-        // target: 'http://192.168.43.25:30002/',
+        target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api/', // 要访问的接口域名
+        // target: 'http://192.168.1.101:30001/', // 要访问的接口域名
         // target: 'http://127.0.0.1:3000/', // 要访问的接口域名
-        // target: 'http://127.0.0.1:40001/', // 要访问的接口域名
+        // target: 'http://192.168.1.108:30000/', // 要访问的接口域名
         ws: true, // 是否启用websockets
         changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
         pathRewrite: {
           '^/api': '' // 这里理解成用'/api'代替target里面的地址,比如我要调用'http://40.00.100.100:3002/user/add'，直接写'/api/user/add'即可
         }
+      },
+      '/test': {
+        target: 'https://huke.163.com/', // 要访问的接口域名
+        ws: true, // 是否启用websockets
+        changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+        pathRewrite: {
+          '^/test': ''
+        }
+      },
+      '/fzk':{
+        target: 'https://www.fzk-tx.top/', // 要访问的接口域名
+        ws: true, // 是否启用websockets
+        changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+        pathRewrite: {
+          '^/fzk': ''
+        }
+      },
+      '/wxResource':{
+        target: 'https://mmbiz.qpic.cn/', // 要访问的接口域名
+        ws: true, // 是否启用websockets
+        changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+        pathRewrite: {
+          '^/wxResource': ''
+        }
+      },
+      '/wx':{
+        target: 'http://127.0.0.1:3001/', // 要访问的接口域名
+        ws: true, // 是否启用websockets
+        changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+        pathRewrite: {
+          '^/wx': ''
+        }
       }
     },
-
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
@@ -34,7 +63,9 @@ module.exports = {
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-
+    historyApiFallback: {
+      index: '/index.html' //与output的publicPath
+    },
 
     /**
      * Source Maps

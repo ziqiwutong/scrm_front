@@ -17,6 +17,14 @@ const state = {
     username: "",
     userCompany: "",
     userImgUrl: ""
+  },
+  repArticleDetail:{
+    articleContext:'',
+    articleTitle:'',
+    articleAuthor:'',
+    articleAccountName:'',
+    articlePower:'',
+    coverImg:''
   }
 }
 
@@ -35,7 +43,8 @@ const store = new Vuex.Store({
       return {
         // 只储存state中的token
         token: val.token,
-        userMessage: val.userMessage
+        userMessage: val.userMessage,
+        repArticleDetail:val.repArticleDetail
       }
     }
   })]

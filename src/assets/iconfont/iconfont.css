@@ -1,17 +1,40 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
-  src: url('iconfont.woff2?t=1636538058824') format('woff2'),
-       url('iconfont.woff?t=1636538058824') format('woff'),
-       url('iconfont.ttf?t=1636538058824') format('truetype');
+  src: url('iconfont.woff2?t=1637051476954') format('woff2'),
+       url('iconfont.woff?t=1637051476954') format('woff'),
+       url('iconfont.ttf?t=1637051476954') format('truetype');
 }
 
-[class^="icon-third"], [class*="icon-third"]/*这里有空格*/
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-third-sort-down:before {
+  content: "\e603";
+}
+
+.icon-third-paixu-shengxu:before {
+  content: "\e657";
+}
+
+.icon-third--paixu_jiangxu:before {
+  content: "\e65e";
+}
+
+.icon-third--paixu_shengxu:before {
+  content: "\e65f";
+}
+
+.icon-third-shangjiantou:before {
+  content: "\e600";
+}
+
+.icon-third-xiajiantou:before {
+  content: "\e602";
 }
 
 .icon-third-shaixuan:before {
