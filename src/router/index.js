@@ -24,6 +24,10 @@ import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
 import editClue from "../components/view/clue/editClue";
 import addClueStatus from "../components/view/clue/addClueStatus";
+import bizOppList from "../components/view/businessOpportunity/bizOppList";
+import bizOppDetail from "../components/view/businessOpportunity/bizOppDetail";
+import addBizOpp from "../components/view/businessOpportunity/addBizOpp";
+import editBizOpp from "../components/view/businessOpportunity/editBizOpp";
 
 
 Vue.use(Router)
@@ -128,6 +132,22 @@ const routes = [
     path: '/reprintArticle',
     name: 'reprintArticle',
     component: reprintArticle
+  },
+  {
+    path: '/bizOppList',
+    component: bizOppList
+  },
+  {
+    path: '/bizOppDetail',
+    component: bizOppDetail
+  },
+  {
+    path: '/addBizOpp',
+    component: addBizOpp
+  },
+  {
+    path: '/editBizOpp',
+    component: editBizOpp
   }
 ];
 
