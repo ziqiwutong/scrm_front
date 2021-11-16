@@ -5,9 +5,9 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
-                           to="/httTest02"/>
+                           to="/customer"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                           url="/"/>
+                           url="/potential"/>
           </van-grid>
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
@@ -24,7 +24,7 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
-                           to="/"/>
+                           to="/clueList"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
                            url="/"/>
           </van-grid>
@@ -45,7 +45,7 @@
         <div class="main">
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
-                           to="/"/>
+                           to="/product"/>
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
                            to="/orderList"/>
           </van-grid>

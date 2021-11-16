@@ -75,7 +75,6 @@ const routes = [
     component: Potential
   },
   {
-
     path: '/product',
     component: product
   },
@@ -99,12 +98,10 @@ const routes = [
     path: '/addClueStatus',
     component: addClueStatus
   },
-
   {
     path: '/readRecord',
     name: 'readRecord',
     component: readRecord
-
   },
   {
     path: '/potentialdetail',
@@ -168,8 +165,6 @@ const routes = [
     component: sweetTest
   }
 ];
-
-
 
 
 const router = new Router({
