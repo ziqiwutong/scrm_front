@@ -9,11 +9,11 @@
 <script>
 export default {
   name: "HeaderNavBar",
-  props:[
+  props: [
     "title"
   ],
-  methods:{
-    returnClick(){
+  methods: {
+    returnClick() {
       this.$emit("returnClick");
     }
   }
@@ -27,7 +27,9 @@ export default {
   text-align: center;
   width: 100vw;
   top: 0px;
-  background-color: white;
+  background-color: #ffffff;
+  z-index: 1000;
+  border-bottom: 1px solid #fafafa;
 }
 
 .header span {

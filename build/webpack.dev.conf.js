@@ -40,11 +40,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     publicPath: config.dev.assetsPublicPath,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
+<<<<<<< HEAD
 
 
     disableHostCheck: true,
 
 
+=======
+    disableHostCheck: true,
+>>>>>>> sweet
     watchOptions: {
       poll: config.dev.poll,
     }

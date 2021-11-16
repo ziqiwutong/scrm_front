@@ -2,54 +2,54 @@
   <div>
     <NavBar/>
     <div class="mainArea">
-      <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
-                         to="/customer"/>
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                         url="/potential"/>
-        </van-grid>
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
-                         to="/"/>
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[3]" style="color:#1296db;" :text="textArray[3]"
-                         url="/"/>
-        </van-grid>
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
-                         url="/"/>
-          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
-        </van-grid>
-      </div>
-      <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
-                         to="/clueList"/>
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
-                         to="/"/>
-        </van-grid>
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
-                         to="/communicationList"/>
-          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
-        </van-grid>
-      </div>
-      <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
-                         to="/contextShareList"/>
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
-                         url="/"/>
-        </van-grid>
-      </div>
-      <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
-                         to="/productList"/>
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
-                         to="/orderList"/>
-        </van-grid>
-      </div>
+        <div class="main">
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
+                           to="/httTest02"/>
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
+                           url="/"/>
+          </van-grid>
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
+                           to="/"/>
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[3]" style="color:#1296db;" :text="textArray[3]"
+                           url="/"/>
+          </van-grid>
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
+                           url="/"/>
+            <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
+          </van-grid>
+        </div>
+        <div class="main">
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
+                           to="/"/>
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
+                           url="/"/>
+          </van-grid>
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
+                           url="/"/>
+            <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
+          </van-grid>
+        </div>
+        <div class="main">
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
+                           to="/contextShareList"/>
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
+                           to="/sweetTest"/>
+          </van-grid>
+        </div>
+        <div class="main">
+          <van-grid clickable :column-num="2" :border="false">
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
+                           to="/"/>
+            <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
+                           to="/orderList"/>
+          </van-grid>
+        </div>
     </div>
     <TabBar/>
   </div>
@@ -110,7 +110,7 @@ export default {
   created: function () {
     // let query=this.$route.query;
     // let userID = query.userID;
-    let userID = "scrm123";
+    let userID = "1";
     if (userID){// userID 不为空时才获取，这里的userID是从URL里获取的
       this.getToken(userID);
     }
