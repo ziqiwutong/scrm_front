@@ -104,7 +104,8 @@ export default {
         articleOriginAuthor: this.$store.state.repArticleDetail.articleAuthor,
         articleAccountName: this.source,
         articlePower: this.$store.state.repArticleDetail.articlePower,
-        articleType: this.radio
+        articleType: 1,
+        materialType: this.radio
       }
       const result = (await this.$http.post(url, postData)).data
       if (result.code == '200') {

@@ -48,13 +48,13 @@
         </van-checkbox-group>
       </van-list>
     </van-dialog>
-    <Product2poster :key="'poster'+index" v-for="(item,index) in createDom"
-                    :posterWrapId="item.posterWrapId"
-                    :productName="item.productName"
-                    :productImg="item.productImg"
-                    :qrcodeId="item.qrcodeId"
-                    :productLink="item.productLink"
-                    @imgUrl="getPost"/>
+    <!--    <Product2poster :key="'poster'+index" v-for="(item,index) in createDom"-->
+    <!--                    :posterWrapId="item.posterWrapId"-->
+    <!--                    :productName="item.productName"-->
+    <!--                    :productImg="item.productImg"-->
+    <!--                    :qrcodeId="item.qrcodeId"-->
+    <!--                    :productLink="item.productLink"-->
+    <!--                    @imgUrl="getPost"/>-->
     <div class="article-ope">
       <div class="addPoster" @click="editArticle">添加产品海报</div>
       <div class="saveArticle" @click="saveArticle">保存编辑</div>
@@ -75,7 +75,7 @@ import {getUrl} from "../../../utils/replaceUrl";
 
 export default {
   name: "repArticleDetail",
-  components: {HeaderNavBar, Product2poster},
+  components: {HeaderNavBar},
   data() {
     return {
       navTitle: "文章详情",
@@ -99,7 +99,6 @@ export default {
       imgUrl: "",
       productName: '',
       productImg: '',
-      createDom: [],
       frontPage: '',
       articleId: '',
       shareId: '',
@@ -112,7 +111,7 @@ export default {
     if (this.frontPage == '1') {
       this.articleId = this.$route.query.articleId;
       this.shareId = this.$route.query.shareId;
-      this.ifShowShareMan = this.$route.query.ifShowShareMan;
+      this.ifShowShareMan = this.$route.query.ifshowshareman;
     }
   },
   methods: {
@@ -136,7 +135,7 @@ export default {
           query: {
             articleId: this.articleId,
             shareId: this.shareId,
-            ifShowShareMan: this.ifShowShareMan
+            ifshowshareman: this.ifShowShareMan
           }
         });
       }
@@ -192,6 +191,12 @@ export default {
         if (imgArray[index].src.startsWith("https://mmbiz.qpic.cn")) {
           let dataSrc = imgArray[index].getAttribute('data-src');
           let newValue = dataSrc.replace("https://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
+        if (imgArray[index].src.startsWith("http://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("http://mmbiz.qpic.cn", "/wxResource");
           imgArray[index].setAttribute('data-src', newValue);
           imgArray[index].src = newValue;
         }
@@ -251,11 +256,18 @@ export default {
           productImg: productArray[i].productImg,
           productLink: productArray[i].productLink
         }
-        this.createDom.push(item);
+        this.article += `<div>
+          <p class="productName" style="margin-left: 10vw;">产品名称:${item.productName}</p>
+          <img class="productImg" style="width: 80vw;margin-left: 10vw;" src="${item.productImg}">
+            </div>`;
       }
-      this.adjustSize();
+      this.$store.commit('updateReqArticleContext', this.article);
+      this.closeDialog();
+      this.$nextTick(() => {
+        this.adjustSize();
+      })
     },
-    // 得到产品海报
+    // 得到产品海报--废弃
     getPost(imgUrl, posterId) {
       let poster = document.getElementById(posterId);
       poster.setAttribute('style', 'display:none');
@@ -290,11 +302,11 @@ export default {
         let postData = {
           id: self.articleId,
           articleContext: self.article,
-          articleTitle:self.title,
-          articleImage:this.$store.state.repArticleDetail.coverImg
+          articleTitle: self.title,
+          articleImage: this.$store.state.repArticleDetail.coverImg
         }
         const result = (await self.$http.put(url, postData)).data;
-        if (result.code == '200'){
+        if (result.code == '200') {
           // 清空vuex，减少内存占用
           this.clearArticleMsg();
           this.$toast("编辑成功");
@@ -304,10 +316,10 @@ export default {
             query: {
               articleId: this.articleId,
               shareId: this.shareId,
-              ifShowShareMan: this.ifShowShareMan
+              ifshowshareman: this.ifShowShareMan
             }
           });
-        }else{
+        } else {
           this.$toast("编辑失败！");
         }
       }
@@ -448,8 +460,4 @@ h2 {
   padding: 8px 10px;
   border: 1px solid #DDD;
 }
-
-///deep/ canvas {
-//  display: none;
-//}
 </style>

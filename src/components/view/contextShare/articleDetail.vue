@@ -1,13 +1,12 @@
 <template>
   <div>
-    <HeaderNavBar :title="navTitle" @returnClick="onClickLeft"/>
+    <HeaderNavBar :title="navTitle" @returnClick="onClickLeft" v-show="!inWX"/>
     <div class="article-container">
       <h2>{{ title }}</h2>
       <div class="article-msg">
         <p>{{ author }}</p>
         <p>{{ date }}</p>
       </div>
-      <!--      <van-button type="primary" @click="shareArticle">主要按钮</van-button>-->
       <div v-html="article" class="article"></div>
     </div>
     <van-share-sheet v-model="showShare" :options="options" @select="shareArticle"/>
@@ -69,13 +68,13 @@ export default {
       sharePerCompany: "",
       sharePerPhone: "",
       showShare: false,
-      articleMsg:{
+      articleMsg: {
         articleContext: '',
         articleTitle: '',
         articleAuthor: '',
         articleAccountName: '',
         articlePower: '',
-        coverImg:''
+        coverImg: ''
       },
       options: [
         {
@@ -87,13 +86,24 @@ export default {
           icon: 'wechat-moments',
         }
       ],
+      readTime: 0,
+      timer: null,
+      wxUserMsg: '',
+      // 滚动前，滚动条距文档顶部的距离
+      oldScrollTop: 0,
     }
   },
   created() {
     this.articleId = this.$route.query.articleId;
     this.shareId = this.$route.query.shareId;
-    this.showCard = this.$route.query.ifShowShareMan;
+    this.showCard = this.$route.query.ifshowshareman;
     this.getArticle();
+    let user = navigator.userAgent.toLowerCase();
+    if (user.match(/MicroMessenger/i) == "micromessenger") {
+      this.timer = setInterval(() => {
+        this.readTime++;
+      }, 1000);
+    }
   },
   mounted() {
     this.judgeEnv();
@@ -102,15 +112,57 @@ export default {
       element.setAttribute('style', 'padding-top:30px;');
     }
   },
+  async beforeDestroy() {
+    clearInterval(this.timer);
+    this.timer = null;
+    // 把用户基本信息与用户阅读时间传给后台
+    let url = JSON.parse(getUrl()).contextShare.saveWxUserMsg;
+    let postData = {
+      articleId: this.articleId,
+      shareId: this.shareId,
+      readTime: this.readTime,
+      openid: this.wxUserMsg.openid,
+      nickname: this.wxUserMsg.nickname,
+      sex: this.wxUserMsg.sex,
+      province: this.wxUserMsg.province,
+      city: this.wxUserMsg.city,
+      country: this.wxUserMsg.country,
+      headimgurl: this.wxUserMsg.headimgurl,
+      privilege: this.wxUserMsg.privilege,
+      unionid: this.wxUserMsg.unionid
+    }
+    const wxUserMsg = (await this.$http.post(url, postData)).data;
+    console.log(wxUserMsg.code);
+  },
   methods: {
     // 判断环境为微信还是app
-    judgeEnv() {
+    async judgeEnv() {
       let user = navigator.userAgent.toLowerCase();
       if (user.match(/MicroMessenger/i) == "micromessenger") {
+        let url = window.location.href.split('#')[0];
+        // 不存在code则代表是未授权页面
+        if (!this.$route.query.code) {
+          let articleUrl = encodeURIComponent(url);
+          let link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8cfd402efecab262&redirect_uri=" + articleUrl + "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
+          location.href = link;
+        } else {
+          // 用微信返回的code去请求后台获取用户基本信息
+          let getData = {
+            code: this.$route.query.code,
+            state: 123
+          }
+          let url = JSON.parse(getUrl()).contextShare.getWxUserMsg;
+          const wxUserMsg = (await this.$http.get(url, {params: getData})).data.data;
+          // 把微信用户的基本信息存入本地，然后等用户离开页面时再返回给后台
+          this.wxUserMsg = wxUserMsg;
+        }
         this.inWX = true;
-        document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-bottom:0px;');
+        document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-top:60px;padding-bottom:0px;');
+        document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
         // 微信分享文章
         this.shareArticle();
+        // 监听页面滚动事件
+        window.addEventListener("scroll", this.scrolling)
       } else {
         this.inWX = false;
       }
@@ -151,12 +203,13 @@ export default {
     onClickLeft() {
       this.$router.push("/contextShareList");
     },
+    // 删除文章
     deleteArticle() {
       let self = this;
       this.$dialog.confirm({
         title: '温馨提示',
         message: '您确定删除这篇文章吗',
-        confirmButtonColor:'#645fd7',
+        confirmButtonColor: '#645fd7',
       })
         .then(async () => {
           // 向后台发送删除文章的请求
@@ -180,23 +233,21 @@ export default {
     async shareArticle() {
       // 先去后台拿微信的jsConfig，然后触发分享事件，传给后台的pageUrl不需要编码
       let postData = {
-        pageUrl: window.location.href.split('#')[0]
+        url: window.location.href.split('#')[0]
       }
       let url = JSON.parse(getUrl()).contextShare.wxConfig;
-      const result = (await this.$http.get(url, {params: postData})).data.data.wxJDK;
+      const result = (await this.$http.get(url, {params: postData})).data.data;
       let wxConfig = {
         appId: result.appId,
         timestamp: result.timestamp,
-        nonceStr: result.nonceStr,
+        nonceStr: result.noncestr,
         signature: result.signature
       }
-      console.log("sweet")
-      console.log(wxConfig)
       let shareMsg = {
-        title: '很高兴认识你',
-        desc: '今天天气真不错~',
+        title: this.title,
+        desc: '点击查看详情->',
         link: window.location.href,
-        imgUrl: 'https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg'
+        imgUrl: this.articleMsg.coverImg
       }
       console.log(shareMsg.link)
       await wxApi.wxRegister(wxConfig, shareMsg);
@@ -253,6 +304,12 @@ export default {
           imgArray[index].setAttribute('data-src', newValue);
           imgArray[index].src = newValue;
         }
+        if (imgArray[index].src.startsWith("http://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("http://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
         let eleWidth = parseInt(getComputedStyle(imgArray[index], null).getPropertyValue('width'));
         // eleWidth为0表示图片未显示在页面上（图片懒加载的原因），因此也需要添加最大宽度
         if (eleWidth > bodyWidth || eleWidth == 0) {
@@ -261,7 +318,7 @@ export default {
       }
     },
     // 编辑文章
-    editArticle(){
+    editArticle() {
       let shareId = JSON.parse(getUserId()).userID;
       this.$store.commit('updateEditReqArticle', this.articleMsg);
       this.$router.push({
@@ -273,6 +330,22 @@ export default {
           ifShowShareMan: this.showCard
         }
       });
+    },
+    scrolling() {
+      // 滚动条距文档顶部的距离
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop ||
+        document.body.scrollTop
+      // 滚动条滚动的距离
+      let scrollStep = scrollTop - this.oldScrollTop;
+      // 更新——滚动前，滚动条距文档顶部的距离
+      this.oldScrollTop = scrollTop;
+      if (scrollStep < 0) {
+        // 滚动条向上滚动了
+        this.showCard = true;
+      } else {
+        // 滚动条向下滚动了
+        this.showCard = false;
+      }
     }
   }
 }

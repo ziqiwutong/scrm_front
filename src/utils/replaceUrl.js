@@ -26,11 +26,13 @@ export function getUrl() {
       addArticle: '/fzk/mk/article/insert',
       articleDetail: '/fzk/mk/article/detail',
       deleteArticle: '/api/deleteArticle',
-      readRecordList: '/api/allReadRecord',
-      queryShareMan: '/api/queryShareMan',
+      readRecordList: '/fzk/mk/article/shareRecord',
+      queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
-      wxConfig:'/wx/jsApi',
-      editArticle:'/fzk/mk/article/update'
+      wxConfig:'/fzk/mk/wx/jsApi',
+      editArticle:'/fzk/mk/article/update',
+      getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
+      saveWxUserMsg:'/fzk/mk/article/addReadRecord'
     }
   };
 

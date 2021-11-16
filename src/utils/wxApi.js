@@ -1,3 +1,4 @@
+import wx from 'weixin-js-sdk'
 //utils.js
 const wxApi = {
   wxRegister(data, option) {
