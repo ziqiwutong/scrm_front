@@ -4,52 +4,55 @@
       <van-tab title="内容营销" name="article">内容营销</van-tab>
       <van-tab title="数据统计" name="statistics">数据统计</van-tab>
     </van-tabs>
-    <form action="/" v-if="searchShow">
-      <van-search
-        v-model="searchValue"
-        show-action
-        placeholder="请输入搜索关键词"
-        autofocus="true"
-        @search="onSearch"
-        @cancel="onSearchCancel"
-      />
-    </form>
-    <van-search v-model="searchValue" placeholder="请输入搜索关键词" v-else @click="ifShowSearch"/>
+    <van-search
+      v-if="searchShow"
+      v-model="searchValue"
+      show-action
+      placeholder="请输入搜索关键词"
+      autofocus="true"
+      @search="onSearch"
+      @cancel="onSearchCancel"
+    />
+    <div v-else style="display: inline-flex;width: 100%;">
+      <van-search style="width: 70%;" v-model="searchValue" placeholder="请输入搜索关键词" @click="ifShowSearch"/>
+      <van-dropdown-menu style="width: 30%;" active-color="#3333cc">
+        <van-dropdown-item v-model="dropdownValue" :options="dropdownOption"/>
+      </van-dropdown-menu>
+    </div>
     <van-list
       v-model="loading"
       :finished="finished"
       finished-text="没有更多了"
       @load="onLoad"
     >
-      <div class="list" v-for="(item,i) in list" @click="toArticleDetail(item.articleID)">
-        <div class="left">
+      <div class="list" v-for="(item,i) in list">
+        <div class="left" @click="toArticleDetail(item.id)">
           <van-image
             width="50"
             height="50"
-            :src="item.articleIcon"
+            :src="item.articleImage"
           />
         </div>
-        <div class="right">
+        <div class="right" @click="toArticleDetail(item.id)">
           <div class="right-top">
             <p>{{ item.articleTitle }}</p>
           </div>
           <div class="right-bottom">
-            <p class="readers">{{ item.articleFrequency }}人已读</p>
+            <p class="readers">{{ item.articleViewTimes }}人已读</p>
           </div>
         </div>
-        <van-button type="primary" size="mini" class="shareBtn" @click="showShareDialog">立即分享</van-button>
+        <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog">立即分享</van-button>
       </div>
     </van-list>
     <van-share-sheet v-model="showShare" :options="options"/>
-
     <van-action-sheet v-if="show"
                       v-model="show"
                       :actions="actions"
                       cancel-text="取消"
-                      close-on-click-action
+                      @select="reprintArticle"
                       @cancel="onCancel"
     />
-    <CreateContext @ifShow="ifShowDialog" :text="createContext" v-else/>
+    <CreateContext @ifShow="ifShowDialog" :text="createText" v-else/>
     <TabBar/>
   </div>
 </template>
@@ -59,6 +62,8 @@ import qs from 'qs'// axios参数包
 import TabBar from "../..//component/TabBar";
 import CreateContext from "../../component/CreateContext";
 import {Toast} from "vant";
+import {getUserId} from "../../../network/getToken";
+import {getUrl} from "../../../utils/replaceUrl";
 
 export default {
   name: "contextShareList",
@@ -68,13 +73,12 @@ export default {
   },
   data() {
     return {
-      createContext:'+创建素材',
       searchValue: '',
       active: 2,
       activeName: 'article',
       pageProps: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       },
       searchShow: false,
       list: [],
@@ -92,11 +96,26 @@ export default {
         }
       ],
       show: false,
-      actions: [{name: '拍照创建内容海报'}, {name: '上传图片创建内容海报'}, {name: '转载公众号文章'}]
+      actions: [{name: '转载公众号文章'}],
+      createText: "+创建素材",
+      dropdownValue: 1,
+      dropdownOption: [
+        {text: '企业素材库', value: 1},
+        {text: '个人素材库', value: 0}
+      ]
     };
   },
   created() {
     this.$store.commit('updateTabBarActive', 2);
+  },
+  watch: {
+    dropdownValue: {
+      handler() {
+        this.pageProps.pageNum = 1;
+        this.list = [];
+        this.onLoad();
+      }
+    }
   },
   methods: {
     // 是否在搜索框输入内容
@@ -110,12 +129,12 @@ export default {
     },
     // 关键字搜索
     async onSearch() {
-      let url = "/api//queryArticleByKey";
+      let url = JSON.parse(getUrl()).contextShare.searchByKey;
       let postData = {
-        keySearch: this.searchValue
+        title: this.searchValue
       }
       this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params: postData})).data.data
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
       }
@@ -126,24 +145,43 @@ export default {
     },
     // 列表加载
     async onLoad() {
-      let url = "/api/queryArticleList";
+      let url = JSON.parse(getUrl()).contextShare.queryList;
       let postData = {
         pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize
+        pageSize: this.pageProps.pageSize,
+        examineFlag: 1,
+        materialType: this.dropdownValue
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params: postData})).data.data
       if (result.length == 0) {
         // 已加载全部数据
         this.finished = true;
         Toast('已加载全部数据！');
       }
       for (let i = 0; i < result.length; i++) {
+        // 解决微信图片跨域问题
+        if (result[i].articleImage.startsWith("https://mmbiz.qpic.cn") || result[i].articleImage.startsWith("http://mmbiz.qpic.cn")) {
+          let imageUrl = result[i].articleImage
+          if (result[i].articleImage.startsWith("https")) {
+            result[i].articleImage = imageUrl.replace("https://mmbiz.qpic.cn", "/wxResource");
+          } else {
+            result[i].articleImage = imageUrl.replace("http://mmbiz.qpic.cn", "/wxResource");
+          }
+        }
+        if (result[i].articleImage.startsWith("https://mmbiz.qlogo.cn") || result[i].articleImage.startsWith("http://mmbiz.qlogo.cn")) {
+          let imageUrl = result[i].articleImage
+          if (result[i].articleImage.startsWith("https")) {
+            result[i].articleImage = imageUrl.replace("https://mmbiz.qlogo.cn", "/wxResource");
+          } else {
+            result[i].articleImage = imageUrl.replace("http://mmbiz.qlogo.cn", "/wxResource");
+          }
+        }
         this.list.push(result[i]);
       }
       // 加载状态结束
       this.loading = false;
     },
-    showShareDialog() {
+    async showShareDialog() {
       this.showShare = true
     },
     onCancel() {
@@ -153,9 +191,21 @@ export default {
       this.show = true;
     },
     // 跳转至文章详情页
-    toArticleDetail(ID) {
-      // 带着articleID去请求文章详情页
-
+    toArticleDetail(articleId) {
+      // 带着articleId&shareId去请求文章详情页
+      let shareId = JSON.parse(getUserId()).userID;
+      this.$router.push({
+        name: 'articleDetail',
+        query: {
+          articleId: articleId,
+          shareId: shareId,
+          ifshowshareman: true
+        }
+      });
+    },
+    // 转载公众号
+    reprintArticle(item) {
+      this.$router.push('/reprintArticle');
     }
   }
 }
@@ -215,7 +265,7 @@ p {
   margin-bottom: 15px;
 }
 
-.right-top p{
+.right-top p {
   width: 75vw;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -236,5 +286,19 @@ p {
 
 /deep/ .van-overlay {
   background-color: rgba(0, 0, 0, .3);
+}
+
+/deep/ van-search {
+  width: 60%;
+}
+
+/deep/ .van-dropdown-menu__bar {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  height: 3rem;
+  background-color: #fff;
+  box-shadow: none;
 }
 </style>

@@ -8,19 +8,19 @@
 <script>
 export default {
   name: "CreateContext",
-  props:[
+  props: [
     "text"
   ],
-  methods:{
-    createContext(){
-      this.$emit('ifShow',true);
+  methods: {
+    createContext() {
+      this.$emit('ifShow', true);
     }
   }
 }
 </script>
 
 <style scoped>
-button{
+button {
   position: fixed;
   bottom: 80px;
   right: 0;

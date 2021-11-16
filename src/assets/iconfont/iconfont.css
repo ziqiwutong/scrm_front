@@ -1,5 +1,12 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
+
+  src: url('//at.alicdn.com/t/font_2849451_y80n06udxl.woff2?t=1634372159625') format('woff2'),
+  url('//at.alicdn.com/t/font_2849451_y80n06udxl.woff?t=1634372159625') format('woff'),
+  url('//at.alicdn.com/t/font_2849451_y80n06udxl.ttf?t=1634372159625') format('truetype');
+  src: url('iconfont.woff2?t=1635772933871') format('woff2'),
+  url('iconfont.woff?t=1635772933871') format('woff'),
+  url('iconfont.ttf?t=1635772933871') format('truetype');
   src: url('iconfont.woff2?t=1636706219984') format('woff2'),
        url('iconfont.woff?t=1636706219984') format('woff'),
        url('iconfont.ttf?t=1636706219984') format('truetype');
@@ -12,6 +19,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 
 .icon-third-sort-down:before {
   content: "\e603";
@@ -40,6 +48,7 @@
 .icon-third-shaixuan:before {
   content: "\e627";
 }
+>>>>>>> liboyuan
 
 .icon-third-circle-company:before {
   content: "\e71e";

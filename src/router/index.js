@@ -1,13 +1,31 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from "../components/view/home";
-import contextShare from "../components/view/contextShare/contextShareList";
+import contextShareList from "../components/view/contextShare/contextShareList";
+import articleDetail from "../components/view/contextShare/articleDetail";
+import readRecord from "../components/view/contextShare/readRecord";
+import reprintArticle from "../components/view/contextShare/reprintArticle";
+import repArticleDetail from "../components/view/contextShare/repArticleDetail";
+import reArticleDes from "../components/view/contextShare/reArticleDes";
+import product2poster from "../components/component/Product2poster";
+import sweetTest from "../components/view/contextShare/sweetTest";
 import store from "../store";
 import {Toast} from "vant";
-import orderList from "../components/view/order/orderList"
+import orderList from "../components/view/order/orderList";
+import clueList from "../components/view/clue/clueList"
+import customer from "../components/customer/customer"
+import Perinfor from "../components/customer/Perinfor"
+import Potential from "../components/customer/Potential"
+import product from "../components/view/product"
+import clueDetail from "../components/view/clue/clueDetail";
+import addClue from "../components/view/clue/addClue";
+import editClueStatus from "../components/view/clue/editClueStatus";
+import PotentDetail from "../components/customer/potentialdetail"
 import orderCreate from "../components/view/order/orderCreate";
 import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
+import editClue from "../components/view/clue/editClue";
+import addClueStatus from "../components/view/clue/addClueStatus";
 import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
@@ -18,24 +36,93 @@ const routes = [
   {path: '/', redirect: 'home'},
   {
     path: '/home',
+    name: 'home',
     component: home
   },
   {
-    path: '/contextShare',
-    component: contextShare
+    path: '/contextShareList',
+    name: 'contextShareList',
+    component: contextShareList
   },
   {
-    path:'/orderList',
-    component:orderList
-  },
-
-  {
-    path:'/orderCreate',
-    component:orderCreate
+    path: '/orderList',
+    component: orderList
   },
   {
-    path:'/orderDetail',
-    component:orderDetail
+    path: '/articleDetail',
+    name: 'articleDetail',
+    component: articleDetail
+  },
+  {
+    path: '/clueList',
+    component: clueList
+  },
+  {
+    path: '/orderList',
+    component: orderList
+  },
+  {
+    path: '/customer',
+    component: customer
+  },
+  {
+    path: '/perinfor',
+    name: 'perinfor',
+    component: Perinfor
+  },
+  {
+    path: '/potential',
+    component: Potential
+  },
+  {
+    path: '/product',
+    component: product
+  },
+  {
+    path: '/clueDetail',
+    component: clueDetail
+  },
+  {
+    path: '/addClue',
+    component: addClue
+  },
+  {
+    path: '/editClueStatus',
+    component: editClueStatus
+  },
+  {
+    path: '/editClue',
+    component: editClue
+  },
+  {
+    path: '/addClueStatus',
+    component: addClueStatus
+  },
+  {
+    path: '/readRecord',
+    name: 'readRecord',
+    component: readRecord
+  },
+  {
+    path: '/potentialdetail',
+    component: PotentDetail
+  },
+  {
+    path: '/orderCreate',
+    component: orderCreate
+  },
+  {
+    path: '/orderDetail',
+    component: orderDetail
+  },
+  {
+    path: '/orderEdit',
+    component: orderEdit
+  },
+  {
+    path: '/reprintArticle',
+    name: 'reprintArticle',
+    component: reprintArticle
   },
   {
     path:'/orderEdit',
@@ -56,11 +143,32 @@ const routes = [
   {
     path:'/productEdit',
     component:productEdit
+  },
+  {
+    path: '/repArticleDetail',
+    name:'repArticleDetail',
+    component: repArticleDetail
+  },
+  {
+    path: '/reArticleDes',
+    name:'reArticleDes',
+    component: reArticleDes
+  },
+  {
+    path: '/product2poster',
+    name:'product2poster',
+    component: product2poster
+  },
+  {
+    path: '/sweetTest',
+    name:'sweetTest',
+    component: sweetTest
   }
-  ];
+];
 
 
 const router = new Router({
+  mode:'history',
   routes
 })
 
@@ -73,7 +181,7 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 
 const jwt = require("jsonwebtoken");//引入jwt
 const secret = "scrm";// 设置秘钥
-const whiteList = ["/home"]; // 定义一个白名单列表
+const whiteList = ["/home","/product2poster","/sweetTest","/repArticleDetail","/articleDetail"]; // 定义一个白名单列表
 router.beforeEach(async (to, from, next) => {
   if (whiteList.includes(to.path)) { // 如果是访问的白名单中的页面
     return next(); // 不需要校验，直接返回继续访问该页面

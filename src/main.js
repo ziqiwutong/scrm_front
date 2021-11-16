@@ -6,15 +6,25 @@ import axios from 'axios'
 import router from './router'
 import store from "./store/index"
 import Vant from 'vant'
-// import './plugins/vant.js'
+import preview from 'vue-photo-preview'
+// import Vconsole from 'vconsole'
 import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
 import 'vant/lib/index.css'
+import 'vue-photo-preview/dist/skin.css'
+import VueClipboard from 'vue-clipboard2'
+import './plugins/element.js'
+import './assets/iconfont/iconfont.css'
+import './assets/css/global.css'
 
+// let vConsole = new Vconsole()
+// Vue.use(vConsole)
 Vue.use(Vant)
+Vue.use(VueClipboard)
+Vue.use(preview)
 Vue.prototype.$http = axios
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 // 请求头里配置token
 axios.interceptors.request.use(config => {
