@@ -134,6 +134,9 @@
           {{ item1.name }}</van-button
         >
       </van-row>
+
+
+
       <van-button type="default" @click="reset" class="scrresbtn" hairline
       >重置</van-button
       >
@@ -213,7 +216,7 @@ export default {
         { text: '销量排序', value: 'c' },
       ],
     //  以下为筛选数据
-      scrShow: true,
+      scrShow: false,
       followShow: false,
       // 筛选-跟进人-搜索
       followVal: "",
@@ -624,7 +627,7 @@ export default {
       });
     },
     async onSearch() {
-      let url = "/api/product/queryProductByKey";
+      let url = "/api/se/product/queryProductByKey";
       let postData = {
         keySearch: this.searchValue,
         // orderType: this.active
@@ -646,7 +649,7 @@ export default {
     },
 
     async onLoad() {
-      let url = "/api/product/queryProduct";
+      let url = "/api/se/product/queryProduct";
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
@@ -686,7 +689,7 @@ export default {
       }
     },
     async deletefun(productID){
-      let url = "/api/product/deleteProduct";
+      let url = "/api/se/product/deleteProduct";
       let postData = {
         productID: productID
       }
