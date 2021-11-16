@@ -116,7 +116,7 @@ export default {
       });
     },
     async onLoad() {
-      let url = "/api/clue/queryClueStatus";
+      let url = "/api/se/clue/queryClueStatus";
       let postData = {clueId:this.$route.query.clueId};
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       this.list = [];
@@ -142,7 +142,7 @@ export default {
       });
     },
     async sendDelete() {
-      let url = "/api/clue/deleteClue";
+      let url = "/api/se/clue/deleteClue";
       let postData = {
         id: this.$route.query.clueId,
       }
@@ -162,7 +162,7 @@ export default {
       });
     },
     async sendToBizOpp() {
-      let url = "/api/clue/toBizOpp";
+      let url = "/api/se/clue/toBizOpp";
       let postData = {
         id: this.id
       }

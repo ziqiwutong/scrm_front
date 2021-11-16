@@ -58,7 +58,7 @@ export default {
     async test(){
       this.id=this.$route.query.id;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/clue/queryClueEditStatus";
+      let url = "/api/se/clue/queryClueEditStatus";
       let postData = {
         id:this.id
       }
@@ -69,7 +69,7 @@ export default {
       this.clueId=result.clueId;
     },
     async Submit() {
-      let url = "/api/clue/editClueStatus";
+      let url = "/api/se/clue/editClueStatus";
       let postData = {
         clueId:this.clueId,
         id:this.id,
@@ -86,7 +86,7 @@ export default {
         Toast('更新提交失败,错误码' + result.code);
     },
     async clueDelete() {
-      let url = "/api/clue/deleteClueStatus";
+      let url = "/api/se/clue/deleteClueStatus";
       let postData = {
         id:this.id,
       }

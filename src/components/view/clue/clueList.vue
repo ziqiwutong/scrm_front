@@ -135,7 +135,7 @@ export  default  {
     },
     // 关键字搜索
     async onSearch() {
-      let url = "/api/clue/queryClueByKey";
+      let url = "/api/se/clue/queryClueByKey";
       let postData = {
         keySearch: this.searchVal
       }
@@ -157,7 +157,7 @@ export  default  {
       this.loading = false;
     },
     async onLoad() {
-      let url = "/api/clue/queryClue";
+      let url = "/api/se/clue/queryClue";
       let postData = {
         pageCount: this.pageProps.pageCount++,
         currentPage: this.pageProps.currentPage,
@@ -205,7 +205,7 @@ export  default  {
       }
     },
     async deletefun(id){
-      let url = "/api/clue/deleteClue";
+      let url = "/api/se/clue/deleteClue";
       let postData = {
         id: id,
       }
@@ -321,4 +321,7 @@ export  default  {
   background-color:#C1D1FC;
 }
 
+/deep/.van-dropdown-menu__bar {
+  box-shadow: unset !important;
+}
 </style>

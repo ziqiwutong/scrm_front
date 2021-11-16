@@ -152,7 +152,7 @@ export default {
       this.showPicker = false;
     },
    async onSubmit() {
-      let url = "/api/order/addOrder";
+      let url = "/api/se/order/addOrder";
     if(this.orderType === '撤销')
        this.orderStatus='-1';
      if(this.orderType === '代收款')

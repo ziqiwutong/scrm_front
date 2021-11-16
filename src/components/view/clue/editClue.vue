@@ -119,7 +119,7 @@ export default {
     async test(){
       this.id=this.$route.query.id;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/clue/queryClueStatus";
+      let url = "/api/se/clue/queryClueStatus";
       let postData = {
         clueId:this.id
       }
@@ -134,7 +134,7 @@ export default {
       this.switchChecked=result[0].businessOpporitunityFlag;
     },
     async onSubmit() {
-      let url = "/api/clue/editClue";
+      let url = "/api/se/clue/editClue";
       let postData = {
         id: this.$route.query.id,
         clueName:this.clueName,

@@ -30,7 +30,7 @@ export default {
     async getUserMessage() {
       // 当vuex中没有用户信息时才去请求，减少网络请求的次数
       if (this.$store.state.userMessage.username == "") {
-        let url = "/api/doLogin";
+        let url = "/sweet/doLogin";
         const result = (await this.$http.get(url)).data.data
         this.username = result.username;
         this.userCompany = result.userCompany;

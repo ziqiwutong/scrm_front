@@ -9,7 +9,7 @@
 
     <div class="tab_block">
       <van-tabs v-model="active" swipeable>
-        <van-tab v-for="index in tabNum" :title="'关系 ' + index">
+        <van-tab v-for="index in tabNum" :title="'关系 ' + index" :key="i">
           <!--竖向条-->
           <div class="Step">
             <van-steps direction="vertical" :active="listNum[index-1]" active-color="#cccccc">
@@ -68,11 +68,11 @@ export default {
       this.searchData1=this.$route.query.searchData1;
       this.searchData2=this.$route.query.searchData2;
       let url = "/api/se/customerRest/relation";
-      // let postData = {
-      //   relationshipA: this.searchData1,
-      //   relationshipB: this.searchData2
-      // };
-      const result = (await this.$http.get(url)).data.data;
+      let postData = {
+        firmA: this.searchData1,
+        firmB: this.searchData2
+      };
+      const result = (await this.$http.get(url,{params:postData})).data.data;
       this.tabNum = result.length;
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);

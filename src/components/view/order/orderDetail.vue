@@ -200,7 +200,7 @@ export default {
    async test(){
      this.orderID=this.$route.query.orderID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-     let url = "/api/order/orderDetail";
+     let url = "/api/se/order/orderDetail";
      let postData = {
        orderID:this.orderID
      }
@@ -238,7 +238,7 @@ export default {
      });
    },
    async sendDelete() {
-     let url = "/api/order/deleteOrder";
+     let url = "/api/se/order/deleteOrder";
      let postData = {
        orderID: this.orderID
      }

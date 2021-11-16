@@ -334,7 +334,7 @@ export default {
       });
     },
     async onSearch() {
-      let url = "/api/order/queryOrderByKey";
+      let url = "/api/se/order/queryOrderByKey";
       let postData = {
         keySearch: this.searchValue,
         orderType: this.orderStatus
@@ -356,7 +356,7 @@ export default {
     },
 
     async onLoad() {
-      let url = "/api/order/queryOrder";
+      let url = "/api/se/order/queryOrder";
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
@@ -399,7 +399,7 @@ export default {
       }
     },
    async deletefun(orderID){
-     let url = "/api/order/deleteOrder";
+     let url = "/api/se/order/deleteOrder";
      let postData = {
        orderID: orderID
      }

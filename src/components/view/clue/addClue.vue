@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/clue/addClue";
+      let url = "/api/se/clue/addClue";
       let postData = {
         // id:this.id;
         clueName:this.clueName,
