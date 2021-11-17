@@ -28,10 +28,10 @@ export default {
       this.$router.push("/home")
     },
     toCustomer(){
-
+      this.$router.push("/customer")
     },
     toApplication(){
-      this.$router.push("/contextShare")
+      this.$router.push("/contextShareList")
     }
   }
 }

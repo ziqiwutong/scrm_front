@@ -4,10 +4,10 @@
 <!--    <div class="posterWrap" id="posterWrap">-->
 <!--      <img :src="productImg" class="backgroundImg">-->
 <!--      <div class="posterDes">-->
-<!--        <div class="posterDesText">-->
-<!--          <p style="font-size: 1.2rem;font-family: fangsong;">{{ productName }}</p>-->
-<!--          <p style="font-size: 0.9rem;color: red;font-weight: 600">扫描右侧二维码购买</p>-->
-<!--        </div>-->
+        <div class="posterDesText">
+          <p style="font-size: 1.2rem;font-family: fangsong;">{{ productName }}</p>
+          <p style="font-size: 0.9rem;color: red;font-weight: 600">扫描右侧二维码购买</p>
+        </div>
         <div :id="qrcode1" :ref="qrcode1"></div>
 <!--      </div>-->
 <!--    </div>-->
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import qs from 'qs'// axios参数包
 import QRCode from 'qrcodejs2'
 import html2canvas from 'html2canvas'
 
@@ -70,7 +69,21 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+@import "src/assets/css/px2vw.scss";
+.posterDesText {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 10px;
+  height: 60px;
+}
+
+p{
+  font-size: vw(20);
+}
+</style>
+<style scoped>
 .posterWrap {
   position: relative;
   width: 80vw;
@@ -103,14 +116,6 @@ p {
   display: inline-flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.posterDesText {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-right: 10px;
-  height: 60px;
 }
 
 </style>
