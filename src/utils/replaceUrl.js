@@ -32,7 +32,8 @@ export function getUrl() {
       wxConfig:'/fzk/mk/wx/jsApi',
       editArticle:'/fzk/mk/article/update',
       getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
-      saveWxUserMsg:'/fzk/mk/article/addReadRecord'
+      saveWxUserMsg:'/fzk/mk/article/addReadRecord',
+      queryProductList:'/api/queryProductList'
     }
   };
 

@@ -16,7 +16,7 @@
     <div v-else style="display: inline-flex;width: 100%;">
       <van-search style="width: 70%;" v-model="searchValue" placeholder="请输入搜索关键词" @click="ifShowSearch"/>
       <van-dropdown-menu style="width: 30%;" active-color="#3333cc">
-        <van-dropdown-item v-model="dropdownValue" :options="dropdownOption" @click="changeType"/>
+        <van-dropdown-item v-model="dropdownValue" :options="dropdownOption"/>
       </van-dropdown-menu>
     </div>
     <van-list
@@ -111,6 +111,7 @@ export default {
   watch: {
     dropdownValue: {
       handler() {
+        this.pageProps.pageNum = 1;
         this.list = [];
         this.onLoad();
       }
@@ -141,11 +142,6 @@ export default {
       this.loading = true;
       this.finished = true;
       Toast('已加载全部数据！');
-    },
-    // 修改文章类型
-    changeType() {
-      this.list = [];
-      this.onLoad();
     },
     // 列表加载
     async onLoad() {
