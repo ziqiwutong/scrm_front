@@ -2,7 +2,7 @@
   <div>
     <HeaderNavBar :title="navTitle" @returnClick="onClickLeft"/>
     <div class="article-container">
-      <van-form @submit="onSubmit">
+      <van-form @submit="onSubmitPre">
         <van-field
           v-model="title"
           name="标题"
@@ -25,8 +25,8 @@
         <van-field name="radio" label="所属文件夹">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal">
-              <van-radio name="1">个人素材库</van-radio>
-              <van-radio name="2">企业素材库</van-radio>
+              <van-radio name="1" icon-size="16px">个人素材库</van-radio>
+              <van-radio name="2" icon-size="16px">企业素材库</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -86,11 +86,24 @@ export default {
       this.clearArticleMsg();
       this.$router.push('/reprintArticle');
     },
-    async onSubmit() {
+    onSubmitPre(){
       if (this.coverImg == '') {
         this.$toast("文章封面不能为空！");
         return;
       }
+      this.$dialog.confirm({
+        title: '温馨提示',
+        message: '确定发布文章吗？',
+        confirmButtonColor:'#1989fa'
+      })
+        .then(() => {
+          this.onSubmit();
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
+    async onSubmit() {
       let url = JSON.parse(getUrl()).contextShare.addArticle;
       /*
       * articleType为1代表个人素材库

@@ -56,7 +56,7 @@
     <!--                    :productLink="item.productLink"-->
     <!--                    @imgUrl="getPost"/>-->
     <div class="article-ope">
-      <div class="addPoster" @click="editArticle">添加产品海报</div>
+      <div class="addPoster" @click="editArticle">添加产品</div>
       <div class="saveArticle" @click="saveArticle">保存编辑</div>
     </div>
   </div>
@@ -147,7 +147,7 @@ export default {
     },
     // 在弹窗中加载产品列表
     async getProductList() {
-      let url = "/api/queryProductList";
+      let url = "/sweet/queryProductList";
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize
@@ -166,45 +166,9 @@ export default {
     },
     // 调整文章尺寸
     adjustSize() {
-      let bodyWidth = document.body.clientWidth;
-      let sectionArray = document.getElementsByTagName('section');
-      let pArray = document.getElementsByTagName('p');
-      let imgArray = document.getElementsByTagName('img');
       if (document.querySelector('#js_pc_qr_code')) {
         let qrCodeEle = document.querySelector('#js_pc_qr_code');
         qrCodeEle.setAttribute('style', 'display:none;');
-      }
-      for (let index = 0; index < sectionArray.length; index++) {
-        let eleWidth = parseInt(getComputedStyle(sectionArray[index], null).getPropertyValue('width'));
-        // 如果元素宽度大于页面宽度，则需要进行自适应
-        if (eleWidth > bodyWidth) {
-          sectionArray[index].setAttribute('style', 'max-width:98% !important');
-        }
-      }
-      for (let index = 0; index < pArray.length; index++) {
-        let eleWidth = parseInt(getComputedStyle(pArray[index], null).getPropertyValue('width'));
-        if (eleWidth > bodyWidth) {
-          pArray[index].setAttribute('style', 'max-width:98% !important');
-        }
-      }
-      for (let index = 0; index < imgArray.length; index++) {
-        if (imgArray[index].src.startsWith("https://mmbiz.qpic.cn")) {
-          let dataSrc = imgArray[index].getAttribute('data-src');
-          let newValue = dataSrc.replace("https://mmbiz.qpic.cn", "/wxResource");
-          imgArray[index].setAttribute('data-src', newValue);
-          imgArray[index].src = newValue;
-        }
-        if (imgArray[index].src.startsWith("http://mmbiz.qpic.cn")) {
-          let dataSrc = imgArray[index].getAttribute('data-src');
-          let newValue = dataSrc.replace("http://mmbiz.qpic.cn", "/wxResource");
-          imgArray[index].setAttribute('data-src', newValue);
-          imgArray[index].src = newValue;
-        }
-        let eleWidth = parseInt(getComputedStyle(imgArray[index], null).getPropertyValue('width'));
-        // eleWidth为0表示图片未显示在页面上（图片懒加载的原因），因此也需要添加最大宽度
-        if (eleWidth > bodyWidth || eleWidth == 0) {
-          imgArray[index].setAttribute('style', 'max-width:98% !important');
-        }
       }
     },
     // 复选框触发器
@@ -345,6 +309,7 @@ export default {
 .container {
   display: flex;
   flex-direction: column-reverse;
+  overflow-x: hidden;
 }
 
 .article-container {
@@ -360,7 +325,17 @@ export default {
 }
 
 .article {
-  //text-align: center;
+  font-size: 17px;
+  line-height: 1.6em;
+  text-align: justify;
+  color: #333;
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+.article /deep/*{
+  max-width: 100% !important;
+  box-sizing: border-box;
 }
 
 h2 {
@@ -459,5 +434,9 @@ h2 {
 /deep/ td, th {
   padding: 8px 10px;
   border: 1px solid #DDD;
+}
+
+/deep/ h1{
+  display: none;
 }
 </style>
