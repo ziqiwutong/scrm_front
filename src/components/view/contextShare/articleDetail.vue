@@ -276,9 +276,24 @@ export default {
     },
     // 调整文章尺寸
     adjustSize() {
+      let imgArray = document.getElementsByTagName('img');
       if (document.querySelector('#js_pc_qr_code')) {
         let qrCodeEle = document.querySelector('#js_pc_qr_code');
         qrCodeEle.setAttribute('style', 'display:none;');
+      }
+      for (let index = 0; index < imgArray.length; index++) {
+        if (imgArray[index].src.startsWith("https://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("https://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
+        if (imgArray[index].src.startsWith("http://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("http://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
       }
     },
     // 编辑文章

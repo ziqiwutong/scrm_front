@@ -13,7 +13,7 @@
       <div v-html="article" class="article"></div>
     </div>
     <van-dialog v-model="showDialog" title="请选择商品" show-cancel-button
-                @confirm="insertProduct" :before-close="checkBtn">
+                @confirm="insertProduct" :before-close="checkBtn" confirm-button-color="#178bf6">
       <van-list
         v-model="loading"
         :finished="finished"
@@ -142,7 +142,8 @@ export default {
     },
     // 显示插入图片的弹窗
     editArticle() {
-      this.showDialog = true
+      this.showDialog = true;
+      this.pageProps.pageNum = 1;
       this.getProductList();
     },
     // 在弹窗中加载产品列表
@@ -166,9 +167,24 @@ export default {
     },
     // 调整文章尺寸
     adjustSize() {
+      let imgArray = document.getElementsByTagName('img');
       if (document.querySelector('#js_pc_qr_code')) {
         let qrCodeEle = document.querySelector('#js_pc_qr_code');
         qrCodeEle.setAttribute('style', 'display:none;');
+      }
+      for (let index = 0; index < imgArray.length; index++) {
+        if (imgArray[index].src.startsWith("https://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("https://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
+        if (imgArray[index].src.startsWith("http://mmbiz.qpic.cn")) {
+          let dataSrc = imgArray[index].getAttribute('data-src');
+          let newValue = dataSrc.replace("http://mmbiz.qpic.cn", "/wxResource");
+          imgArray[index].setAttribute('data-src', newValue);
+          imgArray[index].src = newValue;
+        }
       }
     },
     // 复选框触发器
