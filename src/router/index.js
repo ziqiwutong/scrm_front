@@ -3,17 +3,18 @@ import Router from 'vue-router'
 import home from "../components/view/home";
 import contextShare from "../components/view/contextShare/contextShareList";
 import store from "../store";
-import {Toast} from "vant";
+import { Toast } from "vant";
 import orderList from "../components/view/order/orderList"
 import customer from "../components/customer/Customer"
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
 import PotentDetail from "../components/customer/potentialdetail"
+import procustomer from "../components/customer/procustomer"
 
 Vue.use(Router)
 
 const routes = [
-  {path: '/', redirect: 'home'},
+  { path: '/', redirect: 'home' },
   {
     path: '/home',
     component: home
@@ -23,11 +24,15 @@ const routes = [
     component: contextShare
   },
   {
-    path:'/orderList',
-    component:orderList
-  }, {
+    path: '/orderList',
+    component: orderList
+  },
+  {
     path: '/customer',
-    component: customer
+    component: customer,
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
   {
     path: '/perinfor',
@@ -35,17 +40,30 @@ const routes = [
     component: Perinfor
   },
   {
+    path: '/procustomer',
+    name: 'procustomer',
+    component: procustomer
+  },
+  {
     path: '/potential',
     component: Potential
   },
   {
     path: '/potentialdetail',
+    name: "potentialdetail",
     component: PotentDetail
   },
 ]
 
 const router = new Router({
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 } //期望滚动到哪个的位置
+    }
+  },
 })
 
 // 解决Vue-Router升级导致的Uncaught(in promise) navigation guard问题
