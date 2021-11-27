@@ -18,14 +18,16 @@ const state = {
     userCompany: "",
     userImgUrl: ""
   },
-  repArticleDetail:{
-    articleContext:'',
-    articleTitle:'',
-    articleAuthor:'',
-    articleAccountName:'',
-    articlePower:'',
-    coverImg:''
-  }
+  repArticleDetail: {
+    articleContext: '',
+    articleTitle: '',
+    articleAuthor: '',
+    articleAccountName: '',
+    articlePower: '',
+    coverImg: '',
+    productIds: []
+  },
+  hasOAuth: 'false'
 }
 
 // 2. 创建对象
@@ -44,7 +46,8 @@ const store = new Vuex.Store({
         // 只储存state中的token
         token: val.token,
         userMessage: val.userMessage,
-        repArticleDetail:val.repArticleDetail
+        repArticleDetail: val.repArticleDetail,
+        hasOAuth: val.hasOAuth
       }
     }
   })]

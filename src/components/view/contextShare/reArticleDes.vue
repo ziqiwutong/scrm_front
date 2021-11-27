@@ -110,7 +110,7 @@ export default {
       * articleType为0代表企业素材库
       * */
       let postData = {
-        productId: '',
+        productIds: this.$store.state.repArticleDetail.productIds,
         articleContext: this.$store.state.repArticleDetail.articleContext,
         articleTitle: this.title,
         articleImage: this.coverImg,
@@ -150,7 +150,8 @@ export default {
         articleAuthor: '',
         articleAccountName: '',
         articlePower: '',
-        coverImg: ''
+        coverImg: '',
+        productIds: []
       }
       // 清理vuex
       this.$store.commit('updateEditReqArticle', repArticleDetail);

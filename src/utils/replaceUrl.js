@@ -6,6 +6,7 @@
 export function getUrl() {
   // 线上环境
   let production = {
+    baseUrl:'http://scrm.natapp1.cc/',
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',
       searchByKey: '/fzk/queryArticleByKey',
@@ -20,25 +21,29 @@ export function getUrl() {
 
   // 开发环境
   let developmentT = {
+    baseUrl:'http://scrm.natapp1.cc/',
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',
       searchByKey: '/fzk/mk/article/queryByTitle',
       addArticle: '/fzk/mk/article/insert',
       articleDetail: '/fzk/mk/article/detail',
-      deleteArticle: '/api/deleteArticle',
+      deleteArticle: '/fzk/mk/article/delete',
       readRecordList: '/fzk/mk/article/shareRecord',
       queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
       wxConfig:'/fzk/mk/wx/jsApi',
+      yyConfig:'/fzk/mk/iuap/jsApi',
       editArticle:'/fzk/mk/article/update',
       getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
       saveWxUserMsg:'/fzk/mk/article/addReadRecord',
-      queryProductList:'/api/queryProductList'
+      queryProductList:'/api/queryProductList',
+      sendAppCode:'/fzk/mk/iuap/userInfo'
     }
   };
 
   // 开发环境
   let development = {
+    baseUrl:'http://scrm.natapp1.cc/',
     contextShare: {
       queryList: '/api/queryArticleList',
       searchByKey: '/api/queryArticleByKey',

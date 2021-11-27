@@ -19,9 +19,18 @@ export default {
     state.repArticleDetail.articleAccountName = articleMessage.articleAccountName;
     state.repArticleDetail.articlePower = articleMessage.articlePower;
     state.repArticleDetail.coverImg = articleMessage.coverImg;
+    state.repArticleDetail.productIds = articleMessage.productIds;
   },
   // 更新转载的公众号内容
   updateReqArticleContext(state,articleContext){
     state.repArticleDetail.articleContext = articleContext;
+  },
+  // 更新文章关联的产品
+  updateArticleProductList(state,productIds){
+    state.repArticleDetail.productIds = productIds;
+  },
+  // 更新微信给授权用户提供的code
+  updateArticleOAuth(state,status){
+    state.hasOAuth = status;
   }
 }

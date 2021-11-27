@@ -13,7 +13,7 @@
       <div v-html="article" class="article"></div>
     </div>
     <van-dialog v-model="showDialog" title="请选择商品" show-cancel-button
-                @confirm="insertProduct" :before-close="checkBtn" confirm-button-color="#178bf6">
+                @confirm="insertProduct" confirm-button-color="#178bf6">
       <van-list
         v-model="loading"
         :finished="finished"
@@ -89,6 +89,8 @@ export default {
       showDialog: false,
       checkResult: [],
       checkResultT: [],
+      productList: [],
+      singleAddProduct: [],
       list: [],
       loading: false,
       finished: false,
@@ -111,7 +113,7 @@ export default {
     if (this.frontPage == '1') {
       this.articleId = this.$route.query.articleId;
       this.shareId = this.$route.query.shareId;
-      this.ifShowShareMan = this.$route.query.ifshowshareman;
+      this.ifShowShareMan = this.$route.query.ifShowShareMan;
     }
   },
   methods: {
@@ -133,8 +135,8 @@ export default {
         this.$router.push({
           name: 'articleDetail',
           query: {
-            articleId: this.articleId,
-            shareId: this.shareId,
+            articleid: this.articleId,
+            shareid: this.shareId,
             ifshowshareman: this.ifShowShareMan
           }
         });
@@ -142,12 +144,15 @@ export default {
     },
     // 显示插入图片的弹窗
     editArticle() {
+      this.list = [];
+      this.singleAddProduct = [];
       this.showDialog = true;
       this.pageProps.pageNum = 1;
       this.getProductList();
     },
     // 在弹窗中加载产品列表
     async getProductList() {
+      // todo 要跟后台确定下插入产品的逻辑和接口
       let url = JSON.parse(getUrl()).contextShare.queryProductList;
       let postData = {
         pageNum: this.pageProps.pageNum++,
@@ -197,12 +202,15 @@ export default {
           productImg: item.productImg,
           productLink: item.productLink
         }
+        this.singleAddProduct.push(arrayItem);
         this.checkResult.push(arrayItem);
-        console.log(this.checkResult);
+        this.productList.push(arrayItem.productId);
       } else {// 取消选中时需要从数组中删除这个元素
         for (let i = 0; i < this.checkResult.length; i++) {
-          if (this.$refs.checkboxes[index].name == this.checkResult[i]) {// 表示数组中已经有了该元素
+          if (this.$refs.checkboxes[index].name === this.checkResult[i].productName) {// 表示数组中已经有了该元素
             this.checkResult.splice(i, 1);
+            this.productList.splice(i, 1);
+            this.singleAddProduct.splice(i, 1);
             break;
           }
         }
@@ -211,9 +219,11 @@ export default {
     // 弹窗关闭前检查
     checkBtn(action, done) {
       if (action === 'confirm') {
-        if (this.checkResult.length == 0) {
-          done(false);
+        console.log('列表长度：');
+        console.log(this.checkResult.length);
+        if (this.checkResult.length === 0) {
           this.$toast("请选择商品！");
+          done(false);
         }
       } else {
         done();
@@ -227,7 +237,7 @@ export default {
         duration: 0
       });
       //this.checkResult里存的是产品Id
-      let productArray = this.checkResult;
+      let productArray = this.singleAddProduct;
       for (let i = 0; i < productArray.length; i++) {
         let item = {
           posterWrapId: productArray[i].productId,
@@ -237,11 +247,11 @@ export default {
           productLink: productArray[i].productLink
         }
         this.article += `<div>
-          <p class="productName" style="margin-left: 10vw;">产品名称:${item.productName}</p>
-          <img class="productImg" style="width: 80vw;margin-left: 10vw;" src="${item.productImg}">
+          <p class="productName" style="">产品名称:${item.productName}</p>
+          <img class="productImg" style="width: 100%;" src="${item.productImg}">
             </div>`;
       }
-      this.$store.commit('updateReqArticleContext', this.article);
+      // this.$store.commit('updateReqArticleContext', this.article);
       this.closeDialog();
       this.$nextTick(() => {
         this.adjustSize();
@@ -266,14 +276,13 @@ export default {
     closeDialog() {
       this.$toast.clear();
       this.$toast.success('生成成功！');
-      this.showDialog = false;
-      this.checkResult = [];
-      this.checkResultT = [];
+      // this.showDialog = false;
     },
     // 保存编辑
     async saveArticle() {
       if (this.frontPage == '0') {
         this.$store.commit('updateReqArticleContext', this.article);
+        this.$store.commit('updateArticleProductList',this.productList);
         this.$router.push('/reArticleDes')
       } else {
         // 向后台发送编辑文章的请求
@@ -283,7 +292,8 @@ export default {
           id: self.articleId,
           articleContext: self.article,
           articleTitle: self.title,
-          articleImage: this.$store.state.repArticleDetail.coverImg
+          articleImage: this.$store.state.repArticleDetail.coverImg,
+          productIds:this.productList
         }
         const result = (await self.$http.put(url, postData)).data;
         if (result.code == '200') {
@@ -294,8 +304,8 @@ export default {
           this.$router.push({
             name: 'articleDetail',
             query: {
-              articleId: this.articleId,
-              shareId: this.shareId,
+              articleid: this.articleId,
+              shareid: this.shareId,
               ifshowshareman: this.ifShowShareMan
             }
           });
@@ -312,7 +322,8 @@ export default {
         articleAuthor: '',
         articleAccountName: '',
         articlePower: '',
-        coverImg: ''
+        coverImg: '',
+        productIds: []
       }
       // 清理vuex
       this.$store.commit('updateEditReqArticle', repArticleDetail);
@@ -349,7 +360,7 @@ export default {
   box-sizing: border-box;
 }
 
-.article /deep/*{
+.article /deep/ * {
   max-width: 100% !important;
   box-sizing: border-box;
 }
@@ -452,7 +463,7 @@ h2 {
   border: 1px solid #DDD;
 }
 
-/deep/ h1{
+/deep/ h1 {
   display: none;
 }
 </style>
