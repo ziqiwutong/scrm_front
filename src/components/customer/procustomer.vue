@@ -227,7 +227,6 @@
         </p>
       </van-row>
 
-
       <!-- 筛选内容重置 -->
       <van-button
         type="default"
@@ -475,6 +474,7 @@
         @cancel="showArea = false"
       />
     </van-popup>
+    <TabBar />
   </div>
 </template>
 
@@ -482,12 +482,15 @@
 import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
-
+import TabBar from "../component/TabBar";
 export default {
   name: "customer",
+  components: {
+    TabBar,
+  },
   data() {
     return {
-      type:"",
+      type: "",
       dialogShow: false,
       // 客户类型-排序-种类
       sortCusType: "createTime",
@@ -868,16 +871,22 @@ export default {
       if (cusVal == 0) {
         this.cusClass = "全部客户";
         this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
         Toast("选择全部客户");
       } else if (cusVal == 1) {
         this.cusClass = "未分配";
         this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
         Toast("选择待分配客户");
       } else if (cusVal == 2) {
         this.cusClass = "跟进中";
         this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
         Toast("选择跟进中客户");
       }
@@ -899,38 +908,33 @@ export default {
     async onLoad() {
       let url = "/api/se/customer/query";
       // url = this.urlSortChoose(url);
-      url += "?"
+      url += "?";
       // url = this.urlCusTypeChoose(url);
       url = this.urlCusNameChoose(url);
       url = this.urlCusScreen(url);
       url += "&eq_potential=" + "1";
-      url += "&eq_potentialType=" + this.type
+      url += "&eq_potentialType=" + this.type;
       console.log(url);
       const res = await this.$http.get(url, {
         params: {
-          currentPage: this.pageProps.pageNum,
+          currentPage: this.pageProps.pageNum++,
           pageCount: this.pageProps.pageSize,
         },
       });
 
+      // 加载状态结束
+      this.loading = false;
+      const tempList = res.data.data;
       this.cusNum = res.data.totalCount;
-      if (this.cusNum != 0)
-        for (let i = 0; i < this.pageProps.pageSize; i++) {
-          this.cusList.push(res.data.data[i]);
-          if (this.cusList.length >= this.cusNum) {
-            this.finished = true;
-            this.pageProps.pageNum = 1;
-            break;
-          }
-        }
-      if (this.cusList.length >= this.cusNum) {
+      if (tempList.length == 0) {
+        // 已加载全部数据
         this.finished = true;
+        Toast("已加载全部数据！");
       } else {
-        this.pageProps.pageNum++;
-        this.onLoad();
+        for (let i = 0; i < tempList.length; i++) {
+          this.cusList.push(tempList[i]);
+        }
       }
-      // this.cusNum = res.data.code;
-      console.log(this);
     },
     // 客户列表-url参数设置-排序设计
     urlSortChoose(url) {
@@ -984,6 +988,8 @@ export default {
       if (result.data.code == "200") {
         Toast("成功删除");
         this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
       }
       // console.log(result);
@@ -1092,10 +1098,11 @@ export default {
       console.log(this.selectList);
       this.cusList = [];
       this.pageProps.pageNum = 1;
+      this.finished = false;
       this.onLoad();
       this.scrShow = false;
     },
-   
+
     // 新建客户-弹窗
     formClick() {
       this.showform = !this.showform;
@@ -1289,7 +1296,7 @@ export default {
         }
         // 客户不是潜在客户
         this.addList.potential = 1;
-        this.addList.potentialType = this.type
+        this.addList.potentialType = this.type;
 
         function removeEmptyField(obj) {
           var newObj = {};
@@ -1355,6 +1362,8 @@ export default {
         this.uploader = [];
         this.showform = false;
         this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
       }
     },
@@ -1422,14 +1431,15 @@ export default {
   },
   created() {
     let type = this.$route.query.type;
-    this.type = type
+    this.type = type;
+    this.onLoad();
   },
 };
 </script>
 
 <style lang="less" scoped>
 .van-nav-bar__text {
-    color: black;
+  color: black;
 }
 // 全部客户
 /deep/.van-dropdown-menu__title {

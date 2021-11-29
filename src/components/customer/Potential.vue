@@ -104,11 +104,16 @@
       </van-grid>
     </div>
     <div class="background"></div>
+    <TabBar />
   </div>
 </template>
 
 <script>
+import TabBar from "../component/TabBar";
 export default {
+   components: {
+    TabBar,
+  },
   data() {
     return {
       value: "",

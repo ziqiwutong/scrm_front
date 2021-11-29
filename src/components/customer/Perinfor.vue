@@ -148,9 +148,7 @@
           <van-col span="10" class="cusfont"
             >手机：{{ cusDetail.telephone }}</van-col
           >
-          <van-col span="12" offset="2" class="cusfont"
-            >号码归属地：广东/广州</van-col
-          >
+          <van-col span="12" offset="2" class="cusfont">号码归属地：</van-col>
         </van-row>
         <!-- 个人-微信/微信昵称 -->
         <van-row v-if="showCusType == 0">
@@ -1646,7 +1644,6 @@ export default {
     },
     // 标签页-客户关系请求
     getCusStatus() {
-      Toast("获取客户关系");
       this.cusRelation = [];
       this.getCusRelation();
     },

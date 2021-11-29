@@ -741,12 +741,14 @@
       </van-cell>
     </van-popup>
   </div>
+  
 </template>
 <script>
 import { Toast } from "vant";
 import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 export default {
+
   data() {
     return {
       showCusform: false,
