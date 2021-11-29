@@ -38,7 +38,7 @@
           >来源：{{ cusDetail.origin }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >地区：{{ cusDetail.city }}</van-col
+          >地址：{{ cusDetail.address }}</van-col
         >
       </van-row>
       <!-- 共有-客户状态/跟进人 -->
@@ -52,9 +52,11 @@
       </van-row>
       <!-- 共有-成交订单/成交订单金额 -->
       <van-row>
-        <van-col span="10" class="cusfont">成交订单数：5</van-col>
+        <van-col span="10" class="cusfont"
+          >成交订单数：{{ this.cusDetail.orderNumber }}</van-col
+        >
         <van-col span="12" offset="2" class="cusfont"
-          >成交订单金额：200万</van-col
+          >成交订单金额：{{ this.cusDetail.orderAmount }}</van-col
         >
       </van-row>
       <!-- 个人-微信/微信昵称 -->
@@ -97,9 +99,10 @@
           </div></van-col
         >
       </van-row>
-
       <van-row>
-        <van-col span="10" class="cusfont">公司：电子科技大学</van-col>
+        <van-col span="10" class="cusfont"
+          >公司：{{ cusDetail.belongCompany }}</van-col
+        >
         <van-col span="12" offset="2" class="cusfont"
           >所在省市：{{ cusDetail.city }}</van-col
         >
@@ -122,12 +125,6 @@
           >注册资本：{{ cusDetail.registeredCapital }}</van-col
         >
       </van-row>
-      <!-- 共有-进入客户池时间 -->
-      <van-row>
-        <van-col class="cusfont"
-          >进入客户池：{{ cusDetail.enterPoolDate }}</van-col
-        >
-      </van-row>
       <!-- 公司-所属行业/经营范围 -->
       <van-row v-if="cusDetail.customerType == 1">
         <van-col class="cusfont">所属行业：{{ cusDetail.industry }}</van-col>
@@ -136,6 +133,85 @@
       <van-row v-if="cusDetail.customerType == 1">
         <van-col class="cusfont"
           >经营范围：{{ cusDetail.businessRange }}</van-col
+        >
+      </van-row>
+      <!-- 共有-进入客户池时间 -->
+      <van-row>
+        <van-col class="cusfont"
+          >进入客户池：{{ cusDetail.enterPoolDate }}</van-col
+        >
+      </van-row>
+      <!-- 查看详情 -->
+      <div v-if="showCus">
+        <!-- 个人-手机/号码归属地 -->
+        <van-row v-if="showCusType == 0">
+          <van-col span="10" class="cusfont"
+            >手机：{{ cusDetail.telephone }}</van-col
+          >
+          <van-col span="12" offset="2" class="cusfont">号码归属地：</van-col>
+        </van-row>
+        <!-- 个人-微信/微信昵称 -->
+        <van-row v-if="showCusType == 0">
+          <van-col span="10" class="cusfont">微信：{{ cusDetail.wx }}</van-col>
+          <van-col span="12" offset="2" class="cusfont"
+            ><div class="van-ellipsis">
+              微信昵称：{{ cusDetail.wxName }}
+            </div></van-col
+          >
+        </van-row>
+        <!-- 个人-生日/性别 -->
+        <van-row v-if="showCusType == 0">
+          <van-col span="10" class="cusfont">性别：{{ cusDetail.sex }}</van-col>
+          <van-col offset="2" class="cusfont"
+            >生日：{{ cusDetail.birthday }}</van-col
+          >
+        </van-row>
+        <!-- 个人-职位/爱好 -->
+        <van-row v-if="showCusType == 0">
+          <van-col span="10" class="cusfont"
+            >职位：{{ cusDetail.position }}</van-col
+          >
+          <van-col span="12" offset="2" class="cusfont"
+            >爱好：{{ cusDetail.hobby }}</van-col
+          >
+        </van-row>
+        <!-- 公司-法人代表/员工数量 -->
+        <van-row v-if="showCusType == 1">
+          <van-col span="10" class="cusfont"
+            >法人代表：{{ cusDetail.legalPerson }}</van-col
+          >
+          <van-col span="12" offset="2" class="cusfont"
+            >员工数量：{{ cusDetail.companySize }}</van-col
+          >
+        </van-row>
+        <!-- 公司-经营状态/注册资本 -->
+        <van-row v-if="showCusType == 1">
+          <van-col span="10" class="cusfont"
+            >经营状态：{{ cusDetail.operatingStatus }}</van-col
+          >
+          <van-col span="12" offset="2" class="cusfont"
+            >注册资本：{{ cusDetail.registeredCapital }}</van-col
+          >
+        </van-row>
+        <!-- 公司-所属行业/经营范围 -->
+        <van-row v-if="showCusType == 1">
+          <van-col class="cusfont">所属行业：{{ cusDetail.industry }}</van-col>
+        </van-row>
+        <!-- 公司-经营范围 -->
+        <van-row v-if="showCusType == 1">
+          <van-col class="cusfont"
+            >经营范围：{{ cusDetail.businessRange }}</van-col
+          >
+        </van-row>
+      </div>
+      <van-row>
+        <van-col class="cusfont2" @click="showCusAll" v-if="showCus"
+          >收起</van-col
+        >
+      </van-row>
+      <van-row>
+        <van-col class="cusfont2" @click="showCusAll" v-if="!showCus"
+          >查看详情</van-col
         >
       </van-row>
     </van-row>
@@ -149,45 +225,58 @@
       >
         <van-tab title="客户关系">
           <!-- 状态更新 -->
-          <van-steps direction="vertical" :active="-1" class="list-tab-content">
-            <van-step v-for="item in cusRelation" :key="item.id">
-              <div v-if="item.relationType == cusRelationType.addCusPoll">
-                <van-icon name="add-o" color="#3ABD16" />
-                {{ item.relationType }}
-              </div>
-              <div v-if="item.relationType == cusRelationType.addLabel">
-                <van-icon name="upgrade" color="#3ABD16" />
-                {{ item.relationType }}
-              </div>
-              <div v-if="item.relationType == cusRelationType.call">
-                <van-icon name="phone-circle-o" color="#4876F1" />
-                {{ item.relationType }}
-              </div>
-              <div v-if="item.relationType == cusRelationType.msg">
-                <van-icon name="comment-circle-o" color="#f3a108" />
-                {{ item.relationType }}
-              </div>
-              <div v-if="item.relationType == cusRelationType.wx">
-                <van-icon name="chat-o" color="#08f5ce" />
-                {{ item.relationType }}
-              </div>
-              <div v-if="item.relationType == cusRelationType.newCusDetail">
-                <van-icon name="upgrade" color="#3ABD16" />
-                {{ item.relationType }}
-              </div>
-              <p>{{ item.relationDetail }}</p>
-            </van-step>
-          </van-steps>
+          <div class="list-tab-fa">
+            <van-steps
+              direction="vertical"
+              :active="-1"
+              class="list-tab-content"
+            >
+              <van-step
+                v-for="item in cusRelation"
+                :key="item.id"
+                class="list-step"
+              >
+                <div v-if="item.relationType == cusRelationType.addCusPoll">
+                  <van-icon name="add-o" color="#3ABD16" />
+                  {{ item.relationType }}
+                </div>
+                <div v-if="item.relationType == cusRelationType.addLabel">
+                  <van-icon name="upgrade" color="#3ABD16" />
+                  {{ item.relationType }}
+                </div>
+                <div v-if="item.relationType == cusRelationType.call">
+                  <van-icon name="phone-circle-o" color="#4876F1" />
+                  {{ item.relationType }}
+                </div>
+                <div v-if="item.relationType == cusRelationType.msg">
+                  <van-icon name="comment-circle-o" color="#f3a108" />
+                  {{ item.relationType }}
+                </div>
+                <div v-if="item.relationType == cusRelationType.wx">
+                  <van-icon name="chat-o" color="#08f5ce" />
+                  {{ item.relationType }}
+                </div>
+                <div v-if="item.relationType == cusRelationType.newCusDetail">
+                  <van-icon name="upgrade" color="#3ABD16" />
+                  {{ item.relationType }}
+                </div>
+                <p>{{ item.createTime }}</p>
+              </van-step>
+            </van-steps>
+          </div>
         </van-tab>
         <!-- 订单总览 -->
         <van-tab title="订单">
           <van-row class="orderTitle">
             <van-col span="8"
-              >成交订单：<span style="color: #ff5b5b">5</span>个</van-col
+              >成交订单：<span style="color: #ff5b5b">{{
+                this.cusDetail.orderNumber
+              }}</span
+              >个</van-col
             >
             <van-col span="15"
               >成交订单金额：<span style="color: #ff5b5b"
-                >￥10000000000</span
+                >￥{{ this.cusDetail.orderAmount }}</span
               ></van-col
             >
           </van-row>
@@ -250,29 +339,30 @@
           </van-list></van-tab
         >
       </van-tabs>
+      <div class="label-temp"></div>
     </div>
     <!-- 标签栏 -->
-    <van-tabbar active-color="#7d7e80">
-      <van-tabbar-item :icon="callImg" @click="onCallPhone"
-        >打电话
-      </van-tabbar-item>
-      <van-tabbar-item
-        :icon="wchatImg"
-        @click="sendWx"
-        v-clipboard:copy="cusDetail.telephone"
-        v-clipboard:success="copyCode"
-        v-clipboard:error="copyCodeError"
-        >发微信</van-tabbar-item
-      >
-      <van-tabbar-item :icon="msgImg" @click="toShrtMsg"
-        >发短信</van-tabbar-item
-      >
-      <van-tabbar-item :icon="contImg" @click="toMore"
-        >更多操作</van-tabbar-item
-      >
-    </van-tabbar>
-    <!-- 弹窗 -->
-    <van-dialog v-model="show" title="标题" show-cancel-button> </van-dialog>
+    <div class="nav-margin">
+      <van-tabbar active-color="#7d7e80">
+        <van-tabbar-item :icon="callImg" @click="onCallPhone"
+          >打电话
+        </van-tabbar-item>
+        <van-tabbar-item
+          :icon="wchatImg"
+          @click="sendWx"
+          v-clipboard:copy="cusDetail.telephone"
+          v-clipboard:success="copyCode"
+          v-clipboard:error="copyCodeError"
+          >发微信</van-tabbar-item
+        >
+        <van-tabbar-item :icon="msgImg" @click="toShrtMsg"
+          >发短信</van-tabbar-item
+        >
+        <van-tabbar-item :icon="contImg" @click="toMore"
+          >更多操作</van-tabbar-item
+        >
+      </van-tabbar>
+    </div>
     <!-- 更多操作 -->
     <van-action-sheet
       v-model="addShow"
@@ -442,6 +532,7 @@
         <!-- 联系信息-生日信息 -->
         <van-field
           v-model="cusDetail.birthday"
+          readonly
           name="validator"
           label="生日"
           placeholder="选择时间"
@@ -457,7 +548,7 @@
         <van-row class="addcustit">公司信息</van-row>
         <!-- 公司信息-公司 -->
         <van-field
-          v-model="cusDetail.addCompany"
+          v-model="cusDetail.belongCompany"
           name="validator"
           label="公司"
           placeholder="请输入"
@@ -567,18 +658,11 @@
         <!-- 公司信息-成立日期 -->
         <van-field
           v-model="cusDetail.establishDate"
+          readonly
           name="validator"
           label="成立日期"
           placeholder="选择时间"
           @click="toDate1()"
-        />
-
-        <!-- 公司信息-公司规模 -->
-        <van-field
-          v-model="cusDetail.companySize"
-          name="validator"
-          label="公司规模"
-          placeholder="请输入"
         />
         <!-- 公司信息-经营状态 -->
         <van-field
@@ -594,27 +678,6 @@
           label="经营范围"
           placeholder="请输入"
         />
-        <!-- 公司信息-商标 -->
-        <van-field
-          v-model="cusDetail.addTrad"
-          name="validator"
-          label="商标"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-渠道能力 -->
-        <van-field
-          v-model="cusDetail.addChaCap"
-          name="validator"
-          label="渠道能力"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-是否有定制能力 -->
-        <van-field
-          v-model="cusDetail.addHasD"
-          name="validator"
-          label="是否有定制能力"
-          placeholder="请输入"
-        />
         <!-- 公司信息-备注 -->
         <van-field
           v-model="cusDetail.addNote"
@@ -624,7 +687,7 @@
         />
         <!-- 公司信息-客户状态 -->
         <van-field
-          v-model="cusDetail.addCusSta"
+          v-model="cusDetail.customerStatus"
           readonly
           clickable
           name="area"
@@ -639,6 +702,10 @@
           name="validator"
           label="跟进人"
           placeholder="请输入"
+          readonly
+          clickable
+          v-if="cusDetail.customerStatus == this.columns[0]"
+          @click="toAddFollow"
         />
         <!-- 提交按钮 -->
         <div style="margin: 16px">
@@ -654,7 +721,8 @@
       </van-form>
     </van-popup>
     <!-- 发微信 -->
-    <van-popup v-model="wxShow" position="bottom" :style="{ height: '30%' }">
+    <van-popup v-model="wxShow" position="bottom" :style="{ height: '40%' }">
+      <van-image :src="wx" class="wx-img"></van-image>
       <van-button class="screen-confirm-btn" @click="onOpenWx"
         >打开微信</van-button
       >
@@ -700,6 +768,88 @@
       @confirm="deleteCusConfirm"
     >
     </van-dialog>
+    <!-- 编辑客户-地区选择 -->
+    <van-popup v-model="showArea" position="bottom">
+      <van-area
+        :area-list="areaList"
+        @confirm="onConfirm"
+        @cancel="showArea = false"
+      />
+      <!--  -->
+    </van-popup>
+    <!-- 新建客户-时间弹窗 -->
+    <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
+      ><van-datetime-picker
+        v-model="dateVal"
+        type="date"
+        title="选择年月日"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @cancel="dateCancel"
+        @confirm="dateConfirm"
+    /></van-popup>
+    <!-- 新建客户-客户状态选择弹出框 -->
+    <van-popup
+      v-model="addCusStaShow"
+      position="bottom"
+      :style="{ height: '30%' }"
+    >
+      <van-picker
+        title="客户状态"
+        show-toolbar
+        :columns="columns"
+        @confirm="onCusStaConfirm"
+        @cancel="onCusStaCancel"
+      />
+    </van-popup>
+    <!--筛选-跟进人弹出框 -->
+    <van-popup
+      v-model="followShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+      :overlay="false"
+      duration="0"
+    >
+      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
+      <van-search
+        v-model="followVal"
+        placeholder="请输入搜索关键词"
+        @search="onFollowSearch"
+        @cancel="onFollowSearchCancel"
+      />
+      <van-cell
+        v-for="item in followList"
+        :key="item.id"
+        @click="followConfirm(item)"
+      >
+        <!-- 跟进人-跟进人信息 -->
+        <van-row>
+          <!-- 跟进人-跟进人头像 -->
+          <van-col span="4"
+            ><van-image
+              round
+              width="40"
+              height="40"
+              :src="item.userIcon"
+              v-if="item.userIcon"
+            />
+            <div v-if="!item.userIcon" class="list-img-none1">
+              {{ item.username[0] }}
+            </div>
+          </van-col>
+          <!-- 跟进人-跟进人姓名 -->
+          <van-col span="6" class="list-content-name"
+            ><div class="van-ellipsis">
+              {{ item.username }}
+            </div></van-col
+          >
+          <!-- 跟进人-跟进人公司信息 -->
+          <van-col offset="2" class="list-content-msg">{{
+            item.telephone
+          }}</van-col>
+        </van-row>
+      </van-cell>
+    </van-popup>
   </div>
 </template>
 
@@ -718,6 +868,12 @@ export default {
       showform: false,
       callShow: false,
       wxShow: false,
+      // 筛选-跟进人-弹窗
+      followShow: false,
+      // 新建客户-客户状态选择-弹窗
+      addCusStaShow: false,
+      // 新建客户-客户状态选择-内容
+      columns: ["跟进中", "未分配"],
       orderList: [
         // {
         //   orderID: "12345689089",
@@ -876,6 +1032,7 @@ export default {
       msgImg: require("../../assets/cusicon/per_msg.png"),
       contImg: require("../../assets/cusicon/per_context.png"),
       monImg: require("../../assets/cusicon/per_mon.png"),
+      wx: require("../../assets/cusicon/wx.png"),
       // 新建客户-头像数据
       uploader: [],
       // 多选-短信发送-弹窗
@@ -910,6 +1067,20 @@ export default {
       moreDeleteShow: false,
       // 标签数组
       labelCusList: "",
+      // 筛选-跟进人-搜索
+      followVal: "",
+      // 筛选-跟进人列表
+      followList: [],
+      //分类
+      userType: 0,
+      // 跟进人加载-分页
+      followPageProps: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      //
+      showCus: false,
+      showCusType: "",
     };
   },
   created() {
@@ -918,6 +1089,92 @@ export default {
     this.getCusRelation();
   },
   methods: {
+    // 查看客户所有信息
+    showCusAll() {
+      this.showCus = !this.showCus;
+      if (this.cusDetail.customerType == 1) {
+        this.showCusType = 0;
+      } else if (this.cusDetail.customerType == 0) {
+        this.showCusType = 1;
+      }
+    },
+    // 获取用户消息
+    async getUserList() {
+      let url = "/api/cms/user/query";
+      if (this.followVal != "") {
+        url += "?name=" + this.followVal;
+      }
+      const res = await this.$http.get(url, {
+        params: {
+          currentPage: this.followPageProps.pageNum,
+          pageCount: this.followPageProps.pageSize,
+        },
+      });
+
+      let userNum = res.data.totalCount;
+      if (userNum != 0)
+        for (let i = 0; i < this.followPageProps.pageSize; i++) {
+          this.followList.push(res.data.data[i]);
+          if (this.followList.length >= userNum) {
+            this.finished = true;
+            this.followPageProps.pageNum = 1;
+            break;
+          }
+        }
+      if (this.followList.length >= userNum) this.finished = true;
+      else {
+        console.log(this.followList.length);
+        this.followPageProps.pageNum++;
+        this.getUserList();
+      }
+
+      console.log(this.followList);
+    },
+    // 跟进人搜素
+    onFollowSearch() {
+      this.followList = [];
+      this.followPageProps.pageNum = 1;
+      this.getUserList();
+    },
+    // 跟进人搜索取消
+    onFollowSearchCancel() {
+      this.followVal = "";
+      this.followList = [];
+      this.followPageProps.pageNum = 1;
+      this.getUserList();
+    },
+    toAddFollow() {
+      this.followShow = true;
+      this.userType = 1;
+      this.followList = [];
+      this.getUserList();
+    },
+    // 跟进人-选择
+    followConfirm(item) {
+      this.followShow = false;
+      this.followList = [];
+      if (this.userType == 0) {
+        this.cusDetail.followStaffName = item.username;
+        this.cusDetail.followStaffId = item.id;
+        this.cusDetail.customerStatus = "跟进中";
+        this.onClickSumbmit();
+      } else if (this.userType == 1) {
+        this.cusDetail.followStaffName = item.username;
+        this.cusDetail.followStaffId = item.id;
+      }
+    },
+    // 跟进人-页面取消
+    folCancel() {
+      this.followShow = false;
+    },
+    // 新建客户-客户状态-取消
+    onCusStaCancel() {
+      this.addCusStaShow = false;
+    },
+    // 新建客户-客户状态-取消
+    onCusStaCancel() {
+      this.addCusStaShow = false;
+    },
     // 新建客户-单选限定
     cutTabClickOnly(item, index) {
       if (item.name == "客户类型") {
@@ -969,7 +1226,7 @@ export default {
     },
     // 客户详情-返回
     onClickLeft() {
-      this.$router.replace("/customer");
+      this.$router.back("/customer");
     },
     // 多选-发短信-弹窗
     toShrtMsg() {
@@ -999,25 +1256,18 @@ export default {
             "sms:" + this.cusDetail.telephone + "&body=" + msg;
         }
         Toast.success("短信发送成功");
+        this.cusRelation = [];
         this.newCusRelation(this.cusDetail.id, "发短信", "");
-        console.log(this.message);
+
+        this.getCusRelation();
         this.message = "";
       }
     },
-
-    // 编码函数
-    encodeUnicode(str) {
-      var res = [];
-      for (var i = 0; i < str.length; i++) {
-        res[i] = ("00" + str.charCodeAt(i).toString(16)).slice(-4);
-      }
-      return "\\u" + res.join("\\u");
+    // 新建客户-客户状态确认
+    onCusStaConfirm(value) {
+      this.addCusStaShow = false;
+      this.cusDetail.customerStatus = value;
     },
-    decodeUnicode(str) {
-      str = str.replace(/\\/g, "%");
-      return unescape(str);
-    },
-
     //发微信
     sendWx() {
       this.wxShow = true;
@@ -1030,19 +1280,24 @@ export default {
     },
     // 更多操作-发送推文
     toContShare() {
-      this.$router.replace("/contextShare");
+      this.$router.push("/contextShareList");
     },
     // 更多操作-新建商机
     toBusOpprtunity() {
       Toast("跳转商机界面");
+      his.$router.push("/contextShareList");
     },
     // 更多操作-新建订单
     toOrder() {
       Toast("跳转订单界面");
+      his.$router.push("/contextShareList");
     },
     // 更多操作-改跟进人
     changeFollow() {
       Toast("改变跟进人");
+      this.followList = [];
+      this.getUserList();
+      this.followShow = true;
     },
     // 更多操作-改协助人
     changeHelper() {
@@ -1130,7 +1385,7 @@ export default {
         this.$router.replace("/customer");
       }
     },
-    // 获取订单信息
+    // 获取客户详情信息
     getCusDetail(cuslist) {
       this.cusDetail = cuslist;
       for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
@@ -1156,6 +1411,7 @@ export default {
     //新建表单-保存
     onClickAddSave() {
       this.showform = false;
+      this.onClickSumbmit();
     },
     // 新建客户-时间-时间弹窗
     toDate() {
@@ -1200,14 +1456,51 @@ export default {
         Toast("请输入用户名");
       } else {
         // 提交文件不为空
-        if (this.uploader != "")
-          this.cusDetail.customerIcon = this.uploader[0].content;
+        if (this.uploader != "") {
+          let str = this.uploader[0].content;
+          let type = this.uploadPicType(str);
+          let url = "/api/file/pic/base64StrToPic";
+          let picture;
+          if (type.length == 3) {
+            picture = str.slice(22);
+          } else if (type.length == 4) {
+            picture = str.slice(23);
+          } else {
+            Toast("图片格式错误");
+            this.uploader = [];
+          }
+          console.log(picture);
+          if (type.length == 3 || type.length == 4) {
+            let params = new FormData();
+            params.append("picBase64Str", picture);
+            params.append("picFormat", type);
+            params.append("picType", "customerIcon");
+            await this.$http
+              .post(url, params, {
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                },
+              })
+              .then((res) => {
+                console.log(res.data.data);
+                this.cusDetail.customerIcon = res.data.data;
+              });
+          }
+        }
+
         if (this.cusDetail.customerType == "个人客户") {
           this.cusDetail.customerType = 0;
         } else if (this.cusDetail.customerType == "公司客户") {
           this.cusDetail.customerType = 1;
         }
         this.cusDetail.potential = 0;
+        if (
+          this.cusDetail.customerStatus == "未分配" ||
+          this.cusDetail.customerStatus == "潜在客户"
+        ) {
+          this.cusDetail.followStaffId = "";
+          this.cusDetail.followStaffName = "";
+        }
         function removeEmptyField(obj) {
           var newObj = {};
           if (typeof obj === "string") {
@@ -1280,6 +1573,55 @@ export default {
       this.getCusRelation();
       this.showform = false;
     },
+    // 新建客户-头像格式判断
+    uploadPicType(str) {
+      if (str.slice(11, 14) == "png") {
+        return "png";
+      }
+      if (str.slice(11, 14) == "svg") {
+        return "svg";
+      }
+      if (str.slice(11, 14) == "bmp") {
+        return "bmp";
+      }
+      if (str.slice(11, 14) == "ico") {
+        return "ico";
+      }
+      if (str.slice(11, 14) == "jpg") {
+        return "jpg";
+      }
+      if (str.slice(11, 15) == "jpeg") {
+        return "jpeg";
+      }
+      if (str.slice(11, 15) == "tiff") {
+        return "tiff";
+      }
+
+      return "wrong";
+    },
+    // 新建客户-头像上传
+    uploadCusIcon(pic, type, len) {
+      let url = "/api/file/pic/base64StrToPic";
+      let picture;
+      if (len == 3) {
+        picture = pic.slice(22);
+      } else if (len == 4) {
+        picture = pic.slice(23);
+      }
+      console.log(picture);
+      let params = new FormData();
+      params.append("picBase64Str", picture);
+      params.append("picFormat", type);
+      params.append("picType", "customerIcon");
+      this.$http
+        .post(url, params, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          this.cusDetail.customerIcon = res.data.data;
+        });
+    },
     // 标签页-切换
     onTabChange(title) {
       console.log(this.cusDetail);
@@ -1289,35 +1631,36 @@ export default {
     // 标签页-订单请求
     async getCusOrder() {
       Toast("获取订单请求");
-      let url = "/api/order/queryOrderByCustomerID";
-      const result = await this.$http.post(
-        url,
-        { params: { id: this.cusDetail.customerID } },
-        {
-          emulateJSON: true,
-        }
-      );
+      let url = "/api/se/order/queryOrderByCustomerID";
+      let postData = {
+        customerID: this.cusDetail.id,
+      };
+      const result = await this.$http.post(url, qs.stringify(postData));
       if (result.data.code == "200") {
         Toast("订单加载成功");
         this.orderList = result.data.data;
-      }
+        this.finished = true;
+      } else this.finished = true;
     },
     // 标签页-客户关系请求
     getCusStatus() {
-      Toast("获取客户关系");
+      this.cusRelation = [];
       this.getCusRelation();
     },
     // 打电话
     onCallPhone() {
       let tel = "tel:" + this.cusDetail.telephone;
       window.location.href = tel;
+      this.cusRelation = [];
       this.newCusRelation(this.cusDetail.id, "打电话", "");
       this.getCusRelation();
     },
     // 打开微信
     onOpenWx() {
       window.location.href = "weixin://";
+      this.cusRelation = [];
       this.newCusRelation(this.cusDetail.id, "发微信", "");
+      this.getCusRelation();
       this.getCusRelation();
     },
 
@@ -1342,6 +1685,8 @@ export default {
       } else if (val == "发微信") {
         this.cusRelationType = "more-o";
         console.log(this.cusRelationType);
+      } else if (val == "发短信") {
+        this.cusRelationType = "more-o";
       } else {
         this.cusRelationType = "video-o";
         console.log(this.cusRelationType);
@@ -1350,11 +1695,13 @@ export default {
 
     // 获取客户关系
     async getCusRelation() {
+      this.cusRelation = [];
       let url = "/api/se/customer/relation/query";
       const result = await this.$http.get(url + "?id=" + this.cusDetail.id);
       if (result.data.code == "200") {
         this.cusRelation = result.data.data;
       }
+      console.log(this.cusRelation);
     },
 
     // 客户关系-新建
@@ -1366,7 +1713,8 @@ export default {
         relationDetail: detail,
       });
       if (result.data.code == "200") {
-        Toast("成功插入");
+        // Toast("成功插入");
+        this.getCusStatus();
       }
     },
   },
@@ -1433,6 +1781,11 @@ export default {
 .cusfont {
   font-size: 10pt;
   margin-bottom: 5px;
+}
+.cusfont2 {
+  font-size: 10pt;
+  margin-bottom: 5px;
+  color: #4876f1;
 }
 //订单标题
 .orderTitle {
@@ -1540,6 +1893,24 @@ export default {
 }
 
 .list-img-none {
+  width: 60px;
+  height: 60px;
+  background-color: #4876f1;
+  font-size: 20px;
+  border-radius: 50%;
+  // -moz-border-radius: 50%;
+  // -webkit-border-radius: 50%;
+  color: #ffffff;
+  text-align: center;
+  line-height: 60px;
+  position: absolute;
+  z-index: 120;
+  left: 70%;
+  top: 7%;
+  border-style: solid;
+  border-color: #ffffff;
+}
+.list-img-none1 {
   width: 40px;
   height: 40px;
   background-color: #4876f1;
@@ -1549,11 +1920,26 @@ export default {
   color: #ffffff;
   text-align: center;
   line-height: 40px;
-  position: absolute;
-  z-index: 120;
-  left: 70%;
-  top: 7%;
-  border-style:solid;
-  border-color: #ffffff;
+}
+
+.list-tab-content {
+  height: 80%;
+  overflow: auto;
+}
+.list-tab-fa {
+  height: 300px;
+}
+.wx-img {
+  margin-left: 8px;
+}
+//跟进人-取消
+.follow-cancel-btn {
+  border: none;
+}
+.list-step {
+  height: 50px;
+}
+.nav-margin {
+  margin-top: 20px;
 }
 </style>

@@ -1,43 +1,269 @@
 <template>
   <div>
-    <!-- 新建客户 -->
+    <div :class="this.sortShow ? 'main-fix' : ''">
+      <!-- 导航栏 -->
+      <van-nav-bar
+        :title="this.type"
+        left-text="返回"
+        left-arrow
+        @click-left="onClickLeft"
+        class="nav-color"
+      >
+      </van-nav-bar>
+      <!-- 功能栏 -->
+      <van-row>
+        <!-- 筛选功能 -->
+        <van-col span="8">
+          <van-dropdown-menu
+            active-color="#1989fa"
+            :close-on-click-outside="false"
+          >
+            <van-dropdown-item title="筛选" ref="item">
+              <van-row v-for="item in scrList" :key="item.name">
+                <p class="screen-name">{{ item.name }}</p>
+                <van-button
+                  v-for="item1 in item.class"
+                  :key="item1.name"
+                  :class="item1.isSelected ? 'active-screen-btn' : 'screen-btn'"
+                  @click="cutTabClick(item1)"
+                >
+                  {{ item1.name }}</van-button
+                >
+              </van-row>
+              <div class="screen-name">
+                所在地区
+                <p
+                  class="follow-choose"
+                  @click="toScreArea"
+                  v-show="this.ifAreaChoose"
+                >
+                  请选择>>>
+                </p>
+                <p
+                  class="follow-choose"
+                  @click="toScreArea"
+                  v-show="!this.ifAreaChoose"
+                >
+                  {{ this.scrCity }}
+                </p>
+              </div>
+              <!-- 筛选按钮 -->
+              <div style="padding: 5px 16px">
+                <van-button
+                  type="default"
+                  @click="reset"
+                  class="screen-reset-btn"
+                  hairline
+                  >重置</van-button
+                >
+                <van-button
+                  type="info"
+                  @click="screen"
+                  class="screen-confirm-btn"
+                  >确定</van-button
+                >
+              </div>
+            </van-dropdown-item>
+          </van-dropdown-menu>
+        </van-col>
+        <!-- 记录客户总数 -->
+        <van-col class="nav-cusnum-font" v-if="isSearch"
+          >客户总数:{{ this.cusNum }}</van-col
+        >
+        <!-- 搜索客户 -->
+        <form action="/">
+          <van-search
+            v-if="!isSearch"
+            v-model="searchVal"
+            show-action
+            placeholder="请输入搜索关键词"
+            @search="onSearch"
+            @cancel="onSearchCancel"
+            class="nav-search-box"
+          />
+        </form>
+        <!-- 搜索图标 -->
+        <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
+          ><van-icon name="search" size="30" @click="toSearch"
+        /></van-col>
+        <!-- 分割线 -->
+        <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
+        <!-- 新建客户 -->
+        <van-col class="nav-add-btn" span="1" v-if="isSearch"
+          ><van-icon name="plus" size="30" @click="toAdd" />
+        </van-col>
+      </van-row>
+      <!-- 客户列表 -->
+      <van-list
+        class="list"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <!-- 客户列表-滑动单元格 -->
+        <van-swipe-cell v-for="item in cusList" :key="item.id">
+          <van-row @click="onDetail(item)" class="list-content">
+            <!--客户信息行-->
+            <van-row>
+              <!-- 客户列表-头像 -->
+              <van-col span="4" offset="1">
+                <van-image
+                  round
+                  width="40"
+                  height="40"
+                  :src="item.customerIcon"
+                  v-if="item.customerIcon"
+                />
+                <!-- 没有头像的客户头像样式 -->
+                <div v-if="!item.customerIcon" class="list-img-none">
+                  {{ item.customerName[0] }}
+                </div>
+              </van-col>
+              <!-- 客户列表-客户姓名 -->
+              <van-col span="11" class="list-content-name"
+                ><div class="van-ellipsis">
+                  {{ item.customerName }}
+                </div></van-col
+              >
+              <!-- 客户列表-进入客户池时间 -->
+              <van-col span="8" class="list-content-time"
+                >{{ item.enterPoolDate }}进入客户池</van-col
+              >
+              <!-- 客户列表-客户公司信息 -->
+              <van-col span="16" class="list-content-msg">{{
+                item.belongCompany
+              }}</van-col>
+            </van-row>
+            <!-- 客户标签行 -->
+            <van-row>
+              <van-col span="4"></van-col>
+              <!-- 显示标签 -->
+              <van-col class="list-content-tag"
+                ><van-tag
+                  color="#E7F7E3"
+                  text-color="#67C74D"
+                  v-for="item2 in item.customerLabels"
+                  :key="item2.id"
+                  >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+                ></van-col
+              >
+            </van-row>
+          </van-row>
+          <!-- 客户列表-滑动删除 -->
+          <template #right>
+            <van-button
+              square
+              text="删除"
+              type="danger"
+              class="delete-button"
+              @click="detOn(item.id)"
+            />
+          </template>
+          <van-divider />
+        </van-swipe-cell>
+      </van-list>
+    </div>
+    <!-- 客户列表-滑动单元格-删除对话框 -->
+    <van-dialog
+      v-model="detDiaShow"
+      title="是否删除选中项"
+      show-cancel-button
+      @confirm="onDetOne"
+    >
+    </van-dialog>
+    <!-- 点击加号-点击选择框 -->
+    <van-action-sheet
+      v-model="addShow"
+      :actions="actions"
+      cancel-text="取消"
+      close-on-click-action
+    >
+    </van-action-sheet>
+    <!-- 点击加号 上传扫描图片 -->
+    <van-popup v-model="pictureShow" round position="bottom">
+      <van-row>
+        <van-col class="add-choose-font">点击选择上传文件</van-col>
+        <van-col offset="4" class="add-choose-margin"
+          ><van-uploader :after-read="afterRead"
+        /></van-col>
+      </van-row>
+      <van-button type="info" @click="pictureConfirm" class="screen-confirm-btn"
+        >确定</van-button
+      >
+      <van-button
+        type="default"
+        @click="pictureCancel"
+        class="screen-reset-btn"
+        hairline
+        >取消</van-button
+      >
+    </van-popup>
+    <!-- 筛选内容弹窗 -->
+    <van-popup v-model="scrShow" closeable position="right" class="screen">
+      <van-row v-for="item in scrList" :key="item.name">
+        <p class="screen-name">{{ item.name }}</p>
+        <van-button
+          v-for="item1 in item.class"
+          :key="item1.name"
+          :class="item1.isSelected ? 'active-screen-btn' : 'screen-btn'"
+          @click="cutTabClick(item1)"
+        >
+          {{ item1.name }}</van-button
+        >
+      </van-row>
+      <!-- 筛选-地区选择 -->
+      <van-row>
+        <p class="screen-name">地区</p>
+        <p class="follow-choose" @click="toScreArea" v-show="this.ifAreaChoose">
+          请选择>>>
+        </p>
+        <p
+          class="follow-choose"
+          @click="toScreArea"
+          v-show="!this.ifAreaChoose"
+        >
+          {{ this.scrCity }}
+        </p>
+      </van-row>
+
+      <!-- 筛选内容重置 -->
+      <van-button
+        type="default"
+        @click="reset"
+        class="screen-reset-btn"
+        hairline
+        >重置</van-button
+      >
+      <!-- 筛选内容提交 -->
+      <van-button type="info" @click="screen" class="screen-confirm-btn"
+        >确定</van-button
+      >
+    </van-popup>
+    <!-- 筛选-地区弹窗 -->
+    <van-popup v-model="showScrArea" position="bottom">
+      <van-area
+        :area-list="areaList"
+        @confirm="onScrConfirm"
+        @cancel="showScrArea = false"
+      />
+    </van-popup>
+    <!-- 新建潜在客户 -->
     <van-popup
       v-model="showform"
       position="bottom"
       :overlay="false"
       duration="0"
     >
-      <!-- 新建客户-导航栏 -->
       <van-nav-bar
-        title="新建客户"
+        title="新建潜在客户"
         left-text="返回"
         right-text="保存"
         @click-left="onClickAddRe"
         @click-right="onClickAddSave"
       />
-      <!-- 新建客户-表单 -->
       <van-form>
-        <van-row class="add-title">客户类型</van-row>
-        <!-- 客户类型 -->
-        <van-field
-          v-model="addList.sex"
-          name="validator"
-          label="客户类型"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[8].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[8], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <van-row class="add-title">客户信息</van-row>
+        <van-row class="add-title">潜在客户信息</van-row>
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
@@ -58,13 +284,6 @@
           placeholder="请输入"
           :rules="[{ required: true, message: '请填写用户名' }]"
         />
-        <!-- 客户信息-手机号 -->
-        <van-field
-          v-model="addList.telephone"
-          name="validator"
-          label="手机"
-          placeholder="请输入"
-        />
         <!-- 客户信息-地区选择 -->
         <van-field
           readonly
@@ -82,109 +301,6 @@
           label="地址"
           placeholder="请输入"
         />
-        <van-row class="add-title">联系信息</van-row>
-        <!-- 个人信息-微信昵称 -->
-        <van-field
-          v-model="addList.wxName"
-          name="validator"
-          label="微信昵称"
-          placeholder="请输入"
-        />
-        <!-- 个人信息-微信号 -->
-        <van-field
-          v-model="addList.wx"
-          name="validator"
-          label="微信号"
-          placeholder="请输入"
-        />
-        <!-- 个人信息-性别 -->
-        <van-field
-          v-model="addList.sex"
-          name="validator"
-          label="性别"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[0].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[0], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-年龄范围 -->
-        <van-field
-          v-model="addList.ageRange"
-          name="validator"
-          label="年龄范围"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[1].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[1], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-来源 -->
-        <van-field
-          v-model="addList.origin"
-          name="validator"
-          label="来源"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[3].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[3], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-职位 -->
-        <van-field
-          v-model="addList.position"
-          name="validator"
-          label="职位"
-          placeholder="请输入"
-        />
-        <!-- 联系信息-生日信息 -->
-        <van-field
-          v-model="addList.birthday"
-          readonly
-          name="validator"
-          label="生日"
-          placeholder="选择时间"
-          @click="toDate()"
-        />
-        <!-- 联系信息-个人喜好 -->
-        <van-field
-          v-model="addList.hobby"
-          name="validator"
-          label="个人喜好"
-          placeholder="请输入"
-        />
-        <van-row class="add-title">公司信息</van-row>
-        <!-- 公司信息-公司 -->
-        <van-field
-          v-model="addList.belongCompany"
-          name="validator"
-          label="公司"
-          placeholder="请输入"
-        />
         <!-- 公司信息-法定代表人 -->
         <van-field
           v-model="addList.legalPerson"
@@ -192,25 +308,6 @@
           label="法定代表人"
           placeholder="请输入"
         />
-        <!-- 公司信息-客户等级 -->
-        <van-field
-          v-model="addList.customerLevel"
-          name="validator"
-          label="客户等级"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[4].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[4], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
         <!-- 公司信息-企业类型 -->
         <van-field
           v-model="addList.companyType"
@@ -268,20 +365,20 @@
             </van-cell>
           </template>
         </van-field>
-        <!-- 公司信息-员工数量 -->
+        <!-- 公司信息-实缴资本 -->
         <van-field
-          v-model="addList.companySize"
+          v-model="addList.paidCapital"
           name="validator"
-          label="员工数量"
+          label="实缴资本"
           placeholder="请输入"
         >
           <template #input>
             <van-cell class="add-van-cell">
               <van-button
-                v-for="(item, index) in addLabelList[9].class"
+                v-for="(item, index) in addLabelList[10].class"
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[9], index)"
+                @click="cutTabClickOnly(addLabelList[10], index)"
                 >{{ item.name }}
               </van-button>
             </van-cell>
@@ -296,6 +393,15 @@
           placeholder="选择时间"
           @click="toDate1()"
         />
+        <!-- 公司信息-批准日期 -->
+        <van-field
+          v-model="addList.approvalDate"
+          readonly
+          name="validator"
+          label="批准日期"
+          placeholder="选择时间"
+          @click="toDate()"
+        />
 
         <!-- 公司信息-经营状态 -->
         <van-field
@@ -304,41 +410,37 @@
           label="经营状态"
           placeholder="请输入"
         />
-        <!-- 公司信息-经营范围 -->
+
+        <!-- 公司信息-行业代码 -->
         <van-field
-          v-model="addList.businessRange"
+          v-model="addList.industryCode"
           name="validator"
-          label="经营范围"
+          label="行业代码"
           placeholder="请输入"
         />
-        <!-- 公司信息-备注 -->
+
+        <!-- 公司信息-统一社会信用代码 -->
         <van-field
-          v-model="addList.addNote"
+          v-model="addList.socialCreditCode"
           name="validator"
-          label="备注"
+          label="统一社会信用代码"
           placeholder="请输入"
         />
-        <!-- 公司信息-客户状态 -->
+
+        <!-- 公司信息-组织机构代码 -->
         <van-field
-          v-model="addList.customerStatus"
-          readonly
-          clickable
-          name="area"
-          label="客户状态"
-          placeholder="点击选择客户状态"
-          @click="addCusStaShow = true"
-        >
-        </van-field>
-        <!-- 公司信息-跟进人 -->
-        <van-field
-          v-model="addList.followStaffName"
+          v-model="addList.organizationCode"
           name="validator"
-          label="跟进人"
+          label="组织机构代码"
           placeholder="请输入"
-          readonly
-          clickable
-          v-if="addList.customerStatus == this.columns[0]"
-          @click="toAddFollow"
+        />
+
+        <!-- 公司信息-登记机关 -->
+        <van-field
+          v-model="addList.registrationAuthority"
+          name="validator"
+          label="登记机关"
+          placeholder="请输入"
         />
         <!-- 提交按钮 -->
         <div style="margin: 16px">
@@ -372,77 +474,65 @@
         @cancel="showArea = false"
       />
     </van-popup>
-    <!-- 新建客户-客户状态选择弹出框 -->
-    <van-popup
-      v-model="addCusStaShow"
-      position="bottom"
-      :style="{ height: '30%' }"
-    >
-      <van-picker
-        title="客户状态"
-        show-toolbar
-        :columns="columns"
-        @confirm="onCusStaConfirm"
-        @cancel="onCusStaCancel"
-      />
-    </van-popup>
-    <!-- 新建客户-跟进人弹出框 -->
-    <van-popup
-      v-model="followShow"
-      position="bottom"
-      :style="{ height: '100%' }"
-      :overlay="false"
-      duration="0"
-    >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
-      />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
-            <div v-if="!item.userIcon" class="list-img-none">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-             
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
-        </van-row>
-      </van-cell>
-    </van-popup>
+    <TabBar />
   </div>
 </template>
 
 <script>
+import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
+import { Toast } from "vant";
+import TabBar from "../component/TabBar";
 export default {
+  name: "customer",
+  components: {
+    TabBar,
+  },
   data() {
     return {
+      type: "",
+      dialogShow: false,
+      // 客户类型-排序-种类
+      sortCusType: "createTime",
+      // 客户类型-排序-时间
+      sortCusTime: "night",
+      // 导航-客户类型-选择值
+      cusVal: 0,
+      // 导航-客户类型-数组
+      cusOpt: [
+        { text: "全部客户", value: 0 },
+        { text: "待分配客户", value: 1 },
+        { text: "跟进中客户", value: 2 },
+      ],
+      // 导航-客户数量
+      cusNum: 0,
+      // 搜索-搜索内容
+      searchVal: "",
+      // 搜索-搜索图标展示（同时绑定新建和分割线的显示）
+      isSearch: true,
+      // 客户列表-是否加载完毕
+      loading: false,
+      // 客户列表-是否加载完毕
+      finished: false,
+      // 客户列表-头像展示
+      cusImgShow: false,
+      // 客户列表
+      cusList: [],
+      // 客户列表-滑动-删除
+      detDiaShow: false,
+      // 客户列表-滑动-删除id
+      detId: "",
+      // 点击加号-弹出层界面展示
+      addShow: false,
+      // 点击加号-弹出层信息
+      actions: [
+        { name: "新增潜在客户", callback: this.formClick },
+        { name: "扫描名片", callback: this.onPicture },
+      ],
+      // 点击加号-扫描名片-弹出层
+      pictureShow: false,
+      // 扫描名片-传入文件
+
       // 新建客户-弹出层
       showform: false,
       // 新建客户-时间-弹窗
@@ -453,6 +543,7 @@ export default {
       minDate: new Date(1920, 0, 1),
       // 新建客户-时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+      currentDate: new Date(2000, 0, 17),
       // 新建客户-时间-生日/公司创建分类
       addDateType: "",
       // 新建客户-地区-地区列表
@@ -584,6 +675,17 @@ export default {
             { name: "1000人以上", isSelected: false },
           ],
         },
+        {
+          name: "实缴资本",
+          class: [
+            { name: "200万以下", isSelected: false },
+            { name: "500万以下", isSelected: false },
+            { name: "1000万以下", isSelected: false },
+            { name: "5000万以下", isSelected: false },
+            { name: "5000万以上", isSelected: false },
+          ],
+          ename: "paidCapital",
+        },
       ],
       // 新建客户-表单
       addList: {
@@ -679,13 +781,33 @@ export default {
         createTime: "",
         updateTime: "",
       },
-      // 跟进人加载-分页
-      followPageProps: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      // 跟进人-选择列表
-      followChsVal: { name: "跟进人", val: "", id: "" },
+      // 筛选-弹出层界面
+      scrShow: false,
+      // 筛选-筛选列表
+      scrList: [
+        {
+          name: "注册资本",
+          class: [
+            { name: "200万以下", isSelected: false },
+            { name: "500万以下", isSelected: false },
+            { name: "1000万以下", isSelected: false },
+            { name: "5000万以下", isSelected: false },
+            { name: "5000万以上", isSelected: false },
+          ],
+          ename: "registeredCapital",
+        },
+        {
+          name: "实缴资本",
+          class: [
+            { name: "200万以下", isSelected: false },
+            { name: "500万以下", isSelected: false },
+            { name: "1000万以下", isSelected: false },
+            { name: "5000万以下", isSelected: false },
+            { name: "5000万以上", isSelected: false },
+          ],
+          ename: "paidCapital",
+        },
+      ],
       // 筛选-跟进人列表是否被选取
       ifChoose: true,
       // 筛选-地区列表是否被选取
@@ -694,12 +816,293 @@ export default {
       followShow: false,
       // 筛选-跟进人-搜索
       followVal: "",
+      // 筛选-标签选择数组
+      selectList: [],
+      // 筛选-地区-地区弹窗
+      showScrArea: false,
+      // 筛选-地区-地区选择值
+      scrCity: "",
       // 筛选-跟进人列表
       followList: [],
-      userType: "",
+      // 最近浏览-弹出层
+      sortShow: false,
+      // 标签栏-绑定标识符
+      barAct: 0,
+      // 列表加载-分页
+      pageProps: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      // 跟进人加载-分页
+      followPageProps: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      // 跟进人-选择列表
+      followChsVal: { name: "跟进人", val: "", id: "" },
+      // 客户排序-客户分类
+      cusClass: "全部客户",
+      // 客户排序-列表顺序
+      listOrder: "创建时间从晚到早",
+      // 图标
+      cus_new: require("../../assets/cusicon/cus_new.png"),
+      cus_scr: require("../../assets/cusicon/cus_scr.png"),
+      cus_chc: require("../../assets/cusicon/cus_ckc.png"),
+      cus_delete: require("../../assets/cusicon/cus_delete.png"),
+      cus_lable: require("../../assets/cusicon/cus_lable.png"),
+      cus_msg: require("../../assets/cusicon/cus_msg.png"),
+      // 商机负责人
+      oppoChsVal: { name: "商机负责人", val: "", id: "" },
+      ifoppoChoose: true,
+      // 创建人
+      bulidChsVal: { name: "创建人", val: "", id: "" },
+      ifbulidChoose: true,
+      //分类
+      userType: 0,
     };
   },
   methods: {
+    onClickLeft() {
+      this.$router.back("/potential");
+    },
+
+    // 客户排序-客户分类选择-排序
+    onOrderList(cusVal) {
+      if (cusVal == 0) {
+        this.cusClass = "全部客户";
+        this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
+        this.onLoad();
+        Toast("选择全部客户");
+      } else if (cusVal == 1) {
+        this.cusClass = "未分配";
+        this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
+        this.onLoad();
+        Toast("选择待分配客户");
+      } else if (cusVal == 2) {
+        this.cusClass = "跟进中";
+        this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
+        this.onLoad();
+        Toast("选择跟进中客户");
+      }
+    },
+    // 客户列表-搜索功能
+    onSearch() {
+      this.cusList = [];
+      this.onLoad();
+    },
+    // 客户列表-搜索功能-关闭弹窗
+    onSearchCancel() {
+      this.isSearch = !this.isSearch;
+    },
+    // 客户列表-搜索功能展示
+    toSearch() {
+      this.isSearch = !this.isSearch;
+    },
+    // 客户列表-列表加载
+    async onLoad() {
+      let url = "/api/se/customer/query";
+      // url = this.urlSortChoose(url);
+      url += "?";
+      // url = this.urlCusTypeChoose(url);
+      url = this.urlCusNameChoose(url);
+      url = this.urlCusScreen(url);
+      url += "&eq_potential=" + "1";
+      url += "&eq_potentialType=" + this.type;
+      console.log(url);
+      const res = await this.$http.get(url, {
+        params: {
+          currentPage: this.pageProps.pageNum++,
+          pageCount: this.pageProps.pageSize,
+        },
+      });
+
+      // 加载状态结束
+      this.loading = false;
+      const tempList = res.data.data;
+      this.cusNum = res.data.totalCount;
+      if (tempList.length == 0) {
+        // 已加载全部数据
+        this.finished = true;
+        Toast("已加载全部数据！");
+      } else {
+        for (let i = 0; i < tempList.length; i++) {
+          this.cusList.push(tempList[i]);
+        }
+      }
+    },
+    // 客户列表-url参数设置-排序设计
+    urlSortChoose(url) {
+      if (this.sortCusType == "createTime" && this.sortCusTime == "morning")
+        return url + "?" + "asc=" + this.sortCusType;
+      else if (this.sortCusType == "createTime" && this.sortCusTime == "night")
+        return url + "?" + "desc=" + this.sortCusType;
+      else if (
+        this.sortCusType == "updateTime" &&
+        this.sortCusTime == "morning"
+      )
+        return url + "?" + "asc=" + this.sortCusType;
+      else if (this.sortCusType == "updateTime" && this.sortCusTime == "night")
+        return url + "?" + "desc=" + this.sortCusType;
+    },
+    // 客户列表-url参数设置-客户分类设计
+    urlCusTypeChoose(url) {
+      if (this.cusClass == "全部客户")
+        return url + "&" + "customerStatus=" + "all";
+      else if (this.cusClass == "未分配")
+        return url + "&eq_" + "customerStatus=" + "未分配";
+      else if (this.cusClass == "跟进中")
+        return url + "&eq_" + "customerStatus=" + "跟进中";
+    },
+    // 客户列表-url参数设置-模糊查询
+    urlCusNameChoose(url) {
+      if (this.searchVal != "")
+        return url + "&" + "like_customerName=" + this.searchVal;
+      else return url;
+    },
+    // 筛选-url参数设置-筛选内容
+    urlCusScreen(url) {
+      return (url += this.selectList);
+    },
+
+    // 客户列表-客户详情跳转
+    onDetail(item) {
+      // this.$router.replace("/perinfor");
+      this.$router.push({ name: "potentialdetail", query: { cuslist: item } });
+    },
+    // 客户列表-滑动删除-弹出框
+    detOn(val) {
+      this.detDiaShow = true;
+      this.detId = val;
+    },
+    // 客户列表-滑动删除-确认
+    async onDetOne() {
+      // console.log(this.detId)
+      let url = "/api/se/customer/delete";
+      const result = await this.$http.get(url, { params: { id: this.detId } });
+      if (result.data.code == "200") {
+        Toast("成功删除");
+        this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
+        this.onLoad();
+      }
+      // console.log(result);
+    },
+    // 点击加号-弹出
+    toAdd() {
+      this.addShow = true;
+    },
+    // 筛选-筛选功能弹出框
+    toScreen() {
+      this.scrShow = !this.scrShow;
+    },
+    // 筛选-按钮点击高亮
+    cutTabClick(item) {
+      //然后通过这个属性判断是否选中点亮和取消
+      item.isSelected = !item.isSelected;
+    },
+    // 筛选-地区选择
+    toScreArea() {
+      this.showScrArea = true;
+    },
+    // 筛选-重置
+    reset() {
+      let i, j;
+      for (i = 0; i < this.scrList.length; i++) {
+        for (j = 0; j < this.scrList[i].class.length; j++) {
+          if (this.scrList[i].class[j].isSelected == true) {
+            this.scrList[i].class[j].isSelected = false;
+          }
+        }
+      }
+      for (i = 0; i < this.cusList.length; i++) {
+        this.cusList[i].isShow = true;
+      }
+      this.ifChoose = true;
+      this.followChsVal.val = "";
+      this.followChsVal.id = "";
+      this.ifoppoChoose = true;
+      this.oppoChsVal.val = "";
+      this.oppoChsVal.id = "";
+      this.ifbulidChoose = true;
+      this.bulidChsVal.val = "";
+      this.bulidChsVal.id = "";
+      this.ifAreaChoose = true;
+      this.scrCity = [];
+    },
+    // 筛选-提交
+    screen() {
+      this.selectList = [];
+      let i, j, k;
+      let selectNum;
+      var select = [];
+      var val = [];
+      // 读取选中的标签
+      for (i = 0; i < this.scrList.length; i++) {
+        selectNum = 0;
+        for (j = 0; j < this.scrList[i].class.length; j++) {
+          // 读取选中的标签并记录，通过selectNum判断当前种类是单值还是多值
+          // 通过val记录当前选中的标签值
+          if (this.scrList[i].class[j].isSelected == true) {
+            selectNum += 1;
+            val.push(this.scrList[i].class[j].name);
+          }
+        }
+
+        if (this.scrList[i].ename == "customerType") {
+          if (val.length == 1) {
+            if (val == "个人客户") val = 0;
+            else if (val == "公司客户") val = 1;
+          } else if (val.length > 1) {
+            (val[0] = 0), (val[1] = 1);
+          }
+        }
+        // 如果当前种类是单值
+        if (selectNum == 1) {
+          select = "&eq_" + this.scrList[i].ename + "=" + val;
+        } // 当前种类是多值
+        else if (selectNum > 1) {
+          select = "&in_" + this.scrList[i].ename + "=";
+          for (k = 0; k < val.length; k++) {
+            if (k != val.length - 1) {
+              select += val[k] + "▓";
+            } else {
+              select += val[k];
+            }
+          }
+        }
+        val = [];
+        console.log(select);
+        if (select != "") this.selectList += select;
+        this.selectNum = 0;
+        select = [];
+      }
+      // this.selectList.push(
+      //   this.followChsVal.name + ":" + this.followChsVal.val
+      // );
+      if (this.scrCity != "") {
+        this.selectList += "&eq_city=" + this.scrCity;
+      }
+      if (this.followChsVal.id != "") {
+        this.selectList += "&eq_followStaffId=" + this.followChsVal.id;
+      }
+      if (this.bulidChsVal.id != "") {
+        this.selectList += "&eq_createUserId=" + this.bulidChsVal.id;
+      }
+      console.log(this.selectList);
+      this.cusList = [];
+      this.pageProps.pageNum = 1;
+      this.finished = false;
+      this.onLoad();
+      this.scrShow = false;
+    },
+
     // 新建客户-弹窗
     formClick() {
       this.showform = !this.showform;
@@ -754,6 +1157,7 @@ export default {
       if (key == "行业分类") this.addList.industry = val;
       if (key == "注册资本") this.addList.registeredCapital = val;
       if (key == "员工数量") this.addList.companySize = val;
+      if (key == "实缴资本") this.addList.paidCapital = val;
       if (key == "客户类型") {
         this.addList.customerType = val;
         console.log(this.addList.customerType);
@@ -797,7 +1201,7 @@ export default {
       var d = val.getDate();
       d = d < 10 ? "0" + d : d;
       const time = y + "-" + m + "-" + d;
-      if (this.addDateType == "生日") this.addList.birthday = time;
+      if (this.addDateType == "生日") this.addList.approvalDate = time;
       else if (this.addDateType == "成立日期")
         this.addList.establishDate = time;
       this.dateShow = false;
@@ -891,7 +1295,8 @@ export default {
           this.addList.followStaffName = "";
         }
         // 客户不是潜在客户
-        this.addList.potential = 0;
+        this.addList.potential = 1;
+        this.addList.potentialType = this.type;
 
         function removeEmptyField(obj) {
           var newObj = {};
@@ -952,14 +1357,13 @@ export default {
         if (result.code == "200") {
           Toast("成功添加客户");
           console.log(result.data);
-          this.newCusRelation(result.data.id, "进入客户池");
         }
         this.addList = this.addListTemp;
         this.uploader = [];
         this.showform = false;
         this.cusList = [];
-        this.finished = false;
         this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
       }
     },
@@ -989,51 +1393,24 @@ export default {
 
       return "wrong";
     },
-    // 跟进人-页面取消
-    folCancel() {
-      this.followShow = false;
+    // 点击加号-扫描名片
+    onPicture() {
+      this.pictureShow = true;
     },
-    // 跟进人搜素
-    onFollowSearch() {
-      this.followList = [];
-      this.followPageProps.pageNum = 1;
-      this.getUserList();
+    // 点击加号-扫描名片-确认
+    pictureConfirm() {
+      Toast("上传图片成功");
+      this.pictureShow = false;
     },
-    // 跟进人搜索取消
-    onFollowSearchCancel() {
-      this.followVal = "";
-      this.followList = [];
-      this.followPageProps.pageNum = 1;
-      this.getUserList();
+    // 点击加号-扫描名片-取消
+    pictureCancel() {
+      this.pictureShow = false;
     },
-    // 跟进人-选择
-    followConfirm(item) {
-      this.followShow = false;
-      // 筛选-跟进人
-      if (this.userType == 0) {
-        this.followChsVal.val = item.username;
-        this.followChsVal.id = item.id;
-        this.ifChoose = false;
-      }
-      // 筛选-商机负责人
-      else if (this.userType == 1) {
-        this.oppoChsVal.val = item.username;
-        this.oppoChsVal.id = item.id;
-        this.ifoppoChoose = false;
-      }
-      // 筛选-创建人
-      else if (this.userType == 2) {
-        this.bulidChsVal.val = item.username;
-        this.oppoChsVal.id = item.id;
-        this.ifbulidChoose = false;
-      }
-      // 新建-跟进人
-      else if (this.userType == 3) {
-        this.addList.followStaffName = item.username;
-        this.addList.followStaffId = item.id;
-      }
+    // 点击加号-上传名片
+    afterRead(file) {
+      // 此时可以自行将文件上传至服务器
+      console.log(file);
     },
-
     // 新建客户-客户状态-取消
     onCusStaCancel() {
       this.addCusStaShow = false;
@@ -1048,22 +1425,59 @@ export default {
         relationType: type,
       });
       if (result.data.code == "200") {
-        Toast("操作成功");
+        Toast("成功插入");
       }
     },
-    // 筛选-跟进人列表-弹窗
-    toFollow() {
-      this.followShow = true;
-      this.userType = 0;
-      this.followList = [];
-      this.getUserList();
-    },
+  },
+  created() {
+    let type = this.$route.query.type;
+    this.type = type;
+    this.onLoad();
   },
 };
 </script>
+
 <style lang="less" scoped>
-
-
+.van-nav-bar__text {
+  color: black;
+}
+// 全部客户
+/deep/.van-dropdown-menu__title {
+  color: #1e1c27;
+  font-size: 13px;
+}
+/deep/.van-dropdown-menu__bar {
+  box-shadow: unset !important;
+}
+//搜索框
+.nav-search-btn {
+  // margin: 5px 2% 5px 0%;
+  // padding: 2px;
+  margin-top: 5px;
+  margin-right: 2%;
+  margin-bottom: 5px;
+}
+.nav-search-box {
+  height: 48px;
+}
+//分割线
+.nav-separate {
+  margin: 10px 2% 5px 5%;
+  opacity: 0.5;
+}
+//添加按钮
+.nav-add-btn {
+  margin: 5px 2% 5px 0%;
+  // padding: 2px;
+}
+//最近浏览-选项
+.nav-option {
+  margin: 5px 2% 10px 2%;
+  padding: 0px;
+  height: 30px;
+  width: 95px;
+  background-color: #f5f5f5;
+}
 .nav-cusnum-font {
   font-size: 10px;
   // margin-top: 5%;
@@ -1071,7 +1485,32 @@ export default {
   margin-top: 15px;
   color: #bbbcbe;
 }
-
+// 标签栏颜色改变
+.nav-icon-colorful {
+  filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
+    brightness(97%) contrast(95%);
+}
+// 标签栏边距
+.nav-tabar {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+.van-hairline--top-bottom::after,
+.van-hairline-unset--top-bottom::after {
+  border-width: 0px 0;
+}
+// 列表容器
+.list {
+  margin-top: 25px;
+}
+//列表内容
+.list-content {
+  margin-bottom: 10px;
+}
+//客户姓名
+.list-content-name {
+  font-size: 15px;
+}
 //客户时间
 .list-content-time {
   font-size: 11px;
@@ -1152,7 +1591,8 @@ export default {
 }
 //筛选分类name
 .screen-name {
-  margin-left: 20px;
+  margin-top: 2px;
+  margin-left: 10px;
   font-weight: bold;
   font-size: 15px;
   margin-bottom: 6px;
@@ -1170,10 +1610,17 @@ export default {
   margin: 20px 2% 10px 5%;
   width: 40%;
 }
-
+//多选弹出层
+.check {
+  height: 100%;
+}
+//多选列表
+.check-list {
+  margin-bottom: 10px;
+}
 
 .follow-choose {
-  margin-left: 10%;
+  margin-left: 3%;
   color: #4876f1;
   font-size: 10pt;
 }
@@ -1181,7 +1628,10 @@ export default {
 .follow-cancel-btn {
   border: none;
 }
-
+//短信模板-导航
+.shortmsg-nar {
+  margin-top: 20px;
+}
 //新建用户-标题样式
 .add-title {
   background-color: #f8f8f8;
@@ -1191,7 +1641,55 @@ export default {
   height: 30px;
   font-size: 14px;
 }
+//最近浏览-容器
+.browse-container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
 
+  top: 110px;
+  z-index: 1;
+  overflow: hidden;
+}
+//最近浏览-内容
+.browse-content {
+  height: 20%;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
+  position: fixed;
+}
+
+//最近浏览-阴影
+.browse-shady {
+  background-color: #232228;
+  position: absolute;
+  height: 1200px;
+  width: 100%;
+  top: 180px;
+  opacity: 0.8;
+  z-index: 0;
+  position: fixed;
+}
+//最近浏览-阴影补充
+.browse-shady-other {
+  height: 10%;
+  width: 100%;
+  top: 0%;
+  position: absolute;
+  z-index: 500;
+  // opacity: 0;
+  position: fixed;
+}
+//最近浏览-激活效果
+.browse-active-btn {
+  color: #4876f1;
+}
+// 新增-调用手机相册扫描名片
+.add-choose-font {
+  margin-left: 5%;
+  margin-top: 10%;
+}
 // 新增-手动新增客户
 .add-choose-hand-font {
   margin-left: 5%;
@@ -1224,6 +1722,5 @@ export default {
   color: #ffffff;
   text-align: center;
   line-height: 40px;
-  font-size: 15px;
 }
 </style>

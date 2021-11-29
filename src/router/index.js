@@ -10,10 +10,16 @@ import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 import sweetTest from "../components/view/contextShare/sweetTest";
 import store from "../store";
+<<<<<<< HEAD
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList";
 import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
+=======
+import { Toast } from "vant";
+import orderList from "../components/view/order/orderList"
+import customer from "../components/customer/Customer"
+>>>>>>> zjs
 import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
 import searchRelationship from "../components/view/relationship/searchRelationship";
@@ -23,6 +29,7 @@ import clueDetail from "../components/view/clue/clueDetail";
 import addClue from "../components/view/clue/addClue";
 import editClueStatus from "../components/view/clue/editClueStatus";
 import PotentDetail from "../components/customer/potentialdetail"
+<<<<<<< HEAD
 import orderCreate from "../components/view/order/orderCreate";
 import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
@@ -36,10 +43,14 @@ import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
 import productEdit from   "../components/view/product/productEdit";
+=======
+import procustomer from "../components/customer/procustomer"
+
+>>>>>>> zjs
 Vue.use(Router)
 
 const routes = [
-  {path: '/', redirect: 'home'},
+  { path: '/', redirect: 'home' },
   {
     path: '/home',
     name: 'home',
@@ -68,13 +79,28 @@ const routes = [
     component: orderList
   },
   {
+<<<<<<< HEAD
+=======
+    path: '/orderList',
+    component: orderList
+  },
+  {
+>>>>>>> zjs
     path: '/customer',
-    component: customer
+    component: customer,
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
   {
     path: '/perinfor',
     name: 'perinfor',
     component: Perinfor
+  },
+  {
+    path: '/procustomer',
+    name: 'procustomer',
+    component: procustomer
   },
   {
     path: '/potential',
@@ -115,6 +141,7 @@ const routes = [
   },
   {
     path: '/potentialdetail',
+    name: "potentialdetail",
     component: PotentDetail
   },
   {
@@ -199,8 +226,19 @@ const routes = [
 
 
 const router = new Router({
+<<<<<<< HEAD
   mode:'history',
   routes
+=======
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 } //期望滚动到哪个的位置
+    }
+  },
+>>>>>>> zjs
 })
 
 // 解决Vue-Router升级导致的Uncaught(in promise) navigation guard问题
