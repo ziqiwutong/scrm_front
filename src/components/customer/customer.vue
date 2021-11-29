@@ -2689,10 +2689,6 @@ export default {
   color: #ffffff;
   text-align: center;
   line-height: 40px;
-<<<<<<< HEAD
-
-=======
   font-size: 15px;
->>>>>>> zjs
 }
 </style>
