@@ -37,16 +37,16 @@
           <van-image
             width="50"
             height="50"
-            :src="item.readerIcon"
+            :src="item.headimgurl"
           />
         </div>
         <div class="right">
           <div class="right-top">
-            <p class="readerName">{{ item.readerName }}</p>
-            <p class="readerLabel">{{ item.label }}</p>
+            <p class="readerName">{{ item.nickname }}</p>
+            <p class="readerLabel">{{ item.readerStatus != null ? item.readerStatus : '未知' }}</p>
           </div>
           <div class="right-bottom">
-            <p class="readers">阅读时长：{{ item.readerTime }}秒</p>
+            <p class="readers">阅读时长：{{ item.readTime }}秒</p>
           </div>
         </div>
         <p class="shareBtn">{{ item.readDate }}</p>
@@ -76,23 +76,23 @@
           v-for="(item, index) in list"
         >
           <template #right-icon>
-            <van-checkbox :name="item.readerOpenId" ref="checkboxes" checked-color="#6600ff"/>
+            <van-checkbox :name="item.openid" ref="checkboxes" checked-color="#6600ff"/>
           </template>
           <div class="list">
             <div class="left">
               <van-image
                 width="50"
                 height="50"
-                :src="item.readerIcon"
+                :src="item.headImgUrl"
               />
             </div>
             <div class="right">
               <div class="right-top">
-                <p class="readerName">{{ item.readerName }}</p>
-                <p class="readerLabel">{{ item.label }}</p>
+                <p class="readerName">{{ item.nickname }}</p>
+                <p class="readerLabel">{{ item.readerStatus != null ? item.readerStatus : '未知' }}</p>
               </div>
               <div class="right-bottom">
-                <p class="readers">阅读时长：{{ item.readerTime }}秒</p>
+                <p class="readers">阅读时长：{{ item.readTime }}秒</p>
               </div>
             </div>
             <p class="shareBtn">{{ item.readDate }}</p>
@@ -126,7 +126,7 @@ export default {
       allShare: true,
       pageProps: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       },
       shareManList: [],
       shareManCosList: [],
@@ -146,18 +146,18 @@ export default {
   },
   watch: {
     // 以下代码应用于上拉刷新
-    // 'mainPage': {
-    //   deep: true,
-    //   handler: function () {
-    //     if (!this.mainPage) {
-    //       // document.getElementById("cellList").addEventListener('scroll', this.checkBoxLoad);
-    //       window.addEventListener('scroll', this.checkBoxLoad, true)
-    //     } else {
-    //       // document.getElementById("cellList").removeEventListener('scroll', this.checkBoxLoad);
-    //       window.removeEventListener('scroll', this.checkBoxLoad, true)
-    //     }
-    //   }
-    // }
+    'mainPage': {
+      deep: true,
+      handler: function () {
+        if (!this.mainPage) {
+          // document.getElementById("cellList").addEventListener('scroll', this.checkBoxLoad);
+          window.addEventListener('scroll', this.checkBoxLoad, true)
+        } else {
+          // document.getElementById("cellList").removeEventListener('scroll', this.checkBoxLoad);
+          window.removeEventListener('scroll', this.checkBoxLoad, true)
+        }
+      }
+    }
   },
   methods: {
     returnClick() {
@@ -181,6 +181,7 @@ export default {
         headerWrapper.classList.remove('myShareHeader');
         headerList.classList.remove('myShareList');
       }
+      this.pageProps.pageNum = 1;
       this.list = [];
       this.cellListLength = [];
       if (name == "myShare") {
@@ -198,36 +199,24 @@ export default {
       let url = JSON.parse(getUrl()).contextShare.readRecordList;
       let getData = {
         articleId: this.articleId,
-        shareId: this.shareManCosList
+        shareId: this.shareManCosList,
+        pageNum: this.pageProps.pageNum++,
+        pageSize: this.pageProps.pageSize
       };
+      // const result = (await this.$http.get(url, {params: getData})).data.data
       const result = (await this.$http.get(url + "?" + qs.stringify(getData, {arrayFormat: 'repeat'}))).data.data
       this.readPeople = result.readPeople;
       this.readTimes = result.readTimes;
-      let shareList = result.articleShareRecords;
-      if (shareList.length > 0) {
-        for (let i = 0; i < shareList.length; i++) {// 所有分享人
-          let readerList = JSON.parse(shareList[i].readRecord);// 每个分享人底下的阅读名单
-          if (readerList) {
-            for (let j = 0; j < readerList.length; j++) {
-              let readerMsg = {
-                readerIcon: readerList[j].headimgurl,
-                label: '未知',
-                readerName: readerList[j].nickname,
-                readerTime: readerList[j].readTime,
-                readDate: readerList[j].readDate,
-                readerOpenId: readerList[j].openid
-              }
-              if (readerList[j].readerStatus) {
-                readerMsg.label = readerList[j].readerStatus;
-              }
-              this.list.push(readerMsg);
-            }
-          }
-        }
+      let readRecord = result.wxReadRecords;
+      for (let i = 0; i < readRecord.length; i++) {
+        this.list.push(readRecord[i]);
       }
-      // 加载状态结束
-      this.finished = true;
-      Toast('已加载全部数据！');
+      if (result.wxReadRecords.length < 20) {
+        // 加载状态结束
+        this.finished = true;
+        Toast('已加载全部数据！');
+      }
+      this.loading = false;
     },
     // 展示筛选dialog
     async showFilterDialog() {

@@ -51,7 +51,8 @@ import wxApi from "../../../utils/wxApi";
 import yyApi from "../../../utils/yyApi";
 import wx from 'weixin-js-sdk'
 import {ajax} from "../../../utils/ajax";
-
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 export default {
   name: "articleDetail",
@@ -95,6 +96,8 @@ export default {
       wxUserMsg: '',
       // 滚动前，滚动条距文档顶部的距离
       oldScrollTop: 0,
+      stompClient: '',
+      ws_timer:''
     }
   },
   created() {
@@ -109,6 +112,7 @@ export default {
         this.readTime++;
       }, 1000);
     }
+    // this.initWebSocket();
   },
   mounted() {
     if (this.showCard == false) {
@@ -121,18 +125,78 @@ export default {
         history.pushState(null, null, document.URL)
         window.addEventListener('popstate', this.backChange, false) // false阻止默认事件
       }
+      // window.addEventListener('pagehide', this.beforeunloadHandler, false);
+      // window.addEventListener('onunload', e => {
+      //   console.log('onunload');
+      //   this.beforeunloadHandler();
+      // });
+      window.onbeforeunload = function () {
+        this.beforeunloadHandler();
+      }
     }
+
+    // setInterval(() => {
+    //   this.handleSend();
+    // }, 1000);
+  },
+  beforeDestroy() {
+    this.beforeunloadHandler();
   },
   destroyed() {
     let user = navigator.userAgent.toLowerCase();
     if (user.match(/MicroMessenger/i) == "micromessenger") {
+      // this.beforeunloadHandler();
+      // 监听页面回退
       window.removeEventListener('popstate', this.backChange, false) // false阻止默认事件
+      // // 监听页面关闭
+      // window.removeEventListener('pagehide', this.beforeunloadHandler);
+      // window.removeEventListener('onunload', this.beforeunloadHandler);
     }
+    // this.disconnect();
   },
   methods: {
+    // initWebSocket() {
+    //   this.connection();
+    //   let that = this;
+    //   // 断开重连机制,尝试发送消息,捕获异常发生时重连
+    //   this.ws_timer = setInterval(() => {
+    //     try {
+    //       that.stompClient.send("test");
+    //     } catch (err) {
+    //       console.log("断线了: " + err);
+    //       that.connection();
+    //     }
+    //   }, 10000);
+    // },
+    // connection() {
+    //   // 建立连接对象
+    //   let socket = new SockJS('http://127.0.0.1:3000/upgrade');
+    //   // 获取STOMP子协议的客户端对象
+    //   this.stompClient = Stomp.over(socket);
+    //   // 定义客户端的认证信息,按需求配置
+    //   let headers = {
+    //     Authorization: ''
+    //   }
+    //   // 向服务器发起websocket连接
+    //   this.stompClient.connect(headers, () => {
+    //     this.stompClient.send("/ws",
+    //       headers,
+    //       JSON.stringify({sender: 'eet', chatType: 'JOIN'}),
+    //     )   //用户加入接口
+    //   }, (err) => {
+    //     // 连接发生错误时的处理函数
+    //     console.log('失败')
+    //     console.log(err);
+    //   });
+    // },
+    // disconnect() {
+    //   if (this.stompClient) {
+    //     this.stompClient.disconnect();
+    //     clearInterval(this.ws_timer);
+    //   }
+    // },  // 断开连接
     backChange() {
       this.beforeunloadHandler();
-      wx.closeWindow();
     },
     async beforeunloadHandler() {
       clearInterval(this.timer);
@@ -165,6 +229,7 @@ export default {
         }
       });
       // const wxUserMsg = (await this.$http.post(url, postData)).data;
+      wx.closeWindow();
     },
     // 判断环境为微信还是app
     async judgeEnv() {
