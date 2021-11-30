@@ -160,7 +160,11 @@
       <van-row>
         <van-col class="add-choose-font">点击选择上传文件</van-col>
         <van-col offset="4" class="add-choose-margin"
-          ><van-uploader :after-read="afterRead"
+          ><van-uploader
+            multiple
+            v-model="scruploader"
+            :max-count="1"
+            :after-read="afterRead"
         /></van-col>
       </van-row>
       <van-button type="info" @click="pictureConfirm" class="screen-confirm-btn"
@@ -294,6 +298,8 @@
         </van-row>
       </van-cell>
     </van-popup>
+
+    
     <!-- 创建人弹出框 -->
 
     <!-- 筛选-地区弹窗 -->
@@ -894,10 +900,12 @@ import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
 import TabBar from "../component/TabBar";
+import AddForm from "../component/AddForm";
 export default {
   name: "customer",
   components: {
     TabBar,
+    AddForm,
   },
   data() {
     return {
@@ -966,6 +974,8 @@ export default {
       columns: ["跟进中", "未分配"],
       // 新建客户-头像数据
       uploader: [],
+      // 扫描名片-头像数据
+      scruploader: [],
       // 新建客户-表单按钮选择项
       addLabelList: [
         {
@@ -1429,7 +1439,6 @@ export default {
     //   let url = "/se/customer/customizedField";
     //   const res = await this.$http.get(url);
     //   console.log(res.data.data)
-
     // },
 
     // 获取用户标签值
@@ -2338,8 +2347,48 @@ export default {
       this.pictureShow = true;
     },
     // 点击加号-扫描名片-确认
-    pictureConfirm() {
-      Toast("上传图片成功");
+    async pictureConfirm() {
+      // 提交文件不为空
+      if (this.scruploader != "") {
+        let str = this.scruploader[0].content;
+        let type = this.uploadPicType(str);
+        // this.uploadCusIcon(str, type, type.length);
+        let url = "/api/file/pic/base64StrToPic";
+        let picture;
+        var scrIconUrl;
+        if (type.length == 3) {
+          picture = str.slice(22);
+        } else if (type.length == 4) {
+          picture = str.slice(23);
+        }
+        console.log(picture);
+        let params = new FormData();
+        params.append("picBase64Str", picture);
+        params.append("picFormat", type);
+        params.append("picType", "customerIcon");
+        await this.$http
+          .post(url, params, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          })
+          .then((res) => {
+            console.log(res.data.data);
+            //url
+            scrIconUrl = res.data.data;
+          });
+        url = "/api/se/customerRest/businessCard";
+
+        await this.$http
+          .get(url, {
+            params: {
+              image: scrIconUrl,
+            },
+          })
+          .then((res) => {
+            console.log(res.data.data);
+            if (res.data.data == null) Toast("识别图片失败，请手动新建");
+          });
+      }
+
       this.pictureShow = false;
     },
     // 点击加号-扫描名片-取消
@@ -2369,6 +2418,12 @@ export default {
       }
     },
   },
+  // beforeRouteLeave(to, from, next) {
+  //   from.meta.keepAlive = false;
+  //   this.scollTop =
+  //     document.documentElement.scrollTop || document.body.scrollTop;
+  //   next();
+  // },
   created() {
     this.getCusLabel();
     this.onLoad();

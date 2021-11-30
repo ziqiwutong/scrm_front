@@ -29,7 +29,7 @@
           >手机：{{ cusDetail.telephone }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >号码归属地：广东/广州</van-col
+          >号码归属地：{{ this.telAdress }}</van-col
         >
       </van-row>
       <!-- 共有-来源/地区 -->
@@ -148,7 +148,9 @@
           <van-col span="10" class="cusfont"
             >手机：{{ cusDetail.telephone }}</van-col
           >
-          <van-col span="12" offset="2" class="cusfont">号码归属地：</van-col>
+          <van-col span="12" offset="2" class="cusfont"
+            >号码归属地：{{ this.telAdress }}</van-col
+          >
         </van-row>
         <!-- 个人-微信/微信昵称 -->
         <van-row v-if="showCusType == 0">
@@ -860,6 +862,7 @@ import { Toast } from "vant";
 export default {
   data() {
     return {
+      telAdress: "",
       list: [],
       loading: false,
       finished: false,
@@ -1035,6 +1038,8 @@ export default {
       wx: require("../../assets/cusicon/wx.png"),
       // 新建客户-头像数据
       uploader: [],
+      // 新建客户-扫描数据
+      scruploader: [],
       // 多选-短信发送-弹窗
       shortShow: false,
       // 多选-短信发送-短信内容
@@ -1087,8 +1092,22 @@ export default {
     let cuslist = this.$route.query.cuslist;
     this.getCusDetail(cuslist);
     this.getCusRelation();
+    this.getTelAdress();
   },
   methods: {
+    // 号码归属地查询
+    async getTelAdress() {
+      if (this.cusDetail.telephone != null) {
+        let url = "/api/se/customerRest/attribution";
+        const res = await this.$http.get(url, {
+          params: {
+            phone: this.cusDetail.telephone,
+          },
+        });
+        if (res.data.data != null)
+          this.telAdress = res.data.data.province + res.data.data.city;
+      }
+    },
     // 查看客户所有信息
     showCusAll() {
       this.showCus = !this.showCus;
@@ -1290,7 +1309,7 @@ export default {
     // 更多操作-新建订单
     toOrder() {
       Toast("跳转订单界面");
-      his.$router.push("/contextShareList");
+      his.$router.push("/orderCreate");
     },
     // 更多操作-改跟进人
     changeFollow() {
@@ -1718,6 +1737,16 @@ export default {
       }
     },
   },
+  // beforeRouteEnter(to, from, next) {
+  //   if (to.path == "/customer") {
+  //     to.meta.keepAlive = true;
+  //   } else {
+  //     to.meta.keepAlive = false;
+  //   }
+  //   next((vm) => {
+  //     document.body.scrollTop = vm.scrollTop;
+  //   });
+  // },
 };
 </script>
 
