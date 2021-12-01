@@ -1,7 +1,6 @@
 <template>
   <div class="productList_container">
     <!--以下为搜索栏-->
-    <h3>产品列表</h3>
     <div class="surf">
       <form action="/" v-if="searchShow">
         <van-search
@@ -52,20 +51,29 @@
 <!--        -->
 <!--      </van-row>-->
 <div class="tabbar1">
+<!--      <div class="tuijain" @click="cancel1">-->
+<!--      <van-dropdown-menu  text-color="#4876F1" active-color="#4876F1"	@open="open1">-->
+<!--        <van-dropdown-item color="#4876F1" v-model="value1" :options="option1" />-->
+<!--      </van-dropdown-menu>-->
+<!--      </div>-->
+  <van-tabbar class="tabbar2" v-model="barAct" :fixed="false" active-color="#4876F1">
+    <!--    综合推荐-->
+    <van-tabbar-item class="navopt" @click="sortPop1">
+      <van-icon
+        :name="cus_new"
+        :class="barAct == 0 ? 'colorful' : ''"
+      />综合推荐
+    </van-tabbar-item>
 
-      <van-dropdown-menu active-color="#5252cc"	@open="open1">
-        <van-dropdown-item v-model="value1" :options="option1" />
-      </van-dropdown-menu>
-  <van-tabbar class="tabbar2" v-model="barAct" :fixed="false" active-color="#5252cc">
     <!--    销量-->
-    <van-tabbar-item class="navopt" @click="sortPop">
+    <van-tabbar-item class="navopt" @click="sortPop2">
       <van-icon
         :name="cus_new"
         :class="barAct == 0 ? 'colorful' : ''"
       />销量
     </van-tabbar-item>
     <!--    价格-->
-    <van-tabbar-item class="navopt" @click="sortPop1">
+    <van-tabbar-item class="navopt" @click="sortPop3">
       价格<van-icon
       class-prefix="icon-third"
       :name= "this.priceStatus == 0 ? 'sort-down' : 'paixu-shengxu'"
@@ -93,8 +101,8 @@
                 <div  @click="onDetail(item.productID)">
                   <van-col span="4" offset="1">
                     <van-image
-                      width="75"
-                      height="75"
+                      width="135%"
+                      height="75px"
                       src="https://img01.yzcdn.cn/vant/cat.jpeg"
                     />
 <!--                      src=item.productPic-->
@@ -104,9 +112,9 @@
                   <van-col class="productName" span="8" offset="2">{{item.productName}}</van-col>
                   <van-col class="price" span="6" offset="2">售价:<span class="pricecolor">￥{{item.productPrice}}</span></van-col>
                   <van-col class="stock" span="6" offset="2">库存:{{item.productInventory}}件</van-col>
-                  <van-col class="View" span="6" offset="2">{{item.productView}}人浏览</van-col>
-                  <van-col  class="button" span="6" offset="4">
-                  </van-col>
+                  <van-col class="View" span="10" offset="2">{{item.productView}}人浏览</van-col>
+<!--                  <van-col  class="button" span="6" offset="4">-->
+<!--                  </van-col>-->
                 </div>
                   <div class="button">
                   <van-button class="button-edit" block  @click="showShareDialog" color="#4876F1"  type="info">立即分享</van-button>
@@ -122,7 +130,7 @@
           </div>
     </div>
 <!---->
-    <van-popup v-model="scrShow" closeable position="right" class="scrpop">
+    <van-popup v-model="scrShow" closeable position="bottom" class="scrpop">
       <van-row v-for="item in scrList" :key="item.name">
         <p class="scrname">{{ item.name }}</p>
         <van-button
@@ -165,18 +173,22 @@ export default {
     return {
       ifChoose:'',
 
-      colorful:'#5252cc',
+      colorful:'#4876F1',
       active1: 0,
       priceStatus:0,
       // priceName: this.priceStatus == 0 ? '-paixu_jiangxu' : '-paixu_shengxu',
       //筛选层
-      barAct:3,
+      barAct:0,
       showShare:false,
       options: [
-        { name: '微信', icon: 'wechat' },
-        { name: '微博', icon: 'weibo' },
-        { name: '复制链接', icon: 'link' },
-        { name: '二维码', icon: 'qrcode' },
+        {
+          name: '微信',
+          icon: 'wechat',
+        },
+        {
+          name: '朋友圈',
+          icon: 'wechat-moments',
+        }
       ],
       pageProps: {
         pageNum: 1,
@@ -226,313 +238,26 @@ export default {
       newscrList: [],
       scrList: [
         {
-          name: "性别",
+          name: "价格",
           class: [
-            { name: "男", isSelected: false },
-            { name: "女", isSelected: false },
+            { name: "小于500元", isSelected: false },
+            { name: "500到1000元", isSelected: false },
+            { name: "1000元到2000元", isSelected: false },
+            { name: "2000元到3000元", isSelected: false },
+            { name: "3000元以上", isSelected: false }
           ],
         },
         {
-          name: "年龄范围",
+          name: "产品类型",
           class: [
-            { name: "青少年", isSelected: false },
-            { name: "中青年", isSelected: false },
-            { name: "中老年", isSelected: false },
-          ],
-        },
-        {
-          name: "标签",
-          class: [
-            { name: "高管客户", isSelected: false },
-            { name: "C端客户", isSelected: false },
-            { name: "B端客户", isSelected: false },
-            { name: "爱酒", isSelected: false },
-            { name: "慈善", isSelected: false },
-            { name: "科技公司", isSelected: false },
             { name: "红酒", isSelected: false },
             { name: "啤酒", isSelected: false },
-            { name: "集团合作客户", isSelected: false },
+            { name: "白酒", isSelected: false },
             { name: "定制酒", isSelected: false },
-            { name: "旅游", isSelected: false },
             { name: "其他", isSelected: false },
           ],
         },
-        {
-          name: "来源",
-          class: [
-            { name: "手动新建", isSelected: false },
-            { name: "高端推荐", isSelected: false },
-            { name: "内容营销", isSelected: false },
-            { name: "行业活动", isSelected: false },
-            { name: "启信宝", isSelected: false },
-            { name: "其他", isSelected: false },
-          ],
-        },
-        {
-          name: "企微-客户等级",
-          class: [
-            { name: "一般", isSelected: false },
-            { name: "重要", isSelected: false },
-            { name: "核心", isSelected: false },
-          ],
-        },
-        {
-          name: "企业类型",
-          class: [
-            { name: "国企", isSelected: false },
-            { name: "民企", isSelected: false },
-            { name: "中国500强", isSelected: false },
-            { name: "世界500强", isSelected: false },
-            { name: "上市公司", isSelected: false },
-            { name: "其他", isSelected: false },
-          ],
-        },
-        {
-          name: "行业分类",
-          class: [
-            { name: "食品制造业", isSelected: false },
-            { name: "酒", isSelected: false },
-            { name: "饮料", isSelected: false },
-            { name: "茶制造业", isSelected: false },
-            { name: "批发零售业", isSelected: false },
-            { name: "贸易业", isSelected: false },
-            { name: "金融业", isSelected: false },
-            { name: "建筑安装业", isSelected: false },
-            { name: "房地产业", isSelected: false },
-            { name: "交通运输仓储业", isSelected: false },
-            { name: "软件信息技术业", isSelected: false },
-            { name: "租赁与商业服务业", isSelected: false },
-            { name: "住宿和餐饮业", isSelected: false },
-            { name: "农副食品加工业", isSelected: false },
-            { name: "公共管理与社会保障", isSelected: false },
-            { name: "科学研究和技术服务业", isSelected: false },
-            { name: "农林牧渔业", isSelected: false },
-            { name: "文体旅游和卫生业", isSelected: false },
-            { name: "采矿业", isSelected: false },
-            { name: "其他制造业", isSelected: false },
-            { name: "其他行业", isSelected: false },
-          ],
-        },
-        {
-          name: "注册资本",
-          class: [
-            { name: "200万以下", isSelected: false },
-            { name: "500万以下", isSelected: false },
-            { name: "1000万以下", isSelected: false },
-            { name: "5000万以下", isSelected: false },
-            { name: "5000万以上", isSelected: false },
-          ],
-        },
-        {
-          name: "员工数量",
-          class: [
-            { name: "20人以下", isSelected: false },
-            { name: "100人以下", isSelected: false },
-            { name: "500人以下", isSelected: false },
-            { name: "1000人以下", isSelected: false },
-            { name: "1000人以上", isSelected: false },
-          ],
-        },
-        {
-          name: "跟进阶段",
-          class: [
-            { name: "新客", isSelected: false },
-            { name: "已加微信", isSelected: false },
-            { name: "产品介绍", isSelected: false },
-            { name: "合作模式洽谈", isSelected: false },
-            { name: "签约协议", isSelected: false },
-            { name: "已成交", isSelected: false },
-            { name: "已打首付款", isSelected: false },
-            { name: "阶段性付款", isSelected: false },
-            { name: "已打尾款", isSelected: false },
-            { name: "多次成交", isSelected: false },
-            { name: "已输单", isSelected: false },
-            { name: "无效客户", isSelected: false },
-          ],
-        },
-        {
-          name: "输单原因",
-          class: [
-            { name: "价格原因", isSelected: false },
-            { name: "合作模式", isSelected: false },
-            { name: "产品", isSelected: false },
-            { name: "其它", isSelected: false },
-          ],
-        },
-        {
-          name: "无效原因",
-          class: [
-            { name: "其它", isSelected: false },
-            { name: "客户无需求", isSelected: false },
-            { name: "多次联系不上", isSelected: false },
-            { name: "错误手机号码", isSelected: false },
-          ],
-        },
-        {
-          name: "商机创建时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "预计成交时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "成交时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "结束时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "最近跟进阶段",
-          class: [
-            { name: "新客", isSelected: false },
-            { name: "已加微信", isSelected: false },
-            { name: "产品介绍", isSelected: false },
-            { name: "合作模式洽谈", isSelected: false },
-            { name: "签约协议", isSelected: false },
-            { name: "已成交", isSelected: false },
-            { name: "已打首付款", isSelected: false },
-            { name: "阶段性付款", isSelected: false },
-            { name: "已打尾款", isSelected: false },
-            { name: "多次成交", isSelected: false },
-            { name: "已输单", isSelected: false },
-            { name: "无效客户", isSelected: false },
-          ],
-        },
-        {
-          name: "成交状态",
-          class: [
-            { name: "未成交", isSelected: false },
-            { name: "成交", isSelected: false },
-          ],
-        },
-        {
-          name: "客户状态",
-          class: [
-            { name: "未成交", isSelected: false },
-            { name: "成交", isSelected: false },
-          ],
-        },
-        {
-          name: "创建时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "分配时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "最近通话时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "最近通话状态",
-          class: [
-            { name: "已接通", isSelected: false },
-            { name: "未接通", isSelected: false },
-            { name: "未知", isSelected: false },
-          ],
-        },
-        {
-          name: "回收时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
-        {
-          name: "最近旅程时间",
-          class: [
-            { name: "今天", isSelected: false },
-            { name: "昨天", isSelected: false },
-            { name: "过去7天", isSelected: false },
-            { name: "本周", isSelected: false },
-            { name: "上周", isSelected: false },
-            { name: "本月", isSelected: false },
-            { name: "上月", isSelected: false },
-            { name: "自定义", isSelected: false },
-            { name: "为空", isSelected: false },
-          ],
-        },
+
       ],
 
     }
@@ -541,7 +266,18 @@ export default {
     CreateContext,
     TabBar
   },
+  mounted() {
+    // let dropdown = document.querySelector('/deep/.van-dropdown-menu__title');
+    // dropdown.classList.add('.van-dropdown-menu__title__active');
+  },
   methods: {
+    cancel1(){
+      this.barAct=3
+      let dropdown = document.querySelector('.van-ellipsis');
+      console.log(dropdown.classList);
+      dropdown.classList.add('.van-ellipsis-active');
+
+    },
     //以上为筛选内容
     toScreen() {
       this.scrShow = !this.scrShow;
@@ -555,11 +291,7 @@ export default {
           }
         }
       }
-      for (i = 0; i < this.cusList.length; i++) {
-        this.cusList[i].isShow = true;
-      }
       this.ifChoose = true;
-      this.followChsVal = [];
     },
     // 筛选-按钮点击高亮事件
     cutTabClick(item) {
@@ -583,16 +315,38 @@ export default {
         for (j = 0; j < this.scrList[i].class.length; j++) {
           if (this.scrList[i].class[j].isSelected === true) {
             this.selectList.push(
-              this.scrList[i].name + ":" + this.scrList[i].class[j].name
+              // this.scrList[i].name + ":" + this.scrList[i].class[j].name
+              j+5*i
             );
           }
         }
       }
-      this.selectList.push(
-        this.followChsVal.name + ":" + this.followChsVal.val
-      );
       console.log(this.selectList);
-
+      this.send();
+    },
+    async send(){  //发送筛选请求
+      this.pageProps.pageNum=1;
+      this.list=[];
+      let url = "/api/se/product/queryProduct";
+      let postData = {
+        pageNum: this.pageProps.pageNum++,
+        pageSize: this.pageProps.pageSize,
+        type: 4,
+        sort:this.selectList,
+      }
+      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      if (result.length == 0) {
+        // 已加载全部数据
+        this.finished = true;
+        Toast('已加载全部数据！');
+      }
+      for (let i = 0; i < result.length; i++) {
+        this.list.push(result[i]);
+      }
+      console.log(this.list);
+      // 加载状态结束
+      this.loading = false;
+      this.scrShow = false;
     },
     //以上为筛选内容
     // toFollow(){
@@ -603,14 +357,30 @@ export default {
    this.scrShow = true;
     },
     sortPop1(barAct){
+      // let dropdown = document.querySelector('.van-ellipsis');
+      // dropdown.classList.add('.van-ellipsis-active');
+      this.pageProps.pageNum=1;
+      this.list=[];
+      this.onLoad();
+    },
+    sortPop2(barAct){
+
+      this.pageProps.pageNum=1;
+      this.list=[];
+      this.onLoad();
+    },
+    sortPop3(barAct){
      if(this.priceStatus === 0)
        this.priceStatus = 1;
       else
        this.priceStatus = 0;
-
+     this.pageProps.pageNum=1;
+      this.pageProps.pageSize=10;
+      this.list=[];
+      this.onLoad();
     },
     open1(){
-      this.barAct=3;
+      this.barAct=0;
     },
     showShareDialog() {
       this.showShare = true
@@ -650,10 +420,13 @@ export default {
 
     async onLoad() {
       let url = "/api/se/product/queryProduct";
+      let barAct1=this.barAct;
+      if( this.barAct == 2 && this.priceStatus == 0) barAct1 =3;
+      // if( this.barAct == 3 ) barAct1 =4;
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
-        // orderType: this.active,
+        type: barAct1
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       if (result.length == 0) {
@@ -711,9 +484,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+ .tuijain{
+  height: auto;
+  color: #4876F1;
+}
 //以下为筛选内容
 .scrpop {
-  width: 90%;
+  //width: 90%;
 }
 // 筛选按钮
 .scrbtn {
@@ -756,7 +533,7 @@ export default {
 //以上为筛选内容
 /deep/ .tabbar2{
   height: 100%;
-  width: 75%;
+  width: 100%;
   float: left;
   .van-tabbar-item{
     font-size: 15px;
@@ -790,6 +567,9 @@ h3{
   box-shadow:0 0 0 0;
   //width:75%;
 }
+ .van-dropdown-menu__title__active{
+   color: #4876F1;
+ }
 .productList_container{
   height:100%;
   //margin-bottom: 40px;
@@ -800,7 +580,6 @@ h3{
   height: 100%;
   margin-bottom: 50px;
 }
-
 /deep/ .content1 {
   height:30px;
   //border:1px solid gray;
@@ -812,6 +591,7 @@ h3{
     font-size: 14px;
   }
 }
+
 .tab-nav1{
   background-color: lightblue;
   line-height: 35px;
@@ -852,6 +632,7 @@ h3{
     font-size: 13px;
   }
   .productName{
+    font-size: 14px;
     height: 40px;
   }
 
@@ -863,6 +644,7 @@ h3{
 }
   .price{
     text-align: right;
+    font-size: 14px;
   }
 .View{
   margin-top: 10px;
@@ -888,9 +670,19 @@ h3{
 /deep/ .van-row1 .van-col--8{
   // display: flex;
   height:40px;
-  font-size:16px;
+  font-size:14px;
 
 }
 
+/deep/ .van-dropdown-menu__title{
+  padding-top: 4px;
+  //color: #4876F1;
+}
+/deep/ .van-ellipsis{
+  color:rgb(72, 118, 241);
+}
+/deep/ .van-ellipsis-active{
+  color:#030303;
+}
 
 </style>

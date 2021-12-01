@@ -151,6 +151,8 @@ export default {
   name: "productCreate",
   data() {
     return {
+      //客户表弹出框
+      followShow:'',
       productName: '',
       productPrice: '',
       productInventory: '',
@@ -170,7 +172,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/se/product/addOrder";
+      let url = "/api/se/product/addProduct";
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,
@@ -179,17 +181,21 @@ export default {
         productCertificate: this.productCertificate,
         notes:this.notes,
         priceChange:this.priceChange,
-        productPic: this.productPic,
-        productQr: this.productQr
+        productPic: this.productPic1,
+        pretailPrice:this.pretailPrice,
+        wholesalePrice:this.wholesalePrice,
+        priceDescribe:this.priceDescribe,
+        productIntro:this.productIntro,
+        brandIntro:this.brandIntro
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data
 
       if(result.code === 200) {
-        Toast('订单创建成功');
-        this.$router.push('orderList');
+        Toast('产品创建成功');
+        this.$router.push('productList');
       }
       else
-        Toast('订单创建失败,错误码' + result.code);
+        Toast('产品创建失败,错误码' + result.code);
 
     },
     async afterRead(file) {

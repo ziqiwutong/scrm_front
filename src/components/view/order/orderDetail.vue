@@ -9,8 +9,10 @@
 
     />
     <div class="order_status" v-if="orderType === 2" >
+      <img src="../../../assets/底纹@3x.png" height="200" width="100%"/>
       <div class="img-group1">
         <div class="sphere"></div>
+        <div class="sphere-border"></div>
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
@@ -19,6 +21,7 @@
 <!--          height="40"-->
 <!--          src="../../../assets/地图-圆 (1).png">-->
         <div class="sphere"></div>
+        <div class="sphere-border"></div>
 <!--        <van-icon class-prefix="icon-third" name="ditu-yuan-copy" color="#5252cc"/>-->
         <div class="img-tip">2</div>
       </div>
@@ -35,13 +38,15 @@
 <!---->
 
     <div class="order_status" v-else-if="orderType === 0" >
+      <img src="../../../assets/底纹@3x.png" height="200" width="100%"/>
       <div class="img-group1">
         <div class="sphere"></div>
-
+        <div class="sphere-border"></div>
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
         <div class="sphere1"></div>
+        <div class="sphere-border"></div>
         <div class="img-tip">2</div>
       </div>
       <div class="line-post"></div>
@@ -55,13 +60,15 @@
     </div>
 
     <div class="order_status" v-else-if="orderType === 1" >
+      <img src="../../../assets/底纹@3x.png" height="200" width="100%"/>
       <div class="img-group1">
         <div class="sphere"></div>
-
+        <div class="sphere-border"></div>
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
         <div class="sphere1"></div>
+        <div class="sphere-border"></div>
         <div class="img-tip">2</div>
       </div>
       <div class="line-post"></div>
@@ -75,13 +82,15 @@
     </div>
 
     <div class="order_status" v-else-if="orderType === -1" >
+      <img src="../../../assets/底纹@3x.png" height="200" width="100%"/>
       <div class="img-group1">
         <div class="sphere"></div>
-
+        <div class="sphere-border"></div>
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
         <div class="sphere1"></div>
+        <div class="sphere-border"></div>
         <div class="img-tip">2</div>
       </div>
       <div class="line-post"></div>
@@ -95,13 +104,16 @@
     </div>
 
     <div class="order_status" v-else >
+
+      <img src="../../../assets/底纹@3x.png" height="200" width="100%"/>
       <div class="img-group1">
         <div class="sphere"></div>
-
+        <div class="sphere-border"></div>
         <div class="img-tip">1</div>
       </div>
       <div class="img-group2">
         <div class="sphere1"></div>
+        <div class="sphere-border"></div>
         <div class="img-tip">2</div>
       </div>
       <div class="line-post"></div>
@@ -116,15 +128,15 @@
 <!--    -->
     <div class="order_detail" >
       <van-row>
-        <van-col class="top" span="6" offset="1">买家</van-col>
+        <van-col class="top"  span="6" offset="1">买家</van-col>
         <van-col class="top2"  span="15">{{ orderBuyer }}</van-col>
-        <van-col span="6" offset="1">成交员工</van-col>
+        <van-col span="6" class="left" offset="1">成交员工</van-col>
         <van-col span="15" class="detail_right">{{ orderStaff }}</van-col>
-        <van-col span="6" offset="1">订单号</van-col>
+        <van-col span="6" class="left" offset="1">订单号</van-col>
         <van-col span="15" class="detail_right">{{ orderID }}</van-col>
-        <van-col span="6" offset="1">备注</van-col>
+        <van-col span="6" class="left" offset="1">备注</van-col>
         <van-col span="15"class="detail_right">{{ notes }}</van-col>
-        <van-col span="6" offset="1">订单来源</van-col>
+        <van-col span="6" class="left" offset="1">订单来源</van-col>
         <van-col span="15"class="detail_right">{{ orderSource }}</van-col>
       </van-row>
     </div>
@@ -137,7 +149,7 @@
             round
             width="60"
             height="60"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
+            :src=this.productPic
           />
         </van-col>
         <van-col class="words1" span="15" offset="4">￥{{productPrice}}×{{productBuyAmount}}</van-col>
@@ -146,18 +158,18 @@
     </div>
       <div class="price_right">
         <van-row class="right_row">
-          <van-col class="top" span="10" offset="1">商品总价</van-col>
-          <van-col class="top" span="13">￥{{ productPrice }}</van-col>
-          <van-col span="10" offset="1">改价</van-col>
-          <van-col span="13">￥{{ priceChange }}</van-col>
-          <van-col class="real1" span="10" offset="1">实收金额</van-col>
-          <van-col class="real2" span="13">￥{{realPrice}}</van-col>
+          <van-col class="top" span="10" offset="3">商品总价</van-col>
+          <van-col class="top" span="11">￥{{ productPrice }}</van-col>
+          <van-col span="10" offset="3">改价</van-col>
+          <van-col span="11">￥{{ priceChange }}</van-col>
+          <van-col class="real1" span="10" offset="3">实收金额</van-col>
+          <van-col class="real2" span="11">￥{{realPrice}}</van-col>
         </van-row>
-        <div class="button1">
-        <van-button class="button-1" block  @click="orderEdit1" color="#5252cc"  type="info">编辑</van-button>
-          <van-button class="button-1" block @click="orderDelete1" type="danger">删除</van-button>
-        </div>
 
+      </div>
+      <div class="button1">
+        <van-button class="button-1" block  @click="orderEdit1" color="#4876F1"  type="info">编辑</van-button>
+        <van-button class="button-1" block @click="orderDelete1" type="danger">删除</van-button>
       </div>
     </div>
 
@@ -180,6 +192,7 @@ export default {
       orderBuyer:'',
       orderStaff:'',
       productPic:'',
+      // productPic1:'https://img01.yzcdn.cn/vant/cat.jpeg',
       productBuyAmount:'',
       notes:'',
       orderSource:'',
@@ -211,8 +224,8 @@ export default {
      this.orderStaff=result.orderStaff;
      this.notes=result.notes;
      this.orderSource=result.orderSource;
-     this.orderTime=result.orderTime;
-     this.orderFinish=result.orderFinish;
+     this.orderTime=result.orderTime.split(" ")[0];
+     this.orderFinish=result.orderFinish.split(" ")[0];
      this.productBuyAmount=result.productBuyAmount;
      this.priceChange=result.priceChange;
      this.realPrice=this.productPrice - this.priceChange;
@@ -256,27 +269,52 @@ export default {
 </script>
 
 <style lang="less" scoped>
+///deep/ .van-nav-bar__text{
+//  //color:black;
+//}
+/deep/ .van-nav-bar__left{
+  font-size: 1rem;
+  //color:black;
+}
 .orderDetail_container{
   height: 100%;
-  background-color: rgba(215, 215, 215, 0.129411764705882);
+  background-color: #ffffff;
 }
 .order_status{
-  //background: url(../../../assets/底纹@3x.png);
-  background-color: white ;
-  height:30%;
-  padding--top: 60px;
-  border-top:5px solid rgba(215, 215, 215, 0.12941176) ;
+  //background: url(../../../assets/底纹@3x.png) repeat-x center center;
+  background-size:100% 100%;
+  box-sizing: border-box;
+  //background-repeat: repeat-x;
+  background-color: #4876F1;
+  //height:calc(20vh +  46px);
+  //height:30vh;
+  height: 220px;
+  padding-top: 46px;
+  //border-top:5vh solid rgba(215, 215, 215, 0.12941176) ;
 }
 .img-group1 {
   height: 40px;
   width: 40px;
   position: absolute;
-  top:110px;
+  //top:15vh;
+  top:100px;
   left:70px;
   .sphere{
     width: 40px;
     height: 40px;
-    background-color: #5252cc;
+    background-color: #ffffff;
+    border-radius: 50%;
+  }
+  .sphere-border{
+    position: absolute;
+   //z-index: ;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%,-50%);
+    opacity: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
     border-radius: 50%;
   }
 
@@ -285,53 +323,70 @@ export default {
   height: 40px;
   width: 40px;
   position: absolute;
-  top:110px;
+   top:100px;
   right:70px;
   .sphere{
     width: 40px;
     height: 40px;
-    background-color: #5252cc;
+    background-color: #ffffff;
+    border-radius: 50%;
+  }
+  .sphere-border{
+    position: absolute;
+    //z-index: ;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%,-50%);
+    opacity: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
     border-radius: 50%;
   }
 }
 .sphere1{
+  //opacity:0.5;
   width: 40px;
   height: 40px;
-  background-color: lightgray;
+  background-color: #FFFFFF;
   border-radius: 50%;
 }
 .img-tip {
   position: absolute;
-  font-size: 20px;
-  color: white;
+  font-size: 1.3rem;
+  color: #4876F1;
   left:14px;
   top:8px;
 }
 .line{
   position: absolute;
-  top:130px;
+  top:119px;
   left:110px;
-  height: 4px;
+  height: 3px;
   right:110px;
   //width: 43%;
-  background-color: #5252cc;
+  background-color: #ffffff;
 }
 .line-post{
   position: absolute;
-  top:130px;
+  top:119px;
   left:110px;
   height: 4px;
   right:110px;
-  background-color: lightgray;
+  background-color: #FFFFFF;
 }
 .order_time{
   text-align: center;
   position: absolute;
    left:89px;
-  top:149px;
+   top:143px;
   transform: translateX(-50%);
   p{
-   margin: 5px;
+    margin: 5px;
+    //margin-right: auto;
+    color: #FFFFFF;
+    font-size: 1rem;
+    font-family: PingFang-SC-Medium;
   }
 }
 
@@ -339,10 +394,13 @@ export default {
   text-align: center;
   position: absolute;
   right:89px;
-  top:149px;
+  top:143px;
   transform: translateX(50%);
   p{
     margin: 5px;
+    color: #FFFFFF;
+    font-size: 1rem;
+    font-family: PingFang-SC-Medium;
   }
 }
 /deep/ .van-steps__items{
@@ -370,50 +428,64 @@ margin-top: 20px;
 }
 }
 
-.nav-bar{
-  height:48px;
+/deep/ .nav-bar{
+  height:46PX;
+  .van-nav-bar__title{
+    font-size: 1rem;
+    text-align: center;
+  }
 }
 .order_detail{
-  border-top:10px solid rgba(215, 215, 215, 0.129411764705882) ;
-  height:30%;
-  padding-top: 10px;
+  border-top:2vh solid rgba(215, 215, 215, 0.129411764705882);
+  //height:30vh;
+  padding-top: 1vh;
   background-color: white;
-  .van-row{
-
+  .left{
+    color:#B2B2B2
+  }
+  .top{
+    color:#B2B2B2
   }
 }
 .order_price{
-  border-top:10px solid rgba(215, 215, 215, 0.129411764705882) ;
-  height:35%;
+  position: relative;
+  border-top:2vh solid rgba(215, 215, 215, 0.129411764705882) ;
+  //height:28vh;
   //padding-top: 10px;
+  height: 200px;
+  //margin: auto 0;
   background-color: white;
 }
 .price_left{
-  height: 100%;
+  height: 150px;
+  background-color: white;
   width: 50%;
   float: left;
 }
 /deep/.van-row2{
   position: relative;
-  .img1{
-    position:absolute;
-    top:80px;
-  }
+  //.img1{
+  //  position:absolute;
+  //  top:80px;
+  //}
   .van-col{
-  margin-top: 35%;
+  margin-top: 30%;
   }
-  .words1{
-    width: 100px;
-    margin-top: 40%;
-  }
+  //.words1{
+  //  width: 100px;
+  //  margin-top: 40%;
+  //}
   .words2{
-    width: 100px;
-    margin-left: 40%;
+    //width: 100px;
+    //margin-left: 40%;
+    color:#B2B2B2 ;
     margin-top: 0;
   }
 }
 .price_right{
-  height: 70%;
+  //height: 70%;
+  height: 200px;
+  background-color: #FFFFFF;
   width: 50%;
   float: left;
   .right_row{
@@ -422,7 +494,7 @@ margin-top: 20px;
       font-size: 1rem;
     }
   .top{
-    margin-top: 32%;
+    margin-top: 20%;
   }
   }
 
@@ -453,16 +525,23 @@ margin-top: 20px;
 
 }
 .button1{
+  //z-index: 100;
+  position: absolute;
+  right:25px;
+  bottom:20px;
   //margin-top: 10px;
   height: 35px;
-  width: 140px;
+  //width: 140px;
   display: flex;
   margin-top: 10px;
-  margin-right:10px;
+  margin-right:15px;
 }
-.button-1{
-  height:35px;
-  width: 70px;
+/deep/ .van-button--block{
+  //height:35px;
+  //width: 110px;
+  height: 2.3rem;
+  width: 6rem;
   margin-left:10px;
 }
+
 </style>
