@@ -2,9 +2,6 @@ import wx from 'weixin-js-sdk'
 //utils.js
 const wxApi = {
   wxRegister(data, option) {
-    console.log("hello");
-    console.log(data)
-    console.log(option)
     wx.config({
       debug: true, // 开启调试模式
       appId: data.appId, // 必填，公众号的唯一标识

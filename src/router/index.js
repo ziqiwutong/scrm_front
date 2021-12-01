@@ -39,6 +39,9 @@ import productDetail from "../components/view/product/productDetail";
 import productEdit from   "../components/view/product/productEdit";
 import procustomer from "../components/customer/procustomer"
 
+import searchList from "../components/view/searchCustomer/searchList";
+import searchCustomer from "../components/view/searchCustomer/searchCustomer";
+import bkIntroduce from "../components/view/searchCustomer/bkIntroduce";
 
 Vue.use(Router)
 
@@ -208,6 +211,21 @@ const routes = [
     path: '/sweetTest',
     name:'sweetTest',
     component: sweetTest
+  },
+  {
+    path: '/searchCustomer',
+    name:'searchCustomer',
+    component: searchCustomer
+  },
+  {
+    path: '/searchList',
+    name:'searchList',
+    component: searchList
+  },
+  {
+    path: '/bkIntroduce',
+    name:'bkIntroduce',
+    component: bkIntroduce
   }
 ];
 

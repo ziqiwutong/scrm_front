@@ -9,7 +9,7 @@
       </div>
       <div v-html="article" class="article"></div>
     </div>
-    <van-share-sheet v-model="showShare" :options="options" @select="shareArticle"/>
+    <van-share-sheet v-model="showShare" title="立即分享" :options="options" @select="shareArticleApp"/>
     <BusinessCard class="bsCard" :userImgUrl="sharePerImg" :username="sharePerName" :userCompany="sharePerCompany"
                   :userPhone="sharePerPhone"
                   v-show="showCard"/>
@@ -48,6 +48,11 @@ import {Toast} from "vant";
 import {getUserId} from "../../../network/getToken";
 import {getUrl} from "../../../utils/replaceUrl";
 import wxApi from "../../../utils/wxApi";
+import yyApi from "../../../utils/yyApi";
+import wx from 'weixin-js-sdk'
+import {ajax} from "../../../utils/ajax";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 export default {
   name: "articleDetail",
@@ -60,7 +65,7 @@ export default {
       date: "",
       articleId: "123",
       article: "",
-      showCard: false,
+      showCard: true,
       inWX: false,
       shareId: '',
       sharePerImg: "",
@@ -91,11 +96,14 @@ export default {
       wxUserMsg: '',
       // 滚动前，滚动条距文档顶部的距离
       oldScrollTop: 0,
+      stompClient: '',
+      ws_timer: ''
     }
   },
   created() {
-    this.articleId = this.$route.query.articleId;
-    this.shareId = this.$route.query.shareId;
+    this.judgeEnv();
+    this.articleId = this.$route.query.articleid;
+    this.shareId = this.$route.query.shareid;
     this.showCard = this.$route.query.ifshowshareman;
     this.getArticle();
     let user = navigator.userAgent.toLowerCase();
@@ -104,44 +112,184 @@ export default {
         this.readTime++;
       }, 1000);
     }
+    this.pageListener();
+    setInterval(() => {
+      this.handleSend();
+    }, 1000);
+    // this.initWebSocket();
   },
   mounted() {
-    this.judgeEnv();
     if (this.showCard == false) {
       let element = document.getElementsByClassName('article-container')[0];
       element.setAttribute('style', 'padding-top:30px;');
     }
-  },
-  async beforeDestroy() {
-    clearInterval(this.timer);
-    this.timer = null;
-    // 把用户基本信息与用户阅读时间传给后台
-    let url = JSON.parse(getUrl()).contextShare.saveWxUserMsg;
-    let postData = {
-      articleId: this.articleId,
-      shareId: this.shareId,
-      readTime: this.readTime,
-      openid: this.wxUserMsg.openid,
-      nickname: this.wxUserMsg.nickname,
-      sex: this.wxUserMsg.sex,
-      province: this.wxUserMsg.province,
-      city: this.wxUserMsg.city,
-      country: this.wxUserMsg.country,
-      headimgurl: this.wxUserMsg.headimgurl,
-      privilege: this.wxUserMsg.privilege,
-      unionid: this.wxUserMsg.unionid
+    let user = navigator.userAgent.toLowerCase();
+    if (user.match(/MicroMessenger/i) == "micromessenger") {
+      if (window.history && window.history.pushState) {
+        history.pushState(null, null, document.URL)
+        window.addEventListener('popstate', this.backChange, false) // false阻止默认事件
+      }
+      // window.addEventListener('pagehide', this.beforeunloadHandler, false);
+      // window.addEventListener('onunload', e => {
+      //   console.log('onunload');
+      //   this.beforeunloadHandler();
+      // });
+      window.onbeforeunload = function () {
+        this.beforeunloadHandler();
+      }
     }
-    const wxUserMsg = (await this.$http.post(url, postData)).data;
-    console.log(wxUserMsg.code);
+  },
+  beforeDestroy() {
+    this.beforeunloadHandler();
+  },
+  destroyed() {
+    let user = navigator.userAgent.toLowerCase();
+    if (user.match(/MicroMessenger/i) == "micromessenger") {
+      // this.beforeunloadHandler();
+      // 监听页面回退
+      window.removeEventListener('popstate', this.backChange, false) // false阻止默认事件
+      // // 监听页面关闭
+      // window.removeEventListener('pagehide', this.beforeunloadHandler);
+      // window.removeEventListener('onunload', this.beforeunloadHandler);
+    }
+    this.close();
+    // this.disconnect();
   },
   methods: {
+    pageListener() {
+      if (typeof (WebSocket) === "undefined") {
+        alert("您的浏览器不支持socket")
+      } else {
+        let url = "ws://192.168.1.107:30003/mk/article/ws";
+        // let url = "ws://127.0.0.1:4000";
+        // 实例化socket
+        this.socket = new WebSocket(url)
+        // 监听socket连接
+        this.socket.onopen = this.open
+        // 监听socket错误信息
+        this.socket.onerror = this.error
+        // 监听socket消息
+        this.socket.onmessage = this.getMessage
+      }
+    },
+    open() {
+      console.log("socket连接成功")
+    },
+    error() {
+      console.log("连接错误")
+    },
+    getMessage(msg) {
+      console.log(msg.data);
+    },
+    send: function (params) {
+      // try {
+      this.socket.send(params)
+      // } catch (err) {
+      //   console.log('websocket掉线了');
+      //   return;
+      //   // this.socket = new WebSocket(url);
+      // }
+    },
+    close: function () {
+      console.log("socket已经关闭")
+    },
+    handleSend(e) {
+      let params = JSON.stringify({
+        content: '1',
+        id: 'sss'
+      })
+      this.send(params);
+    },
+
+    // initWebSocket() {
+    //   this.connection();
+    //   let that = this;
+    //   // 断开重连机制,尝试发送消息,捕获异常发生时重连
+    //   this.ws_timer = setInterval(() => {
+    //     try {
+    //       that.stompClient.send("test");
+    //     } catch (err) {
+    //       console.log("断线了: " + err);
+    //       that.connection();
+    //     }
+    //   }, 10000);
+    // },
+    // connection() {
+    //   // 建立连接对象
+    //   let socket = new SockJS('http://127.0.0.1:3000/upgrade');
+    //   // 获取STOMP子协议的客户端对象
+    //   this.stompClient = Stomp.over(socket);
+    //   // 定义客户端的认证信息,按需求配置
+    //   let headers = {
+    //     Authorization: ''
+    //   }
+    //   // 向服务器发起websocket连接
+    //   this.stompClient.connect(headers, () => {
+    //     this.stompClient.send("/ws",
+    //       headers,
+    //       JSON.stringify({sender: 'eet', chatType: 'JOIN'}),
+    //     )   //用户加入接口
+    //   }, (err) => {
+    //     // 连接发生错误时的处理函数
+    //     console.log('失败')
+    //     console.log(err);
+    //   });
+    // },
+    // disconnect() {
+    //   if (this.stompClient) {
+    //     this.stompClient.disconnect();
+    //     clearInterval(this.ws_timer);
+    //   }
+    // },  // 断开连接
+    backChange() {
+      this.beforeunloadHandler();
+    },
+    async beforeunloadHandler() {
+      clearInterval(this.timer);
+      this.timer = null;
+      // 把用户基本信息与用户阅读时间传给后台
+      let url = JSON.parse(getUrl()).contextShare.saveWxUserMsg;
+      let postData = {
+        articleId: this.articleId,
+        shareId: this.shareId,
+        readTime: this.readTime,
+        openid: this.wxUserMsg.openid,
+        nickname: this.wxUserMsg.nickname,
+        sex: this.wxUserMsg.sex,
+        province: this.wxUserMsg.province,
+        city: this.wxUserMsg.city,
+        country: this.wxUserMsg.country,
+        headimgurl: this.wxUserMsg.headimgurl,
+        // privilege: this.wxUserMsg.privilege,
+        unionid: this.wxUserMsg.unionid
+      }
+      ajax({
+        type: 'POST',
+        url: url,
+        async: false,
+        contentType: "application/json;charset=utf-8",
+        data: postData,
+        success: function (data) {
+        },
+        error: function () {
+        }
+      });
+      // const wxUserMsg = (await this.$http.post(url, postData)).data;
+      wx.closeWindow();
+    },
     // 判断环境为微信还是app
     async judgeEnv() {
       let user = navigator.userAgent.toLowerCase();
-      if (user.match(/MicroMessenger/i) == "micromessenger") {
-        let url = window.location.href.split('#')[0];
+      if (user.match(/MicroMessenger/i) == "micromessenger") {// 只能是两个等号，看起来类型是不同的
         // 不存在code则代表是未授权页面
-        if (!this.$route.query.code) {
+        if (!this.$route.query.code || this.$store.state.hasOAuth === 'false') {
+          this.$store.commit('updateArticleOAuth', 'true');
+          let url = JSON.parse(getUrl()).baseUrl
+            + 'articleDetail?articleid='
+            + this.$route.query.articleid
+            + '&shareid='
+            + this.$route.query.shareid
+            + '&ifshowshareman=' + this.showCard;
           let articleUrl = encodeURIComponent(url);
           let link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8cfd402efecab262&redirect_uri=" + articleUrl + "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
           location.href = link;
@@ -155,12 +303,13 @@ export default {
           const wxUserMsg = (await this.$http.get(url, {params: getData})).data.data;
           // 把微信用户的基本信息存入本地，然后等用户离开页面时再返回给后台
           this.wxUserMsg = wxUserMsg;
+          this.shareArticleWx();
         }
         this.inWX = true;
         document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-top:60px;padding-bottom:0px;');
         document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
+
         // 微信分享文章
-        this.shareArticle();
         // 监听页面滚动事件
         window.addEventListener("scroll", this.scrolling)
       } else {
@@ -171,8 +320,8 @@ export default {
       let self = this;
       let url = JSON.parse(getUrl()).contextShare.articleDetail
       let postData = {
-        id: self.articleId,
-        shareId: self.shareId
+        id: this.$route.query.articleid,
+        shareId: this.$route.query.shareid
       }
       const result = (await self.$http.get(url, {params: postData})).data.data;
       self.title = result.article.articleTitle;
@@ -183,8 +332,7 @@ export default {
       }
       self.date = '';
       self.article = result.article.articleContext;
-      let lastWord = result.user.username.slice(-1);
-      self.sharePerImg = result.user.username == "" ? "酒" : lastWord;
+      self.sharePerImg = result.user.userIcon;
       self.sharePerName = result.user.username;
       self.sharePerCompany = '泸州老窖集团有限责任公司';
       self.sharePerPhone = result.user.telephone;
@@ -221,6 +369,8 @@ export default {
           if (result.code == 200) {
             Toast("删除成功！");
             self.$router.push("/contextShareList");
+          } else {
+            this.$toast('删除失败，请重试！');
           }
         })
         .catch(() => {
@@ -230,10 +380,17 @@ export default {
     showShareArticle() {
       this.showShare = true;
     },
-    async shareArticle() {
+    async shareArticleWx() {
       // 先去后台拿微信的jsConfig，然后触发分享事件，传给后台的pageUrl不需要编码
+      // let pageUrl = JSON.parse(getUrl()).baseUrl
+      //   + 'articleDetail?artcileid='
+      //   + this.articleId
+      //   + '&shareid='
+      //   + this.shareId
+      //   + '&ifshowshareman=' + this.showCard;
+      let pageUrl = location.href;
       let postData = {
-        url: window.location.href.split('#')[0]
+        url: pageUrl
       }
       let url = JSON.parse(getUrl()).contextShare.wxConfig;
       const result = (await this.$http.get(url, {params: postData})).data.data;
@@ -251,6 +408,29 @@ export default {
       }
       console.log(shareMsg.link)
       await wxApi.wxRegister(wxConfig, shareMsg);
+      this.showShare = false;
+    },
+    async shareArticleApp(e) {
+      // 先去后台拿用友的jsConfig，然后触发分享事件
+      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      const result = (await this.$http.get(url)).data.data;
+      let yyConfig = {
+        appId: result.appid,
+        timestamp: result.timestamp,
+        signature: result.signature
+      }
+      let shareMsg = {
+        type: '2',
+        title: this.title,
+        imageUrl: this.articleMsg.coverImg,
+        desc: '点击查看详情->',
+        pageUrl: window.location.href
+      }
+      if (e.name === '朋友圈') {
+        shareMsg.type = '3';
+      }
+      await yyApi.yyRegister(yyConfig, shareMsg);
+      this.showShare = false;
     },
     switchBtn(showCard) {
       this.showCard = showCard;
@@ -340,7 +520,7 @@ export default {
   //background-color: #fafafa;
 }
 
-.article{
+.article {
   font-size: 17px;
   line-height: 1.6em;
   text-align: justify;
@@ -349,7 +529,7 @@ export default {
   box-sizing: border-box;
 }
 
-.article /deep/*{
+.article /deep/ * {
   max-width: 100% !important;
   box-sizing: border-box;
 }
@@ -385,6 +565,7 @@ h2 {
   vertical-align: middle;
   padding: 10px;
   background-color: #f2f2f2;
+  z-index: 99;
 }
 
 .bottomTab p {

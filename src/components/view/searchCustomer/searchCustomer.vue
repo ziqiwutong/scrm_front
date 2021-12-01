@@ -3,32 +3,11 @@
   <div class="searchRelationship_container">
     <NavBar/>
     <div class="company_logo_block">
-      <img class="company_logo" src="../../../assets/icon/company_logo.png">
+      <img class="company_logo" src="@/assets/icon/company_logo.png">
     </div>
-
-    <p class="tip">请输入双方关系</p>
 
     <div class="search1_block">
-      <van-field
-        class="search1"
-        v-model="value1"
-        left-icon="customer-relationship"
-        placeholder="请输入您想要检索的客户/公司"
-        border=border
-      >
-        <van-icon class-prefix="icon-third" slot="left-icon" name="customer-relationship"/>
-      </van-field>
-    </div>
-
-    <div class="search2_block">
-      <van-field
-        class="search2"
-        v-model="value2"
-        left-icon="customer-relationship"
-        placeholder="请输入您想要检索的客户/公司"
-      >
-        <van-icon class-prefix="icon-third" slot="left-icon" name="customer-relationship"/>
-      </van-field>
+      <input class="search-input" :placeholder="searchTips" v-model="value" v-on:keyup.enter='sendSearchMessage'/>
     </div>
 
     <div class="search_button_block">
@@ -37,7 +16,7 @@
         round
         type="info"
         @click="sendSearchMessage">
-        查询
+        查&nbsp;&nbsp;询
       </van-button>
     </div>
     <TabBar/>
@@ -49,27 +28,40 @@ import NavBar from "../../component/NavBar";
 import TabBar from "../../component/TabBar";
 
 export default {
-  name: "searchRelationship",
+  name: "searchCustomer",
   components: {
     NavBar,
     TabBar
   },
   data() {
     return {
-      value1: '',
-      value2: '',
+      value: '',
+      searchTips: '',
+      type: 1
     };
   },
   created() {
     this.$store.commit('updateTabBarActive', 2);
+    console.log(this.$route.params);
+    if (this.$route.params.type === 1) {
+      this.type = 1;
+      this.searchTips = '请输入想要查询的企业名...';
+    } else {
+      this.type = 2;
+      this.searchTips = '请输入想要查询的人名...';
+    }
   },
   methods: {
     sendSearchMessage() {
+      if (this.value.trim().length === 0) {
+        this.$toast('查询内容不能为空！');
+        return;
+      }
       this.$router.push({
-        name:'relationshipDetail',
-        query:{
-          searchData1: this.value1,
-          searchData2: this.value2
+        name: 'searchList',
+        query: {
+          searchMessage: this.value,
+          type: this.type
         }
       });
     },
@@ -110,28 +102,20 @@ export default {
 .search1_block {
   padding-top: 20px;
   height: 40px;
-  .search1 {
-    width: 70vw;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
+  width: 80%;
+  margin-left: 10%;
+
+  .search-input {
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    border: 1px solid #3333cc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    padding: 5px;
   }
 }
 
-.search2_block {
-  padding-top: 10px;
-  height: 40px;
-  .search2 {
-    width: 70vw;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-  }
-}
 
 .search_button_block {
   position: relative;
@@ -140,7 +124,7 @@ export default {
 
   .search_button {
     position: absolute;
-    width: 64vw;
+    width: 80vw;
     height: 46px;
     top: 0;
     bottom: 0;
@@ -148,6 +132,16 @@ export default {
     right: 0;
     margin: auto;
   }
+}
+
+/deep/ .van-button--info {
+  color: #fff;
+  background-color: #3333cc;
+  border: 1px solid #3333cc;
+}
+
+/deep/ .van-button--round {
+  border-radius: 6px;
 }
 
 </style>
