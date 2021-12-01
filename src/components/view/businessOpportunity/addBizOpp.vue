@@ -198,11 +198,11 @@ export default {
       customerName: "",
       boSelectCustomerShow: false,
 
-      boEditorID: "",
-      boEditor: "李琦桢",
+      boEditorId: "",
+      boEditor: "",
 
-      boResponsibleID: "",
-      boResponsible: "李琦桢",
+      boResponsibleId: "",
+      boResponsible: "",
       boSelectResponsibleShow: false,
 
       boName: "",
@@ -260,16 +260,16 @@ export default {
     };
   },
 
-  watch: {
-    $route: {
-      immediate: true,
-      handler: function (to, from) {
-        //拿到目标参数 to.query.id 去再次请求数据接口
-        this.customerId = to.query.id;
-        this.customerName = to.query.customerName;
-      },
-    },
-  },
+  // watch: {
+  //   $route: {
+  //     immediate: true,
+  //     handler: function (to, from) {
+  //       //拿到目标参数 to.query.id 去再次请求数据接口
+  //       this.customerId = to.query.id;
+  //       this.customerName = to.query.customerName;
+  //     },
+  //   },
+  // },
 
   created(){
     this.boEditor = this.$store.state.userMessage.username;
@@ -292,7 +292,7 @@ export default {
 
     //从用户列表组件获取负责人信息
     getResponsibleInfo(val) {
-      this.boResponsibleID = val.id;
+      this.boResponsibleId = val.id;
       this.boResponsible = val.name;
     },
 
@@ -409,13 +409,13 @@ export default {
         customerName: this.customerName,
         boName: this.boName,
         boStatus: this.boStatus,
-        boEditorId: this.boEditorID,
+        boEditorId: this.boEditorId,
         boEditor: this.boEditor,
         boFullStage: this.boFullStage,
         boFollowStage: this.boFollowStage,
         boAmount: this.boAmount,
         boExpectDate: this.boExpectDate,
-        boResponsibleId: this.boResponsibleID,
+        boResponsibleId: this.boResponsibleId,
         boResponsible: this.boResponsible,
         boNotes: this.boNotes,
       };

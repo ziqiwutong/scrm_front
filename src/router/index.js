@@ -35,7 +35,8 @@ import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
 import productEdit from   "../components/view/product/productEdit";
-import procustomer from "../components/customer/procustomer"
+import procustomer from "../components/customer/procustomer";
+
 
 Vue.use(Router)
 
@@ -155,11 +156,12 @@ const routes = [
   },
   {
     path: '/bizOppDetail',
+    name: 'bizOppDetail',
     component: bizOppDetail
   },
   {
     path: '/addBizOpp',
-    name: 'addBizOpp',
+    name:"addBizOpp",
     component: addBizOpp
   },
   {
@@ -202,6 +204,7 @@ const routes = [
 
 
 const router = new Router({
+
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

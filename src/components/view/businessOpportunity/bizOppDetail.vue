@@ -29,43 +29,43 @@
       <div class="card">
         <div class="message-line">
           <div class="message-left">商机名称：</div>
-          <div class="message-right">成都字节公司定酒20箱</div>
+          <div class="message-right">{{ boName }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">客户名称：</div>
-          <div class="message-right">王志文</div>
+          <div class="message-right">{{ customerName }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机状态：</div>
-          <div class="message-right">跟进中</div>
+          <div class="message-right">{{ boStatus }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机创建：</div>
-          <div class="message-right">2021-10-12 13:43:49</div>
+          <div class="message-right">{{ createTime }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机更新：</div>
-          <div class="message-right">2021-10-30 09:10:56</div>
+          <div class="message-right">{{ updateTime }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机金额：</div>
-          <div class="message-right">5000.55</div>
+          <div class="message-right">{{ boAmount }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">预计成交日：</div>
-          <div class="message-right">2021-11-23</div>
+          <div class="message-right">{{ boExpectDate }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机录入人：</div>
-          <div class="message-right">李琦桢</div>
+          <div class="message-right">{{ boEditor }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机负责人：</div>
-          <div class="message-right">王志文</div>
+          <div class="message-right">{{ boResponsible }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">备注：</div>
-          <div class="message-right">客户公司团建用酒，酒的度数不要太高，大概订单数量有20箱</div>
+          <div class="message-right">{{ boNotes }}</div>
         </div>
       </div>
     </div>
@@ -100,6 +100,37 @@
           placeholder="请输入商机名称"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
+
+        <!-- 点击选择客户 -->
+        <van-field
+          is-link
+          clickable
+          readonly
+          :value="customerName"
+          name="customerName"
+          label="目标客户"
+          placeholder="点击选择目标客户"
+          @click="boSelectCustomerShow = true"
+          :rules="[{ required: true, message: '填写不能为空' }]"
+        />
+
+        <AbbList :type=2 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
+
+
+
+        <!-- 点击选择负责人 -->
+        <van-field
+          is-link
+          clickable
+          readonly
+          :value="boResponsible"
+          name="boResponsible"
+          label="负责人"
+          placeholder="点击选择商机负责人"
+          @click="boSelectResponsibleShow = true"
+          :rules="[{ required: true, message: '填写不能为空' }]"
+        />
+        <AbbList :type=1 v-show="boSelectResponsibleShow" @returnClick="boSelectResponsibleShow = false" @onCh="getResponsibleInfo"/>
 
         <!-- 编辑商机跟进流程 -->
         <van-field
@@ -232,28 +263,32 @@
 import {getUrl} from "../../../utils/replaceUrl";
 import qs from 'qs'
 import {Dialog, Toast} from "vant";
+import AbbList from "../../component/AbbList";
 
 export default {
   name: "bizOppDetail",
+  components: {
+    AbbList,
+  },
   data(){
     return {
-      id:1,
-      customerId:1001,
-      customerName:'李琦桢',
-      boName:'超有爱科技责任有限公司有购酒意向',
-      boStatus:'跟进中',
-      boEditorID: 1004,
-      boEditor:'王志文',
-      boFullStage: '新客_已加微信_签约协议_已成交_已打尾款_多次成交',
-      boFollowStage: '签约协议',
-      boAmount:"1000.25",
-      boExpectDate:'2021-9-10',
-      boResponsibleID: 1004,
-      boResponsible:'王志文',
-      boNotes:'客户公司团建用酒，酒的度数不要太高，大概订单数量有20箱',
+      id:"",
+      customerId:"",
+      customerName:"",
+      boName:"",
+      boStatus:"",
+      boEditorId: "",
+      boEditor:"",
+      boFullStage: "",
+      boFollowStage: "",
+      boAmount: "",
+      boExpectDate: "",
+      boResponsibleId: "",
+      boResponsible: "",
+      boNotes: "",
 
-      createTime: '2021-10-12 13:43:49',
-      updateTime: '2021-10-30 09:10:56',
+      createTime: "",
+      updateTime: "",
 
 
 
@@ -262,6 +297,9 @@ export default {
       //下面都是弹出编辑页面的变量
       editPageShow: false,
       ifEdit: false,
+
+      boSelectCustomerShow: false,
+      boSelectResponsibleShow: false,
 
       /*
       编辑商机的跟进流程，
@@ -308,7 +346,7 @@ export default {
     boFollowStage: 'onEditChange',
     boAmount:'onEditChange',
     boExpectDate:'onEditChange',
-    boResponsibleID: 'onEditChange',
+    boResponsibleId: 'onEditChange',
     boNotes:'onEditChange',
   },
 
@@ -318,7 +356,29 @@ export default {
 
   methods: {
     onLoad() {
-      //处理接收到的数据，将boFullStage转化为stageResult再转化为boFullStageString,
+      //接收来自bizOppList的数据，存入当前页面的变量
+      let list = this.$route.params.boDetail;
+
+      this.id= list.id;
+      this.customerId= list.customerId;
+      this.customerName= list.customerName;
+      this.boName= list.boName;
+      this.boStatus= list.boStatus;
+      this.boEditorId= list.boEditorId;
+      this.boEditor= list.boEditor;
+      this.boFullStage= list.boFullStage;
+      this.boFollowStage= list.boFollowStage;
+      this.boAmount= list.boAmount;
+      this.boExpectDate= list.boExpectDate;
+      this.boResponsibleId= list.boResponsibleId;
+      this.boResponsible= list.boResponsible;
+      this.boNotes= list.boNotes;
+      this.createTime= list.createTime;
+      this.updateTime= list.updateTime;
+
+
+
+      //处理接收到的数据，将boFullStage转化为stageResult再转化为boFullStageString，
       //stageResult用来转化 编辑商机流程 的选项的状态，boFullStageString用来显示目前的全部流程
       this.stageResult = this.boFullStage.split("_");
       for (let i = 0; i < this.stageResult.length; i++) {
@@ -334,6 +394,21 @@ export default {
           }
         }
       }
+
+      //ToDo 自己修改不需要提示，其它地方的也要加上这条
+      this.ifEdit = false;
+    },
+
+    //从客户列表组件获取客户信息
+    getCustomerInfo(val) {
+      this.customerId = val.id;
+      this.customerName =val.name;
+    },
+
+    //从用户列表组件获取负责人信息
+    getResponsibleInfo(val) {
+      this.boResponsibleId = val.id;
+      this.boResponsible = val.name;
     },
 
 
@@ -396,13 +471,13 @@ export default {
         customerName: this.customerName,
         boName: this.boName,
         boStatus: this.boStatus,
-        boEditorID: this.boEditorID,
+        boEditorId: this.boEditorId,
         boEditor: this.boEditor,
         boFullStage: this.boFullStage,
         boFollowStage: this.boFollowStage,
         boAmount: this.boAmount,
         boExpectDate: this.boExpectDate,
-        boResponsibleID: this.boResponsibleID,
+        boResponsibleId: this.boResponsibleId,
         boResponsible: this.boResponsible,
         boNotes: this.boNotes
       }

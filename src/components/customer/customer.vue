@@ -2120,6 +2120,9 @@ export default {
       time = yy + "-" + mm + "-" + dd;
       this.addList.enterPoolDate = time;
     },
+    test(){
+      console.log("错误")
+    },
     // 新建客户-生日时间-弹窗
     toDate() {
       this.dateShow = true;
