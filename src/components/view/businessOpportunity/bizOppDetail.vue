@@ -341,9 +341,11 @@ export default {
       this.$router.push('/bizOppList');
     },
 
+
+
     async deleteBo() {
       // let url = JSON.parse(getUrl()).bizOppManager.deleteBo;
-      let url = '/api/se/businessOpportunity/deleteBizOpp';
+      let url = '/LiZiTong/se/businessOpportunity/deleteBizOpp';
       let postData = {
         id: this.id,
       }
@@ -387,7 +389,7 @@ export default {
 
     async submitEdit() {
       // let url = JSON.parse(getUrl()).bizOppManager.editBo;
-      let url = '/api/se/businessOpportunity/editBizOpp';
+      let url = '/LiZiTong/se/businessOpportunity/editBizOpp';
       let postData = {
         id: this.id,
         customerId: this.customerId,

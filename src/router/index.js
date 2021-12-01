@@ -35,10 +35,12 @@ import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
 import productEdit from   "../components/view/product/productEdit";
+import procustomer from "../components/customer/procustomer"
+
 Vue.use(Router)
 
 const routes = [
-  {path: '/', redirect: 'home'},
+  { path: '/', redirect: 'home' },
   {
     path: '/home',
     name: 'home',
@@ -68,12 +70,20 @@ const routes = [
   },
   {
     path: '/customer',
-    component: customer
+    component: customer,
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
   {
     path: '/perinfor',
     name: 'perinfor',
     component: Perinfor
+  },
+  {
+    path: '/procustomer',
+    name: 'procustomer',
+    component: procustomer
   },
   {
     path: '/potential',
@@ -114,6 +124,7 @@ const routes = [
   },
   {
     path: '/potentialdetail',
+    name: "potentialdetail",
     component: PotentDetail
   },
   {
@@ -191,8 +202,14 @@ const routes = [
 
 
 const router = new Router({
-  mode:'history',
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 } //期望滚动到哪个的位置
+    }
+  },
 })
 
 // 解决Vue-Router升级导致的Uncaught(in promise) navigation guard问题

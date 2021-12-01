@@ -167,7 +167,7 @@ export  default  {
     // 关键字搜索
     async onSearch() {
       // let url = JSON.parse(getUrl()).bizOppManager.addBo;
-      let url = '/api/se/businessOpportunity/queryBizOppByKey';
+      let url = '/LiZiTong/se/businessOpportunity/queryBizOppByKey';
       let postData = {
         keySearch: this.searchVal
       }
@@ -191,7 +191,7 @@ export  default  {
 
     async onLoad() {
       // let url = JSON.parse(getUrl()).bizOppManager.queryBizOpportunity;
-      let url = '/api/se/businessOpportunity/queryBizOpportunity'
+      let url = '/LiZiTong/se/businessOpportunity/queryBizOpportunity'
       let postData = {
         pageCount: this.pageProps.pageCount++,
         currentPage: this.pageProps.currentPage,
@@ -239,7 +239,7 @@ export  default  {
       }
     },
     async deleteBo(id){
-      let url = "/api/se/businessOpportunity/deleteBizOpp";
+      let url = "/LiZiTong/se/businessOpportunity/deleteBizOpp";
       let postData = {
         id: id,
       }

@@ -47,6 +47,16 @@
               @oversize="onOversize"
               v-model="uploader"
               :max-count="1"
+              v-if="type == 1"
+            />
+            <van-uploader
+              multiple
+              :max-size="500 * 1024"
+              @oversize="onOversize"
+              v-model="uploader2"
+              :deletable="false"
+              :max-count="1"
+              v-if="type == 2"
             />
           </template>
         </van-field>
@@ -440,11 +450,16 @@
 
 <script>
 import { areaList } from "@vant/area-data";
+import { Toast } from "vant";
 export default {
+  name: "AddForm",
+  props: ["type"],
   data() {
     return {
+      //
+      uploader2: [{ url: "" }],
       // 新建客户-弹出层
-      showform: false,
+      showform: true,
       // 新建客户-时间-弹窗
       dateShow: false,
       // 新建客户-时间-选择值
@@ -700,12 +715,6 @@ export default {
     };
   },
   methods: {
-    // 新建客户-弹窗
-    formClick() {
-      this.showform = !this.showform;
-      // 客户类型保持一致
-      this.addList.customerType = "个人客户";
-    },
     // 新建客户-单选限定
     cutTabClickOnly(item, index) {
       // 特殊处理客户类型没有单选
@@ -815,6 +824,12 @@ export default {
         .join("/");
       this.showArea = false;
     },
+    toAddFollow() {
+      this.followShow = true;
+      this.userType = 3;
+      this.followList = [];
+      this.getUserList();
+    },
     onScrConfirm(values) {
       this.scrCity = values
         .filter((item) => !!item)
@@ -825,11 +840,10 @@ export default {
     },
     // 新建客户-返回
     onClickAddRe() {
-      this.showform = false;
+      this.$emit("returnClick");
     },
     // 新建客户-保存
     onClickAddSave() {
-      this.showform = false;
       this.onClickSumbmit();
     },
     // 新建客户-提交
@@ -850,7 +864,7 @@ export default {
         this.addLabelList[8].class[0].isSelected = true;
 
         // 提交文件不为空
-        if (this.uploader != "") {
+        if (this.uploader != "" && this.type == 1) {
           let str = this.uploader[0].content;
           let type = this.uploadPicType(str);
           // this.uploadCusIcon(str, type, type.length);
@@ -875,7 +889,10 @@ export default {
               this.addList.customerIcon = res.data.data;
             });
         }
-
+        // 提交文件不为空
+        if (this.uploader2 != "" && this.type == 2) {
+          this.addList.customerIcon = this.uploader2[0].url;
+        }
         // 传输
         if (this.addList.customerType == "个人客户") {
           this.addList.customerType = 0;
@@ -956,12 +973,9 @@ export default {
         }
         this.addList = this.addListTemp;
         this.uploader = [];
-        this.showform = false;
-        this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
-        this.onLoad();
+        this.$emit("returnClick");
       }
+      
     },
     // 新建客户-头像格式判断
     uploadPicType(str) {
@@ -1058,12 +1072,50 @@ export default {
       this.followList = [];
       this.getUserList();
     },
+    // 获取用户消息
+    async getUserList() {
+      let url = "/api/cms/user/query";
+      if (this.followVal != "") {
+        url += "?name=" + this.followVal;
+      }
+      const res = await this.$http.get(url, {
+        params: {
+          currentPage: this.followPageProps.pageNum,
+          pageCount: this.followPageProps.pageSize,
+        },
+      });
+
+      let userNum = res.data.totalCount;
+      if (userNum != 0)
+        for (let i = 0; i < this.followPageProps.pageSize; i++) {
+          this.followList.push(res.data.data[i]);
+          if (this.followList.length >= userNum) {
+            this.finished = true;
+            this.followPageProps.pageNum = 1;
+            break;
+          }
+        }
+      if (this.followList.length >= userNum) this.finished = true;
+      else {
+        console.log(this.followList.length);
+        this.followPageProps.pageNum++;
+        this.getUserList();
+      }
+
+      console.log(this.followList);
+    },
+  },
+  created() {
+    if (this.type == 2) {
+      console.log(1);
+      this.addList.wxName = this.$store.state.wxUser.nickName;
+      this.uploader2[0].url = this.$store.state.wxUser.imgUrl;
+      //   this.addList.wxName =  this.$store.state.;
+    }
   },
 };
 </script>
 <style lang="less" scoped>
-
-
 .nav-cusnum-font {
   font-size: 10px;
   // margin-top: 5%;
@@ -1170,7 +1222,6 @@ export default {
   margin: 20px 2% 10px 5%;
   width: 40%;
 }
-
 
 .follow-choose {
   margin-left: 10%;

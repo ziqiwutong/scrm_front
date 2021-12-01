@@ -22,6 +22,7 @@ export default {
       userCompany: '',
       userImgUrl: ''
     }
+
   },
   created: function () {
     this.getUserMessage();

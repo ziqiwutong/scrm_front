@@ -22,53 +22,55 @@
         <!-- 跟进人-跟进人信息 -->
         <van-row v-if="type==1">
           <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-          ><van-image
-            round
-            width="40"
-            height="40"
-            :src="item.userIcon"
-            v-if="item.userIcon"
-          />
+          <van-col span="4">
+            <van-image
+              round
+              width="40"
+              height="40"
+              :src="item.userIcon"
+              v-if="item.userIcon"
+            />
             <div v-if="!item.userIcon" class="list-img-none">
               {{ item.username[0] }}
             </div>
           </van-col>
           <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-          ><div class="van-ellipsis">
+          <van-col span="6" class="list-content-name">
+            <div class="van-ellipsis">
             {{ item.username }}
-          </div></van-col
-          >
+            </div>
+          </van-col>
           <!-- 跟进人-跟进人公司信息 -->
           <van-col offset="2" class="list-content-msg">{{
               item.telephone
-            }}</van-col>
+            }}
+          </van-col>
         </van-row>
         <van-row v-if="type==2">
           <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-          ><van-image
-            round
-            width="40"
-            height="40"
-            :src="item.customerIcon"
-            v-if="item.customerIcon"
-          />
+          <van-col span="4">
+            <van-image
+              round
+              width="40"
+              height="40"
+              :src="item.customerIcon"
+              v-if="item.customerIcon"
+            />
             <div v-if="!item.customerIcon" class="list-img-none">
               {{ item.customerName[0] }}
             </div>
           </van-col>
           <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-          ><div class="van-ellipsis">
-            {{ item.customerName }}
-          </div></van-col
-          >
+          <van-col span="6" class="list-content-name">
+            <div class="van-ellipsis">
+              {{ item.customerName }}
+            </div>
+          </van-col>
           <!-- 跟进人-跟进人公司信息 -->
           <van-col offset="2" class="list-content-msg">{{
-              item.telephone
-            }}</van-col>
+            item.telephone
+          }}
+          </van-col>
         </van-row>
       </van-cell>
     </van-popup>

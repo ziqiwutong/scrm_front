@@ -1,13 +1,10 @@
 <template>
   <div>
-    <div class="navbar"  @click="toBoList">
-      <van-nav-bar
-        title="新建商机"
-        left-text="返回"
-        left-arrow
-      />
+    <div class="navbar" @click="toBoList">
+      <van-nav-bar title="新建商机" left-text="返回" left-arrow />
     </div>
-    <van-form @submit="onSubmit"  class="addBo">
+
+    <van-form @submit="onSubmit" class="addBo">
       <!-- 商机名称 -->
       <van-field
         clearable
@@ -48,7 +45,6 @@
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
       <AbbList :type=1 v-show="boSelectResponsibleShow" @returnClick="boSelectResponsibleShow = false" @onCh="getResponsibleInfo"/>
-
 
 
       <!-- 编辑商机跟进流程 -->
@@ -116,7 +112,8 @@
               clickable
               :key="item"
               :title="item"
-              @click="selectFollowStage(index, item)">
+              @click="selectFollowStage(index, item)"
+            >
               <template #right-icon>
                 <van-radio :name="item" />
               </template>
@@ -182,11 +179,13 @@
 </template>
 
 
+
 <script>
 import {Toast} from "vant";
 import qs from 'qs';
 import {getUrl} from "../../../utils/replaceUrl";
 import AbbList from "../../component/AbbList";
+
 
 export default {
   name: "addBizOpp",
@@ -195,20 +194,20 @@ export default {
   },
   data() {
     return {
-      customerId: '',
-      customerName: '',
+      customerId: "",
+      customerName: "",
       boSelectCustomerShow: false,
 
-      boEditorID: '',
-      boEditor: '',
+      boEditorID: "",
+      boEditor: "李琦桢",
 
-      boResponsibleID: '',
-      boResponsible: '',
+      boResponsibleID: "",
+      boResponsible: "李琦桢",
       boSelectResponsibleShow: false,
 
-      boName: '',
-      boAmount: '',
-      boStatus: '',
+      boName: "",
+      boAmount: "",
+      boStatus: "",
       /*
       编辑商机的跟进流程，
       boEditStageShow编辑弹窗是否显示变量
@@ -219,16 +218,27 @@ export default {
       boFullStageString阶段之间以'\n'间隔，boFullStage阶段之间以'_'间隔
        */
       boEditStageShow: false,
-      stageList: ['新客', '已加微信', '产品介绍', '合作模式洽谈', '签约协议', '已成交', '已打首付款', '阶段性付款', '已打尾款', '多次成交'],
+      stageList: [
+        "新客",
+        "已加微信",
+        "产品介绍",
+        "合作模式洽谈",
+        "签约协议",
+        "已成交",
+        "已打首付款",
+        "阶段性付款",
+        "已打尾款",
+        "多次成交",
+      ],
       stageResult: [],
-      boFullStageString: '',
-      boFullStage: '',
+      boFullStageString: "",
+      boFullStage: "",
 
       /*
       boFollowStage是传递给后端的内容，内容为目前进行到的阶段，
       boFollowStageShow控制选中弹出页的出现
        */
-      boFollowStage: '',
+      boFollowStage: "",
       boFollowStageShow: false,
 
       /*
@@ -237,17 +247,16 @@ export default {
       boExpectDateVal存放时间选择表原始的时间格式
       boExpectDateShow弹框是否出现的变量
        */
-      boExpectDate: '',
-      boExpectDateVal: '',
+      boExpectDate: "",
+      boExpectDateVal: "",
       boExpectDateShow: false,
 
       // 时间-时间最小值
       minDate: new Date(2020, 0, 1),
       // 时间-时间最大值
       maxDate: new Date(2025, 10, 1),
-
       //商机的备注信息
-      boNotes:'',
+      boNotes: "",
     };
   },
 
@@ -317,16 +326,15 @@ export default {
       清空boFollowStage得到的效果是一样的，此处不分选项的勾选状态
        */
       if (item === this.boFollowStage) {
-        this.boFollowStage = '';
+        this.boFollowStage = "";
       }
     },
 
-    //选择跟进阶段后，判断商机的状态(新商机，跟进中，已结束)
     selectFollowStage(index, item) {
       this.boFollowStage = item;
-      if (index === 0){ //跟进选择为第一个阶段
+      if (index === 0) {
         this.boStatus = "新商机";
-      } else if (index === this.stageResult.length-1){  //跟进选择为最后一个阶段
+      } else if (index === this.stageResult.length - 1) {
         this.boStatus = "已结束";
       } else {
         this.boStatus = "跟进中";
@@ -334,7 +342,7 @@ export default {
     },
 
     confirmEditStage() {
-      this.boEditStageShow=false;
+      this.boEditStageShow = false;
       this.boFullStage = "";
       this.boFullStageString = "";
       let stageListLength = this.stageList.length;
@@ -343,7 +351,11 @@ export default {
       let position = 0;
 
       for (let listCount = 0; listCount < stageListLength; listCount++) {
-        for (let resultCount = 0; resultCount < stageResultLength; resultCount++) {
+        for (
+          let resultCount = 0;
+          resultCount < stageResultLength;
+          resultCount++
+        ) {
           if (this.stageList[listCount] === this.stageResult[resultCount]) {
             tempStage = this.stageResult[resultCount];
             this.stageResult[resultCount] = this.stageResult[position];
@@ -351,13 +363,18 @@ export default {
 
             if (0 === position) {
               this.boFullStage = this.boFullStage + this.stageResult[position];
-              this.boFullStageString = this.boFullStageString + this.stageResult[position];
-            }else{
-              this.boFullStage = this.boFullStage + "_" + this.stageResult[position];
-              this.boFullStageString = this.boFullStageString + "\n" + this.stageResult[position];
+              this.boFullStageString =
+                this.boFullStageString + this.stageResult[position];
+            } else {
+              this.boFullStage =
+                this.boFullStage + "_" + this.stageResult[position];
+              this.boFullStageString =
+                this.boFullStageString + "\n" + this.stageResult[position];
             }
             position++;
-            if (position === stageResultLength) {break;}
+            if (position === stageResultLength) {
+              break;
+            }
           }
         }
       }
@@ -373,9 +390,9 @@ export default {
     },
 
     confirmFollowStage() {
-      if (this.boFollowStage==='') {
+      if (this.boFollowStage === "") {
         Toast("请选择后确认");
-      }else {
+      } else {
         Toast("选择成功");
         this.boFollowStageShow = false;
       }
@@ -385,7 +402,7 @@ export default {
     async onSubmit() {
       //POST方式向后端提交数据
       // let url = JSON.parse(getUrl()).bizOppManager.addBo;
-      let url = '/api/se/businessOpportunity/addBizOpp';
+      let url = "/LiZiTong/se/businessOpportunity/addBizOpp";
       let postData = {
         //ToDo 改变量名
         customerId: this.customerId,
@@ -396,27 +413,26 @@ export default {
         boEditor: this.boEditor,
         boFullStage: this.boFullStage,
         boFollowStage: this.boFollowStage,
-        boAmount:this.boAmount,
+        boAmount: this.boAmount,
         boExpectDate: this.boExpectDate,
         boResponsibleId: this.boResponsibleID,
         boResponsible: this.boResponsible,
-        boNotes: this.boNotes
-      }
+        boNotes: this.boNotes,
+      };
       const result = (await this.$http.post(url, qs.stringify(postData))).data;
 
-      if(result.code === 200) {
-        Toast('商机提交成功');
+      if (result.code === 200) {
+        Toast("商机提交成功");
         this.toBoList();
-      }else {
-        Toast('商机提交失败,错误码' + result.code);
+      } else {
+        Toast("商机提交失败,错误码" + result.code);
       }
     },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
-
 //改变所有van-field的上下间距
 .van-field {
   padding-top: 4vw;
@@ -429,7 +445,7 @@ export default {
 }
 
 .submit {
-  width:90%;
+  width: 90%;
 }
 
 .van-picker__toolbar {
