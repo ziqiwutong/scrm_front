@@ -3,7 +3,7 @@
   <div class="searchRelationship_container">
     <NavBar/>
     <div class="company_logo_block">
-      <img class="company_logo" src="./company_logo.png">
+      <img class="company_logo" src="../../../assets/company_logo.png">
     </div>
 
     <p class="tip">请输入双方关系</p>
@@ -80,16 +80,16 @@ export default {
 
 <style lang="less" scoped>
 .company_logo_block {
-  padding-top: 140px;
-  padding-bottom: 60px;
+  padding-top: 32vw;
+  padding-bottom: 20vw;
   width: 100vw;
-  height: 100px;
+  height: 20vw;
   position: relative;
 
   .company_logo {
     position: absolute;
-    width: 220px;
-    height: 80px;
+    width: 64%;
+    height: 32%;
     left: 0;
     right: 0;
     margin: auto;
@@ -99,7 +99,6 @@ export default {
 .tip {
   width: 60vw;
   font-weight: bolder;
-  font-size: small;
   top: 0;
   bottom: 0;
   left: 0;
@@ -108,8 +107,8 @@ export default {
 }
 
 .search1_block {
-  padding-top: 20px;
-  height: 40px;
+  padding-top: 4vw;
+  height: 10vw;
   .search1 {
     width: 70vw;
     top: 0;
@@ -117,12 +116,13 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
+    border-bottom: 1px solid grey;
   }
 }
 
 .search2_block {
-  padding-top: 10px;
-  height: 40px;
+  padding-top: 1vw;
+  height: 10vw;
   .search2 {
     width: 70vw;
     top: 0;
@@ -135,13 +135,13 @@ export default {
 
 .search_button_block {
   position: relative;
-  padding-top: 80px;
-  height: 60px;
+  padding-top: 20vw;
+  height: 15vw;
 
   .search_button {
     position: absolute;
     width: 64vw;
-    height: 46px;
+    height: 12vw;
     top: 0;
     bottom: 0;
     left: 0;

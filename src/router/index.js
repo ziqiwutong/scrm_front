@@ -31,7 +31,6 @@ import addClueStatus from "../components/view/clue/addClueStatus";
 import bizOppList from "../components/view/businessOpportunity/bizOppList";
 import bizOppDetail from "../components/view/businessOpportunity/bizOppDetail";
 import addBizOpp from "../components/view/businessOpportunity/addBizOpp";
-import editBizOpp from "../components/view/businessOpportunity/editBizOpp";
 import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
@@ -149,15 +148,8 @@ const routes = [
   },
   {
     path: '/addBizOpp',
+    name: 'addBizOpp',
     component: addBizOpp
-  },
-  {
-    path: '/editBizOpp',
-    component: editBizOpp
-  },
-  {
-    path:'/orderEdit',
-    component:orderEdit
   },
   {
     path:'/productList',

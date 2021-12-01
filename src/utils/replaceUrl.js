@@ -48,9 +48,16 @@ export function getUrl() {
       queryShareMan: '/api/queryShareMan',
       batchAddCustomer: '/api/batchAddReader',
       wxConfig:'/wx/jsApi'
+    },
+    bizOppManager: {
+      queryBizOpportunity: '/sweet/se/businessOpportunity/queryBizOpportunity',
+      searchBo: '/sweet/searchBo',
+      editBo:'/sweet/editBo',
+      deleteBo: '/sweet/deleteBo',
+      addBo: '/sweet/addBo',
     }
   };
 
-  let env = JSON.stringify(developmentT);
+  let env = JSON.stringify(development);
   return env;
 }
