@@ -1,6 +1,9 @@
 <template>
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
+      <!-- <van-button @click="test">测试1</van-button>
+    <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/>
+      <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
       <!-- 导航栏 -->
       <van-row>
         <!-- 导航-客户类型筛选-->
@@ -892,6 +895,7 @@
       />
     </van-popup>
     <TabBar />
+
   </div>
 </template>
 
@@ -900,15 +904,19 @@ import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
 import TabBar from "../component/TabBar";
+import AbbList from "../component/AbbList";
 import AddForm from "../component/AddForm";
 export default {
   name: "customer",
   components: {
     TabBar,
+    AbbList,
     AddForm,
   },
   data() {
     return {
+      testtxt:"查找客户列表",
+      testVal:false,
       // 客户类型-排序-种类
       sortCusType: "createTime",
       // 客户类型-排序-时间
@@ -1440,7 +1448,15 @@ export default {
     //   const res = await this.$http.get(url);
     //   console.log(res.data.data)
     // },
-
+    testConsole(val){
+      console.log(val)
+    },
+    onTestCancel(){
+      this.testVal = false
+    },
+    test(){
+      this.testVal = true
+         },
     // 获取用户标签值
     async getCusLabel() {
       let url = "/api/se/label/query";
@@ -2418,12 +2434,12 @@ export default {
       }
     },
   },
-  // beforeRouteLeave(to, from, next) {
-  //   from.meta.keepAlive = false;
-  //   this.scollTop =
-  //     document.documentElement.scrollTop || document.body.scrollTop;
-  //   next();
-  // },
+  beforeRouteLeave(to, from, next) {
+    from.meta.keepAlive = false;
+    this.scollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    next();
+  },
   created() {
     this.getCusLabel();
     this.onLoad();

@@ -10,7 +10,7 @@ import Perinfor from "../components/customer/Perinfor"
 import Potential from "../components/customer/Potential"
 import PotentDetail from "../components/customer/potentialdetail"
 import procustomer from "../components/customer/procustomer"
-
+import addBizOpp from "../components/view/businessOpportunity/addBizOpp";
 Vue.use(Router)
 
 const routes = [
@@ -52,6 +52,11 @@ const routes = [
     path: '/potentialdetail',
     name: "potentialdetail",
     component: PotentDetail
+  },
+  {
+    path: '/addBizOpp',
+    name: "addBizOpp",
+    component: addBizOpp
   },
 ]
 

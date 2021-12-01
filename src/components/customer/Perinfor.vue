@@ -1304,7 +1304,7 @@ export default {
     // 更多操作-新建商机
     toBusOpprtunity() {
       Toast("跳转商机界面");
-      his.$router.push("/contextShareList");
+      this.$router.push({ name: "addBizOpp", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
     },
     // 更多操作-新建订单
     toOrder() {
