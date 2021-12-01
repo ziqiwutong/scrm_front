@@ -97,7 +97,7 @@ export default {
       // 滚动前，滚动条距文档顶部的距离
       oldScrollTop: 0,
       stompClient: '',
-      ws_timer:''
+      ws_timer: ''
     }
   },
   created() {
@@ -112,6 +112,10 @@ export default {
         this.readTime++;
       }, 1000);
     }
+    this.pageListener();
+    setInterval(() => {
+      this.handleSend();
+    }, 1000);
     // this.initWebSocket();
   },
   mounted() {
@@ -134,10 +138,6 @@ export default {
         this.beforeunloadHandler();
       }
     }
-
-    // setInterval(() => {
-    //   this.handleSend();
-    // }, 1000);
   },
   beforeDestroy() {
     this.beforeunloadHandler();
@@ -152,9 +152,55 @@ export default {
       // window.removeEventListener('pagehide', this.beforeunloadHandler);
       // window.removeEventListener('onunload', this.beforeunloadHandler);
     }
+    this.close();
     // this.disconnect();
   },
   methods: {
+    pageListener() {
+      if (typeof (WebSocket) === "undefined") {
+        alert("您的浏览器不支持socket")
+      } else {
+        let url = "ws://192.168.1.107:30003/mk/article/ws";
+        // let url = "ws://127.0.0.1:4000";
+        // 实例化socket
+        this.socket = new WebSocket(url)
+        // 监听socket连接
+        this.socket.onopen = this.open
+        // 监听socket错误信息
+        this.socket.onerror = this.error
+        // 监听socket消息
+        this.socket.onmessage = this.getMessage
+      }
+    },
+    open() {
+      console.log("socket连接成功")
+    },
+    error() {
+      console.log("连接错误")
+    },
+    getMessage(msg) {
+      console.log(msg.data);
+    },
+    send: function (params) {
+      // try {
+      this.socket.send(params)
+      // } catch (err) {
+      //   console.log('websocket掉线了');
+      //   return;
+      //   // this.socket = new WebSocket(url);
+      // }
+    },
+    close: function () {
+      console.log("socket已经关闭")
+    },
+    handleSend(e) {
+      let params = JSON.stringify({
+        content: '1',
+        id: 'sss'
+      })
+      this.send(params);
+    },
+
     // initWebSocket() {
     //   this.connection();
     //   let that = this;
