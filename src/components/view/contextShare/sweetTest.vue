@@ -69,8 +69,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import "src/assets/css/px2vw.scss";
+<style lang="less" scoped>
 .posterDesText {
   display: flex;
   flex-direction: column;
