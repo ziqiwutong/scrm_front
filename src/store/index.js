@@ -18,6 +18,7 @@ const state = {
     userCompany: "",
     userImgUrl: ""
   },
+<<<<<<< HEAD
   repArticleDetail:{
     articleContext:'',
     articleTitle:'',
@@ -26,6 +27,12 @@ const state = {
     articlePower:'',
     coverImg:''
   }
+=======
+  wxUser:{
+    imgUrl:"https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/baike/pic/item/8435e5dde71190efaa5405dfc21b9d16fdfa6007.jpg",
+    nickName:"1234444",
+  },
+>>>>>>> zjs
 }
 
 // 2. 创建对象

@@ -45,7 +45,11 @@ import productDetail from "../components/view/product/productDetail";
 import productEdit from   "../components/view/product/productEdit";
 =======
 import procustomer from "../components/customer/procustomer"
+<<<<<<< HEAD
 
+>>>>>>> zjs
+=======
+import addBizOpp from "../components/view/businessOpportunity/addBizOpp";
 >>>>>>> zjs
 Vue.use(Router)
 
@@ -145,6 +149,7 @@ const routes = [
     component: PotentDetail
   },
   {
+<<<<<<< HEAD
     path: '/relationshipDetail',
     name: 'relationshipDetail',
     component: relationshipDetail
@@ -224,6 +229,13 @@ const routes = [
   }
 ];
 
+=======
+    path: '/addBizOpp',
+    name: "addBizOpp",
+    component: addBizOpp
+  },
+]
+>>>>>>> zjs
 
 const router = new Router({
 <<<<<<< HEAD
