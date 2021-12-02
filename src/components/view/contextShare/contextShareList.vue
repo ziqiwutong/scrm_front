@@ -1,23 +1,25 @@
 <template>
   <div>
-    <van-tabs v-model="activeName" class="scrm-tab">
-      <van-tab title="内容营销" name="article">内容营销</van-tab>
-      <van-tab title="数据统计" name="statistics">数据统计</van-tab>
-    </van-tabs>
-    <van-search
-      v-if="searchShow"
-      v-model="searchValue"
-      show-action
-      placeholder="请输入搜索关键词"
-      autofocus="true"
-      @search="onSearch"
-      @cancel="onSearchCancel"
-    />
-    <div v-else style="display: inline-flex;width: 100%;">
-      <van-search style="width: 70%;" v-model="searchValue" placeholder="请输入搜索关键词" @click="ifShowSearch"/>
-      <van-dropdown-menu style="width: 30%;" active-color="#3333cc">
-        <van-dropdown-item v-model="dropdownValue" :options="dropdownOption"/>
-      </van-dropdown-menu>
+    <div class="header">
+      <van-tabs v-model="activeName" class="scrm-tab">
+        <van-tab title="内容营销" name="article">内容营销</van-tab>
+        <van-tab title="数据统计" name="statistics">数据统计</van-tab>
+      </van-tabs>
+      <van-search
+        v-if="searchShow"
+        v-model="searchValue"
+        show-action
+        placeholder="请输入搜索关键词"
+        autofocus="true"
+        @search="onSearch"
+        @cancel="onSearchCancel"
+      />
+      <div v-else style="display: inline-flex;width: 100%;">
+        <van-search style="width: 70%;" v-model="searchValue" placeholder="请输入搜索关键词" @click="ifShowSearch"/>
+        <van-dropdown-menu style="width: 30%;" active-color="#3333cc">
+          <van-dropdown-item v-model="dropdownValue" :options="dropdownOption"/>
+        </van-dropdown-menu>
+      </div>
     </div>
     <van-list
       v-model="loading"
@@ -38,13 +40,13 @@
             <p>{{ item.articleTitle }}</p>
           </div>
           <div class="right-bottom">
-            <p class="readers">{{ item.articleViewTimes }}人已读</p>
+            <p class="readers">浏览量:{{ item.articleViewTimes }}次</p>
           </div>
         </div>
-        <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog">立即分享</van-button>
+        <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog(item)">立即分享</van-button>
       </div>
     </van-list>
-    <van-share-sheet v-model="showShare" :options="options"/>
+    <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
     <van-action-sheet v-if="show"
                       v-model="show"
                       :actions="actions"
@@ -58,12 +60,13 @@
 </template>
 
 <script>
-import qs from 'qs'// axios参数包
 import TabBar from "../..//component/TabBar";
 import CreateContext from "../../component/CreateContext";
 import {Toast} from "vant";
 import {getUserId} from "../../../network/getToken";
 import {getUrl} from "../../../utils/replaceUrl";
+import yyApi from "../../../utils/yyApi";
+import {ajax} from "../../../utils/ajax";
 
 export default {
   name: "contextShareList",
@@ -76,6 +79,7 @@ export default {
       searchValue: '',
       active: 2,
       activeName: 'article',
+      shareId: 1,
       pageProps: {
         pageNum: 1,
         pageSize: 20
@@ -102,11 +106,19 @@ export default {
       dropdownOption: [
         {text: '企业素材库', value: 1},
         {text: '个人素材库', value: 0}
-      ]
+      ],
+      shareMsg: {
+        type: '2',
+        title: '',
+        imageUrl: '',
+        desc: '点击查看详情->',
+        pageUrl: ''
+      }
     };
   },
   created() {
     this.$store.commit('updateTabBarActive', 2);
+    this.shareId = JSON.parse(getUserId()).userID;
   },
   watch: {
     dropdownValue: {
@@ -135,7 +147,18 @@ export default {
       }
       this.list = [];
       const result = (await this.$http.get(url, {params: postData})).data.data
+
       for (let i = 0; i < result.length; i++) {
+        // 当阅读量过万时，以万为单位
+        if (parseInt(result[i].articleViewTimes) > 10000) {
+          // 小数部分保留一位
+          if ((parseInt(result[i].articleViewTimes) % 10000) > 1000) {
+            let firstDecimal = parseInt(result[i].articleViewTimes) % 10000;
+            result[i].articleViewTimes = parseInt(result[i].articleViewTimes) / 10000 + '.' + firstDecimal + '万';
+          } else {
+            result[i].articleViewTimes = parseInt(result[i].articleViewTimes) / 10000 + '万';
+          }
+        }
         this.list.push(result[i]);
       }
       // 加载状态结束
@@ -152,6 +175,7 @@ export default {
         examineFlag: 1,
         materialType: this.dropdownValue
       }
+
       const result = (await this.$http.get(url, {params: postData})).data.data
       if (result.length == 0) {
         // 已加载全部数据
@@ -176,13 +200,44 @@ export default {
             result[i].articleImage = imageUrl.replace("http://mmbiz.qlogo.cn", "/wxResource");
           }
         }
+        // 当阅读量过万时，以万为单位
+        if (parseInt(result[i].articleViewTimes) > 10000) {
+          // 小数部分保留一位
+          if ((parseInt(result[i].articleViewTimes) % 10000) > 1000) {
+            let firstDecimal = parseInt(result[i].articleViewTimes) % 10000;
+            result[i].articleViewTimes = parseInt(result[i].articleViewTimes) / 10000 + '.' + firstDecimal + '万';
+          } else {
+            result[i].articleViewTimes = parseInt(result[i].articleViewTimes) / 10000 + '万';
+          }
+        }
         this.list.push(result[i]);
       }
       // 加载状态结束
       this.loading = false;
     },
-    async showShareDialog() {
-      this.showShare = true
+    showShareDialog(item) {
+      let imageUrl = item.articleImage.replace('/wxResource', 'http://mmbiz.qpic.cn');
+      this.shareMsg.title = item.articleTitle;
+      this.shareMsg.imageUrl = imageUrl;
+      this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl + 'articleDetail?articleid=' + item.id + '&shareid=' + this.shareId + '&ifshowshareman=true';
+      this.showShare = true;
+    },
+    async shareArticleApp(e) {
+      // 先去后台拿用友的jsConfig，然后触发分享事件
+      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      const result = (await this.$http.get(url)).data.data;
+      let yyConfig = {
+        appId: result.appid,
+        timestamp: result.timestamp,
+        signature: result.signature
+      }
+      let shareMsg = this.shareMsg;
+      if (e.name === '朋友圈') {
+        shareMsg.type = '3';
+      }
+      console.log(shareMsg);
+      await yyApi.yyRegister(yyConfig, shareMsg);
+      this.showShare = false;
     },
     onCancel() {
       this.show = false;
@@ -193,12 +248,11 @@ export default {
     // 跳转至文章详情页
     toArticleDetail(articleId) {
       // 带着articleId&shareId去请求文章详情页
-      let shareId = JSON.parse(getUserId()).userID;
       this.$router.push({
         name: 'articleDetail',
         query: {
-          articleId: articleId,
-          shareId: shareId,
+          articleid: articleId,
+          shareid: this.shareId,
           ifshowshareman: true
         }
       });
@@ -278,6 +332,19 @@ p {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 99;
+}
+
+/deep/ .van-list {
+  margin-top: 100px;
 }
 
 /deep/ .van-share-sheet__options {

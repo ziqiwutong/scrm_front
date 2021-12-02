@@ -3,7 +3,8 @@
   <div class="header">
     <div class="left">
       <div class="userImg">
-        {{ getUserImgUrl }}
+        <img v-if="hasImg" :src="getUserImgUrl"/>
+        <p v-else>{{ getUserImgUrl }}</p>
       </div>
     </div>
     <div class="center">
@@ -26,18 +27,29 @@ export default {
     "userImgUrl",
     "userPhone"
   ],
+  data() {
+    return {
+      hasImg: false
+    }
+  },
   computed: {
     getUserName() {
-      return this.username
+      return this.username;
     },
     getUserCompany() {
-      return this.userCompany
+      return this.userCompany;
     },
     getUserImgUrl() {
-      return this.userImgUrl
+      if (this.userImgUrl === '') {
+        let lastWord = this.username.slice(-1);
+        this.userImgUrl = lastWord;
+      } else {
+        this.hasImg = true;
+      }
+      return this.userImgUrl;
     },
     getUserPhone() {
-      return this.userPhone
+      return this.userPhone;
     }
   },
   methods: {
@@ -59,6 +71,7 @@ export default {
   display: inline-flex;
   background-color: #ffffff;
   border-bottom: 1px solid #fafafa;
+  z-index: 99;
 }
 
 .left {
@@ -66,7 +79,7 @@ export default {
   position: relative;
 }
 
-.userImg {
+.userImg, img {
   position: absolute;
   top: 0;
   right: 0;

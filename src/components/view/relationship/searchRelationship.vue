@@ -3,7 +3,7 @@
   <div class="searchRelationship_container">
     <NavBar/>
     <div class="company_logo_block">
-      <img class="company_logo" src="../../../assets/company_logo.png">
+      <img class="company_logo" src="../../../assets/icon/company_logo.png">
     </div>
 
     <p class="tip">请输入双方关系</p>

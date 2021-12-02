@@ -3,7 +3,8 @@ y<template>
   <div class="header">
     <div class="left">
       <div class="userImg">
-        {{ userImgUrl }}
+        <img v-if="hasImg" :src="userImgUrl"/>
+        <p v-else="!hasImg">{{ userImgUrl }}</p>
       </div>
     </div>
     <div class="center">
@@ -20,7 +21,8 @@ export default {
     return {
       username: '',
       userCompany: '',
-      userImgUrl: ''
+      userImgUrl: '',
+      hasImg: false,
     }
 
   },
@@ -29,8 +31,8 @@ export default {
   },
   methods: {
     async getUserMessage() {
-      // 当vuex中没有用户信息时才去请求，减少网络请求的次数
-      if (this.$store.state.userMessage.username == "") {
+      // 理论上用户信息应该从vuex里获取，首页已经获取用户信息并将其存入vuex中了的，只不过和用户的还没有打通，所以暂时测不了
+      if (this.$store.state.userMessage.username == '') {
         let url = "/sweet/doLogin";
         const result = (await this.$http.get(url)).data.data
         this.username = result.username;
@@ -41,6 +43,13 @@ export default {
         this.username = this.$store.state.userMessage.username
         this.userCompany = this.$store.state.userMessage.userCompany
         this.userImgUrl = this.$store.state.userMessage.userImgUrl
+      }
+      // 根据返回数据是否有头像决定头像模块显示什么
+      if (this.userImgUrl == "") {
+        let lastWord = this.username.slice(-1);
+        this.userImgUrl = lastWord;
+      }else{
+        this.hasImg = true;
       }
     }
   }
@@ -64,7 +73,7 @@ export default {
   position: relative;
 }
 
-.userImg {
+.userImg, img {
   position: absolute;
   top: 0;
   right: 0;
@@ -78,6 +87,11 @@ export default {
   color: white;
   text-align: center;
   line-height: 40px;
+}
+
+.userImg p{
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 .center {

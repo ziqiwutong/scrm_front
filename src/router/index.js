@@ -34,14 +34,17 @@ import addBizOpp from "../components/view/businessOpportunity/addBizOpp";
 import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
-import productEdit from   "../components/view/product/productEdit";
-import procustomer from "../components/customer/procustomer";
-
+import productEdit from "../components/view/product/productEdit";
+import procustomer from "../components/customer/procustomer"
+import searchList from "../components/view/searchCustomer/searchList";
+import searchCustomer from "../components/view/searchCustomer/searchCustomer";
+import bkIntroduce from "../components/view/searchCustomer/bkIntroduce";
+import searchCompanyDetail from "../components/view/searchCustomer/searchCompanyDetail";
 
 Vue.use(Router)
 
 const routes = [
-  { path: '/', redirect: 'home' },
+  {path: '/', redirect: 'home'},
   {
     path: '/home',
     name: 'home',
@@ -161,56 +164,85 @@ const routes = [
   },
   {
     path: '/addBizOpp',
-    name:"addBizOpp",
+    name: "addBizOpp",
     component: addBizOpp
   },
   {
-    path:'/productList',
-    component:productList
+    path: '/editBizOpp',
+    component: editBizOpp
   },
   {
-    path:'/productCreate',
-    component:productCreate
+    path: '/orderEdit',
+    component: orderEdit
   },
   {
-    path:'/productDetail',
-    component:productDetail
+    path: '/productList',
+    component: productList
   },
   {
-    path:'/productEdit',
-    component:productEdit
+    path: '/productCreate',
+    component: productCreate
+  },
+  {
+    path: '/productDetail',
+    component: productDetail
+  },
+  {
+    path: '/productEdit',
+    component: productEdit
   },
   {
     path: '/repArticleDetail',
-    name:'repArticleDetail',
+    name: 'repArticleDetail',
     component: repArticleDetail
   },
   {
     path: '/reArticleDes',
-    name:'reArticleDes',
+    name: 'reArticleDes',
     component: reArticleDes
   },
   {
     path: '/product2poster',
-    name:'product2poster',
+    name: 'product2poster',
     component: product2poster
   },
   {
     path: '/sweetTest',
-    name:'sweetTest',
+    name: 'sweetTest',
     component: sweetTest
+  },
+  {
+    path: '/searchCustomer',
+    name: 'searchCustomer',
+    component: searchCustomer
+  },
+  {
+    path: '/searchList',
+    name: 'searchList',
+    component: searchList
+  },
+  {
+    path: '/bkIntroduce',
+    name: 'bkIntroduce',
+    component: bkIntroduce
+  },
+  {
+    path: '/searchCompanyDetail',
+    name: 'searchCompanyDetail',
+    component: searchCompanyDetail
   }
 ];
 
 
 const router = new Router({
 
+  mode: 'history',
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
-      return { x: 0, y: 0 } //期望滚动到哪个的位置
+      return {x: 0, y: 0} //期望滚动到哪个的位置
     }
   },
 })
@@ -224,7 +256,7 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 
 const jwt = require("jsonwebtoken");//引入jwt
 const secret = "scrm";// 设置秘钥
-const whiteList = ["/home","/product2poster","/sweetTest","/repArticleDetail","/articleDetail"]; // 定义一个白名单列表
+const whiteList = ["/home", "/product2poster", "/sweetTest", "/repArticleDetail", "/articleDetail"]; // 定义一个白名单列表
 router.beforeEach(async (to, from, next) => {
   if (whiteList.includes(to.path)) { // 如果是访问的白名单中的页面
     return next(); // 不需要校验，直接返回继续访问该页面

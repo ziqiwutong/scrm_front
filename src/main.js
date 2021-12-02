@@ -7,22 +7,29 @@ import router from './router'
 import store from "./store/index"
 import Vant from 'vant'
 import preview from 'vue-photo-preview'
-// import Vconsole from 'vconsole'
+
+import Vconsole from 'vconsole'
+// import './plugins/vant.js'
+
 import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
 import 'vant/lib/index.css'
 import 'vue-photo-preview/dist/skin.css'
+
 import VueClipboard from 'vue-clipboard2'
 import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
+import $ from 'jquery'
 
-// let vConsole = new Vconsole()
-// Vue.use(vConsole)
+
+let vConsole = new Vconsole()
+Vue.use(vConsole)
 Vue.use(Vant)
 Vue.use(VueClipboard)
 Vue.use(preview)
+
 Vue.prototype.$http = axios
 // Vue.config.productionTip = false
 
