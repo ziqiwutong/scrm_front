@@ -2,7 +2,7 @@
   <div class="orderCreate_container">
     <!--  navBar栏-->
     <van-nav-bar  class="nav-bar"
-                  title="新建产品"
+                  title="编辑产品"
                   left-text="返回"
                   left-arrow
                   fixed
@@ -31,8 +31,8 @@
         />
 
         <van-field
-          v-model="pretailPrice"
-          type="pretailPrice"
+          v-model="retailPrice"
+          type="retailPrice"
           name="产品零售价"
           label="产品零售价"
           placeholder="产品零售价"
@@ -118,14 +118,14 @@
           placeholder="请输入产品介绍"
         />
 
-        <van-field
-          v-model="notes"
-          rows="1"
-          autosize
-          label="备注"
-          type="textarea"
-          placeholder="请输入备注"
-        />
+<!--        <van-field-->
+<!--          v-model="notes"-->
+<!--          rows="1"-->
+<!--          autosize-->
+<!--          label="备注"-->
+<!--          type="textarea"-->
+<!--          placeholder="请输入备注"-->
+<!--        />-->
 
 
 
@@ -159,9 +159,9 @@ export default {
       productInventory: '',
       productType:'',
       productCertificate:'',
-      notes:'',
+      // notes:'',
       productPic:[],
-      pretailPrice:'',
+      retailPrice:'',
       wholesalePrice:'',
       priceDescribe:'',
       productIntro:'',
@@ -176,7 +176,7 @@ export default {
     async test(){
       this.productID=this.$route.query.productID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/se/product/productDetail";
+      let url = "/api/product/productDetail";
       let postData = {
         productID:this.productID
       }
@@ -189,9 +189,9 @@ export default {
         this.productInventory=result.productInventory;
         this.productType=result.productType;
         this.productCertificate=result.productCertificate;
-        this.notes=result.notes;
+        // this.notes=result.notes;
         this.productPic1=result.productPic;
-        this.pretailPrice=result.pretailPrice;
+        this.retailPrice=result.retailPrice;
         this.wholesalePrice=result.wholesalePrice;
         this.priceDescribe=result.priceDescribe;
         this.productIntro=result.productIntro;
@@ -199,23 +199,22 @@ export default {
 
     },
     async onSubmit() {
-      let url = "/api/se/product/editProduct";
+      let url = "/api/product/editProduct";
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,
         productInventory: this.productInventory,
         productType:this.productType,
         productCertificate: this.productCertificate,
-        notes:this.notes,
         priceChange:this.priceChange,
         productPic: this.productPic1,
-        pretailPrice:this.pretailPrice,
+        retailPrice:this.retailPrice,
         wholesalePrice:this.wholesalePrice,
         priceDescribe:this.priceDescribe,
         productIntro:this.productIntro,
         brandIntro:this.brandIntro
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
+      const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
       if(result.code === 200) {
         Toast('产品修改成功');
@@ -226,7 +225,7 @@ export default {
 
     },
     async afterRead(file) {
-      let url="/fzk/pic/file/base64StrToPic"
+      let url="/fzk/file/pic/base64StrToPic"
       let postData = {
         picBase64Str: file.content.substring(22),
         picFormat:'png',

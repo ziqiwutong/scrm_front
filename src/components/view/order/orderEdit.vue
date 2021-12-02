@@ -143,7 +143,7 @@ export default {
   },
   methods: {
     async afterRead(file) {
-      let url="/fzk/pic/file/base64StrToPic"
+      let url="/fzk/file/pic/base64StrToPic"
       let postData = {
         picBase64Str: file.content.substring(22),
         picFormat:'png',

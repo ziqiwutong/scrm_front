@@ -103,7 +103,7 @@
                     <van-image
                       width="135%"
                       height="75px"
-                      src="https://img01.yzcdn.cn/vant/cat.jpeg"
+                      :src=item.productPic
                     />
 <!--                      src=item.productPic-->
 <!--                      />-->
@@ -207,26 +207,11 @@ export default {
       // productBuyAmount:"3",
       // orderBuyer:"王佳乐",
       // orderID:"123978129038123",
-      // productPic:[],
+      //  productPic1:"",
     //以下为标签栏
       value1: 0,
       value2: 'a',
       value3:'a',
-      option1: [
-        { text: '综合推荐', value: 0 },
-        { text: '新款商品', value: 1 },
-        { text: '活动商品', value: 2 },
-      ],
-      option2: [
-        { text: '销量', value: 'a' },
-        { text: '好评排序', value: 'b' },
-        { text: '销量排序', value: 'c' },
-      ],
-      option3: [
-        { text: '价格', value: 'a' },
-        { text: '好评排序', value: 'b' },
-        { text: '销量排序', value: 'c' },
-      ],
     //  以下为筛选数据
       scrShow: false,
       followShow: false,
@@ -327,7 +312,7 @@ export default {
     async send(){  //发送筛选请求
       this.pageProps.pageNum=1;
       this.list=[];
-      let url = "/api/se/product/queryProduct";
+      let url = "/api/product/queryProduct";
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
@@ -397,7 +382,7 @@ export default {
       });
     },
     async onSearch() {
-      let url = "/api/se/product/queryProductByKey";
+      let url = "/api/product/queryProductByKey";
       let postData = {
         keySearch: this.searchValue,
         // orderType: this.active
@@ -419,7 +404,7 @@ export default {
     },
 
     async onLoad() {
-      let url = "/api/se/product/queryProduct";
+      let url = "/api/product/queryProduct";
       let barAct1=this.barAct;
       if( this.barAct == 2 && this.priceStatus == 0) barAct1 =3;
       // if( this.barAct == 3 ) barAct1 =4;
@@ -462,7 +447,7 @@ export default {
       }
     },
     async deletefun(productID){
-      let url = "/api/se/product/deleteProduct";
+      let url = "/api/product/deleteProduct";
       let postData = {
         productID: productID
       }

@@ -3,7 +3,7 @@
     <HeaderNavBar :title="navTitle" @returnClick="onClickLeft" v-show="!inWX"/>
 
     <div class="article-container">
-      <img class="productPic1" src="../../../assets/mmexport1631806085595.jpg"  width="100%" />
+      <img class="productPic1" :src=productPic  width="100%" />
       <div>
  <van-row class="content1">
    <van-col class="price" offset="2" span="16">￥{{productPrice}}</van-col>
@@ -64,12 +64,15 @@ export default {
   components: {BusinessCard, NavBar, HeaderNavBar},
   data() {
     return {
+      productPic2:"../../../assets/mmexport1631806085595.jpg",
       navTitle: "产品详情",
       title: "",
       author: "",
       date: "",
-      productPrice:"100",
-      productName:"爱藏寿酒",
+      productPic:"",
+      productID:this.$route.query.productID,
+      productPrice:"",
+      productName:"",
       productIntro:"瑞丽集团旗下的锁唇国际酒业主营进口葡萄酒业务，与全球知名的葡萄酒集团合作，为消费者提供源自澳大利亚的高品质佳酿。",
       articleId: "123",
       article: "",
@@ -108,7 +111,8 @@ export default {
   },
   created() {
     this.articleId = this.$route.query.articleId;
-    this.shareId = this.$route.query.shareId;
+    // this.shareId = this.$store.state.userMessage.userId;
+     this.shareId = 1; //此为测试代码
     this.showCard = this.$route.query.ifshowshareman;
     this.getProduct();
     let user = navigator.userAgent.toLowerCase();
@@ -182,12 +186,13 @@ export default {
     },
     async getProduct() {
       let self = this;
-      let url = "/api/se/product/productDetail"
+      let url = "/api/product/productDetail"
       let postData = {
-        productID: self.productId,
-        shareId: self.shareId
+        productID: this.$route.query.productID,
+        // shareId: self.shareId
       }
-      const result = (await self.$http.get(url, {params: postData})).data.data;
+      // const result = (await self.$http.get(url, {params: postData})).data.data;
+      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       // self.title = result.article.articleTitle;
       // if (result.article.articleType === 1) {
       //   self.author = result.article.articleOriginAuthor;
@@ -196,16 +201,21 @@ export default {
       // }
       self.date = '';
       // self.article = result.article.articleContext;
+      this.productType = result.productType
+      this.productName = result.productName
+      this.productPrice = result.productPrice
+      this.productIntro = result.productIntro
+      this.productPic = result.productPic
       let lastWord = result.sharePerName.slice(-1);
       self.sharePerImg = result.sharePerIcon === "" ? lastWord : result.sharePerIcon;
       self.sharePerName = result.sharePerName;
       self.sharePerCompany = '泸州老窖集团有限责任公司';
       self.sharePerPhone = result.sharePerPhone;
-
-      self.productType = result.productType;
-      self.productName = result.productName
-      self.productPrice = result.productPrice
-      self.productIntro = result.productIntro
+ console.log(1);
+      // this.productType = result.productType
+      // this.productName = result.productName
+      // this.productPrice = result.productPrice
+      // this.productIntro = result.productIntro
       // self.articleMsg.articleContext = result.article.articleContext;
       // self.articleMsg.articleTitle = result.article.articleTitle;
       // self.articleMsg.articleAuthor = result.article.articleOriginAuthor;
@@ -217,39 +227,39 @@ export default {
       //   self.adjustSize();
       // })
     },
-    async getArticle() {
-      let self = this;
-      let url = JSON.parse(getUrl()).contextShare.articleDetail
-      let postData = {
-        id: self.articleId,
-        shareId: self.shareId
-      }
-      const result = (await self.$http.get(url, {params: postData})).data.data;
-      self.title = result.article.articleTitle;
-      if (result.article.articleType === 1) {
-        self.author = result.article.articleOriginAuthor;
-      } else {
-        self.author = result.article.authorName;
-      }
-      self.date = '';
-      self.article = result.article.articleContext;
-      let lastWord = result.user.username.slice(-1);
-      self.sharePerImg = result.user.username == "" ? "酒" : lastWord;
-      self.sharePerName = result.user.username;
-      self.sharePerCompany = '泸州老窖集团有限责任公司';
-      self.sharePerPhone = result.user.telephone;
-
-      // self.articleMsg.articleContext = result.article.articleContext;
-      // self.articleMsg.articleTitle = result.article.articleTitle;
-      // self.articleMsg.articleAuthor = result.article.articleOriginAuthor;
-      // self.articleMsg.articleAccountName = result.article.articleAccountName;
-      // self.articleMsg.articlePower = result.article.articlePower;
-      // self.articleMsg.coverImg = result.article.articleImage;
-      // 页面渲染完成后在执行
-      // self.$nextTick(() => {
-      //   self.adjustSize();
-      // })
-    },
+    // async getArticle() {
+    //   let self = this;
+    //   let url = JSON.parse(getUrl()).contextShare.articleDetail
+    //   let postData = {
+    //     id: self.articleId,
+    //     shareId: self.shareId
+    //   }
+    //   const result = (await self.$http.get(url, {params: postData})).data.data;
+    //   self.title = result.article.articleTitle;
+    //   if (result.article.articleType === 1) {
+    //     self.author = result.article.articleOriginAuthor;
+    //   } else {
+    //     self.author = result.article.authorName;
+    //   }
+    //   self.date = '';
+    //   self.article = result.article.articleContext;
+    //   let lastWord = result.user.username.slice(-1);
+    //   self.sharePerImg = result.user.username == "" ? "酒" : lastWord;
+    //   self.sharePerName = result.user.username;
+    //   self.sharePerCompany = '泸州老窖集团有限责任公司';
+    //   self.sharePerPhone = result.user.telephone;
+    //
+    //   // self.articleMsg.articleContext = result.article.articleContext;
+    //   // self.articleMsg.articleTitle = result.article.articleTitle;
+    //   // self.articleMsg.articleAuthor = result.article.articleOriginAuthor;
+    //   // self.articleMsg.articleAccountName = result.article.articleAccountName;
+    //   // self.articleMsg.articlePower = result.article.articlePower;
+    //   // self.articleMsg.coverImg = result.article.articleImage;
+    //   // 页面渲染完成后在执行
+    //   // self.$nextTick(() => {
+    //   //   self.adjustSize();
+    //   // })
+    // },
     onClickLeft() {
       this.$router.push("/productList");
     },
@@ -293,7 +303,8 @@ export default {
         signature: result.signature
       }
       let shareMsg = {
-        title: this.title,
+        // title: this.title,
+        title: this.productName,
         desc: '点击查看详情->',
         link: window.location.href,
         imgUrl: this.articleMsg.coverImg
@@ -373,7 +384,7 @@ export default {
       this.$router.push({
         path: '/productEdit',
         query: {
-          productID: this.productId,
+          productID: this.productID,
           shareId: shareId,
           ifShowShareMan: this.showCard
         }
