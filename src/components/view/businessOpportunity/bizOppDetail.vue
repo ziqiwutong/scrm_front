@@ -98,6 +98,7 @@
           name="boName"
           label="商机名称"
           placeholder="请输入商机名称"
+          @input="onEditChange()"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
 
@@ -110,11 +111,13 @@
           name="customerName"
           label="目标客户"
           placeholder="点击选择目标客户"
+          @input="onEditChange()"
           @click="boSelectCustomerShow = true"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
 
-        <AbbList :type=2 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
+        <!-- ToDo 此组件还没做好 -->
+        <AbbList :type=3 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
 
 
 
@@ -127,6 +130,7 @@
           name="boResponsible"
           label="负责人"
           placeholder="点击选择商机负责人"
+          @input="onEditChange()"
           @click="boSelectResponsibleShow = true"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
@@ -144,6 +148,7 @@
           name="boFullStage"
           label="编辑流程"
           placeholder="点击自定义商机流程"
+          @input="onEditChange()"
           @click="boEditStageShow = true"
         />
         <van-popup v-model="boEditStageShow" position="bottom" @close="confirmEditStage()">
@@ -179,6 +184,7 @@
           :value="boFollowStage"
           label="跟进阶段"
           placeholder="点击选择目前进行的阶段"
+          @input="onEditChange()"
           @click="showFollowStagePop()"
         />
         <van-popup v-model="boFollowStageShow" position="bottom">
@@ -211,6 +217,7 @@
           name="boAmount"
           label="商机金额"
           placeholder="请输入商机金额"
+          @input="onEditChange()"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
 
@@ -223,6 +230,7 @@
           :value="boExpectDate"
           label="预计成交时间"
           placeholder="点击选择时间"
+          @input="onEditChange()"
           @click="boExpectDateShow = true"
         />
         <van-popup v-model="boExpectDateShow" position="bottom">
@@ -247,6 +255,7 @@
           maxlength="200"
           placeholder="请输入商机备注"
           show-word-limit
+          @input="onEditChange()"
         />
 
         <!-- 提交按钮 -->
@@ -289,6 +298,9 @@ export default {
 
       createTime: "",
       updateTime: "",
+
+
+
 
 
 
@@ -337,18 +349,6 @@ export default {
       maxDate: new Date(2025, 10, 1),
     };
   },
-  watch:{
-    //判断这些可填数据是否有变化，用来提示用户没有提交
-    customerId:'onEditChange',
-    boName:'onEditChange',
-    boStatus:'onEditChange',
-    boFullStage: 'onEditChange',
-    boFollowStage: 'onEditChange',
-    boAmount:'onEditChange',
-    boExpectDate:'onEditChange',
-    boResponsibleId: 'onEditChange',
-    boNotes:'onEditChange',
-  },
 
   created() {
     this.onLoad();
@@ -394,9 +394,6 @@ export default {
           }
         }
       }
-
-      //ToDo 自己修改不需要提示，其它地方的也要加上这条
-      this.ifEdit = false;
     },
 
     //从客户列表组件获取客户信息
@@ -425,7 +422,6 @@ export default {
         id: this.id,
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data;
-      console.log(result);
 
       if (result.code === 200) {
         Toast('商机删除成功');
@@ -451,6 +447,7 @@ export default {
         })
           .then(() => {
             // 确认
+            this.ifEdit = false;
             this.editPageShow=false;
           })
           .catch(() => {
@@ -490,7 +487,7 @@ export default {
         Toast('商机提交失败,错误码' + result.code);
       }
       //防止提交以后还出现确认弹窗
-      this.ifEdit = true;
+      this.ifEdit = false;
     },
 
     // 时间录入处理

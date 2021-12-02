@@ -168,10 +168,6 @@ const routes = [
     component: addBizOpp
   },
   {
-    path: '/editBizOpp',
-    component: editBizOpp
-  },
-  {
     path: '/orderEdit',
     component: orderEdit
   },

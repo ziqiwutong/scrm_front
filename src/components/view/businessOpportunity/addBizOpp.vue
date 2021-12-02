@@ -28,7 +28,8 @@
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
 
-      <AbbList :type=2 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
+      <!-- ToDo 此组件还没做好 -->
+      <AbbList :type=3 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
 
 
 
@@ -260,22 +261,22 @@ export default {
     };
   },
 
-  // watch: {
-  //   $route: {
-  //     immediate: true,
-  //     handler: function (to, from) {
-  //       //拿到目标参数 to.query.id 去再次请求数据接口
-  //       this.customerId = to.query.id;
-  //       this.customerName = to.query.customerName;
-  //     },
-  //   },
-  // },
+  watch: {
+    $route: {
+      immediate: true,
+      handler: function (to, from) {
+        //拿到目标参数 to.query.id 去再次请求数据接口
+        this.customerId = to.query.id;
+        this.customerName = to.query.customerName;
+      },
+    },
+  },
 
   created(){
+    //当页面加载的时候从vuex获取当前使用者的信息作为 商机编辑者
+    this.boEditorId = this.$store.state.userMessage.userId;
     this.boEditor = this.$store.state.userMessage.username;
     //ToDo 需要获取用户的id作为录入人id
-    this.customerId = this.$router.query.id;
-    this.customerName = this.$router.query.customerName;
 
   },
   methods: {
