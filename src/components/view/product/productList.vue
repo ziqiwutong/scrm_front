@@ -312,7 +312,7 @@ export default {
     async send(){  //发送筛选请求
       this.pageProps.pageNum=1;
       this.list=[];
-      let url = "/api/product/queryProduct";
+      let url = "/api/se/product/queryProduct";
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
@@ -382,7 +382,7 @@ export default {
       });
     },
     async onSearch() {
-      let url = "/api/product/queryProductByKey";
+      let url = "/api/se/product/queryProductByKey";
       let postData = {
         keySearch: this.searchValue,
         // orderType: this.active
@@ -404,7 +404,7 @@ export default {
     },
 
     async onLoad() {
-      let url = "/api/product/queryProduct";
+      let url = "/api/se/product/queryProduct";
       let barAct1=this.barAct;
       if( this.barAct == 2 && this.priceStatus == 0) barAct1 =3;
       // if( this.barAct == 3 ) barAct1 =4;
@@ -447,7 +447,7 @@ export default {
       }
     },
     async deletefun(productID){
-      let url = "/api/product/deleteProduct";
+      let url = "/api/se/product/deleteProduct";
       let postData = {
         productID: productID
       }

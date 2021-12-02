@@ -36,7 +36,7 @@
           name="产品零售价"
           label="产品零售价"
           placeholder="产品零售价"
-          :rules="[{ required: true, message: '请填写产品零售价' }]"
+          :rules="[{ required: false, message: '请填写产品零售价' }]"
         />
 
         <van-field
@@ -45,7 +45,7 @@
           name="产品批发价"
           label="产品批发价"
           placeholder="产品批发价"
-          :rules="[{ required: true, message: '请填写产品批发价' }]"
+          :rules="[{ required: false, message: '请填写产品批发价' }]"
         />
 
         <van-field name="productPic" label="产品图片">
@@ -60,7 +60,7 @@
           name="产品库存"
           label="产品库存"
           placeholder="产品库存"
-          :rules="[{ required: true, message: '请填写产品库存' }]"
+          :rules="[{ required: false, message: '请填写产品库存' }]"
         />
 
         <van-field
@@ -69,7 +69,7 @@
           name="产品类型"
           label="产品类型"
           placeholder="产品类型"
-          :rules="[{ required: true, message: '请填写产品类型' }]"
+          :rules="[{ required: false, message: '请填写产品类型' }]"
         />
 
         <van-field
@@ -78,7 +78,7 @@
           name="产品资质"
           label="产品资质"
           placeholder="产品资质"
-          :rules="[{ required: true, message: '请填写产品资质' }]"
+          :rules="[{ required: false, message: '请填写产品资质' }]"
         />
 
         <!--        <van-field-->
@@ -160,7 +160,9 @@ export default {
       productType:'',
       productCertificate:'',
       // notes:'',
-      productPic:[],
+      productPic:[
+
+      ],
       retailPrice:'',
       wholesalePrice:'',
       priceDescribe:'',
@@ -176,7 +178,7 @@ export default {
     async test(){
       this.productID=this.$route.query.productID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/product/productDetail";
+      let url = "/api/se/product/productDetail";
       let postData = {
         productID:this.productID
       }
@@ -191,6 +193,8 @@ export default {
         this.productCertificate=result.productCertificate;
         // this.notes=result.notes;
         this.productPic1=result.productPic;
+         this.productPic.push({url: result.productPic});
+        console.log(this.productPic[0])
         this.retailPrice=result.retailPrice;
         this.wholesalePrice=result.wholesalePrice;
         this.priceDescribe=result.priceDescribe;
@@ -199,8 +203,9 @@ export default {
 
     },
     async onSubmit() {
-      let url = "/api/product/editProduct";
+      let url = "/api/se/product/editProduct";
       let postData = {
+        productID:this.productID,
         productName: this.productName,
         productPrice: this.productPrice,
         productInventory: this.productInventory,

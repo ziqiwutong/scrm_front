@@ -19,7 +19,7 @@
       <div v-html="article" class="article"></div>
     </div>
 
-    <van-share-sheet v-model="showShare" :options="options" @select="shareArticle"/>
+    <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
     <BusinessCard class="bsCard" :userImgUrl="sharePerImg" :username="sharePerName" :userCompany="sharePerCompany"
                   :userPhone="sharePerPhone"
                   v-show="showCard"/>
@@ -50,14 +50,18 @@
 </template>
 
 <script>
-import qs from 'qs'// axios参数包
+
+import {Toast} from "vant";
+import qs from 'qs';// axios参数包
 import HeaderNavBar from "../../component/HeaderNavBar";
 import NavBar from "../../component/NavBar";
 import BusinessCard from "../../component/BusinessCard";
-import {Toast} from "vant";
+// import {Toast} from "vant";
 import {getUserId} from "../../../network/getToken";
 import {getUrl} from "../../../utils/replaceUrl";
 import wxApi from "../../../utils/wxApi";
+// import yyApi from "../../../utils/yyApi";
+
 
 export default {
   name: "productDetail",
@@ -153,12 +157,19 @@ export default {
   },
   methods: {
     // 判断环境为微信还是app
+    // 判断环境为微信还是app
     async judgeEnv() {
       let user = navigator.userAgent.toLowerCase();
-      if (user.match(/MicroMessenger/i) == "micromessenger") {
-        let url = window.location.href.split('#')[0];
+      if (user.match(/MicroMessenger/i) == "micromessenger") {// 只能是两个等号，看起来类型是不同的
         // 不存在code则代表是未授权页面
-        if (!this.$route.query.code) {
+        if (!this.$route.query.code || this.$store.state.hasOAuth === 'false') {
+          this.$store.commit('updateArticleOAuth', 'true');
+          let url = JSON.parse(getUrl()).baseUrl
+            + 'articleDetail?articleid='
+            + this.$route.query.articleid
+            + '&shareid='
+            + this.$route.query.shareid
+            + '&ifshowshareman=' + this.showCard;
           let articleUrl = encodeURIComponent(url);
           let link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8cfd402efecab262&redirect_uri=" + articleUrl + "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
           location.href = link;
@@ -172,12 +183,13 @@ export default {
           const wxUserMsg = (await this.$http.get(url, {params: getData})).data.data;
           // 把微信用户的基本信息存入本地，然后等用户离开页面时再返回给后台
           this.wxUserMsg = wxUserMsg;
+          this.shareArticleWx();
         }
         this.inWX = true;
         document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-top:60px;padding-bottom:0px;');
         document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
+
         // 微信分享文章
-        this.shareArticle();
         // 监听页面滚动事件
         window.addEventListener("scroll", this.scrolling)
       } else {
@@ -186,11 +198,12 @@ export default {
     },
     async getProduct() {
       let self = this;
-      let url = "/api/product/productDetail"
+      let url = "/api/se/product/productDetail"
       let postData = {
         productID: this.$route.query.productID,
-        // shareId: self.shareId
+        shareID: self.shareId
       }
+      // console.log(this.shareId)
       // const result = (await self.$http.get(url, {params: postData})).data.data;
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       // self.title = result.article.articleTitle;
@@ -207,7 +220,9 @@ export default {
       this.productIntro = result.productIntro
       this.productPic = result.productPic
       let lastWord = result.sharePerName.slice(-1);
-      self.sharePerImg = result.sharePerIcon === "" ? lastWord : result.sharePerIcon;
+       // self.sharePerImg = this.productPic2;
+      self.sharePerImg = result.sharePerIcon;
+       // console.log(self.sharePerImg)
       self.sharePerName = result.sharePerName;
       self.sharePerCompany = '泸州老窖集团有限责任公司';
       self.sharePerPhone = result.sharePerPhone;
@@ -227,39 +242,58 @@ export default {
       //   self.adjustSize();
       // })
     },
-    // async getArticle() {
-    //   let self = this;
-    //   let url = JSON.parse(getUrl()).contextShare.articleDetail
-    //   let postData = {
-    //     id: self.articleId,
-    //     shareId: self.shareId
-    //   }
-    //   const result = (await self.$http.get(url, {params: postData})).data.data;
-    //   self.title = result.article.articleTitle;
-    //   if (result.article.articleType === 1) {
-    //     self.author = result.article.articleOriginAuthor;
-    //   } else {
-    //     self.author = result.article.authorName;
-    //   }
-    //   self.date = '';
-    //   self.article = result.article.articleContext;
-    //   let lastWord = result.user.username.slice(-1);
-    //   self.sharePerImg = result.user.username == "" ? "酒" : lastWord;
-    //   self.sharePerName = result.user.username;
-    //   self.sharePerCompany = '泸州老窖集团有限责任公司';
-    //   self.sharePerPhone = result.user.telephone;
-    //
-    //   // self.articleMsg.articleContext = result.article.articleContext;
-    //   // self.articleMsg.articleTitle = result.article.articleTitle;
-    //   // self.articleMsg.articleAuthor = result.article.articleOriginAuthor;
-    //   // self.articleMsg.articleAccountName = result.article.articleAccountName;
-    //   // self.articleMsg.articlePower = result.article.articlePower;
-    //   // self.articleMsg.coverImg = result.article.articleImage;
-    //   // 页面渲染完成后在执行
-    //   // self.$nextTick(() => {
-    //   //   self.adjustSize();
-    //   // })
-    // },
+    async shareArticleWx() {
+      // 先去后台拿微信的jsConfig，然后触发分享事件，传给后台的pageUrl不需要编码
+      // let pageUrl = JSON.parse(getUrl()).baseUrl
+      //   + 'articleDetail?artcileid='
+      //   + this.articleId
+      //   + '&shareid='
+      //   + this.shareId
+      //   + '&ifshowshareman=' + this.showCard;
+      let pageUrl = location.href;
+      let postData = {
+        url: pageUrl
+      }
+      let url = JSON.parse(getUrl()).contextShare.wxConfig;
+      const result = (await this.$http.get(url, {params: postData})).data.data;
+      let wxConfig = {
+        appId: result.appId,
+        timestamp: result.timestamp,
+        nonceStr: result.noncestr,
+        signature: result.signature
+      }
+      let shareMsg = {
+        title: this.title,
+        desc: '点击查看详情->',
+        link: window.location.href,
+        imgUrl: this.articleMsg.coverImg
+      }
+      console.log(shareMsg.link)
+      await wxApi.wxRegister(wxConfig, shareMsg);
+      this.showShare = false;
+    },
+    async shareArticleApp(e) {
+      // 先去后台拿用友的jsConfig，然后触发分享事件
+      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      const result = (await this.$http.get(url)).data.data;
+      let yyConfig = {
+        appId: result.appid,
+        timestamp: result.timestamp,
+        signature: result.signature
+      }
+      let shareMsg = {
+        type: '2',
+        title: this.title,
+        imageUrl: this.articleMsg.coverImg,
+        desc: '点击查看详情->',
+        pageUrl: window.location.href
+      }
+      if (e.name === '朋友圈') {
+        shareMsg.type = '3';
+      }
+      await yyApi.yyRegister(yyConfig, shareMsg);
+      this.showShare = false;
+    },
     onClickLeft() {
       this.$router.push("/productList");
     },

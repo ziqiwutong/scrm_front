@@ -172,7 +172,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/product/addProduct";
+      let url = "/api/se/product/addProduct";
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,
