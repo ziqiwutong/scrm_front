@@ -18,6 +18,10 @@ import editClueStatus from "../components/view/clue/editClueStatus";
 import PotentDetail from "../components/customer/potentialdetail"
 import editClue from "../components/view/clue/editClue";
 import addClueStatus from "../components/view/clue/addClueStatus";
+import communicationList from "../components/view/commuication/communicationList";
+import communicationDetail from "../components/view/commuication/communicationDetail";
+import addCommunicationLog  from "../components/view/commuication/addCommunicationLog"
+import editCom from "../components/view/commuication/editCom"
 Vue.use(Router)
 
 const routes = [
@@ -53,7 +57,8 @@ const routes = [
   },
   {
     path: '/perinfor',
-    component: Perinfor
+    name:'perinfor',
+    component: Perinfor,
   },
   {
     path: '/potential',
@@ -92,6 +97,25 @@ const routes = [
     path: '/potentialdetail',
     component: PotentDetail
   },
+  {
+    path: '/communicationList',
+    component: communicationList
+  },
+  {
+    path: '/communicationDetail',
+    name: 'communicationDetail',
+    component: communicationDetail,
+  },
+  {
+    path: '/addCommunicationLog',
+    name:'addCommunicationLog',
+    component: addCommunicationLog,
+  },
+  {
+    path: '/editCom',
+    name: 'editCom',
+    component: editCom,
+  }
 
 ]
 

@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/clue/addClueStatus";
+      let url = "/api/se/clue/addClueStatus";
       let postData = {
         clueId:this.$route.query.clueId,
         clueEditor:this.clueEditor,

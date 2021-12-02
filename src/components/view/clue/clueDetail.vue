@@ -72,6 +72,8 @@ export default {
       id:'',
       clueId:'',
       active: 1,
+      boDate:'',
+      boStatus: '',
       list: [
         {
           clueName:'',
@@ -117,7 +119,7 @@ export default {
       });
     },
     async onLoad() {
-      let url = "/api/clue/queryClueStatus";
+      let url = "/api/se/clue/queryClueStatus";
       let postData = {clueId:this.$route.query.clueId};
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       this.list = [];
@@ -143,7 +145,7 @@ export default {
       });
     },
     async sendDelete() {
-      let url = "/api/clue/deleteClue";
+      let url = "/api/se/clue/deleteClue";
       let postData = {
         id: this.$route.query.clueId,
       }
@@ -163,14 +165,23 @@ export default {
       });
     },
     async sendToBizOpp() {
-      let url = "/api/clue/toBizOpp";
+      let url = "/api/se/clue/editClue";
+      this.businessOpporitunityFlag=1;
+      this.clueStatus='转换为商机';
       let postData = {
-        id: this.id
+        id: this.$route.query.id,
+        clueName:this.clueName,
+        clueDate:this.clueDate,
+        clueEditor:this.clueEditor,
+        clueDiscover:this.clueDiscover,
+        clueResponsible:this.clueResponsible,
+        clueStatus:this.clueStatus,
+        businessOpporitunityFlag:this.businessOpporitunityFlag,
       }
-      const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
-      if (result1.code === 200) {
+      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+      if (result.code === 200) {
         Toast('线索转换商机成功');
-        this.$router.push('clueList');
+        this.$router.push('addBizOpp');
       } else
         Toast('线索转换商机,错误码' + result1.code);
     },

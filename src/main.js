@@ -11,8 +11,10 @@ import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
 import 'vant/lib/index.css'
+import VueClipboard from 'vue-clipboard2'
 
 Vue.use(Vant)
+Vue.use(VueClipboard)
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 // Vue.use(Vant)

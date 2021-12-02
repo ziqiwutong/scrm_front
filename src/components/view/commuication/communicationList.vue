@@ -67,7 +67,6 @@
         </van-tabbar>
       </van-row>
       <!-- 客户列表 -->
-
       <van-list
         class="list"
         v-model="loading"
@@ -75,68 +74,64 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <div class="van-clearfix">
-          <!-- 客户列表-滑动单元格 -->
-          <van-swipe-cell v-for="item in cusList" :key="item.id">
-            <van-row @click="onDetail(item)" class="list-content">
-              <!--客户信息行-->
-              <van-row>
-                <!-- 客户列表-头像 -->
-                <van-col span="4" offset="1">
-                  <van-image
-                    round
-                    width="40"
-                    height="40"
-                    :src="item.customerIcon"
-                    v-if="item.customerIcon"
-                  />
-                  <div v-if="!item.customerIcon" class="list-img-none">
-                    {{ item.customerName[0] }}
-                  </div>
-                </van-col>
-                <!-- 客户列表-客户姓名 -->
-                <van-col span="11" class="list-content-name"
-                ><div class="van-ellipsis">
-                  {{ item.customerName }}
-                </div></van-col
-                >
-                <!-- 客户列表-进入客户池时间 -->
-                <van-col span="8" class="list-content-time"
-                >{{ item.enterPoolDate }}进入客户池</van-col
-                >
-                <!-- 客户列表-客户公司信息 -->
-                <van-col span="16" class="list-content-msg">{{
-                    item.belongCompany
-                  }}</van-col>
-              </van-row>
-              <!-- 客户标签行 -->
-              <van-row>
-                <van-col span="4"></van-col>
-                <!-- 显示标签 -->
-                <van-col class="list-content-tag"
-                ><van-tag
-                  color="#E7F7E3"
-                  text-color="#67C74D"
-                  v-for="item2 in item.customerLabels"
-                  :key="item2.id"
-                >{{ item2.labelType + ":" + item2.labelName }}</van-tag
-                ></van-col
-                >
-              </van-row>
+        <!-- 客户列表-滑动单元格 -->
+        <van-swipe-cell v-for="item in cusList" :key="item.id">
+          <van-row @click="onDetail(item)" class="list-content">
+            <!--客户信息行-->
+            <van-row>
+              <!-- 客户列表-头像 -->
+              <van-col span="4" offset="1">
+                <van-image
+                  round
+                  width="40"
+                  height="40"
+                  :src="item.customerIcon"
+                  v-if="item.customerIcon"
+                />
+                <div v-if="!item.customerIcon" class="list-img-none">{{item.customerName[0]}}</div>
+              </van-col>
+              <!-- 客户列表-客户姓名 -->
+              <van-col span="11" class="list-content-name"
+              ><div class="van-ellipsis">
+                {{ item.customerName }}
+              </div></van-col
+              >
+              <!-- 客户列表-进入客户池时间 -->
+              <van-col span="8" class="list-content-time"
+              >{{ item.enterPoolDate }}进入客户池</van-col
+              >
+              <!-- 客户列表-客户公司信息 -->
+              <van-col span="16" class="list-content-msg">{{
+                  item.customerName
+                }}</van-col>
             </van-row>
-            <!-- 客户列表-滑动删除 -->
-            <template #right>
-              <van-button
-                square
-                text="删除"
-                type="danger"
-                class="delete-button"
-                @click="detOn(item.id)"
-              />
-            </template>
-            <van-divider />
-          </van-swipe-cell>
-        </div>
+            <!-- 客户标签行 -->
+            <van-row>
+              <van-col span="4"></van-col>
+              <!-- 显示标签 -->
+              <van-col class="list-content-tag"
+              ><van-tag
+                color="#E7F7E3"
+                text-color="#67C74D"
+                v-for="item2 in item.customerLabels"
+                :key="item2.id"
+              >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+              ></van-col
+              >
+            </van-row>
+          </van-row>
+          <!-- 客户列表-滑动删除 -->
+          <template #right>
+            <van-button
+              square
+              text="删除"
+              type="danger"
+              class="delete-button"
+              @click="detOn(item.id)"
+            />
+          </template>
+          <van-divider />
+        </van-swipe-cell>
       </van-list>
     </div>
     <!-- 客户列表-滑动单元格-删除对话框 -->
@@ -179,10 +174,10 @@
       <van-row v-for="item in scrList" :key="item.name">
         <p class="screen-name">{{ item.name }}</p>
         <van-button
-          v-for="(item1, index) in item.class"
+          v-for="item1 in item.class"
           :key="item1.name"
           :class="item1.isSelected ? 'active-screen-btn' : 'screen-btn'"
-          @click="cutTabClick(item1, item, index)"
+          @click="cutTabClick(item1)"
         >
           {{ item1.name }}</van-button
         >
@@ -269,18 +264,8 @@
         <van-row>
           <!-- 跟进人-跟进人头像 -->
           <van-col span="4"
-          ><van-image
-            round
-            width="40"
-            height="40"
-            :src="item.userIcon"
-            v-if="item.userIcon"
-          />
-            <div v-if="!item.userIcon" class="list-img-none">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-             
+          ><van-image round width="40" height="40" :src="item.userIcon"
+          /></van-col>
           <!-- 跟进人-跟进人姓名 -->
           <van-col span="6" class="list-content-name"
           ><div class="van-ellipsis">
@@ -336,11 +321,7 @@
                 width="40"
                 height="40"
                 :src="item.customerIcon"
-                v-if="item.customerIcon"
               />
-              <div v-if="!item.customerIcon" class="list-img-none">
-                {{ item.customerName[0] }}
-              </div>
             </van-col>
             <!-- 多选-客户姓名 -->
             <van-col span="10" class="list-content-name"
@@ -439,13 +420,13 @@
     </van-popup>
     <!-- 多选-打标签弹出框 -->
     <van-popup v-model="ckShow" closeable position="bottom">
-      <van-row v-for="(item, index) in putLabelList" :key="item.name">
+      <van-row v-for="item in putLabelList" :key="item.name">
         <p class="screen-name">{{ item.name }}</p>
         <van-button
           v-for="item1 in item.class"
           :key="item1.name"
           :class="!item1.isSelected ? 'active-screen-btn' : 'screen-btn'"
-          @click="cutTabClick(item1, item, index)"
+          @click="cutTabClick(item1)"
         >
           {{ item1.name }}</van-button
         >
@@ -481,18 +462,18 @@
         <!--排序-最近动态时间从晚到早 -->
         <van-cell
           title="最近动态时间从晚到早"
-          @click="dFromMbtn"
-          :class="this.dFromM ? 'browse-active-btn' : ''"
-        >
-          <van-icon name="passed" v-show="dFromM" color="#4876f1" />
-        </van-cell>
-        <!--排序-最近动态时间从早到晚 -->
-        <van-cell
-          title="最近动态时间从早到晚"
           @click="dFromNbtn"
           :class="this.dFromN ? 'browse-active-btn' : ''"
         >
           <van-icon name="passed" v-show="dFromN" color="#4876f1" />
+        </van-cell>
+        <!--排序-最近动态时间从早到晚 -->
+        <van-cell
+          title="最近动态时间从早到晚"
+          @click="dFromMbtn"
+          :class="this.dFromM ? 'browse-active-btn' : ''"
+        >
+          <van-icon name="passed" v-show="dFromM" color="#4876f1" />
         </van-cell>
       </van-cell-group>
       <!-- 弹窗关闭区域 -->
@@ -679,7 +660,7 @@
         <van-row class="add-title">公司信息</van-row>
         <!-- 公司信息-公司 -->
         <van-field
-          v-model="addList.belongCompany"
+          v-model="addList.addCompany"
           name="validator"
           label="公司"
           placeholder="请输入"
@@ -810,6 +791,27 @@
           label="经营范围"
           placeholder="请输入"
         />
+        <!-- 公司信息-商标 -->
+        <van-field
+          v-model="addList.addTrad"
+          name="validator"
+          label="商标"
+          placeholder="请输入"
+        />
+        <!-- 公司信息-渠道能力 -->
+        <van-field
+          v-model="addList.addChaCap"
+          name="validator"
+          label="渠道能力"
+          placeholder="请输入"
+        />
+        <!-- 公司信息-是否有定制能力 -->
+        <van-field
+          v-model="addList.addHasD"
+          name="validator"
+          label="是否有定制能力"
+          placeholder="请输入"
+        />
         <!-- 公司信息-备注 -->
         <van-field
           v-model="addList.addNote"
@@ -885,20 +887,22 @@
         @cancel="onCusStaCancel"
       />
     </van-popup>
-    <TabBar />
+    <TabBar/>
   </div>
 </template>
 
 <script>
 import qs from "qs"; // axios参数包
+
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
-import TabBar from "../component/TabBar";
+import NavBar from "../../component/NavBar";
+import TabBar from "../../component/TabBar";
+
 export default {
   name: "customer",
-  components: {
-    TabBar,
-  },
+  components: {NavBar,TabBar
+    },
   data() {
     return {
       // 客户类型-排序-种类
@@ -949,7 +953,7 @@ export default {
       // 新建客户-时间-选择值
       dateVal: "",
       // 新建客户-时间-时间最小值
-      minDate: new Date(1920, 0, 1),
+      minDate: new Date(2020, 0, 1),
       // 新建客户-时间-时间最大值
       maxDate: new Date(2025, 10, 1),
       // 新建客户-时间-生日/公司创建分类
@@ -963,7 +967,7 @@ export default {
       // 新建客户-客户状态选择-弹窗
       addCusStaShow: false,
       // 新建客户-客户状态选择-内容
-      columns: ["跟进中", "未分配"],
+      columns: ["跟进中", "未分配", "潜在客户"],
       // 新建客户-头像数据
       uploader: [],
       // 新建客户-表单按钮选择项
@@ -1088,14 +1092,13 @@ export default {
       addList: {
         id: "",
         customerType: "",
-        belongCompany: "",
         potential: "",
         customerName: "",
         historyName: "",
         customerIcon: "",
         telephone: "",
         city: "",
-        customerStatus: "未分配",
+        customerStatus: "",
         followStaffId: "",
         followStaffName: "",
         enterPoolDate: "",
@@ -1136,16 +1139,15 @@ export default {
         id: "",
         customerType: "",
         potential: "",
-        belongCompany: "",
         customerName: "",
         historyName: "",
         customerIcon: "",
         telephone: "",
         city: "",
-        cuostomerStatus: "未分配",
+        cuostomerStatus: "",
         followStaffId: "",
         followStaffName: "",
-        enterPoolDate: "",
+        enterPoolDate: "2021-02-13",
         origin: "",
         orderAmount: "",
         orderNumber: "",
@@ -1316,9 +1318,10 @@ export default {
             { name: "上周", isSelected: false },
             { name: "本月", isSelected: false },
             { name: "上月", isSelected: false },
+            { name: "自定义", isSelected: false },
             { name: "为空", isSelected: false },
           ],
-          ename: "businessTime",
+          ename: "",
         },
         {
           name: "创建时间",
@@ -1330,9 +1333,25 @@ export default {
             { name: "上周", isSelected: false },
             { name: "本月", isSelected: false },
             { name: "上月", isSelected: false },
+            { name: "自定义", isSelected: false },
             { name: "为空", isSelected: false },
           ],
           ename: "createTime",
+        },
+        {
+          name: "分配时间",
+          class: [
+            { name: "今天", isSelected: false },
+            { name: "昨天", isSelected: false },
+            { name: "过去7天", isSelected: false },
+            { name: "本周", isSelected: false },
+            { name: "上周", isSelected: false },
+            { name: "本月", isSelected: false },
+            { name: "上月", isSelected: false },
+            { name: "自定义", isSelected: false },
+            { name: "为空", isSelected: false },
+          ],
+          ename: "",
         },
       ],
       // 筛选-跟进人列表是否被选取
@@ -1406,12 +1425,12 @@ export default {
       // 客户排序-列表顺序
       listOrder: "创建时间从晚到早",
       // 图标
-      cus_new: require("../../assets/cusicon/cus_new.png"),
-      cus_scr: require("../../assets/cusicon/cus_scr.png"),
-      cus_chc: require("../../assets/cusicon/cus_ckc.png"),
-      cus_delete: require("../../assets/cusicon/cus_delete.png"),
-      cus_lable: require("../../assets/cusicon/cus_lable.png"),
-      cus_msg: require("../../assets/cusicon/cus_msg.png"),
+      cus_new: require("../../../assets/cusicon/cus_new.png"),
+      cus_scr: require("../../../assets/cusicon/cus_scr.png"),
+      cus_chc: require("../../../assets/cusicon/cus_ckc.png"),
+      cus_delete: require("../../../assets/cusicon/cus_delete.png"),
+      cus_lable: require("../../../assets/cusicon/cus_lable.png"),
+      cus_msg: require("../../../assets/cusicon/cus_msg.png"),
       // 商机负责人
       oppoChsVal: { name: "商机负责人", val: "", id: "" },
       ifoppoChoose: true,
@@ -1420,18 +1439,9 @@ export default {
       ifbulidChoose: true,
       //分类
       userType: 0,
-      // 自定义字段
-      cusField: [],
     };
   },
   methods: {
-    // async getCusField() {
-    //   let url = "/se/customer/customizedField";
-    //   const res = await this.$http.get(url);
-    //   console.log(res.data.data)
-
-    // },
-
     // 获取用户标签值
     async getCusLabel() {
       let url = "/api/se/label/query";
@@ -1478,22 +1488,22 @@ export default {
       if (cusVal == 0) {
         this.cusClass = "全部客户";
         this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
+        this.finished=false;
+        this.pageProps.pageNum=1;
         this.onLoad();
         Toast("选择全部客户");
       } else if (cusVal == 1) {
         this.cusClass = "未分配";
         this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
+        this.finished=false;
+        this.pageProps.pageNum=1;
         this.onLoad();
         Toast("选择待分配客户");
       } else if (cusVal == 2) {
         this.cusClass = "跟进中";
         this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
+        this.finished=false;
+        this.pageProps.pageNum=1;
         this.onLoad();
         Toast("选择跟进中客户");
       }
@@ -1502,19 +1512,24 @@ export default {
     // 客户列表-搜索功能
     onSearch() {
       this.cusList = [];
-      this.finished = false;
-      this.pageProps.pageNum = 1;
+      this.finished=false;
+      this.pageProps.pageNum=1;
       this.onLoad();
     },
     // 客户列表-搜索功能-关闭弹窗
     onSearchCancel() {
       this.isSearch = !this.isSearch;
+      (this.searchVal = ""), (this.cusList = []);
+      this.cusList = [];
+      this.finished=false;
+      this.pageProps.pageNum=1;
+      this.onLoad();
     },
     // 客户列表-搜索功能展示
     toSearch() {
       this.isSearch = !this.isSearch;
-      console.log(this.chooseDate(1));
     },
+    // 客户列表-列表加载
     async onLoad() {
       let url = "/api/se/customer/query";
       url = this.urlSortChoose(url);
@@ -1522,7 +1537,6 @@ export default {
       url = this.urlCusNameChoose(url);
       url = this.urlCusScreen(url);
       url += "&eq_potential=0";
-      console.log(url);
       const res = await this.$http.get(url, {
         params: {
           currentPage: this.pageProps.pageNum++,
@@ -1562,9 +1576,9 @@ export default {
       if (this.cusClass == "全部客户")
         return url + "&" + "customerStatus=" + "all";
       else if (this.cusClass == "未分配")
-        return url + "&eq_" + "customerStatus=" + "未分配";
+        return url + "&" + "customerStatus=" + "wait";
       else if (this.cusClass == "跟进中")
-        return url + "&eq_" + "customerStatus=" + "跟进中";
+        return url + "&" + "customerStatus=" + "follow";
     },
     // 客户列表-url参数设置-模糊查询
     urlCusNameChoose(url) {
@@ -1580,7 +1594,7 @@ export default {
     // 客户列表-客户详情跳转
     onDetail(item) {
       // this.$router.replace("/perinfor");
-      this.$router.push({ name: "perinfor", query: { cuslist: item } });
+      this.$router.push({ name: "communicationDetail", query: { cuslist: item } });
     },
     // 客户列表-滑动删除-弹出框
     detOn(val) {
@@ -1595,8 +1609,8 @@ export default {
       if (result.data.code == "200") {
         Toast("成功删除");
         this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
+        this.finished=false;
+        this.pageProps.pageNum=1;
         this.onLoad();
       }
       // console.log(result);
@@ -1624,8 +1638,8 @@ export default {
       this.sortCusType = "createTime";
       this.sortCusTime = "night";
       this.cusList = [];
-      this.pageProps.pageNum = 1;
-      this.finished = false;
+      this.finished=false;
+      this.pageProps.pageNum=1;
       this.onLoad();
       Toast("创建时间从晚到早");
     },
@@ -1638,12 +1652,11 @@ export default {
       this.dFromM = false;
       this.sortCusType = "createTime";
       this.sortCusTime = "morning";
-
-      this.finished = false;
-      this.pageProps.pageNum = 1;
-      this.cusList = [];
-      this.onLoad();
       Toast("创建时间从早到晚");
+      this.cusList = [];
+      this.finished=false;
+      this.pageProps.pageNum=1;
+      this.onLoad();
     },
     dFromNbtn() {
       this.dFromN = true;
@@ -1654,12 +1667,11 @@ export default {
       this.cFromM = false;
       this.sortCusType = "updateTime";
       this.sortCusTime = "morning";
-
-      this.finished = false;
+      Toast("最近动态从早到晚");
       this.pageProps.pageNum = 1;
       this.cusList = [];
+      this.finished=false;
       this.onLoad();
-      Toast("最近动态从早到晚");
     },
     dFromMbtn() {
       this.dFromM = true;
@@ -1670,30 +1682,20 @@ export default {
       this.cFromM = false;
       this.sortCusType = "updateTime";
       this.sortCusTime = "night";
-      this.finished = false;
+      Toast("最近动态从晚到早");
       this.pageProps.pageNum = 1;
       this.cusList = [];
+      this.finished=false;
       this.onLoad();
-      Toast("最近动态从晚到早");
     },
     // 筛选-筛选功能弹出框
     toScreen() {
       this.scrShow = !this.scrShow;
     },
     // 筛选-按钮点击高亮
-    cutTabClick(item, list, index) {
+    cutTabClick(item) {
       //然后通过这个属性判断是否选中点亮和取消
-      if (list.name == "商机创建时间" || list.name == "创建时间") {
-        for (let i = 0; i < list.class.length; i++) {
-          if (i == index) {
-            list.class[i].isSelected = !list.class[i].isSelected;
-          } else {
-            list.class[i].isSelected = false;
-          }
-        }
-      } else {
-        item.isSelected = !item.isSelected;
-      }
+      item.isSelected = !item.isSelected;
     },
     // 筛选-跟进人列表-弹窗
     toFollow() {
@@ -1736,15 +1738,14 @@ export default {
       });
 
       let userNum = res.data.totalCount;
-      if (userNum != 0)
-        for (let i = 0; i < this.followPageProps.pageSize; i++) {
-          this.followList.push(res.data.data[i]);
-          if (this.followList.length >= userNum) {
-            this.finished = true;
-            this.followPageProps.pageNum = 1;
-            break;
-          }
+      for (let i = 0; i < this.followPageProps.pageSize; i++) {
+        this.followList.push(res.data.data[i]);
+        if (this.followList.length >= userNum) {
+          this.finished = true;
+          this.followPageProps.pageNum = 1;
+          break;
         }
+      }
       if (this.followList.length >= userNum) this.finished = true;
       else {
         console.log(this.followList.length);
@@ -1811,11 +1812,7 @@ export default {
           }
         }
         // 如果当前种类是单值
-        if (
-          selectNum == 1 &&
-          this.scrList[i].ename != "businessTime" &&
-          this.scrList[i].ename != "createTime"
-        ) {
+        if (selectNum == 1) {
           select = "&eq_" + this.scrList[i].ename + "=" + val;
         } // 当前种类是多值
         else if (selectNum > 1) {
@@ -1828,14 +1825,6 @@ export default {
             }
           }
         }
-        // 商机和创建时间单选
-        if (
-          selectNum == 1 &&
-          (this.scrList[i].ename == "businessTime" ||
-            this.scrList[i].ename == "createTime")
-        ) {
-          select = "&" + this.scrList[i].ename + "=" + val;
-        }
         val = [];
         console.log(select);
         if (select != "") this.selectList += select;
@@ -1845,9 +1834,6 @@ export default {
       // this.selectList.push(
       //   this.followChsVal.name + ":" + this.followChsVal.val
       // );
-      if (this.scrCity != "") {
-        this.selectList += "&eq_city=" + this.scrCity;
-      }
       if (this.followChsVal.id != "") {
         this.selectList += "&eq_followStaffId=" + this.followChsVal.id;
       }
@@ -1856,8 +1842,8 @@ export default {
       }
       console.log(this.selectList);
       this.cusList = [];
-      this.finished = false;
       this.pageProps.pageNum = 1;
+      this.finished=false;
       this.onLoad();
       this.scrShow = false;
     },
@@ -1918,15 +1904,11 @@ export default {
       const result = await this.$http.post(url, this.putLabelVal);
       if (result.data.code == "200") {
         Toast("成功打标签");
-        for (let i = 0; i < this.result.length; i++) {
-          this.newCusRelation(this.result[i].id, "打标签");
-        }
         this.putLabelVal = [];
         this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
+        this.finished=false;
+        this.pageProps.pageNum=1;
         this.onLoad();
-        this.ckShow = false;
       }
     },
     // 多选-批量删除-弹窗
@@ -1945,12 +1927,6 @@ export default {
         if (result.data.code == "200") {
           console.log(result.data.data);
           Toast("批量删除成功");
-          this.cusList = [];
-          this.finished = false;
-          this.pageProps.pageNum = 1;
-          this.scrnum = 0;
-          this.result = [];
-          this.onLoad();
         } else {
           Toast("批量删除失败");
         }
@@ -1990,14 +1966,10 @@ export default {
         } else if (isIOS) {
           window.location.href = "sms:" + telephone + "&body=" + msg;
         }
-        this.result = [];
-        this.scrnum = 0;
-        this.shortShow = false;
-        Toast.success("短信发送");
+        Toast.success("短信发送成功");
+        console.log(this.message);
         this.message = "";
-        for (let i = 0; i < this.result.length; i++) {
-          this.newCusRelation(this.result[i].id, "发短信");
-        }
+        this.message = "";
         this.ckShortMsg.customerID = [];
       }
     },
@@ -2065,15 +2037,6 @@ export default {
       console.log(file);
       Toast("文件大小不能超过 500kb");
     },
-    getCurrentTime() {
-      //获取当前时间并打印
-      let time;
-      let yy = new Date().getFullYear();
-      let mm = new Date().getMonth() + 1;
-      let dd = new Date().getDate();
-      time = yy + "-" + mm + "-" + dd;
-      this.addList.enterPoolDate = time;
-    },
     // 新建客户-生日时间-弹窗
     toDate() {
       this.dateShow = true;
@@ -2131,7 +2094,6 @@ export default {
     // 新建客户-保存
     onClickAddSave() {
       this.showform = false;
-      this.onClickSumbmit();
     },
     // 新建客户-提交
     async onClickSumbmit() {
@@ -2146,50 +2108,17 @@ export default {
             }
           }
         }
-        this.getCurrentTime();
         // 客户类型选择高亮
         this.addLabelList[8].class[0].isSelected = true;
 
         // 提交文件不为空
-        if (this.uploader != "") {
-          let str = this.uploader[0].content;
-          let type = this.uploadPicType(str);
-          // this.uploadCusIcon(str, type, type.length);
-          let url = "/api/file/pic/base64StrToPic";
-          let picture;
-          if (type.length == 3) {
-            picture = str.slice(22);
-          } else if (type.length == 4) {
-            picture = str.slice(23);
-          }
-          console.log(picture);
-          let params = new FormData();
-          params.append("picBase64Str", picture);
-          params.append("picFormat", type);
-          params.append("picType", "customerIcon");
-          await this.$http
-            .post(url, params, {
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            })
-            .then((res) => {
-              console.log(res.data.data);
-              this.addList.customerIcon = res.data.data;
-            });
-        }
-
+        if (this.uploader != "")
+          this.addList.customerIcon = this.uploader[0].content;
         // 传输
         if (this.addList.customerType == "个人客户") {
           this.addList.customerType = 0;
         } else {
           this.addList.customerType = 1;
-        }
-
-        if (
-          this.addList.customerStatus == "未分配" ||
-          this.addList.customerStatus == "潜在客户"
-        ) {
-          this.addList.followStaffId = "";
-          this.addList.followStaffName = "";
         }
         // 客户不是潜在客户
         this.addList.potential = 0;
@@ -2249,6 +2178,8 @@ export default {
         console.log(this.addList);
         let url = "/api/se/customer/insert";
         let postData = this.addList;
+
+        console.log(postData);
         const result = (await this.$http.post(url, postData)).data;
         if (result.code == "200") {
           Toast("成功添加客户");
@@ -2259,60 +2190,12 @@ export default {
         this.uploader = [];
         this.showform = false;
         this.cusList = [];
-        this.finished = false;
-        this.pageProps.pageNum = 1;
+        this.finished=false;
+        this.pageProps.pageNum=1;
         this.onLoad();
       }
     },
-    // 新建客户-头像格式判断
-    uploadPicType(str) {
-      if (str.slice(11, 14) == "png") {
-        return "png";
-      }
-      if (str.slice(11, 14) == "svg") {
-        return "svg";
-      }
-      if (str.slice(11, 14) == "bmp") {
-        return "bmp";
-      }
-      if (str.slice(11, 14) == "ico") {
-        return "ico";
-      }
-      if (str.slice(11, 14) == "jpg") {
-        return "jpg";
-      }
-      if (str.slice(11, 15) == "jpeg") {
-        return "jpeg";
-      }
-      if (str.slice(11, 15) == "tiff") {
-        return "tiff";
-      }
 
-      return "wrong";
-    },
-    // // 新建客户-头像上传
-    // async uploadCusIcon(pic, type, len) {
-    //   let url = "/api/file/pic/base64StrToPic";
-    //   let picture;
-    //   if (len == 3) {
-    //     picture = pic.slice(22);
-    //   } else if (len == 4) {
-    //     picture = pic.slice(23);
-    //   }
-    //   console.log(picture);
-    //   let params = new FormData();
-    //   params.append("picBase64Str", picture);
-    //   params.append("picFormat", type);
-    //   params.append("picType", "customerIcon");
-    //   await this.$http
-    //     .post(url, params, {
-    //       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    //     })
-    //     .then((res) => {
-    //       console.log(res.data.data);
-    //       this.addList.customerIcon = res.data.data;
-    //     });
-    // },
     // 跟进人-页面取消
     folCancel() {
       this.followShow = false;
@@ -2389,15 +2272,12 @@ export default {
         relationType: type,
       });
       if (result.data.code == "200") {
-        Toast("操作成功");
+        Toast("成功插入");
       }
     },
   },
   created() {
     this.getCusLabel();
-    this.onLoad();
-    this.$store.commit("updateTabBarActive", 1);
-    // this.getCusField();
   },
 };
 </script>
@@ -2464,8 +2344,6 @@ export default {
 // 列表容器
 .list {
   margin-top: 25px;
-  // overflow: scroll;
-  // height: 150px;
 }
 //列表内容
 .list-content {
@@ -2685,6 +2563,6 @@ export default {
   color: #ffffff;
   text-align: center;
   line-height: 40px;
-  font-size: 15px;
 }
+
 </style>
