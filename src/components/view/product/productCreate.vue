@@ -31,12 +31,12 @@
         />
 
         <van-field
-          v-model="pretailPrice"
-          type="pretailPrice"
+          v-model="retailPrice"
+          type="retailPrice"
           name="产品零售价"
           label="产品零售价"
           placeholder="产品零售价"
-          :rules="[{ required: true, message: '请填写产品零售价' }]"
+          :rules="[{ required: false, message: '请填写产品零售价' }]"
         />
 
         <van-field
@@ -45,7 +45,7 @@
           name="产品批发价"
           label="产品批发价"
           placeholder="产品批发价"
-          :rules="[{ required: true, message: '请填写产品批发价' }]"
+          :rules="[{ required: false, message: '请填写产品批发价' }]"
         />
 
         <van-field name="productPic" label="产品图片">
@@ -60,7 +60,7 @@
           name="产品库存"
           label="产品库存"
           placeholder="产品库存"
-          :rules="[{ required: true, message: '请填写产品库存' }]"
+          :rules="[{ required: false, message: '请填写产品库存' }]"
         />
 
         <van-field
@@ -78,7 +78,7 @@
           name="产品资质"
           label="产品资质"
           placeholder="产品资质"
-          :rules="[{ required: true, message: '请填写产品资质' }]"
+          :rules="[{ required: false, message: '请填写产品资质' }]"
         />
 
 <!--        <van-field-->
@@ -118,14 +118,14 @@
           placeholder="请输入产品介绍"
         />
 
-        <van-field
-          v-model="notes"
-          rows="1"
-          autosize
-          label="备注"
-          type="textarea"
-          placeholder="请输入备注"
-        />
+<!--        <van-field-->
+<!--          v-model="notes"-->
+<!--          rows="1"-->
+<!--          autosize-->
+<!--          label="备注"-->
+<!--          type="textarea"-->
+<!--          placeholder="请输入备注"-->
+<!--        />-->
 
 
 
@@ -151,16 +151,18 @@ export default {
   name: "productCreate",
   data() {
     return {
+      //客户表弹出框
+      followShow:'',
       productName: '',
       productPrice: '',
       productInventory: '',
       productType:'',
       productCertificate:'',
-      notes:'',
+      // notes:'',
       // priceChange:'',
       productPic:[],
       // productQr:[],
-      pretailPrice:'',
+      retailPrice:'',
       wholesalePrice:'',
       priceDescribe:'',
       productIntro:'',
@@ -170,30 +172,34 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/order/addOrder";
+      let url = "/api/se/product/addProduct";
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,
         productInventory: this.productInventory,
         productType:this.productType,
         productCertificate: this.productCertificate,
-        notes:this.notes,
+        // notes:this.notes,
         priceChange:this.priceChange,
-        productPic: this.productPic,
-        productQr: this.productQr
+        productPic: this.productPic1,
+        retailPrice:this.retailPrice,
+        wholesalePrice:this.wholesalePrice,
+        priceDescribe:this.priceDescribe,
+        productIntro:this.productIntro,
+        brandIntro:this.brandIntro
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
+      const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
       if(result.code === 200) {
-        Toast('订单创建成功');
-        this.$router.push('orderList');
+        Toast('产品创建成功');
+        this.$router.push('productList');
       }
       else
-        Toast('订单创建失败,错误码' + result.code);
+        Toast('产品创建失败,错误码' + result.code);
 
     },
     async afterRead(file) {
-      let url="/fzk/pic/file/base64StrToPic"
+      let url="/fzk/file/pic/base64StrToPic"
       let postData = {
         picBase64Str: file.content.substring(22),
         picFormat:'png',
