@@ -1309,7 +1309,7 @@ export default {
     // 更多操作-新建订单
     toOrder() {
       Toast("跳转订单界面");
-      his.$router.push("/orderCreate");
+      this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
     },
     // 更多操作-改跟进人
     changeFollow() {

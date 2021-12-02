@@ -8,6 +8,13 @@
       duration="0"
     >
       <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
+      <van-button
+        class="follow-addcus-btn"
+        @click="addNewCus"
+        v-show="type == 3"
+        >新建客户</van-button
+      >
+      <AddForm :type="1" v-show="addCus" @returnClick="onAddCancel" />
       <van-search
         v-model="followVal"
         placeholder="请输入搜索关键词"
@@ -20,7 +27,7 @@
         @click="followConfirm(item)"
       >
         <!-- 跟进人-跟进人信息 -->
-        <van-row v-if="type==1">
+        <van-row v-if="type == 1">
           <!-- 跟进人-跟进人头像 -->
           <van-col span="4"
             ><van-image
@@ -45,7 +52,32 @@
             item.telephone
           }}</van-col>
         </van-row>
-        <van-row v-if="type==2">
+        <van-row v-if="type == 2">
+          <!-- 跟进人-跟进人头像 -->
+          <van-col span="4"
+            ><van-image
+              round
+              width="40"
+              height="40"
+              :src="item.customerIcon"
+              v-if="item.customerIcon"
+            />
+            <div v-if="!item.customerIcon" class="list-img-none">
+              {{ item.customerName[0] }}
+            </div>
+          </van-col>
+          <!-- 跟进人-跟进人姓名 -->
+          <van-col span="6" class="list-content-name"
+            ><div class="van-ellipsis">
+              {{ item.customerName }}
+            </div></van-col
+          >
+          <!-- 跟进人-跟进人公司信息 -->
+          <van-col offset="2" class="list-content-msg">{{
+            item.telephone
+          }}</van-col>
+        </van-row>
+        <van-row v-if="type == 3">
           <!-- 跟进人-跟进人头像 -->
           <van-col span="4"
             ><van-image
@@ -76,11 +108,17 @@
 </template>
 
 <script>
+import AddForm from "./AddForm.vue";
 export default {
   name: "AbbList",
+  components: {
+    AddForm,
+  },
+
   props: ["type", "val"],
   data() {
     return {
+      addCus: false,
       // 筛选-跟进人-弹窗
       followShow: true,
       // 筛选-跟进人-搜索
@@ -95,6 +133,12 @@ export default {
     };
   },
   methods: {
+    addNewCus() {
+      this.addCus = true;
+    },
+    onAddCancel() {
+      this.addCus = false;
+    },
     // 跟进人搜素
     onFollowSearch() {
       this.followList = [];
@@ -114,7 +158,10 @@ export default {
         let temp = { id: item.id, name: item.username };
         this.$emit("onCh", temp);
       } else if (this.type == 2) {
-             let temp = { id: item.id, name: item.customerName };
+        let temp = { id: item.id, name: item.customerName };
+        this.$emit("onCh", temp);
+      } else if (this.type == 3) {
+        let temp = { id: item.id, name: item.customerName };
         this.$emit("onCh", temp);
       }
       this.folCancel();
@@ -125,7 +172,7 @@ export default {
     },
     // 获取用户消息
     async getUserList() {
-        //用户列表
+      //用户列表
       if (this.type == 1) {
         let url = "/api/cms/user/query";
         if (this.followVal != "") {
@@ -153,7 +200,7 @@ export default {
           this.followPageProps.pageNum++;
           this.getUserList();
         }
-      } 
+      }
       // 客户列表
       else if (this.type == 2) {
         let url = "/api/se/customer/query";
@@ -182,7 +229,33 @@ export default {
           this.followPageProps.pageNum++;
           this.getUserList();
         }
-      } else {
+      } else if (this.type == 3) {
+        let url = "/api/se/customer/query";
+        if (this.followVal != "") {
+          url += "?customerName=" + this.followVal;
+        }
+        const res = await this.$http.get(url, {
+          params: {
+            currentPage: this.followPageProps.pageNum,
+            pageCount: this.followPageProps.pageSize,
+          },
+        });
+
+        let userNum = res.data.totalCount;
+        if (userNum != 0)
+          for (let i = 0; i < this.followPageProps.pageSize; i++) {
+            this.followList.push(res.data.data[i]);
+            if (this.followList.length >= userNum) {
+              this.finished = true;
+              this.followPageProps.pageNum = 1;
+              break;
+            }
+          }
+        if (this.followList.length >= userNum) this.finished = true;
+        else {
+          this.followPageProps.pageNum++;
+          this.getUserList();
+        }
       }
     },
   },
@@ -217,5 +290,9 @@ export default {
   text-align: center;
   line-height: 40px;
   font-size: 15px;
+}
+.follow-addcus-btn {
+  margin-left: 60%;
+  border: none;
 }
 </style>
