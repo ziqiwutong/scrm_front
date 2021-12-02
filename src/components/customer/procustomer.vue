@@ -1,98 +1,104 @@
 <template>
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
-      <!-- 导航栏 -->
-      <van-nav-bar
-        :title="this.type"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-        class="nav-color"
-      >
-      </van-nav-bar>
-      <!-- 功能栏 -->
-      <van-row>
-        <!-- 筛选功能 -->
-        <van-col span="8">
-          <van-dropdown-menu
-            active-color="#1989fa"
-            :close-on-click-outside="false"
-          >
-            <van-dropdown-item title="筛选" ref="item">
-              <van-row v-for="item in scrList" :key="item.name">
-                <p class="screen-name">{{ item.name }}</p>
-                <van-button
-                  v-for="item1 in item.class"
-                  :key="item1.name"
-                  :class="item1.isSelected ? 'active-screen-btn' : 'screen-btn'"
-                  @click="cutTabClick(item1)"
-                >
-                  {{ item1.name }}</van-button
-                >
-              </van-row>
-              <div class="screen-name">
-                所在地区
-                <p
-                  class="follow-choose"
-                  @click="toScreArea"
-                  v-show="this.ifAreaChoose"
-                >
-                  请选择>>>
-                </p>
-                <p
-                  class="follow-choose"
-                  @click="toScreArea"
-                  v-show="!this.ifAreaChoose"
-                >
-                  {{ this.scrCity }}
-                </p>
-              </div>
-              <!-- 筛选按钮 -->
-              <div style="padding: 5px 16px">
-                <van-button
-                  type="default"
-                  @click="reset"
-                  class="screen-reset-btn"
-                  hairline
-                  >重置</van-button
-                >
-                <van-button
-                  type="info"
-                  @click="screen"
-                  class="screen-confirm-btn"
-                  >确定</van-button
-                >
-              </div>
-            </van-dropdown-item>
-          </van-dropdown-menu>
-        </van-col>
-        <!-- 记录客户总数 -->
-        <van-col class="nav-cusnum-font" v-if="isSearch"
-          >客户总数:{{ this.cusNum }}</van-col
+      <div class="nav-fix">
+     
+        <!-- 导航栏 -->
+        <van-nav-bar
+          :title="this.type"
+          left-text="返回"
+          left-arrow
+          @click-left="onClickLeft"
+          class="nav-color"
         >
-        <!-- 搜索客户 -->
-        <form action="/">
-          <van-search
-            v-if="!isSearch"
-            v-model="searchVal"
-            show-action
-            placeholder="请输入搜索关键词"
-            @search="onSearch"
-            @cancel="onSearchCancel"
-            class="nav-search-box"
-          />
-        </form>
-        <!-- 搜索图标 -->
-        <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
-          ><van-icon name="search" size="30" @click="toSearch"
-        /></van-col>
-        <!-- 分割线 -->
-        <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
-        <!-- 新建客户 -->
-        <van-col class="nav-add-btn" span="1" v-if="isSearch"
-          ><van-icon name="plus" size="30" @click="toAdd" />
-        </van-col>
-      </van-row>
+        </van-nav-bar>
+        <!-- 功能栏 -->
+        <van-row>
+          <!-- 筛选功能 -->
+          <van-col span="8">
+            <van-dropdown-menu
+              active-color="#1989fa"
+              :close-on-click-outside="false"
+            >
+              <van-dropdown-item title="筛选" ref="item">
+                <van-row v-for="item in scrList" :key="item.name">
+                  <p class="screen-name">{{ item.name }}</p>
+                  <van-button
+                    v-for="item1 in item.class"
+                    :key="item1.name"
+                    :class="
+                      item1.isSelected ? 'active-screen-btn' : 'screen-btn'
+                    "
+                    @click="cutTabClick(item1)"
+                  >
+                    {{ item1.name }}</van-button
+                  >
+                </van-row>
+                <div class="screen-name">
+                  所在地区
+                  <p
+                    class="follow-choose"
+                    @click="toScreArea"
+                    v-show="this.ifAreaChoose"
+                  >
+                    请选择>>>
+                  </p>
+                  <p
+                    class="follow-choose"
+                    @click="toScreArea"
+                    v-show="!this.ifAreaChoose"
+                  >
+                    {{ this.scrCity }}
+                  </p>
+                </div>
+                <!-- 筛选按钮 -->
+                <div style="padding: 5px 16px">
+                  <van-button
+                    type="default"
+                    @click="reset"
+                    class="screen-reset-btn"
+                    hairline
+                    >重置</van-button
+                  >
+                  <van-button
+                    type="info"
+                    @click="screen"
+                    class="screen-confirm-btn"
+                    >确定</van-button
+                  >
+                </div>
+              </van-dropdown-item>
+            </van-dropdown-menu>
+          </van-col>
+          <!-- 记录客户总数 -->
+          <van-col class="nav-cusnum-font" v-if="isSearch"
+            >客户总数:{{ this.cusNum }}</van-col
+          >
+          <!-- 搜索客户 -->
+          <form action="/">
+            <van-search
+              v-if="!isSearch"
+              v-model="searchVal"
+              show-action
+              placeholder="请输入搜索关键词"
+              @search="onSearch"
+              @cancel="onSearchCancel"
+              class="nav-search-box"
+            />
+          </form>
+          <!-- 搜索图标 -->
+          <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
+            ><van-icon name="search" size="30" @click="toSearch"
+          /></van-col>
+          <!-- 分割线 -->
+          <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
+          <!-- 新建客户 -->
+          <van-col class="nav-add-btn" span="1" v-if="isSearch"
+            ><van-icon name="plus" size="30" @click="toAdd" />
+          </van-col>
+        </van-row>
+      </div>
+         <div class="list-highcollapse"></div>
       <!-- 客户列表 -->
       <van-list
         class="list"
@@ -969,7 +975,6 @@ export default {
     urlCusScreen(url) {
       return (url += this.selectList);
     },
-
     // 客户列表-客户详情跳转
     onDetail(item) {
       // this.$router.replace("/perinfor");
@@ -1356,9 +1361,10 @@ export default {
         const result = (await this.$http.post(url, postData)).data;
         if (result.code == "200") {
           Toast("成功添加客户");
+          this.addList = this.addListTemp;
           console.log(result.data);
         }
-        this.addList = this.addListTemp;
+            this.addList = this.addListTemp;
         this.uploader = [];
         this.showform = false;
         this.cusList = [];
@@ -1722,5 +1728,14 @@ export default {
   color: #ffffff;
   text-align: center;
   line-height: 40px;
+}
+.nav-fix {
+  position: fixed;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+.list-highcollapse {
+  height: 80px;
 }
 </style>

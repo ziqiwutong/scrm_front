@@ -91,9 +91,7 @@
     </div>
     <div>
       <van-button class="button-hang" @click="toAddCus">转化为客户</van-button>
-      <van-button class="button-hang" @click="changeCusDetail"
-        >修改信息</van-button
-      >
+      <van-button class="button-hang" @click="changeCusDetail">修改信息</van-button>
     </div>
     <!-- 新建潜在客户 -->
     <van-popup
@@ -741,7 +739,7 @@
       </van-cell>
     </van-popup>
   </div>
-  
+
 </template>
 <script>
 import { Toast } from "vant";
@@ -2638,13 +2636,14 @@ export default {
 .detail {
   background-color: #ffffff;
   width: 65%;
-  height: 60px;
+  height: 60px; 
   text-align: center;
   padding: 5%;
   color: #1f2752;
   border-color: #f5f5f5;
   border-style: solid;
   border-width: 1px;
+  overflow: auto;
 }
 .button-hang {
   height: 50px;
