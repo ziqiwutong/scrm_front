@@ -42,7 +42,6 @@ export default {
   },
   created() {
     this.$store.commit('updateTabBarActive', 2);
-    console.log(this.$route.params);
     if (this.$route.params.type === 1) {
       this.type = 1;
       this.searchTips = '请输入想要查询的企业名...';
@@ -59,7 +58,7 @@ export default {
       }
       this.$router.push({
         name: 'searchList',
-        query: {
+        params: {
           searchMessage: this.value,
           type: this.type
         }

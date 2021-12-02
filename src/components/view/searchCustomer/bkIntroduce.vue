@@ -28,9 +28,10 @@ export default {
   methods: {
     onClickLeft() {
       this.$router.push({
-        name: 'searchCustomer',
+        name: 'searchList',
         params: {
-          type: 2
+          type: 2,
+          searchMessage:this.$route.params.searchMessage
         }
       })
     }

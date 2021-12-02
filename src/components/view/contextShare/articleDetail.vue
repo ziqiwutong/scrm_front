@@ -112,10 +112,10 @@ export default {
         this.readTime++;
       }, 1000);
     }
-    this.pageListener();
-    setInterval(() => {
-      this.handleSend();
-    }, 1000);
+    // this.pageListener();
+    // setInterval(() => {
+    //   this.handleSend();
+    // }, 1000);
     // this.initWebSocket();
   },
   mounted() {

@@ -969,7 +969,6 @@ export default {
     urlCusScreen(url) {
       return (url += this.selectList);
     },
-
     // 客户列表-客户详情跳转
     onDetail(item) {
       // this.$router.replace("/perinfor");

@@ -14,9 +14,11 @@ const state = {
   secret: "scrm",
   tabBarActive: 0,
   userMessage: {
-    username: "",
-    userCompany: "",
-    userImgUrl: ""
+    username: '张楠',
+    userCompany: '泸州老窖集团',
+    userImgUrl: '',
+    userId:'6',
+    userPhone:'15689657265'
   },
   repArticleDetail: {
     articleContext: '',
@@ -51,7 +53,8 @@ const store = new Vuex.Store({
         token: val.token,
         userMessage: val.userMessage,
         repArticleDetail: val.repArticleDetail,
-        hasOAuth: val.hasOAuth
+        hasOAuth: val.hasOAuth,
+        wxUser: val.wxUser
       }
     }
   })]

@@ -31,8 +31,8 @@ export default {
   },
   methods: {
     async getUserMessage() {
-      // 当vuex中没有用户信息时才去请求，减少网络请求的次数
-      if (this.$store.state.userMessage.username == "") {
+      // 理论上用户信息应该从vuex里获取，首页已经获取用户信息并将其存入vuex中了的，只不过和用户的还没有打通，所以暂时测不了
+      if (this.$store.state.userMessage.username == '') {
         let url = "/sweet/doLogin";
         const result = (await this.$http.get(url)).data.data
         this.username = result.username;

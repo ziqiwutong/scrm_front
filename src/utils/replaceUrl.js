@@ -41,7 +41,8 @@ export function getUrl() {
     },
     searchCustomer: {
       personal: '/api/se/customerRest/personal',
-      company: '/api/se/customerRest/company'
+      company: '/api/se/customerRest/company',
+      companyDetail:'/api/se/customerRest/companyDetail'
     }
   };
 

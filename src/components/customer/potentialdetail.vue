@@ -91,9 +91,7 @@
     </div>
     <div>
       <van-button class="button-hang" @click="toAddCus">转化为客户</van-button>
-      <van-button class="button-hang" @click="changeCusDetail"
-        >修改信息</van-button
-      >
+      <van-button class="button-hang" @click="changeCusDetail">修改信息</van-button>
     </div>
     <!-- 新建潜在客户 -->
     <van-popup
@@ -741,7 +739,7 @@
       </van-cell>
     </van-popup>
   </div>
-  
+
 </template>
 <script>
 import { Toast } from "vant";

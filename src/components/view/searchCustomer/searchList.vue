@@ -45,8 +45,8 @@ export default {
     }
   },
   created() {
-    let searchValue = this.$route.query.searchMessage;
-    this.type = this.$route.query.type;
+    let searchValue = this.$route.params.searchMessage;
+    this.type = this.$route.params.type;
     this.searchByKey(searchValue, this.type);
   },
   methods: {
@@ -59,6 +59,11 @@ export default {
       })
     },
     async searchByKey(searchValue, type) {
+      const loading = this.$toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: '加载中...'
+      })
       let url = ''
       if (type === 1) {
         url = JSON.parse(getUrl()).searchCustomer.company;
@@ -76,21 +81,45 @@ export default {
             if (i === 0) {
               resultItem[j].source = 'company';// 企业个人用户
             } else {
-              resultItem[j].source = 'bk';// 百科结果
+              resultItem[j].source = 'other';// 百科结果
             }
             this.list.push(resultItem[j]);
           }
         }
       }
+      this.$toast.clear(loading);
       this.$toast('请点击人物查看详情');
     },
     toResultPage(item) {
-      this.$router.push({
-        name: 'bkIntroduce',
-        params: {
-          url: item.url
-        }
-      })
+      switch (item.source) {
+        case 'company':// 跳转至企业用户详情界面
+          this.$router.push({
+            name: 'perinfor',
+            query: {
+              cuslist: item
+            }
+          })
+          break;
+        case 'other':// 跳转到非企业客户查询结果页
+          if (this.type === 1) {
+            this.$router.push({
+              name: 'searchCompanyDetail',
+              params: {
+                registerNo: item.registerNo,
+                searchMessage: this.$route.params.searchMessage
+              }
+            })
+          } else {
+            this.$router.push({
+              name: 'bkIntroduce',
+              params: {
+                url: item.url,
+                searchMessage: this.$route.params.searchMessage
+              }
+            })
+          }
+          break;
+      }
     }
   }
 }
