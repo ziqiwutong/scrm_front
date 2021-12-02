@@ -4,7 +4,7 @@
        url('iconfont.woff?t=1638438831529') format('woff'),
        url('iconfont.ttf?t=1638438831529') format('truetype');
 }
-
+[class^="icon-third"], [class*="icon-third"]/*这里有空格*/
 .iconfont {
   font-family: "iconfont" !important;
   font-size: 16px;

@@ -123,7 +123,12 @@
         @cancel="showPicker = false"
       />
     </van-popup>
+<!--    todo  type换成3-->
+    <AbbList :type=3 v-show="testVal" @returnClick="onTestCancel"
+             @onCh="testConsole"/>
   </div>
+
+
 </template>
 
 <script>
@@ -131,21 +136,20 @@ import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
 import { areaList } from "@vant/area-data";
 import {getUrl} from "../../../utils/replaceUrl";
+import AbbList from "../../component/AbbList";
 export default {
   name: "orderCreate",
+  components: {
+    AbbList,
+  },
+
   data() {
     return {
-      pageProps: {
-        pageNum: 1,
-        pageSize: 10
-      },
-      list: [],
+      testVal:false,
       customerInfo: {
         id: '',
         customerName: ''
       },
-      loading: false,
-      finished: false,
       followVal: '',
       followShow: false,
       columns: ['撤销', '待付款', '待收货', '交易成功', '退款成功'],
@@ -168,46 +172,25 @@ export default {
     };
   },
   methods: {
-    newCustomer() {
-      this.showform = true;
+//
+    onTestCancel(){
+      this.testVal = false
     },
+    testConsole(val){
+      console.log(val)
+      this.customerInfo.customerName=val.name;
+      this.customerInfo.id=val.id;
+      this.orderBuyer=this.customerInfo.customerName;
+    },
+    returnClick(){
+      // this.orderBuyer=this.customerInfo.customerName;
+    },
+//
     onFollowSearchCancel() {
       this.followVal = '';
     },
 
 
-
-      async onFollowSearch()
-      {
-        let url = "/api/se/customer/query";
-        this.list = [];
-        this.pageProps.pageNum = 1;
-        this.pageProps.pageSize = 10;
-        let postData = {
-          currentPage: this.pageProps.pageNum++,
-          pageCount: this.pageProps.pageSize,
-          like_customerName: this.followVal
-        }
-        const result = (await this.$http.get(url, {params: postData})).data.data
-        if (result.length == 0) {
-          // 已加载全部数据
-          this.finished = true;
-          Toast('已加载全部数据！');
-        }
-        for (let i = 0; i < result.length; i++) {
-          this.list.push(result[i]);
-        }
-        // console.log(this.list);
-        // 加载状态结束
-        this.loading = false;
-      },
-      followConfirm(item)
-      {
-        this.customerInfo.id = item.id;
-        this.customerInfo.customerName = item.customerName;
-        this.orderBuyer = item.customerName;
-        this.followShow = false;
-      },
       folCancel()
       {
         this.followShow = false;
@@ -215,7 +198,7 @@ export default {
       chooseBuyer()
       {
         // console.log(1)
-        this.followShow = true
+        this.testVal = true
         this.onLoad();
       },
 
