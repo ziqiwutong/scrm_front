@@ -17,60 +17,16 @@
     </div>
     <!--  以下为标签页切换  -->
     <div class="orderList_tab">
-<!--      <van-row>-->
-<!--        <van-tabbar v-model="barAct" :fixed="false">-->
-<!--          &lt;!&ndash; 综合推荐 @click="sortPop"&ndash;&gt;-->
-<!--          <van-tabbar-item class="navopt"  @click="showShareDialog">-->
-<!--            <van-icon-->
-<!--              :name="cus_new"-->
-<!--              :class="barAct == 0 ? 'colorful' : ''"-->
-<!--            />综合推荐-->
-<!--          </van-tabbar-item>-->
-<!--          &lt;!&ndash; 销量 &ndash;&gt;-->
-<!--          <van-tabbar-item class="navopt" @click="toScreen"-->
-<!--          ><van-icon-->
-<!--            :name="cus_scr"-->
-<!--            :class="barAct == 1 ? 'colorful' : ''"-->
-<!--          />销量</van-tabbar-item-->
-<!--          >-->
-<!--          &lt;!&ndash; 价格 &ndash;&gt;-->
-<!--          <van-tabbar-item class="navopt" @click="toCheckbox"-->
-<!--          ><van-icon-->
-<!--            :name="cus_chc"-->
-<!--            :class="barAct == 2 ? 'colorful' : ''"-->
-<!--          />价格</van-tabbar-item-->
-<!--          >-->
-<!--          &lt;!&ndash; 筛选 &ndash;&gt;-->
-<!--          <van-tabbar-item class="navopt" @click="toCheckbox"-->
-<!--          ><van-icon-->
-<!--            :name="cus_chc"-->
-<!--            :class="barAct == 2 ? 'colorful' : ''"-->
-<!--          />筛选</van-tabbar-item-->
-<!--          >-->
-<!--        </van-tabbar>-->
-<!--        -->
-<!--      </van-row>-->
 <div class="tabbar1">
-<!--      <div class="tuijain" @click="cancel1">-->
-<!--      <van-dropdown-menu  text-color="#4876F1" active-color="#4876F1"	@open="open1">-->
-<!--        <van-dropdown-item color="#4876F1" v-model="value1" :options="option1" />-->
-<!--      </van-dropdown-menu>-->
-<!--      </div>-->
   <van-tabbar class="tabbar2" v-model="barAct" :fixed="false" active-color="#4876F1">
     <!--    综合推荐-->
     <van-tabbar-item class="navopt" @click="sortPop1">
-      <van-icon
-        :name="cus_new"
-        :class="barAct == 0 ? 'colorful' : ''"
-      />综合推荐
+      综合推荐
     </van-tabbar-item>
 
     <!--    销量-->
     <van-tabbar-item class="navopt" @click="sortPop2">
-      <van-icon
-        :name="cus_new"
-        :class="barAct == 0 ? 'colorful' : ''"
-      />销量
+      销量
     </van-tabbar-item>
     <!--    价格-->
     <van-tabbar-item class="navopt" @click="sortPop3">
@@ -110,8 +66,8 @@
 
                   </van-col>
                   <van-col class="productName" span="8" offset="2">{{item.productName}}</van-col>
-                  <van-col class="price" span="6" offset="2">售价:<span class="pricecolor">￥{{item.productPrice}}</span></van-col>
-                  <van-col class="stock" span="6" offset="2">库存:{{item.productInventory}}件</van-col>
+                  <van-col class="price" span="8" offset="0">售价:<span class="pricecolor">￥{{item.productPrice}}</span></van-col>
+                  <van-col class="stock" span="8" offset="10">库存:{{item.productInventory}}件</van-col>
                   <van-col class="View" span="10" offset="2">{{item.productView}}人浏览</van-col>
 <!--                  <van-col  class="button" span="6" offset="4">-->
 <!--                  </van-col>-->
@@ -155,7 +111,7 @@
     </van-popup>
 <!--    -->
     <CreateContext @ifShow="ifShowDialog" :text="createContext" />
-    <van-share-sheet v-model="showShare" :options="options"/>
+    <van-share-sheet v-model="showShare" :options="options"  @select="shareArticleApp"/>
     <TabBar/>
   </div>
 
@@ -163,10 +119,12 @@
 
 <script>
 import qs from 'qs'// axios参数包
-import TabBar from "@/components/component/TabBar";
 import { Toast } from 'vant';
-import CreateContext from "../../component/CreateContext";
 import productCreate from "./productCreate";
+import {getUrl} from "../../../utils/replaceUrl";
+import TabBar from "../..//component/TabBar";
+import CreateContext from "../../component/CreateContext";
+import yyApi from "../../../utils/yyApi";
 export default {
   name: "productList",
   data() {
@@ -209,18 +167,11 @@ export default {
       // orderID:"123978129038123",
       //  productPic1:"",
     //以下为标签栏
-      value1: 0,
-      value2: 'a',
-      value3:'a',
+
     //  以下为筛选数据
       scrShow: false,
       followShow: false,
-      // 筛选-跟进人-搜索
-      followVal: "",
-      // 筛选-标签选择数组
-      selectList: [],
       //筛选列表
-      newscrList: [],
       scrList: [
         {
           name: "价格",
@@ -244,7 +195,13 @@ export default {
         },
 
       ],
-
+      shareMsg: {
+        type: '2',
+        title: '',
+        imageUrl: '',
+        desc: '点击查看详情->',
+        pageUrl: ''
+      }
     }
   },
   components: {
@@ -256,13 +213,32 @@ export default {
     // dropdown.classList.add('.van-dropdown-menu__title__active');
   },
   methods: {
-    cancel1(){
-      this.barAct=3
-      let dropdown = document.querySelector('.van-ellipsis');
-      console.log(dropdown.classList);
-      dropdown.classList.add('.van-ellipsis-active');
-
+    //todo 分享设置、
+    showShareDialog(item) {
+      let imageUrl = item.articleImage.replace('/wxResource', 'http://mmbiz.qpic.cn');
+      this.shareMsg.title = item.productName;
+      this.shareMsg.imageUrl = item.productPic;
+      this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl + 'articleDetail?articleid=' + item.id + '&shareid=' + this.shareId + '&ifshowshareman=true';
+      this.showShare = true;
     },
+    async shareArticleApp(e) {
+      // 先去后台拿用友的jsConfig，然后触发分享事件
+      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      const result = (await this.$http.get(url)).data.data;
+      let yyConfig = {
+        appId: result.appid,
+        timestamp: result.timestamp,
+        signature: result.signature
+      }
+      let shareMsg = this.shareMsg;
+      if (e.name === '朋友圈') {
+        shareMsg.type = '3';
+      }
+      console.log(shareMsg);
+      await yyApi.yyRegister(yyConfig, shareMsg);
+      this.showShare = false;
+    },
+
     //以上为筛选内容
     toScreen() {
       this.scrShow = !this.scrShow;
@@ -367,9 +343,7 @@ export default {
     open1(){
       this.barAct=0;
     },
-    showShareDialog() {
-      this.showShare = true
-    },
+
     ifShowSearch() {
       this.searchShow = true;
     },
@@ -595,7 +569,12 @@ h3{
 .delete-button{
   height:100%;
 }
+ /deep/ .van-row1 .van-col--8{
+   // display: flex;
+   //height:40px;
+   font-size:14px;
 
+ }
 /deep/ .van-row1 {
   height:100px;
   //justify-content: center;
@@ -618,11 +597,11 @@ h3{
   }
   .productName{
     font-size: 14px;
-    height: 40px;
+    //height: 40px;
   }
 
 .stock{
-  margin-top: 5px;
+  margin-top: 8px;
   font-size:12px;
   text-align: right;
   font-weight: lighter;
@@ -652,12 +631,7 @@ h3{
     color: red;
   }
 }
-/deep/ .van-row1 .van-col--8{
-  // display: flex;
-  height:40px;
-  font-size:14px;
 
-}
 
 /deep/ .van-dropdown-menu__title{
   padding-top: 4px;
