@@ -22,6 +22,7 @@
 
           <van-col class="nav-cusnum-font" v-if="isSearch"
           >客户总数:{{ this.cusNum }}</van-col
+
           >
           <!-- 导航-搜索 -->
           <form action="/">
@@ -38,6 +39,7 @@
           <!-- 导航-搜索-搜索图标 -->
           <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
           ><van-icon name="search" size="30" @click="toSearch"
+
           /></van-col>
           <!-- 导航-分割线 -->
           <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
@@ -738,6 +740,7 @@
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[5], index)"
               >{{ item.name }}
+
               </van-button>
             </van-cell>
           </template>
@@ -757,6 +760,7 @@
                 :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
                 @click="cutTabClickOnly(addLabelList[6], index)"
               >{{ item.name }}
+
               </van-button>
             </van-cell>
           </template>
@@ -867,14 +871,14 @@
     </van-popup>
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-    ><van-datetime-picker
-      v-model="dateVal"
-      type="date"
-      title="选择年月日"
-      :min-date="minDate"
-      :max-date="maxDate"
-      @cancel="dateCancel"
-      @confirm="dateConfirm"
+      ><van-datetime-picker
+        v-model="dateVal"
+        type="date"
+        title="选择年月日"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @cancel="dateCancel"
+        @confirm="dateConfirm"
     /></van-popup>
     <!-- 新建客户-地区弹窗 -->
     <van-popup v-model="showArea" position="bottom">
@@ -2103,7 +2107,6 @@ export default {
       time = yy + "-" + mm + "-" + dd;
       this.addList.enterPoolDate = time;
     },
-
     // 新建客户-生日时间-弹窗
     toDate() {
       this.dateShow = true;
@@ -2503,7 +2506,7 @@ export default {
 // 标签栏颜色改变
 .nav-icon-colorful {
   filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
-  brightness(97%) contrast(95%);
+    brightness(97%) contrast(95%);
 }
 // 标签栏边距
 .nav-tabar {
@@ -2742,7 +2745,7 @@ export default {
 // 标签栏颜色改变
 .colorful {
   filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
-  brightness(97%) contrast(95%);
+    brightness(97%) contrast(95%);
 }
 .list-img-none {
   width: 40px;
