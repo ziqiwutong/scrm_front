@@ -78,7 +78,7 @@
           </van-grid>
           <van-grid clickable :column-num="2" :border="false">
             <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
-                           url="/"/>
+                           to="/communicationList"/>
             <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
           </van-grid>
         </div>

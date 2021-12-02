@@ -87,8 +87,9 @@ export  default  {
         { text: "全部线索", value: 0 },
         { text: "新线索", value: 1 },
         { text: "跟进中", value: 2 },
-        { text: "已转换为商机", value: 3 },
+        { text: "转换为商机", value: 3 },
       ],
+      clueClass: "全部线索",
       // 搜索-搜索内容
       searchVal: "",
       // 搜索-搜索图标展示（同时绑定新建和分割线的显示）
@@ -109,12 +110,26 @@ export  default  {
   methods: {
     //clueList线索分类选择
     onOrderList(clueVal) {
-      if (clueVal == 0) this.clueClass = "全部线索";
-      else if (clueVal == 1) this.clueClass = "新线索";
-      else if (clueVal == 2) this.clueClass = "跟进中";
-      else if (clueVal == 3) this.clueClass = "已转换为商机";
-      console.log(this.clueClass);
-      console.log(this.listOrder);
+      if (clueVal == 0) {
+        this.clueClass = "全部线索";
+        this.list=[];
+        this.onLoad();
+      }
+      else if (clueVal == 1) {
+        this.clueClass = "新线索";
+        this.list=[];
+        this.onLoad();
+      }
+      else if (clueVal == 2) {
+        this.clueClass = "跟进中";
+        this.list=[];
+        this.onLoad();
+      }
+      else if (clueVal == 3) {
+        this.clueClass = "转换为商机";
+        this.list=[];
+        this.onLoad();
+      }
     },
     // 线索列表-搜索功能-取消
     onSearchCancel() {
@@ -158,9 +173,11 @@ export  default  {
     },
     async onLoad() {
       let url = "/api/se/clue/queryClue";
+      url = this.urlCusTypeChoose(url);
+      console.log(url);
       let postData = {
-        pageCount: this.pageProps.pageCount++,
-        currentPage: this.pageProps.currentPage,
+        pageCount: this.pageProps.pageCount,
+        currentPage: this.pageProps.currentPage++,
         active:this.active
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
@@ -212,11 +229,23 @@ export  default  {
       const result = (await this.$http.post(url, qs.stringify(postData))).data
       if(result.code === 200) {
         Toast('线索删除成功');
+        this.list=[];
+        this.onLoad();
       }
       else
         Toast('线索删除失败,错误码' + result.code);
     },
     onDetail() {
+    },
+    urlCusTypeChoose(url) {
+      if (this.clueClass == "全部线索")
+        return url + "?" + "clueList=全部线索";
+      else if (this.clueClass == "新线索")
+        return url + "?" + "clueList=新线索";
+      else if (this.clueClass == "跟进中")
+        return url + "?" + "clueList=跟进中";
+      else if (this.clueClass == "转换为商机")
+        return url + "?" + "clueList=转换为商机";
     },
     // 跳转至线索详情页
     toCLueDetail(clueId) {

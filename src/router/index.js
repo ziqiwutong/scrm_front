@@ -40,7 +40,10 @@ import searchList from "../components/view/searchCustomer/searchList";
 import searchCustomer from "../components/view/searchCustomer/searchCustomer";
 import bkIntroduce from "../components/view/searchCustomer/bkIntroduce";
 import searchCompanyDetail from "../components/view/searchCustomer/searchCompanyDetail";
-
+import communicationList from "../components/view/commuication/communicationList";
+import communicationDetail from "../components/view/commuication/communicationDetail";
+import addCommunicationLog  from "../components/view/commuication/addCommunicationLog"
+import editCom from "../components/view/commuication/editCom"
 Vue.use(Router)
 
 const routes = [
@@ -226,9 +229,27 @@ const routes = [
     path: '/searchCompanyDetail',
     name: 'searchCompanyDetail',
     component: searchCompanyDetail
+  },
+  {
+    path: '/communicationList',
+    component: communicationList
+  },
+  {
+    path: '/communicationDetail',
+    name: 'communicationDetail',
+    component: communicationDetail,
+  },
+  {
+    path: '/addCommunicationLog',
+    name:'addCommunicationLog',
+    component: addCommunicationLog,
+  },
+  {
+    path: '/editCom',
+    name: 'editCom',
+    component: editCom,
   }
 ];
-
 
 const router = new Router({
 

@@ -1,63 +1,20 @@
 <template>
   <div class="clueEdit_container">
-    <!--  navBar栏-->
-    <van-nav-bar  class="nav-bar"
-                  title="编辑线索"
-                  left-text="返回"
-                  left-arrow
-                  fixed
-                  @click-left="onClickLeft"
-
-    />
+    <div class="background">
+      <van-button icon="arrow-left" size="40" class="renav" @click="onClickLeft">
+      </van-button>
+      <div class="title">编辑沟通记录</div>
+    </div>
     <!--  提交栏-->
     <div class="commit">
-      <van-form @submit="onSubmit">
+      <van-form >
         <van-field
-          v-model="clueName"
-          name="线索名称"
-          label="线索名称"
-          placeholder="线索名称"
-          :rules="[{ required: true, message: '请填写线索名' }]"
-        />
-
-        <van-field
-          readonly
-          clickable
-          name="datetimePicker"
-          :value="value"
-          label="时间选择"
-          placeholder="点击选择时间"
-          @click="dateShow = true"
-        />
-        <van-popup v-model="dateShow" position="bottom">
-          <van-datetime-picker
-            v-model="dateVal"
-            type="date"
-            title="选择年月日"
-            :min-date="minDate"
-            :max-date="maxDate"
-            @cancel="dateShow = false"
-            @confirm="dateConfirm"
-          />
-        </van-popup>
-
-        <van-field name="radio" label="线索状态" label-width="6em">
-          <template #input>
-            <van-radio-group v-model="radio" direction="horizontal" class="clueType">
-              <van-radio name="新线索">新线索</van-radio>
-              <van-radio name="跟进中">跟进中</van-radio>
-            </van-radio-group>
-          </template>
-        </van-field>
-
-
-        <van-field
-          v-model="clueEditor"
-          type="clueEditor"
-          name="线索录入人"
-          label="线索录入人"
-          placeholder="线索录入人"
-          :rules="[{ required: true, message: '请填写线索录入人' }]"
+          v-model="customer"
+          type="customer"
+          name="客户"
+          label="客户"
+          placeholder="请选择客户"
+          :rules="[{ required: true, message: '请选择客户' }]"
           readonly
           @click="toAddFollow"
         />
@@ -101,29 +58,53 @@
         </van-popup>
 
         <van-field
-          v-model="clueDiscover"
-          type="clueDiscover"
-          name="线索发现人"
-          label="线索发现人"
-          placeholder="线索发现人"
-          :rules="[{ required: true, message: '请填写线索发现人' }]"
-          readonly
-          @click="toAddDiscover"
+          v-model="telephone"
+          name="联系电话"
+          label="联系电话"
+          placeholder="请填写联系电话"
+          :rules="[{ required: true, message: '请填写联系电话' }]"
         />
+        <van-field
+          v-model="companyName"
+          name="客户公司"
+          label="客户公司"
+          placeholder="请填写客户公司"
+          :rules="[{ required: true, message: '请填写客户公司' }]"
+        />
+        <van-field name="radio" label="沟通方式" label-width="6em">
+          <template #input>
+            <van-radio-group v-model="radio" direction="horizontal" class="clueType">
+              <van-radio name="0">线下</van-radio>
+              <van-radio name="1">电话</van-radio>
+              <van-radio name="2">短信</van-radio>
+              <van-radio name="3">微信</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
 
         <van-field
-          v-model="clueResponsible"
-          type="clueResponsible"
-          name="线索责任人"
-          label="线索责任人"
-          placeholder="线索责任人"
-          :rules="[{ required: true, message: '请填写线索责任人' }]"
-          readonly
-          @click="toAddResponsible"
+          v-model="communicationTime"
+          name="沟通时间"
+          label="沟通时间"
+          placeholder="沟通时间"
+          :rules="[{ required: true, message: '请填写沟通时间，格式如下“2021-09-01 10:30:18”' }]"
+        />
+        <van-field
+          v-model="comContent"
+          rows="2"
+          autosize
+          label="沟通内容"
+          type="textarea"
+          maxlength="50"
+          placeholder="请输入沟通内容"
+          show-word-limit
         />
 
-        <div style="margin: 16px;">
-          <van-button round block type="info" native-type="submit">提交</van-button>
+        <div class="submit">
+          <van-button round size="large" type="info" @click="Submit">提交记录</van-button>
+        </div>
+        <div class="deleteUpdate">
+          <van-button plain round size="large" type="info" @click="clueDelete">删除记录</van-button>
         </div>
       </van-form>
     </div>
@@ -134,15 +115,19 @@
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
 export default {
-  name: "editClue",
+  name: "addCommunicationLog",
   data() {
     return {
+      id:'',
+      cuslist:[],
       followVal: "",
-      clueName: '',
-      clueDate: '',
-      clueEditor:'',
-      clueDiscover:'',
-      clueResponsible:'',
+      communicationTime: '',
+      customer:'',
+      telephone:'',
+      companyName:'',
+      customerId:1,
+      communicationWay:1,
+      comContent:'',
       //线索状态单选框
       radio: '',
       //转换成商机按钮
@@ -166,37 +151,40 @@ export default {
   },
   created () {
     this.test();
+    this.cuslist = this.$route.query.cuslist;
+    console.log(this.cuslist)
   },
 
   methods: {
     async test(){
       this.id=this.$route.query.id;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/se/clue/queryClueStatus";
+      let url = "/api/se/communication/queryCommunicationLog";
       let postData = {
-        clueId:this.id
+        id:this.id,
+        customerId:this.customerId,
+        communicationWay:this.communicationWay,
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
-      // console.log(result[0])
-      this.clueName=result[0].clueName;
-      this.value=result[0].clueDate;
-      this.clueEditor=result[0].clueEditor;
-      this.clueDiscover=result[0].clueDiscover;
-      this.clueResponsible=result[0].clueResponsible;
-      this.radio=result[0].clueStatus;
-      this.switchChecked=result[0].businessOpporitunityFlag;
+      console.log(result);
+      console.log(result[2]);
+      this.customer=result[0].customerName;
+      this.telephone=result[0].telephone;
+      this.companyName=result[0].belongCompany;
+      this.radio=result[2].communicationWay.toString();
+      this.communicationTime=result[2].communicationTime;
+      this.comContent=result[2].communicationContent;
     },
-    async onSubmit() {
-      let url = "/api/se/clue/editClue";
+    async Submit() {
+      let url = "/api/se/communication/editCommunicationLog";
       let postData = {
-        id: this.$route.query.id,
-        clueName:this.clueName,
-        clueDate:this.value,
-        clueEditor:this.clueEditor,
-        clueDiscover:this.clueDiscover,
-        clueResponsible:this.clueResponsible,
-        clueStatus:this.radio,
-        businessOpporitunityFlag:this.switchChecked,
+        customerId:this.customerId,
+        id: this.id,
+        customerName:this.customerName,
+        telephone:this.telephone,
+        communicationWay:this.radio,
+        communicationContent:this.comContent,
+        communicationTime:this.communicationTime,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
@@ -208,23 +196,23 @@ export default {
         Toast('订单修改失败,错误码' + result.code);
     },
 
-    onClickLeft(clueId) {
-      this.$router.push({
-        path: '/clueDetail',
-        query: {
-          clueId:this.id,
-        }
-      });
+    async clueDelete() {
+      let url = "/api/se/communication/deleteCommunicationLog";
+      let postData = {
+        communicationWay:this.radio,
+        customerId:this.customerId,
+        id:this.id,
+      }
+      const result = (await this.$http.post(url, qs.stringify(postData))).data;
+      if(result.code === 200) {
+        Toast('更新删除成功');
+        this.onClickLeft(this.id);
+      }
+      else
+        Toast('更新删除失败,错误码' + result.code);
     },
-    // 时间-时间录入处理
-    dateConfirm(date) {
-      var y = date.getFullYear();
-      var m = date.getMonth() + 1;
-      m = m < 10 ? "0" + m : m;
-      var d = date.getDate();
-      d = d < 10 ? "0" + d : d;
-      this.value = y + "-" + m + "-" + d;
-      this.dateShow = false;
+    onClickLeft() {
+      this.$router.push({ name: "communicationDetail", query: { cuslist: this.$route.query.cuslist } });
     },
     toAddFollow() {
       this.userType = 0;
@@ -266,7 +254,7 @@ export default {
       this.followShow = false;
       // 筛选-跟进人
       if (this.userType == 0) {
-        this.clueEditor = item.username;
+        this.customer = item.username;
         this.ifChoose = false;
       }
       // 筛选-商机负责人
@@ -317,24 +305,62 @@ export default {
 
 <style lang="less" scoped>
 
-/deep/ .nav-bar{
-  height: 50px;
-  margin-bottom: 5px;
-  //bclue-bottom: 1px solid lightgray;
-  .van-nav-bar__content{
-    height:50px;
-  }
+.background {
+  background-color: #4881F2;
+  width: 100%;
+  height: 44px;
+  //对象可层叠
+  position: absolute;
+  z-index: 1;
+  top:0px;
+}
+.commit {
+  position: absolute;
+  top:50px;
+  width:100%;
 }
 
+
+.renav {
+  position: absolute;
+  background-color: #4881F2;
+  color: #ffffff;
+  border: none;
+  top: 14px;
+  left:15px;
+  height: 20px;
+  z-index: 130;
+}
+.title {
+  position: absolute;
+  top: 10px;
+  left:150px;
+  color: #ffffff;
+  font-size: 18px;
+}
 .clueEdit_container{
   padding-top: 52px;
 }
 
 .clueType {
-  width:300px;
+  width:280px;
 }
 //跟进人-取消
 .follow-cancel-btn {
   border: none;
 }
+.submit {
+  position: absolute;
+  top: 420px;
+  left: 50px;
+  width: 120px;
+}
+
+.deleteUpdate {
+  position: absolute;
+  top: 420px;
+  left: 240px;
+  width: 120px;
+}
 </style>
+
