@@ -798,7 +798,7 @@ export default {
       // 新建客户-时间-弹窗
       dateShow: false,
       // 新建客户-时间-选择值
-      dateVal: "",
+          dateVal: new Date(2000, 0, 1),
       // 新建客户-时间-时间最小值
       minDate: new Date(1920, 0, 1),
       // 新建客户-时间-时间最大值
