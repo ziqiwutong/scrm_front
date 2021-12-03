@@ -2117,6 +2117,16 @@ export default {
       }
     },
   },
+    beforeRouteEnter(to, from, next) {
+    if (to.path == "/procustome") {
+      to.meta.keepAlive = true;
+    } else {
+      to.meta.keepAlive = false;
+    }
+    next((vm) => {
+      document.body.scrollTop = vm.scrollTop;
+    });
+  },
 };
 </script>
 <style lang="less" scoped>
