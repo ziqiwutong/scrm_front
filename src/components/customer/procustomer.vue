@@ -1236,6 +1236,7 @@ export default {
     // 新建客户-返回
     onClickAddRe() {
       this.showform = false;
+      this.addList = this.addListTemp
     },
     // 新建客户-保存
     onClickAddSave() {
@@ -1435,6 +1436,12 @@ export default {
         Toast("成功插入");
       }
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    from.meta.keepAlive = true;
+    this.scollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    next();
   },
   created() {
     let type = this.$route.query.type;

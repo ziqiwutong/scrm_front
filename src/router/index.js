@@ -10,7 +10,7 @@ import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 import sweetTest from "../components/view/contextShare/sweetTest";
 import store from "../store";
-import {Toast} from "vant";
+import { Toast } from "vant";
 import orderList from "../components/view/order/orderList";
 import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
