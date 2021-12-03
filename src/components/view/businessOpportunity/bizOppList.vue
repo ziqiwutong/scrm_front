@@ -267,8 +267,8 @@ export default {
       // 带着id去请求商机详情页
       this.$router.push({
         name: 'bizOppDetail',
-        params: {
-          boDetail: item,
+        query: {
+          boId: item.id,
         }
       });
     },

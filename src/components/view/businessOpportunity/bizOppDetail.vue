@@ -355,27 +355,31 @@ export default {
   },
 
   methods: {
-    onLoad() {
+    async onLoad() {
       //接收来自bizOppList的数据，存入当前页面的变量
-      let list = this.$route.params.boDetail;
+      this.id = this.$route.query.boId;
 
-      this.id= list.id;
-      this.customerId= list.customerId;
-      this.customerName= list.customerName;
-      this.boName= list.boName;
-      this.boStatus= list.boStatus;
-      this.boEditorId= list.boEditorId;
-      this.boEditor= list.boEditor;
-      this.boFullStage= list.boFullStage;
-      this.boFollowStage= list.boFollowStage;
-      this.boAmount= list.boAmount;
-      this.boExpectDate= list.boExpectDate;
-      this.boResponsibleId= list.boResponsibleId;
-      this.boResponsible= list.boResponsible;
-      this.boNotes= list.boNotes;
-      this.createTime= list.createTime;
-      this.updateTime= list.updateTime;
+      let url = '/LiZiTong/se/businessOpportunity/queryBizOpportunityDetail';
+      let postData = {
+        id: this.id
+      }
+      const result = (await this.$http.post(url, qs.stringify(postData))).data;
 
+      this.customerId = result.customerId;
+      this.customerName = result.customerName;
+      this.boName = result.boName;
+      this.boStatus = result.boStatus;
+      this.boEditorId = result.boEditorId;
+      this.boEditor = result.boEditor;
+      this.boFullStage = result.boFullStage;
+      this.boFollowStage = result.boFollowStage;
+      this.boAmount = result.boAmount;
+      this.boExpectDate = result.boExpectDate;
+      this.boResponsibleId = result.boResponsibleId;
+      this.boResponsible = result.boResponsible;
+      this.boNotes = result.boNotes;
+      this.createTime = result.createTime;
+      this.updateTime = result.updateTime;
 
 
       //处理接收到的数据，将boFullStage转化为stageResult再转化为boFullStageString，
@@ -384,7 +388,7 @@ export default {
       for (let i = 0; i < this.stageResult.length; i++) {
         if (i === 0) {
           this.boFullStageString = this.boFullStageString + this.stageResult[i];
-        }else {
+        } else {
           this.boFullStageString = this.boFullStageString + "\n" + this.stageResult[i];
         }
 
