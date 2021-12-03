@@ -402,10 +402,8 @@ export default {
     //表单提交
     async onSubmit() {
       //POST方式向后端提交数据
-      // let url = JSON.parse(getUrl()).bizOppManager.addBo;
-      let url = "/LiZiTong/se/businessOpportunity/addBizOpp";
+      let url = JSON.parse(getUrl()).bizOppManager.addBo;
       let postData = {
-        //ToDo 改变量名
         customerId: this.customerId,
         customerName: this.customerName,
         boName: this.boName,

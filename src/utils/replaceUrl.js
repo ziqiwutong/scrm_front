@@ -72,11 +72,12 @@ export function getUrl() {
       companyDetail:'/api/se/customerRest/companyDetail'
     },
     bizOppManager: {
-      queryBizOpportunity: '/sweet/se/businessOpportunity/queryBizOpportunity',
-      searchBo: '/sweet/searchBo',
-      editBo:'/sweet/editBo',
-      deleteBo: '/sweet/deleteBo',
-      addBo: '/sweet/addBo',
+      queryBo: '/api/se/businessOpportunity/queryBizOpportunity',
+      queryBoByKey: '/api/se/businessOpportunity/queryBizOppByKey',
+      editBo:'/api/se/businessOpportunity/editBizOpp',
+      deleteBo: '/api/se/businessOpportunity/deleteBizOpp',
+      addBo: '/api/se/businessOpportunity/addBizOpp',
+      queryBoDetail: '/api/se/businessOpportunity/queryBizOpportunityDetail',
     }
   };
 

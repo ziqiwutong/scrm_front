@@ -359,11 +359,13 @@ export default {
       //接收来自bizOppList的数据，存入当前页面的变量
       this.id = this.$route.query.boId;
 
-      let url = '/LiZiTong/se/businessOpportunity/queryBizOpportunityDetail';
+      let url = JSON.parse(getUrl()).bizOppManager.queryBoDetail;
       let postData = {
         id: this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data;
+      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+
+      console.log(result);
 
       this.customerId = result.customerId;
       this.customerName = result.customerName;
@@ -420,8 +422,7 @@ export default {
 
 
     async deleteBo() {
-      // let url = JSON.parse(getUrl()).bizOppManager.deleteBo;
-      let url = '/LiZiTong/se/businessOpportunity/deleteBizOpp';
+      let url = JSON.parse(getUrl()).bizOppManager.deleteBo;
       let postData = {
         id: this.id,
       }
@@ -464,8 +465,7 @@ export default {
     },
 
     async submitEdit() {
-      // let url = JSON.parse(getUrl()).bizOppManager.editBo;
-      let url = '/LiZiTong/se/businessOpportunity/editBizOpp';
+      let url = JSON.parse(getUrl()).bizOppManager.editBo;
       let postData = {
         id: this.id,
         customerId: this.customerId,
