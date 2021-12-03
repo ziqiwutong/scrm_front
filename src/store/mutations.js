@@ -36,5 +36,5 @@ export default {
   // 更新微信用户转客户时存储的信息
   updateWxUserMsg(state, wxUser) {
     state.wxUser = wxUser;
-  },
+  }
 }

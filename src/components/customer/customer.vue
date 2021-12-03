@@ -4,74 +4,79 @@
       <!-- <van-button @click="test">测试1</van-button>
     <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/>
       <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
-      <!-- 导航栏 -->
-      <van-row>
-        <!-- 导航-客户类型筛选-->
-        <van-col span="8">
-          <van-dropdown-menu active-color="#1989fa">
-            <van-dropdown-item
-              v-model="cusVal"
-              :options="cusOpt"
-              @change="onOrderList(cusVal)"
-            >
-            </van-dropdown-item>
-          </van-dropdown-menu>
-        </van-col>
 
-        <van-col class="nav-cusnum-font" v-if="isSearch"
+      <!-- 导航栏 -->
+      <div class="nav-fix">
+        <van-row>
+          <!-- 导航-客户类型筛选-->
+          <van-col span="8">
+            <van-dropdown-menu active-color="#1989fa">
+              <van-dropdown-item
+                v-model="cusVal"
+                :options="cusOpt"
+                @change="onOrderList(cusVal)"
+              >
+              </van-dropdown-item>
+            </van-dropdown-menu>
+          </van-col>
+
+          <van-col class="nav-cusnum-font" v-if="isSearch"
           >客户总数:{{ this.cusNum }}</van-col
-        >
-        <!-- 导航-搜索 -->
-        <form action="/">
-          <van-search
-            v-if="!isSearch"
-            v-model="searchVal"
-            show-action
-            placeholder="请输入搜索关键词"
-            @search="onSearch"
-            @cancel="onSearchCancel"
-            class="nav-search-box"
-          />
-        </form>
-        <!-- 导航-搜索-搜索图标 -->
-        <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
+
+          >
+          <!-- 导航-搜索 -->
+          <form action="/">
+            <van-search
+              v-if="!isSearch"
+              v-model="searchVal"
+              show-action
+              placeholder="请输入搜索关键词"
+              @search="onSearch"
+              @cancel="onSearchCancel"
+              class="nav-search-box"
+            />
+          </form>
+          <!-- 导航-搜索-搜索图标 -->
+          <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
           ><van-icon name="search" size="30" @click="toSearch"
-        /></van-col>
-        <!-- 导航-分割线 -->
-        <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
-        <!-- 导航-新建图标 -->
-        <van-col class="nav-add-btn" span="1" v-if="isSearch"
+
+          /></van-col>
+          <!-- 导航-分割线 -->
+          <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
+          <!-- 导航-新建图标 -->
+          <van-col class="nav-add-btn" span="1" v-if="isSearch"
           ><van-icon name="plus" size="30" @click="toAdd" />
-        </van-col>
-      </van-row>
-      <!-- 标签栏 -->
-      <van-row>
-        <van-tabbar v-model="barAct" :fixed="false" class="nav-tabar">
-          <!-- 最近浏览 -->
-          <van-tabbar-item class="nav-option" @click="sortPop">
-            <van-icon
-              :name="cus_new"
-              :class="barAct == 0 ? 'nav-icon-colorful' : ''"
-            />排序
-          </van-tabbar-item>
-          <!-- 筛选 -->
-          <van-tabbar-item class="nav-option" @click="toScreen"
+          </van-col>
+        </van-row>
+        <!-- 标签栏 -->
+        <van-row>
+          <van-tabbar v-model="barAct" :fixed="false" class="nav-tabar">
+            <!-- 最近浏览 -->
+            <van-tabbar-item class="nav-option" @click="sortPop">
+              <van-icon
+                :name="cus_new"
+                :class="barAct == 0 ? 'nav-icon-colorful' : ''"
+              />排序
+            </van-tabbar-item>
+            <!-- 筛选 -->
+            <van-tabbar-item class="nav-option" @click="toScreen"
             ><van-icon
               :name="cus_scr"
               :class="barAct == 1 ? 'nav-icon-colorful' : ''"
             />筛选</van-tabbar-item
-          >
-          <!-- 多选 -->
-          <van-tabbar-item class="nav-option" @click="toCheckbox"
+            >
+            <!-- 多选 -->
+            <van-tabbar-item class="nav-option" @click="toCheckbox"
             ><van-icon
               :name="cus_chc"
               :class="barAct == 2 ? 'nav-icon-colorful' : ''"
             />多选</van-tabbar-item
-          >
-        </van-tabbar>
-      </van-row>
+            >
+          </van-tabbar>
+        </van-row>
+      </div>
+      <div class="list-highcollapse"></div>
       <!-- 客户列表 -->
-
       <van-list
         class="list"
         v-model="loading"
@@ -100,31 +105,31 @@
                 </van-col>
                 <!-- 客户列表-客户姓名 -->
                 <van-col span="11" class="list-content-name"
-                  ><div class="van-ellipsis">
-                    {{ item.customerName }}
-                  </div></van-col
+                ><div class="van-ellipsis">
+                  {{ item.customerName }}
+                </div></van-col
                 >
                 <!-- 客户列表-进入客户池时间 -->
                 <van-col span="8" class="list-content-time"
-                  >{{ item.enterPoolDate }}进入客户池</van-col
+                >{{ item.enterPoolDate }}进入客户池</van-col
                 >
                 <!-- 客户列表-客户公司信息 -->
                 <van-col span="16" class="list-content-msg">{{
-                  item.belongCompany
-                }}</van-col>
+                    item.belongCompany
+                  }}</van-col>
               </van-row>
               <!-- 客户标签行 -->
               <van-row>
                 <van-col span="4"></van-col>
                 <!-- 显示标签 -->
                 <van-col class="list-content-tag"
-                  ><van-tag
-                    color="#E7F7E3"
-                    text-color="#67C74D"
-                    v-for="item2 in item.customerLabels"
-                    :key="item2.id"
-                    >{{ item2.labelType + ":" + item2.labelName }}</van-tag
-                  ></van-col
+                ><van-tag
+                  color="#E7F7E3"
+                  text-color="#67C74D"
+                  v-for="item2 in item.customerLabels"
+                  :key="item2.id"
+                >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+                ></van-col
                 >
               </van-row>
             </van-row>
@@ -164,22 +169,22 @@
       <van-row>
         <van-col class="add-choose-font">点击选择上传文件</van-col>
         <van-col offset="4" class="add-choose-margin"
-          ><van-uploader
-            multiple
-            v-model="scruploader"
-            :max-count="1"
-            :after-read="afterRead"
+        ><van-uploader
+          multiple
+          v-model="scruploader"
+          :max-count="1"
+          :after-read="afterRead"
         /></van-col>
       </van-row>
       <van-button type="info" @click="pictureConfirm" class="screen-confirm-btn"
-        >确定</van-button
+      >确定</van-button
       >
       <van-button
         type="default"
         @click="pictureCancel"
         class="screen-reset-btn"
         hairline
-        >取消</van-button
+      >取消</van-button
       >
     </van-popup>
     <!-- 筛选内容 -->
@@ -247,11 +252,11 @@
         @click="reset"
         class="screen-reset-btn"
         hairline
-        >重置</van-button
+      >重置</van-button
       >
       <!-- 筛选内容提交 -->
       <van-button type="info" @click="screen" class="screen-confirm-btn"
-        >确定</van-button
+      >确定</van-button
       >
     </van-popup>
     <!--筛选-跟进人弹出框 -->
@@ -278,13 +283,13 @@
         <van-row>
           <!-- 跟进人-跟进人头像 -->
           <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
+          ><van-image
+            round
+            width="40"
+            height="40"
+            :src="item.userIcon"
+            v-if="item.userIcon"
+          />
             <div v-if="!item.userIcon" class="list-img-none">
               {{ item.username[0] }}
             </div>
@@ -292,19 +297,18 @@
              
           <!-- 跟进人-跟进人姓名 -->
           <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
+          ><div class="van-ellipsis">
+            {{ item.username }}
+          </div></van-col
           >
           <!-- 跟进人-跟进人公司信息 -->
           <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
+              item.telephone
+            }}</van-col>
         </van-row>
       </van-cell>
     </van-popup>
 
-    
     <!-- 创建人弹出框 -->
 
     <!-- 筛选-地区弹窗 -->
@@ -355,31 +359,31 @@
             </van-col>
             <!-- 多选-客户姓名 -->
             <van-col span="10" class="list-content-name"
-              ><div class="van-ellipsis">
-                {{ item.customerName }}
-              </div></van-col
+            ><div class="van-ellipsis">
+              {{ item.customerName }}
+            </div></van-col
             >
             <!-- 多选-客户进入客户池时间 -->
             <van-col span="10" class="list-content-time"
-              >{{ item.enterPoolDate }}进入客户池</van-col
+            >{{ item.enterPoolDate }}进入客户池</van-col
             >
             <!-- 多选-客户公司信息 -->
             <van-col span="16" class="list-content-msg">{{
-              item.customerName
-            }}</van-col>
+                item.customerName
+              }}</van-col>
           </van-row>
           <!-- 多选-客户标签行 -->
           <van-row>
             <van-col span="3"></van-col>
             <!-- 显示标签 -->
             <van-col class="list-content-tag"
-              ><van-tag
-                color="#E7F7E3"
-                text-color="#67C74D"
-                v-for="item2 in item.customerLabels"
-                :key="item2.id"
-                >{{ item2.labelType + ":" + item2.labelName }}</van-tag
-              ></van-col
+            ><van-tag
+              color="#E7F7E3"
+              text-color="#67C74D"
+              v-for="item2 in item.customerLabels"
+              :key="item2.id"
+            >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+            ></van-col
             >
           </van-row>
           <!-- 多选-选择按钮 -->
@@ -387,7 +391,6 @@
             <van-checkbox :name="item" ref="checkboxes" />
           </template>
         </van-cell>
-
       </van-checkbox-group>
       <!-- 多选-功能导航 -->
       <van-tabbar active-color="#7d7e80">
@@ -395,16 +398,15 @@
         <van-checkbox v-model="checked" @click="checkAll">全选</van-checkbox>
         <!-- 多选-打标签 -->
         <van-tabbar-item :icon="cus_lable" @click="showCh"
-          >打标签</van-tabbar-item
+        >打标签</van-tabbar-item
         >
         <!-- 多选-发短信 -->
         <van-tabbar-item :icon="cus_msg" @click="toShrtMsg"
-          >发短信</van-tabbar-item
+        >发短信</van-tabbar-item
         >
         <!-- 多选-批量删除 -->
         <van-tabbar-item :icon="cus_delete" @click="toAllDelete"
-          >批量删除</van-tabbar-item
-
+        >批量删除</van-tabbar-item
         >
       </van-tabbar>
     </van-popup>
@@ -465,11 +467,11 @@
       </van-row>
       <!-- 打标签-重置 -->
       <van-button type="default" class="screen-reset-btn" hairline
-        >重置</van-button
+      >重置</van-button
       >
       <!-- 打标签-提交 -->
       <van-button type="info" class="screen-confirm-btn" @click="putLabel"
-        >确定</van-button
+      >确定</van-button
       >
     </van-popup>
     <!-- 排序-弹窗 -->
@@ -544,7 +546,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[8], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -617,17 +619,15 @@
           placeholder="请输入"
         >
           <template #input>
-
             <van-cell class="add-van-cell">
               <van-button
                 v-for="(item, index) in addLabelList[0].class"
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[0], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
-
           </template>
         </van-field>
         <!-- 联系信息-年龄范围 -->
@@ -638,16 +638,13 @@
           placeholder="请输入"
         >
           <template #input>
-
             <van-cell class="add-van-cell">
-
               <van-button
                 v-for="(item, index) in addLabelList[1].class"
                 :key="item.name"
-
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[1], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -666,8 +663,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[3], index)"
-                >{{ item.name }}
-
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -722,10 +718,9 @@
               <van-button
                 v-for="(item, index) in addLabelList[4].class"
                 :key="item.name"
-
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[4], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -742,10 +737,9 @@
               <van-button
                 v-for="(item, index) in addLabelList[5].class"
                 :key="item.name"
-
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[5], index)"
-                >{{ item.name }}
+              >{{ item.name }}
 
               </van-button>
             </van-cell>
@@ -763,10 +757,9 @@
               <van-button
                 v-for="(item, index) in addLabelList[6].class"
                 :key="item.name"
-
                 :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
                 @click="cutTabClickOnly(addLabelList[6], index)"
-                >{{ item.name }}
+              >{{ item.name }}
 
               </van-button>
             </van-cell>
@@ -784,11 +777,9 @@
               <van-button
                 v-for="(item, index) in addLabelList[7].class"
                 :key="item.name"
-
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[7], index)"
-                >{{ item.name }}
-
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -805,11 +796,9 @@
               <van-button
                 v-for="(item, index) in addLabelList[9].class"
                 :key="item.name"
-
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[9], index)"
-                >{{ item.name }}
-
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -869,29 +858,27 @@
         />
         <!-- 提交按钮 -->
         <div style="margin: 16px">
-
           <van-button
             round
             block
             type="info"
             native-type="submit"
             @click="onClickSumbmit"
-            >提交</van-button
-
+          >提交</van-button
           >
         </div>
       </van-form>
     </van-popup>
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-    ><van-datetime-picker
-      v-model="dateVal"
-      type="date"
-      title="选择年月日"
-      :min-date="minDate"
-      :max-date="maxDate"
-      @cancel="dateCancel"
-      @confirm="dateConfirm"
+      ><van-datetime-picker
+        v-model="dateVal"
+        type="date"
+        title="选择年月日"
+        :min-date="minDate"
+        :max-date="maxDate"
+        @cancel="dateCancel"
+        @confirm="dateConfirm"
     /></van-popup>
     <!-- 新建客户-地区弹窗 -->
     <van-popup v-model="showArea" position="bottom">
@@ -917,7 +904,6 @@
       />
     </van-popup>
     <TabBar />
-
   </div>
 </template>
 
@@ -937,8 +923,8 @@ export default {
   },
   data() {
     return {
-      testtxt:"查找客户列表",
-      testVal:false,
+      testtxt: "查找客户列表",
+      testVal: false,
       // 客户类型-排序-种类
       sortCusType: "createTime",
       // 客户类型-排序-时间
@@ -1470,15 +1456,16 @@ export default {
     //   const res = await this.$http.get(url);
     //   console.log(res.data.data)
     // },
-    testConsole(val){
-      console.log(val)
+    testConsole(val) {
+      console.log(val);
     },
-    onTestCancel(){
-      this.testVal = false
+    onTestCancel() {
+      this.testVal = false;
     },
-    test(){
-      this.testVal = true
-         },
+    test() {
+      this.testVal = true;
+      console.log("错误");
+    },
     // 获取用户标签值
     async getCusLabel() {
       let url = "/api/se/label/query";
@@ -2120,9 +2107,6 @@ export default {
       time = yy + "-" + mm + "-" + dd;
       this.addList.enterPoolDate = time;
     },
-    test(){
-      console.log("错误")
-    },
     // 新建客户-生日时间-弹窗
     toDate() {
       this.dateShow = true;
@@ -2273,7 +2257,7 @@ export default {
                 } else if (
                   typeof obj[attr] === "string" &&
                   ((obj[attr].indexOf("{") > -1 &&
-                    obj[attr].indexOf("}") > -1) ||
+                      obj[attr].indexOf("}") > -1) ||
                     (obj[attr].indexOf("[") > -1 &&
                       obj[attr].indexOf("]") > -1))
                 ) {
@@ -2526,8 +2510,8 @@ export default {
 }
 // 标签栏边距
 .nav-tabar {
-  margin-top: 2%;
-  margin-bottom: 2%;
+  margin-top: 0%;
+  margin-bottom: 0%;
 }
 .van-hairline--top-bottom::after,
 .van-hairline-unset--top-bottom::after {
@@ -2535,10 +2519,20 @@ export default {
 }
 // 列表容器
 .list {
-  margin-top: 25px;
+  // margin-top: 25px;
   // overflow: scroll;
   // height: 150px;
 }
+.list-highcollapse {
+  height: 120px;
+}
+.nav-fix {
+  position: fixed;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
 //列表内容
 .list-content {
   margin-bottom: 10px;
@@ -2751,7 +2745,7 @@ export default {
 // 标签栏颜色改变
 .colorful {
   filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
-  brightness(97%) contrast(95%);
+    brightness(97%) contrast(95%);
 }
 .list-img-none {
   width: 40px;

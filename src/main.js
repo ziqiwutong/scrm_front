@@ -16,7 +16,6 @@ import './assets/iconfont/iconfont.css'
 import './assets/css/global.css'
 import 'vant/lib/index.css'
 import 'vue-photo-preview/dist/skin.css'
-
 import VueClipboard from 'vue-clipboard2'
 import './plugins/element.js'
 import './assets/iconfont/iconfont.css'
@@ -29,7 +28,6 @@ Vue.use(vConsole)
 Vue.use(Vant)
 Vue.use(VueClipboard)
 Vue.use(preview)
-
 Vue.prototype.$http = axios
 // Vue.config.productionTip = false
 

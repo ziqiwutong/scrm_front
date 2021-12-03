@@ -26,103 +26,103 @@
       <!-- 个人-手机/号码归属地 -->
       <van-row v-if="cusDetail.customerType == 0">
         <van-col span="10" class="cusfont"
-          >手机：{{ cusDetail.telephone }}</van-col
+        >手机：{{ cusDetail.telephone }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >号码归属地：{{ this.telAdress }}</van-col
+        >号码归属地：{{ this.telAdress }}</van-col
         >
       </van-row>
       <!-- 共有-来源/地区 -->
       <van-row>
         <van-col span="10" class="cusfont"
-          >来源：{{ cusDetail.origin }}</van-col
+        >来源：{{ cusDetail.origin }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >地址：{{ cusDetail.address }}</van-col
+        >地址：{{ cusDetail.address }}</van-col
         >
       </van-row>
       <!-- 共有-客户状态/跟进人 -->
       <van-row>
         <van-col span="10" class="cusfont"
-          >客户状态：{{ cusDetail.customerStatus }}</van-col
+        >客户状态：{{ cusDetail.customerStatus }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >跟进人：{{ cusDetail.followStaffName }}</van-col
+        >跟进人：{{ cusDetail.followStaffName }}</van-col
         >
       </van-row>
       <!-- 共有-成交订单/成交订单金额 -->
       <van-row>
         <van-col span="10" class="cusfont"
-          >成交订单数：{{ this.cusDetail.orderNumber }}</van-col
+        >成交订单数：{{ this.cusDetail.orderNumber }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >成交订单金额：{{ this.cusDetail.orderAmount }}</van-col
+        >成交订单金额：{{ this.cusDetail.orderAmount }}</van-col
         >
       </van-row>
       <!-- 个人-微信/微信昵称 -->
       <van-row v-if="cusDetail.customerType == 0">
         <van-col span="10" class="cusfont">微信：{{ cusDetail.wx }}</van-col>
         <van-col span="12" offset="2" class="cusfont"
-          ><div class="van-ellipsis">
-            微信昵称：{{ cusDetail.wxName }}
-          </div></van-col
+        ><div class="van-ellipsis">
+          微信昵称：{{ cusDetail.wxName }}
+        </div></van-col
         >
       </van-row>
       <!-- 个人-生日/性别 -->
       <van-row v-if="cusDetail.customerType == 0">
         <van-col span="10" class="cusfont">性别：{{ cusDetail.sex }}</van-col>
         <van-col offset="2" class="cusfont"
-          >生日：{{ cusDetail.birthday }}</van-col
+        >生日：{{ cusDetail.birthday }}</van-col
         >
       </van-row>
       <!-- 个人-职位/爱好 -->
       <van-row v-if="cusDetail.customerType == 0">
         <van-col span="10" class="cusfont" v-if="cusDetail.customerType == 0"
-          >职位：{{ cusDetail.position }}</van-col
+        >职位：{{ cusDetail.position }}</van-col
         >
         <van-col
           span="12"
           offset="2"
           class="cusfont"
           v-if="cusDetail.customerType == 0"
-          >爱好：{{ cusDetail.hobby }}</van-col
+        >爱好：{{ cusDetail.hobby }}</van-col
         >
       </van-row>
       <!-- 共有-客户等级/标签 -->
       <van-row>
         <van-col span="10" class="cusfont"
-          >客户等级：{{ cusDetail.customerLevel }}</van-col
+        >客户等级：{{ cusDetail.customerLevel }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          ><div class="van-ellipsis">
-            标签：{{ this.labelCusList }}
-          </div></van-col
+        ><div class="van-ellipsis">
+          标签：{{ this.labelCusList }}
+        </div></van-col
         >
       </van-row>
       <van-row>
         <van-col span="10" class="cusfont"
-          >公司：{{ cusDetail.belongCompany }}</van-col
+        >公司：{{ cusDetail.belongCompany }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >所在省市：{{ cusDetail.city }}</van-col
+        >所在省市：{{ cusDetail.city }}</van-col
         >
       </van-row>
       <!-- 公司-法人代表/员工数量 -->
       <van-row v-if="cusDetail.customerType == 1">
         <van-col span="10" class="cusfont" v-if="cusDetail.customerType == 1"
-          >法人代表：{{ cusDetail.legalPerson }}</van-col
+        >法人代表：{{ cusDetail.legalPerson }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >员工数量：{{ cusDetail.companySize }}</van-col
+        >员工数量：{{ cusDetail.companySize }}</van-col
         >
       </van-row>
       <!-- 公司-经营状态/注册资本 -->
       <van-row v-if="cusDetail.customerType == 1">
         <van-col span="10" class="cusfont"
-          >经营状态：{{ cusDetail.operatingStatus }}</van-col
+        >经营状态：{{ cusDetail.operatingStatus }}</van-col
         >
         <van-col span="12" offset="2" class="cusfont"
-          >注册资本：{{ cusDetail.registeredCapital }}</van-col
+        >注册资本：{{ cusDetail.registeredCapital }}</van-col
         >
       </van-row>
       <!-- 公司-所属行业/经营范围 -->
@@ -132,13 +132,13 @@
       <!-- 公司-经营范围 -->
       <van-row v-if="cusDetail.customerType == 1">
         <van-col class="cusfont"
-          >经营范围：{{ cusDetail.businessRange }}</van-col
+        >经营范围：{{ cusDetail.businessRange }}</van-col
         >
       </van-row>
       <!-- 共有-进入客户池时间 -->
       <van-row>
         <van-col class="cusfont"
-          >进入客户池：{{ cusDetail.enterPoolDate }}</van-col
+        >进入客户池：{{ cusDetail.enterPoolDate }}</van-col
         >
       </van-row>
       <!-- 查看详情 -->
@@ -146,53 +146,53 @@
         <!-- 个人-手机/号码归属地 -->
         <van-row v-if="showCusType == 0">
           <van-col span="10" class="cusfont"
-            >手机：{{ cusDetail.telephone }}</van-col
+          >手机：{{ cusDetail.telephone }}</van-col
           >
           <van-col span="12" offset="2" class="cusfont"
-            >号码归属地：{{ this.telAdress }}</van-col
+          >号码归属地：{{ this.telAdress }}</van-col
           >
         </van-row>
         <!-- 个人-微信/微信昵称 -->
         <van-row v-if="showCusType == 0">
           <van-col span="10" class="cusfont">微信：{{ cusDetail.wx }}</van-col>
           <van-col span="12" offset="2" class="cusfont"
-            ><div class="van-ellipsis">
-              微信昵称：{{ cusDetail.wxName }}
-            </div></van-col
+          ><div class="van-ellipsis">
+            微信昵称：{{ cusDetail.wxName }}
+          </div></van-col
           >
         </van-row>
         <!-- 个人-生日/性别 -->
         <van-row v-if="showCusType == 0">
           <van-col span="10" class="cusfont">性别：{{ cusDetail.sex }}</van-col>
           <van-col offset="2" class="cusfont"
-            >生日：{{ cusDetail.birthday }}</van-col
+          >生日：{{ cusDetail.birthday }}</van-col
           >
         </van-row>
         <!-- 个人-职位/爱好 -->
         <van-row v-if="showCusType == 0">
           <van-col span="10" class="cusfont"
-            >职位：{{ cusDetail.position }}</van-col
+          >职位：{{ cusDetail.position }}</van-col
           >
           <van-col span="12" offset="2" class="cusfont"
-            >爱好：{{ cusDetail.hobby }}</van-col
+          >爱好：{{ cusDetail.hobby }}</van-col
           >
         </van-row>
         <!-- 公司-法人代表/员工数量 -->
         <van-row v-if="showCusType == 1">
           <van-col span="10" class="cusfont"
-            >法人代表：{{ cusDetail.legalPerson }}</van-col
+          >法人代表：{{ cusDetail.legalPerson }}</van-col
           >
           <van-col span="12" offset="2" class="cusfont"
-            >员工数量：{{ cusDetail.companySize }}</van-col
+          >员工数量：{{ cusDetail.companySize }}</van-col
           >
         </van-row>
         <!-- 公司-经营状态/注册资本 -->
         <van-row v-if="showCusType == 1">
           <van-col span="10" class="cusfont"
-            >经营状态：{{ cusDetail.operatingStatus }}</van-col
+          >经营状态：{{ cusDetail.operatingStatus }}</van-col
           >
           <van-col span="12" offset="2" class="cusfont"
-            >注册资本：{{ cusDetail.registeredCapital }}</van-col
+          >注册资本：{{ cusDetail.registeredCapital }}</van-col
           >
         </van-row>
         <!-- 公司-所属行业/经营范围 -->
@@ -202,18 +202,18 @@
         <!-- 公司-经营范围 -->
         <van-row v-if="showCusType == 1">
           <van-col class="cusfont"
-            >经营范围：{{ cusDetail.businessRange }}</van-col
+          >经营范围：{{ cusDetail.businessRange }}</van-col
           >
         </van-row>
       </div>
       <van-row>
         <van-col class="cusfont2" @click="showCusAll" v-if="showCus"
-          >收起</van-col
+        >收起</van-col
         >
       </van-row>
       <van-row>
         <van-col class="cusfont2" @click="showCusAll" v-if="!showCus"
-          >查看详情</van-col
+        >查看详情</van-col
         >
       </van-row>
     </van-row>
@@ -271,15 +271,15 @@
         <van-tab title="订单">
           <van-row class="orderTitle">
             <van-col span="8"
-              >成交订单：<span style="color: #ff5b5b">{{
+            >成交订单：<span style="color: #ff5b5b">{{
                 this.cusDetail.orderNumber
               }}</span
-              >个</van-col
+            >个</van-col
             >
             <van-col span="15"
-              >成交订单金额：<span style="color: #ff5b5b"
-                >￥{{ this.cusDetail.orderAmount }}</span
-              ></van-col
+            >成交订单金额：<span style="color: #ff5b5b"
+            >￥{{ this.cusDetail.orderAmount }}</span
+            ></van-col
             >
           </van-row>
           <!-- 订单列表 -->
@@ -296,44 +296,44 @@
 
                   <van-col offset="1">订单号：{{ item.orderID }}</van-col>
                   <van-col span="1" offset="2"
-                    ><van-icon name="edit"
+                  ><van-icon name="edit"
                   /></van-col>
                   <van-col span="1"><van-icon name="revoke" /></van-col>
                 </van-row>
                 <van-row>
                   <van-col
-                    ><span style="color: #bbbcbe">订单状态：</span
-                    >{{ item.orderType }}</van-col
+                  ><span style="color: #bbbcbe">订单状态：</span
+                  >{{ item.orderType }}</van-col
                   >
                 </van-row>
                 <van-row>
                   <van-col
-                    ><span style="color: #bbbcbe">实收金额：</span
-                    >{{ item.receivedAmount }}</van-col
+                  ><span style="color: #bbbcbe">实收金额：</span
+                  >{{ item.receivedAmount }}</van-col
                   >
                 </van-row>
                 <van-row>
                   <van-col
-                    ><span style="color: #bbbcbe">成交员工：</span
-                    >{{ item.orderStaff }}</van-col
+                  ><span style="color: #bbbcbe">成交员工：</span
+                  >{{ item.orderStaff }}</van-col
                   >
                 </van-row>
                 <van-row>
                   <van-col
-                    ><span style="color: #bbbcbe">备注：</span>{{ item.notes }}
+                  ><span style="color: #bbbcbe">备注：</span>{{ item.notes }}
                   </van-col>
                   <van-col offset="1"><van-icon name="edit" /></van-col>
                 </van-row>
                 <van-row>
                   <van-col
-                    ><span style="color: #bbbcbe">成交时间：</span
-                    >{{ item.orderFinish }}</van-col
+                  ><span style="color: #bbbcbe">成交时间：</span
+                  >{{ item.orderFinish }}</van-col
                   >
                 </van-row>
                 <van-row>
                   <van-col
-                    ><span style="color: #bbbcbe">订单来源：</span
-                    >{{ item.orderSource }}</van-col
+                  ><span style="color: #bbbcbe">订单来源：</span
+                  >{{ item.orderSource }}</van-col
                   >
                 </van-row>
               </div>
@@ -347,7 +347,7 @@
     <div class="nav-margin">
       <van-tabbar active-color="#7d7e80">
         <van-tabbar-item :icon="callImg" @click="onCallPhone"
-          >打电话
+        >打电话
         </van-tabbar-item>
         <van-tabbar-item
           :icon="wchatImg"
@@ -355,13 +355,13 @@
           v-clipboard:copy="cusDetail.telephone"
           v-clipboard:success="copyCode"
           v-clipboard:error="copyCodeError"
-          >发微信</van-tabbar-item
+        >发微信</van-tabbar-item
         >
         <van-tabbar-item :icon="msgImg" @click="toShrtMsg"
-          >发短信</van-tabbar-item
+        >发短信</van-tabbar-item
         >
         <van-tabbar-item :icon="contImg" @click="toMore"
-          >更多操作</van-tabbar-item
+        >更多操作</van-tabbar-item
         >
       </van-tabbar>
     </div>
@@ -402,7 +402,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[8], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -481,7 +481,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[0], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -500,7 +500,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[1], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -519,7 +519,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[3], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -576,7 +576,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[4], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -595,7 +595,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[5], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -614,7 +614,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
                 @click="cutTabClickOnly(addLabelList[6], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -633,7 +633,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[7], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -652,7 +652,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[9], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -717,7 +717,7 @@
             type="info"
             native-type="submit"
             @click="onClickSumbmit"
-            >提交</van-button
+          >提交</van-button
           >
         </div>
       </van-form>
@@ -726,7 +726,7 @@
     <van-popup v-model="wxShow" position="bottom" :style="{ height: '40%' }">
       <van-image :src="wx" class="wx-img"></van-image>
       <van-button class="screen-confirm-btn" @click="onOpenWx"
-        >打开微信</van-button
+      >打开微信</van-button
       >
     </van-popup>
     <!-- 多选-短信弹出框 -->
@@ -781,14 +781,14 @@
     </van-popup>
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-      ><van-datetime-picker
-        v-model="dateVal"
-        type="date"
-        title="选择年月日"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @cancel="dateCancel"
-        @confirm="dateConfirm"
+    ><van-datetime-picker
+      v-model="dateVal"
+      type="date"
+      title="选择年月日"
+      :min-date="minDate"
+      :max-date="maxDate"
+      @cancel="dateCancel"
+      @confirm="dateConfirm"
     /></van-popup>
     <!-- 新建客户-客户状态选择弹出框 -->
     <van-popup
@@ -828,27 +828,27 @@
         <van-row>
           <!-- 跟进人-跟进人头像 -->
           <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
+          ><van-image
+            round
+            width="40"
+            height="40"
+            :src="item.userIcon"
+            v-if="item.userIcon"
+          />
             <div v-if="!item.userIcon" class="list-img-none1">
               {{ item.username[0] }}
             </div>
           </van-col>
           <!-- 跟进人-跟进人姓名 -->
           <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
+          ><div class="van-ellipsis">
+            {{ item.username }}
+          </div></van-col
           >
           <!-- 跟进人-跟进人公司信息 -->
           <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
+              item.telephone
+            }}</van-col>
         </van-row>
       </van-cell>
     </van-popup>
@@ -1185,10 +1185,6 @@ export default {
     // 跟进人-页面取消
     folCancel() {
       this.followShow = false;
-    },
-    // 新建客户-客户状态-取消
-    onCusStaCancel() {
-      this.addCusStaShow = false;
     },
     // 新建客户-客户状态-取消
     onCusStaCancel() {
@@ -1550,7 +1546,7 @@ export default {
                 } else if (
                   typeof obj[attr] === "string" &&
                   ((obj[attr].indexOf("{") > -1 &&
-                    obj[attr].indexOf("}") > -1) ||
+                      obj[attr].indexOf("}") > -1) ||
                     (obj[attr].indexOf("[") > -1 &&
                       obj[attr].indexOf("]") > -1))
                 ) {

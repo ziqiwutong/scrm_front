@@ -97,6 +97,8 @@ export default {
       minDate: new Date(2020, 0, 1),
       // 时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+      //时间-现在时间
+      currentDate: new Date(),
     };
   },
   methods: {
