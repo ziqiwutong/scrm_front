@@ -106,17 +106,6 @@ export default {
     this.shareId = this.$route.query.shareid;
     this.showCard = this.$route.query.ifshowshareman;
     this.getArticle();
-    let user = navigator.userAgent.toLowerCase();
-    if (user.match(/MicroMessenger/i) == "micromessenger") {
-      this.timer = setInterval(() => {
-        this.readTime++;
-      }, 1000);
-    }
-    this.pageListener();
-    setInterval(() => {
-      this.handleSend();
-    }, 1000);
-    // this.initWebSocket();
   },
   mounted() {
     if (this.showCard == false) {
@@ -129,38 +118,31 @@ export default {
         history.pushState(null, null, document.URL)
         window.addEventListener('popstate', this.backChange, false) // false阻止默认事件
       }
-      // window.addEventListener('pagehide', this.beforeunloadHandler, false);
-      // window.addEventListener('onunload', e => {
-      //   console.log('onunload');
-      //   this.beforeunloadHandler();
-      // });
-      window.onbeforeunload = function () {
-        this.beforeunloadHandler();
-      }
+      this.timer = setInterval(() => {
+        this.readTime += 5;
+        this.handleSend();
+        if (this.readTime > 900) {// 后台Redis最大存储时间为20分钟，前台15分钟就关闭连接
+          this.close();//关闭socket连接
+        }
+      }, 5000);
     }
-  },
-  beforeDestroy() {
-    this.beforeunloadHandler();
   },
   destroyed() {
     let user = navigator.userAgent.toLowerCase();
     if (user.match(/MicroMessenger/i) == "micromessenger") {
-      // this.beforeunloadHandler();
       // 监听页面回退
       window.removeEventListener('popstate', this.backChange, false) // false阻止默认事件
-      // // 监听页面关闭
-      // window.removeEventListener('pagehide', this.beforeunloadHandler);
-      // window.removeEventListener('onunload', this.beforeunloadHandler);
+      this.close();
     }
-    this.close();
-    // this.disconnect();
   },
   methods: {
-    pageListener() {
+    pageListener(openid) {
       if (typeof (WebSocket) === "undefined") {
         alert("您的浏览器不支持socket")
       } else {
-        let url = "ws://192.168.1.107:30003/mk/article/ws";
+        let url = "ws://www.fzk-tx.top/mk/article/ws?articleId=" + this.articleId
+          + '&shareId=' + this.shareId
+          + '&openid=' + openid;
         // let url = "ws://127.0.0.1:4000";
         // 实例化socket
         this.socket = new WebSocket(url)
@@ -176,105 +158,24 @@ export default {
       console.log("socket连接成功")
     },
     error() {
-      console.log("连接错误")
+      console.log("连接错误");
+      this.socket.onclose;
     },
     getMessage(msg) {
       console.log(msg.data);
     },
-    send: function (params) {
-      // try {
+    send(params) {
       this.socket.send(params)
-      // } catch (err) {
-      //   console.log('websocket掉线了');
-      //   return;
-      //   // this.socket = new WebSocket(url);
-      // }
     },
-    close: function () {
-      console.log("socket已经关闭")
+    close() {
+      this.socket.onclose;
+      console.log("socket已经关闭");
     },
-    handleSend(e) {
-      let params = JSON.stringify({
-        content: '1',
-        id: 'sss'
-      })
+    handleSend() {
+      let params = '1';
       this.send(params);
     },
-
-    // initWebSocket() {
-    //   this.connection();
-    //   let that = this;
-    //   // 断开重连机制,尝试发送消息,捕获异常发生时重连
-    //   this.ws_timer = setInterval(() => {
-    //     try {
-    //       that.stompClient.send("test");
-    //     } catch (err) {
-    //       console.log("断线了: " + err);
-    //       that.connection();
-    //     }
-    //   }, 10000);
-    // },
-    // connection() {
-    //   // 建立连接对象
-    //   let socket = new SockJS('http://127.0.0.1:3000/upgrade');
-    //   // 获取STOMP子协议的客户端对象
-    //   this.stompClient = Stomp.over(socket);
-    //   // 定义客户端的认证信息,按需求配置
-    //   let headers = {
-    //     Authorization: ''
-    //   }
-    //   // 向服务器发起websocket连接
-    //   this.stompClient.connect(headers, () => {
-    //     this.stompClient.send("/ws",
-    //       headers,
-    //       JSON.stringify({sender: 'eet', chatType: 'JOIN'}),
-    //     )   //用户加入接口
-    //   }, (err) => {
-    //     // 连接发生错误时的处理函数
-    //     console.log('失败')
-    //     console.log(err);
-    //   });
-    // },
-    // disconnect() {
-    //   if (this.stompClient) {
-    //     this.stompClient.disconnect();
-    //     clearInterval(this.ws_timer);
-    //   }
-    // },  // 断开连接
     backChange() {
-      this.beforeunloadHandler();
-    },
-    async beforeunloadHandler() {
-      clearInterval(this.timer);
-      this.timer = null;
-      // 把用户基本信息与用户阅读时间传给后台
-      let url = JSON.parse(getUrl()).contextShare.saveWxUserMsg;
-      let postData = {
-        articleId: this.articleId,
-        shareId: this.shareId,
-        readTime: this.readTime,
-        openid: this.wxUserMsg.openid,
-        nickname: this.wxUserMsg.nickname,
-        sex: this.wxUserMsg.sex,
-        province: this.wxUserMsg.province,
-        city: this.wxUserMsg.city,
-        country: this.wxUserMsg.country,
-        headimgurl: this.wxUserMsg.headimgurl,
-        // privilege: this.wxUserMsg.privilege,
-        unionid: this.wxUserMsg.unionid
-      }
-      ajax({
-        type: 'POST',
-        url: url,
-        async: false,
-        contentType: "application/json;charset=utf-8",
-        data: postData,
-        success: function (data) {
-        },
-        error: function () {
-        }
-      });
-      // const wxUserMsg = (await this.$http.post(url, postData)).data;
       wx.closeWindow();
     },
     // 判断环境为微信还是app
@@ -304,11 +205,12 @@ export default {
           // 把微信用户的基本信息存入本地，然后等用户离开页面时再返回给后台
           this.wxUserMsg = wxUserMsg;
           this.shareArticleWx();
+          console.log(this.wxUserMsg);
+          this.pageListener(wxUserMsg.openid);
         }
         this.inWX = true;
         document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-top:60px;padding-bottom:0px;');
         document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
-
         // 微信分享文章
         // 监听页面滚动事件
         window.addEventListener("scroll", this.scrolling)

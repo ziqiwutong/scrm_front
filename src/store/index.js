@@ -14,9 +14,11 @@ const state = {
   secret: "scrm",
   tabBarActive: 0,
   userMessage: {
-    username: "",
-    userCompany: "",
-    userImgUrl: ""
+    username: '',
+    userCompany: '',
+    userImgUrl: '',
+    userId:'',
+    userPhone:''
   },
   repArticleDetail: {
     articleContext: '',
@@ -26,6 +28,10 @@ const state = {
     articlePower: '',
     coverImg: '',
     productIds: []
+  },
+  wxUser: {
+    imgUrl: 'https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/baike/pic/item/8435e5dde71190efaa5405dfc21b9d16fdfa6007.jpg',
+    nickName: '1234444'
   },
   hasOAuth: 'false'
 }
@@ -47,7 +53,8 @@ const store = new Vuex.Store({
         token: val.token,
         userMessage: val.userMessage,
         repArticleDetail: val.repArticleDetail,
-        hasOAuth: val.hasOAuth
+        hasOAuth: val.hasOAuth,
+        wxUser: val.wxUser
       }
     }
   })]

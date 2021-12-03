@@ -1,109 +1,112 @@
 <template>
   <div class="main-wrap">
-    <div class="header-wrapper">
-      <div class="header">
-        <span class="returnIcon" @click="returnClick" v-show="!headerCancelShow"></span>
-        <van-tabs v-model="activeName" class="scrm-tab" @click="switchTab">
-          <van-tab title="所有分享" name="allShare"></van-tab>
-          <van-tab title="我的分享" name="myShare"></van-tab>
-        </van-tabs>
-        <span class="header-cancel" v-show="headerCancelShow" @click="cancelCheck">取消</span>
-        <span class="header-myCheck" v-show="!allShare&&!headerCancelShow" @click="myCheck">多选</span>
-      </div>
-      <div v-show="mainPage" class="readStatistics">
-        <p>阅读人数/阅读次数</p>
-        <p>{{ readPeople }}/{{ readTimes }}</p>
-      </div>
-      <div v-show="mainPage&&allShare" class="filterWrap">
-        <div class="filterWrap-item" @click="showFilterDialog">
-          <van-icon class-prefix="icon-third" name="filter"/>
-          <p>筛选</p>
+    <div v-show="!toAddForm">
+      <div class="header-wrapper">
+        <div class="header">
+          <span class="returnIcon" @click="returnClick" v-show="!headerCancelShow"></span>
+          <van-tabs v-model="activeName" class="scrm-tab" @click="switchTab">
+            <van-tab title="所有分享" name="allShare"></van-tab>
+            <van-tab title="我的分享" name="myShare"></van-tab>
+          </van-tabs>
+          <span class="header-cancel" v-show="headerCancelShow" @click="cancelCheck">取消</span>
+          <span class="header-myCheck" v-show="!allShare&&!headerCancelShow" @click="myCheck">多选</span>
         </div>
-        <div class="filterWrap-item" @click="showCheckbox">
-          <van-icon class-prefix="icon-third" name="mul-choice"/>
-          <p>多选</p>
+        <div v-show="mainPage" class="readStatistics">
+          <p>阅读人数/阅读次数</p>
+          <p>{{ readPeople }}/{{ readTimes }}</p>
         </div>
+        <div v-show="mainPage&&allShare" class="filterWrap">
+          <div class="filterWrap-item" @click="showFilterDialog">
+            <van-icon class-prefix="icon-third" name="filter"/>
+            <p>筛选</p>
+          </div>
+          <div class="filterWrap-item" @click="showCheckbox">
+            <van-icon class-prefix="icon-third" name="mul-choice"/>
+            <p>多选</p>
+          </div>
+        </div>
+      </div>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+        v-show="mainPage"
+      >
+        <div class="list" v-for="(item,i) in list">
+          <div class="left">
+            <van-image
+              width="50"
+              height="50"
+              :src="item.headimgurl"
+            />
+          </div>
+          <div class="right">
+            <div class="right-top">
+              <p class="readerName">{{ item.nickname }}</p>
+              <p class="readerLabel">{{ item.readerStatus != null ? item.readerStatus : '未知' }}</p>
+            </div>
+            <div class="right-bottom">
+              <p class="readers">阅读时长：{{ item.readTime }}秒</p>
+            </div>
+          </div>
+          <p class="shareBtn">{{ item.readDate }}</p>
+        </div>
+      </van-list>
+      <van-popup class="popup" v-model="filterShow" round position="right" :style="{ width: '85%',height:'100%' }"
+                 :overlay-style="{backgroundColor:'rgba(0,0,0,.5)'}" @close="closeDialog">
+        <p class="filterTitle">分享人</p>
+        <div class="shareMan">
+          <div v-for="item in shareManList" class="shareManItem" :id="item.id"
+               @click="personShare(item.id)">
+            {{ item.username }}
+          </div>
+        </div>
+        <div class="filterBottom">
+          <van-button plain hairline type="info" color="#8c3fff" @click="cancelBtn">重置</van-button>
+          <van-button plain hairline type="info" color="white" style="background-color: #8c3fff" @click="sureBtn">确定
+          </van-button>
+        </div>
+      </van-popup>
+      <van-checkbox-group v-model="checkResultT" v-show="!mainPage" class="checkList" ref="checkboxGroup" :max="1">
+        <van-cell-group class="cellList" id="cellList">
+          <van-cell
+            clickable
+            :key="index"
+            @click="toggle(index,item)"
+            v-for="(item, index) in list"
+          >
+            <template #right-icon>
+              <van-checkbox :name="item.openid" ref="checkboxes" checked-color="#6600ff"/>
+            </template>
+            <div class="list">
+              <div class="left">
+                <van-image
+                  width="50"
+                  height="50"
+                  :src="item.headImgUrl"
+                />
+              </div>
+              <div class="right">
+                <div class="right-top">
+                  <p class="readerName">{{ item.nickname }}</p>
+                  <p class="readerLabel">{{ item.readerStatus != null ? item.readerStatus : '未知' }}</p>
+                </div>
+                <div class="right-bottom">
+                  <p class="readers">阅读时长：{{ item.readTime }}秒</p>
+                </div>
+              </div>
+              <p class="shareBtn">{{ item.readDate }}</p>
+            </div>
+          </van-cell>
+        </van-cell-group>
+      </van-checkbox-group>
+      <div class="checkReader" v-show="!mainPage">
+        <!--      <van-checkbox v-model="allChecked" @click="checkAllReader(0)" checked-color="#6600ff">全选</van-checkbox>-->
+        <van-button color="#7232dd" @click="batchAddCustomer">导入到客户池</van-button>
       </div>
     </div>
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-      v-show="mainPage"
-    >
-      <div class="list" v-for="(item,i) in list">
-        <div class="left">
-          <van-image
-            width="50"
-            height="50"
-            :src="item.headimgurl"
-          />
-        </div>
-        <div class="right">
-          <div class="right-top">
-            <p class="readerName">{{ item.nickname }}</p>
-            <p class="readerLabel">{{ item.readerStatus != null ? item.readerStatus : '未知' }}</p>
-          </div>
-          <div class="right-bottom">
-            <p class="readers">阅读时长：{{ item.readTime }}秒</p>
-          </div>
-        </div>
-        <p class="shareBtn">{{ item.readDate }}</p>
-      </div>
-    </van-list>
-    <van-popup class="popup" v-model="filterShow" round position="right" :style="{ width: '85%',height:'100%' }"
-               :overlay-style="{backgroundColor:'rgba(0,0,0,.5)'}" @close="closeDialog">
-      <p class="filterTitle">分享人</p>
-      <div class="shareMan">
-        <div v-for="item in shareManList" class="shareManItem" :id="item.id"
-             @click="personShare(item.id)">
-          {{ item.username }}
-        </div>
-      </div>
-      <div class="filterBottom">
-        <van-button plain hairline type="info" color="#8c3fff" @click="cancelBtn">重置</van-button>
-        <van-button plain hairline type="info" color="white" style="background-color: #8c3fff" @click="sureBtn">确定
-        </van-button>
-      </div>
-    </van-popup>
-    <van-checkbox-group v-model="checkResultT" v-show="!mainPage" class="checkList" ref="checkboxGroup" :max="1">
-      <van-cell-group class="cellList" id="cellList">
-        <van-cell
-          clickable
-          :key="index"
-          @click="toggle(index,item)"
-          v-for="(item, index) in list"
-        >
-          <template #right-icon>
-            <van-checkbox :name="item.openid" ref="checkboxes" checked-color="#6600ff"/>
-          </template>
-          <div class="list">
-            <div class="left">
-              <van-image
-                width="50"
-                height="50"
-                :src="item.headImgUrl"
-              />
-            </div>
-            <div class="right">
-              <div class="right-top">
-                <p class="readerName">{{ item.nickname }}</p>
-                <p class="readerLabel">{{ item.readerStatus != null ? item.readerStatus : '未知' }}</p>
-              </div>
-              <div class="right-bottom">
-                <p class="readers">阅读时长：{{ item.readTime }}秒</p>
-              </div>
-            </div>
-            <p class="shareBtn">{{ item.readDate }}</p>
-          </div>
-        </van-cell>
-      </van-cell-group>
-    </van-checkbox-group>
-    <div class="checkReader" v-show="!mainPage">
-      <!--      <van-checkbox v-model="allChecked" @click="checkAllReader(0)" checked-color="#6600ff">全选</van-checkbox>-->
-      <van-button color="#7232dd" @click="batchAddCustomer">导入到客户池</van-button>
-    </div>
+    <AddForm :type=2 v-show="toAddForm" @returnClick="formReturn"/>
   </div>
 </template>
 
@@ -111,9 +114,11 @@
 import qs from 'qs'// axios参数包
 import {Toast} from "vant";
 import {getUrl} from "../../../utils/replaceUrl";
+import AddForm from "../../component/AddForm";
 
 export default {
   name: "readRecord",
+  components: {AddForm},
   data() {
     return {
       articleId: '',
@@ -138,6 +143,7 @@ export default {
       cellListLength: [],
       readPeople: '',
       readTimes: '',
+      toAddForm: false
     }
   },
   created() {
@@ -291,6 +297,11 @@ export default {
       }
       if (!this.$refs.checkboxes[index].checked) {// 选中时才加入数组
         this.checkResult.push(item);
+        let wxUser = {
+          imgUrl: item.headimgurl,
+          nickName: item.nickname
+        }
+        this.$store.commit('updateWxUserMsg', wxUser);
       } else {// 取消选中时需要从数组中删除这个元素
         this.checkResult = [];
       }
@@ -311,7 +322,7 @@ export default {
         for (let i = startIndex; i < self.list.length; i++) {
           let hasInArray = self.hasInArray(self.list[i].readerID, self.checkResult);
           if (!hasInArray) {
-            self.checkResult.push(self.list[i].readerID);
+            self.checkResult.push(self.list[i]);
           }
         }
       } else { // 取消勾选
@@ -330,19 +341,7 @@ export default {
     },
     // 批量添加reader至客户池
     async batchAddCustomer() {
-      this.$toast("该功能暂未开放~");
-      // 暂不支持批量导入
-      // JSON.parse(getUrl()).contextShare.batchAddCustomer;
-      // let postData = {
-      //   articleId: JSON.stringify(this.checkResult)
-      // }
-      // const result = (await this.$http.post(url, qs.stringify(postData))).data
-      // if (result.msg == 'ok') {
-      //   Toast("导入成功！");
-      //   this.mainPage = true;
-      // } else {
-      //   Toast("导入失败！请再次尝试");
-      // }
+      this.toAddForm = true;
     },
     // 多选列表加载--后台的关于文章详情的逻辑是一次请求所有的数据，因此不需要上拉加载操作了
     checkBoxLoad() {
@@ -363,6 +362,9 @@ export default {
           }
         }
       }
+    },
+    formReturn() {
+      this.toAddForm = false;
     }
   }
 }
@@ -391,10 +393,13 @@ export default {
 
 /deep/ .van-list {
   margin-top: 125px;
+  height: calc(100vh - 125px);
+  overflow-y: auto;
 }
 
 .myShareList {
   margin-top: 100px;
+  height: calc(100vh - 100px);
 }
 
 .checkListHeader {
@@ -402,13 +407,18 @@ export default {
 }
 
 .checkList {
-  flex: 1;
-  overflow: auto;
   margin-top: 50px;
+  margin-bottom: 65px;
+  overflow-y: auto;
+  height: calc(100vh - 115px);
 }
 
 .checkReader {
   display: inline-flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: white;
   width: 100%;
   padding: 10px 10px;
   padding-left: 50%;

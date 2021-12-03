@@ -1,3 +1,4 @@
+y
 <template>
   <!--顶部导航栏-->
   <div class="header">
@@ -24,30 +25,29 @@ export default {
       userImgUrl: '',
       hasImg: false,
     }
+
   },
-  created: function () {
+  mounted() {
+    let timer = setInterval(() => {
+      if (this.username === '') {
+        this.getUserMessage();
+      } else {
+        clearInterval(timer);
+      }
+    }, 500);
     this.getUserMessage();
   },
   methods: {
-    async getUserMessage() {
-      // 当vuex中没有用户信息时才去请求，减少网络请求的次数
-      if (this.$store.state.userMessage.username == "") {
-        let url = "/api/doLogin";
-        const result = (await this.$http.get(url)).data.data
-        this.username = result.username;
-        this.userCompany = result.userCompany;
-        this.userImgUrl = result.userImgUrl;
-        this.$store.commit("updateUserMessage", result);
-      } else {
-        this.username = this.$store.state.userMessage.username
-        this.userCompany = this.$store.state.userMessage.userCompany
-        this.userImgUrl = this.$store.state.userMessage.userImgUrl
-      }
+    getUserMessage() {
+      // 理论上用户信息应该从vuex里获取，首页已经获取用户信息并将其存入vuex中了的，只不过和用户的还没有打通，所以暂时测不了
+      this.username = this.$store.state.userMessage.username
+      this.userCompany = this.$store.state.userMessage.userCompany
+      this.userImgUrl = this.$store.state.userMessage.userImgUrl
       // 根据返回数据是否有头像决定头像模块显示什么
       if (this.userImgUrl == "") {
         let lastWord = this.username.slice(-1);
         this.userImgUrl = lastWord;
-      }else{
+      } else {
         this.hasImg = true;
       }
     }
@@ -88,7 +88,7 @@ export default {
   line-height: 40px;
 }
 
-.userImg p{
+.userImg p {
   margin-block-start: 0em;
   margin-block-end: 0em;
 }

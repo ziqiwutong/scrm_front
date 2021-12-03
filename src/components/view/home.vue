@@ -5,28 +5,28 @@
       <div class="main">
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
-                         to="/httTest02"/>
+                         to="/customer"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                         url="/"/>
+                         url="/potential"/>
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
-                         to="/"/>
+                         :to="{name:'searchCustomer',params:{type:1}}"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[3]" style="color:#1296db;" :text="textArray[3]"
-                         url="/"/>
+                         :to="{name:'searchCustomer',params:{type:2}}"/>
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
-                         url="/"/>
+                         url="/relationship"/>
           <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
       </div>
       <div class="main">
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
-                         to="/"/>
+                         to="/clueList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
-                         url="/"/>
+                         url="/bizOppList"/>
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
@@ -45,7 +45,7 @@
       <div class="main">
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
-                         to="/"/>
+                         to="/product"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
                          to="/orderList"/>
         </van-grid>
@@ -112,12 +112,11 @@ export default {
   created: function () {
     // alert(this.$route.query.code);
     this.sendCode();
-    // let query=this.$route.query;
-    // let userID = query.userID;
-    let userID = "6";
-    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-      this.getToken(userID);
-    }
+    // 为了测试，这里暂时写的是6，其实应该是从user里面获取
+    // let userID = "6";
+    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+    //   this.getToken(userID);
+    // }
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -145,12 +144,23 @@ export default {
         this.$store.commit('updateToken', token);
       }
     },
-    async sendCode(){
+    async sendCode() {
       let url = JSON.parse(getUrl()).contextShare.sendAppCode;
       let getData = {
-        code:this.$route.query.code
+        code: this.$route.query.code
       }
-      const wxUserMsg = (await this.$http.get(url, {params: getData})).data;
+      const wxUserMsg = (await this.$http.get(url, {params: getData})).data.data;
+      let userMessage = {
+        username: wxUserMsg.name,
+        userCompany: '泸州老窖集团有限责任公司',
+        userImgUrl: wxUserMsg.avatar,
+        userId: '6',//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
+        // userId: wxUserMsg.user_id,//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
+        userPhone: wxUserMsg.mobile
+      }
+      this.$store.commit('updateUserMessage', userMessage);
+      console.log(this.userMessage);
+      this.getToken(userMessage.userId);
     }
   }
 }
