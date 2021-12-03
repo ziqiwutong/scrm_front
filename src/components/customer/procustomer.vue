@@ -2,7 +2,6 @@
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
       <div class="nav-fix">
-     
         <!-- 导航栏 -->
         <van-nav-bar
           :title="this.type"
@@ -98,7 +97,7 @@
           </van-col>
         </van-row>
       </div>
-         <div class="list-highcollapse"></div>
+      <div class="list-highcollapse"></div>
       <!-- 客户列表 -->
       <van-list
         class="list"
@@ -533,7 +532,7 @@ export default {
       // 点击加号-弹出层信息
       actions: [
         { name: "新增潜在客户", callback: this.formClick },
-        { name: "扫描名片", callback: this.onPicture },
+        // { name: "扫描名片", callback: this.onPicture },
       ],
       // 点击加号-扫描名片-弹出层
       pictureShow: false,
@@ -544,7 +543,7 @@ export default {
       // 新建客户-时间-弹窗
       dateShow: false,
       // 新建客户-时间-选择值
-      dateVal: "",
+      dateVal: new Date(2000, 0, 1),
       // 新建客户-时间-时间最小值
       minDate: new Date(1920, 0, 1),
       // 新建客户-时间-时间最大值
@@ -900,6 +899,8 @@ export default {
     // 客户列表-搜索功能
     onSearch() {
       this.cusList = [];
+      this.pageProps.pageNum = 1;
+      this.finished = false;
       this.onLoad();
     },
     // 客户列表-搜索功能-关闭弹窗
@@ -1364,7 +1365,7 @@ export default {
           this.addList = this.addListTemp;
           console.log(result.data);
         }
-            this.addList = this.addListTemp;
+        this.addList = this.addListTemp;
         this.uploader = [];
         this.showform = false;
         this.cusList = [];

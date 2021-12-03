@@ -1019,7 +1019,7 @@ export default {
       // 新建客户-时间弹窗
       dateShow: false,
       // 新建客户-时间选择值
-      dateVal: "",
+      dateVal: new Date(2000, 0, 1),
       // 新建客户-时间-时间最小值
       minDate: new Date(2020, 0, 1),
       // 新建客户-时间-时间最大值
@@ -1300,12 +1300,24 @@ export default {
     // 更多操作-新建商机
     toBusOpprtunity() {
       Toast("跳转商机界面");
-      this.$router.push({ name: "addBizOpp", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
+      this.$router.push({
+        name: "addBizOpp",
+        query: {
+          id: this.cusDetail.id,
+          customerName: this.cusDetail.customerName,
+        },
+      });
     },
     // 更多操作-新建订单
     toOrder() {
       Toast("跳转订单界面");
-      this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
+      this.$router.push({
+        path: "/orderCreate",
+        query: {
+          id: this.cusDetail.id,
+          customerName: this.cusDetail.customerName,
+        },
+      });
     },
     // 更多操作-改跟进人
     changeFollow() {
@@ -1733,16 +1745,16 @@ export default {
       }
     },
   },
-  // beforeRouteEnter(to, from, next) {
-  //   if (to.path == "/customer") {
-  //     to.meta.keepAlive = true;
-  //   } else {
-  //     to.meta.keepAlive = false;
-  //   }
-  //   next((vm) => {
-  //     document.body.scrollTop = vm.scrollTop;
-  //   });
-  // },
+  beforeRouteEnter(to, from, next) {
+    if (to.path == "/customer") {
+      to.meta.keepAlive = true;
+    } else {
+      to.meta.keepAlive = false;
+    }
+    next((vm) => {
+      document.body.scrollTop = vm.scrollTop;
+    });
+  },
 };
 </script>
 

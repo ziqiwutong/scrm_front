@@ -468,6 +468,9 @@ export default {
       minDate: new Date(1920, 0, 1),
       // 新建客户-时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+      dateVal: new Date(2000, 0, 1),
+
+      currentDate: new Date(2021, 0, 17),
       // 新建客户-时间-生日/公司创建分类
       addDateType: "",
       // 新建客户-地区-地区列表
@@ -975,7 +978,6 @@ export default {
         this.uploader = [];
         this.$emit("returnClick");
       }
-      
     },
     // 新建客户-头像格式判断
     uploadPicType(str) {

@@ -169,11 +169,13 @@
       <van-row>
         <van-col class="add-choose-font">点击选择上传文件</van-col>
         <van-col offset="4" class="add-choose-margin"
-        ><van-uploader
-          multiple
-          v-model="scruploader"
-          :max-count="1"
-          :after-read="afterRead"
+          ><van-uploader
+            multiple
+            v-model="scruploader"
+            :max-count="1"
+            :after-read="afterRead"
+            @oversize="onOversize"
+            :max-size="500 * 1024"
         /></van-col>
       </van-row>
       <van-button type="info" @click="pictureConfirm" class="screen-confirm-btn"
@@ -971,11 +973,12 @@ export default {
       // 新建客户-时间-弹窗
       dateShow: false,
       // 新建客户-时间-选择值
-      dateVal: "",
+      dateVal: new Date(2000, 0, 1),
       // 新建客户-时间-时间最小值
       minDate: new Date(1920, 0, 1),
       // 新建客户-时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+
       // 新建客户-时间-生日/公司创建分类
       addDateType: "",
       // 新建客户-地区-地区列表
@@ -2160,6 +2163,7 @@ export default {
     // 新建客户-返回
     onClickAddRe() {
       this.showform = false;
+      this.addList = this.addListTemp
     },
     // 新建客户-保存
     onClickAddSave() {
@@ -2411,6 +2415,15 @@ export default {
           .then((res) => {
             console.log(res.data.data);
             if (res.data.data == null) Toast("识别图片失败，请手动新建");
+            else {
+              let scrP = res.data.data;
+              this.addList.address = scrP.address;
+              this.addList.belongCompany = scrP.company;
+              this.addList.telephone = scrP.mobile;
+              this.addList.position = scrP.title;
+              this.addList.customerName = scrP.name;
+              this.showform = true;
+            }
           });
       }
 
@@ -2444,7 +2457,7 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
-    from.meta.keepAlive = false;
+    from.meta.keepAlive = true;
     this.scollTop =
       document.documentElement.scrollTop || document.body.scrollTop;
     next();

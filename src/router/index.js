@@ -90,7 +90,10 @@ const routes = [
   {
     path: '/procustomer',
     name: 'procustomer',
-    component: procustomer
+    component: procustomer,
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
   {
     path: '/potential',
