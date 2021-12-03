@@ -30,7 +30,7 @@
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
-                         url="/"/>
+                         url="/communicationList"/>
           <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
       </div>
@@ -112,11 +112,8 @@ export default {
   created: function () {
     // alert(this.$route.query.code);
     this.sendCode();
-    // 为了测试，这里暂时写的是6，其实应该是从user里面获取
-    let userID = "6";
-    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-      this.getToken(userID);
-    }
+    // 这里只是为了测试，上线后会放在sendcode函数的末尾执行
+    this.getToken('6');
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -152,12 +149,15 @@ export default {
       const wxUserMsg = (await this.$http.get(url, {params: getData})).data.data;
       let userMessage = {
         username: wxUserMsg.name,
-        userCompany: '泸州老窖集团',
+        userCompany: '泸州老窖集团有限责任公司',
         userImgUrl: wxUserMsg.avatar,
         userId: '6',//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
+        // userId: wxUserMsg.user_id,//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
         userPhone: wxUserMsg.mobile
       }
       this.$store.commit('updateUserMessage', userMessage);
+      console.log(this.userMessage);
+      // this.getToken(userMessage.userId);
     }
   }
 }
