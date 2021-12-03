@@ -10,7 +10,7 @@ import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 // import sweetTest from "../components/view/contextShare/sweetTest";
 import store from "../store";
-import {Toast} from "vant";
+import { Toast } from "vant";
 import orderList from "../components/view/order/orderList";
 import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
@@ -36,7 +36,7 @@ import editBizOpp from "../components/view/businessOpportunity/editBizOpp";
 import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
-import productEdit from   "../components/view/product/productEdit";
+import productEdit from "../components/view/product/productEdit";
 import procustomer from "../components/customer/procustomer"
 Vue.use(Router)
 
@@ -88,7 +88,10 @@ const routes = [
   {
     path: '/procustomer',
     name: 'procustomer',
-    component: procustomer
+    component: procustomer,
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
   {
     path: '/potential',
@@ -171,38 +174,38 @@ const routes = [
     component: editBizOpp
   },
   {
-    path:'/orderEdit',
-    component:orderEdit
+    path: '/orderEdit',
+    component: orderEdit
   },
   {
-    path:'/productList',
-    component:productList
+    path: '/productList',
+    component: productList
   },
   {
-    path:'/productCreate',
-    component:productCreate
+    path: '/productCreate',
+    component: productCreate
   },
   {
-    path:'/productDetail',
-    component:productDetail
+    path: '/productDetail',
+    component: productDetail
   },
   {
-    path:'/productEdit',
-    component:productEdit
+    path: '/productEdit',
+    component: productEdit
   },
   {
     path: '/repArticleDetail',
-    name:'repArticleDetail',
+    name: 'repArticleDetail',
     component: repArticleDetail
   },
   {
     path: '/reArticleDes',
-    name:'reArticleDes',
+    name: 'reArticleDes',
     component: reArticleDes
   },
   {
     path: '/product2poster',
-    name:'product2poster',
+    name: 'product2poster',
     component: product2poster
   },
   // {
@@ -216,7 +219,7 @@ const routes = [
 
 const router = new Router({
 
-  mode:'history',
+  mode: 'history',
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -236,7 +239,7 @@ Router.prototype.push = function push(location, onResolve, onReject) {
 
 const jwt = require("jsonwebtoken");//引入jwt
 const secret = "scrm";// 设置秘钥
-const whiteList = ["/home","/product2poster","/sweetTest","/repArticleDetail","/articleDetail"]; // 定义一个白名单列表
+const whiteList = ["/home", "/product2poster", "/sweetTest", "/repArticleDetail", "/articleDetail"]; // 定义一个白名单列表
 router.beforeEach(async (to, from, next) => {
   if (whiteList.includes(to.path)) { // 如果是访问的白名单中的页面
     return next(); // 不需要校验，直接返回继续访问该页面
