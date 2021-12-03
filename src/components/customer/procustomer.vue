@@ -2,7 +2,6 @@
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
       <div class="nav-fix">
-     
         <!-- 导航栏 -->
         <van-nav-bar
           :title="this.type"
@@ -98,7 +97,7 @@
           </van-col>
         </van-row>
       </div>
-         <div class="list-highcollapse"></div>
+      <div class="list-highcollapse"></div>
       <!-- 客户列表 -->
       <van-list
         class="list"
@@ -900,6 +899,8 @@ export default {
     // 客户列表-搜索功能
     onSearch() {
       this.cusList = [];
+      this.pageProps.pageNum = 1;
+      this.finished = false;
       this.onLoad();
     },
     // 客户列表-搜索功能-关闭弹窗
@@ -1364,7 +1365,7 @@ export default {
           this.addList = this.addListTemp;
           console.log(result.data);
         }
-            this.addList = this.addListTemp;
+        this.addList = this.addListTemp;
         this.uploader = [];
         this.showform = false;
         this.cusList = [];
