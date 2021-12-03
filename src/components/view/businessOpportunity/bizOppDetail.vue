@@ -365,8 +365,6 @@ export default {
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
 
-      console.log(result);
-
       this.customerId = result.customerId;
       this.customerName = result.customerName;
       this.boName = result.boName;
