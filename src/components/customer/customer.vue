@@ -76,77 +76,79 @@
         </van-row>
       </div>
       <div class="list-highcollapse"></div>
-      <!-- 客户列表 -->
-      <van-list
-        class="list"
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <div class="van-clearfix">
-          <!-- 客户列表-滑动单元格 -->
-          <van-swipe-cell v-for="item in cusList" :key="item.id">
-            <van-row @click="onDetail(item)" class="list-content">
-              <!--客户信息行-->
-              <van-row>
-                <!-- 客户列表-头像 -->
-                <van-col span="4" offset="1">
-                  <van-image
-                    round
-                    width="40"
-                    height="40"
-                    :src="item.customerIcon"
-                    v-if="item.customerIcon"
-                  />
-                  <div v-if="!item.customerIcon" class="list-img-none">
-                    {{ item.customerName[0] }}
-                  </div>
-                </van-col>
-                <!-- 客户列表-客户姓名 -->
-                <van-col span="11" class="list-content-name"
-                ><div class="van-ellipsis">
-                  {{ item.customerName }}
-                </div></van-col
-                >
-                <!-- 客户列表-进入客户池时间 -->
-                <van-col span="8" class="list-content-time"
-                >{{ item.enterPoolDate }}进入客户池</van-col
-                >
-                <!-- 客户列表-客户公司信息 -->
-                <van-col span="16" class="list-content-msg">{{
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <!-- 客户列表 -->
+        <van-list
+          class="list"
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="van-clearfix">
+            <!-- 客户列表-滑动单元格 -->
+            <van-swipe-cell v-for="item in cusList" :key="item.id">
+              <van-row @click="onDetail(item)" class="list-content">
+                <!--客户信息行-->
+                <van-row>
+                  <!-- 客户列表-头像 -->
+                  <van-col span="4" offset="1">
+                    <van-image
+                      round
+                      width="40"
+                      height="40"
+                      :src="item.customerIcon"
+                      v-if="item.customerIcon"
+                    />
+                    <div v-if="!item.customerIcon" class="list-img-none">
+                      {{ item.customerName[0] }}
+                    </div>
+                  </van-col>
+                  <!-- 客户列表-客户姓名 -->
+                  <van-col span="11" class="list-content-name"
+                    ><div class="van-ellipsis">
+                      {{ item.customerName }}
+                    </div></van-col
+                  >
+                  <!-- 客户列表-进入客户池时间 -->
+                  <van-col span="8" class="list-content-time"
+                    >{{ item.enterPoolDate }}进入客户池</van-col
+                  >
+                  <!-- 客户列表-客户公司信息 -->
+                  <van-col span="16" class="list-content-msg">{{
                     item.belongCompany
                   }}</van-col>
+                </van-row>
+                <!-- 客户标签行 -->
+                <van-row>
+                  <van-col span="4"></van-col>
+                  <!-- 显示标签 -->
+                  <van-col class="list-content-tag"
+                    ><van-tag
+                      color="#E7F7E3"
+                      text-color="#67C74D"
+                      v-for="item2 in item.customerLabels"
+                      :key="item2.id"
+                      >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+                    ></van-col
+                  >
+                </van-row>
               </van-row>
-              <!-- 客户标签行 -->
-              <van-row>
-                <van-col span="4"></van-col>
-                <!-- 显示标签 -->
-                <van-col class="list-content-tag"
-                ><van-tag
-                  color="#E7F7E3"
-                  text-color="#67C74D"
-                  v-for="item2 in item.customerLabels"
-                  :key="item2.id"
-                >{{ item2.labelType + ":" + item2.labelName }}</van-tag
-                ></van-col
-                >
-              </van-row>
-            </van-row>
-            <!-- 客户列表-滑动删除 -->
-            <template #right>
-              <van-button
-                square
-                text="删除"
-                type="danger"
-                class="delete-button"
-                @click="detOn(item.id)"
-              />
-            </template>
-            <van-divider />
-          </van-swipe-cell>
-        </div>
-      </van-list>
+              <!-- 客户列表-滑动删除 -->
+              <template #right>
+                <van-button
+                  square
+                  text="删除"
+                  type="danger"
+                  class="delete-button"
+                  @click="detOn(item.id)"
+                />
+              </template>
+              <van-divider />
+            </van-swipe-cell>
+          </div>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <!-- 客户列表-滑动单元格-删除对话框 -->
     <van-dialog
@@ -917,6 +919,8 @@ export default {
   },
   data() {
     return {
+      // 刷新
+      refreshing: false,
       testtxt: "查找客户列表",
       testVal: false,
       // 客户类型-排序-种类
@@ -1453,6 +1457,15 @@ export default {
     //   const res = await this.$http.get(url);
     //   console.log(res.data.data)
     // },
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false;
+      this.pageProps.pageNum = 1;
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true;
+      this.onLoad();
+    },
     testConsole(val) {
       console.log(val);
     },
@@ -1546,6 +1559,10 @@ export default {
       this.isSearch = !this.isSearch;
     },
     async onLoad() {
+      if (this.refreshing) {
+        this.cusList = [];
+        this.refreshing = false;
+      }
       let url = "/api/se/customer/query";
       url = this.urlSortChoose(url);
       url = this.urlCusTypeChoose(url);
@@ -2517,7 +2534,7 @@ export default {
         callback(base64);
       };
     },
-   async userScrImg(base64) {
+    async userScrImg(base64) {
       let str = base64;
       let type = this.uploadPicType(str);
       let url = "/api/file/pic/base64StrToPic";
@@ -2551,7 +2568,7 @@ export default {
           },
         })
         .then((res) => {
-          if (res.data.data==null) Toast("识别图片失败，请手动新建");
+          if (res.data.data == null) Toast("识别图片失败，请手动新建");
           else {
             let scrP = res.data.data;
             this.addList.address = scrP.address;
