@@ -272,13 +272,7 @@
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
-            <van-uploader
-              multiple
-              :max-size="500 * 1024"
-              @oversize="onOversize"
-              v-model="uploader"
-              :max-count="1"
-            />
+            <van-uploader multiple v-model="uploader" :max-count="1" />
           </template>
         </van-field>
         <!-- 客户信息-姓名 -->
@@ -864,6 +858,7 @@ export default {
       ifbulidChoose: true,
       //分类
       userType: 0,
+      data64: "",
     };
   },
   methods: {
@@ -1236,12 +1231,150 @@ export default {
     // 新建客户-返回
     onClickAddRe() {
       this.showform = false;
-      this.addList = this.addListTemp
+      this.addList = this.addListTemp;
     },
     // 新建客户-保存
     onClickAddSave() {
       this.showform = false;
       this.onClickSumbmit();
+    },
+    // 处理回调函数的坑 冗杂没救了
+    async userImg(base64) {
+      let str = this.uploader[0].content;
+      let type = this.uploadPicType(str);
+      // this.uploadCusIcon(str, type, type.length);
+      let url = "/api/file/pic/base64StrToPic";
+      let picture;
+      str = base64;
+      if (type.length == 3) {
+        picture = str.slice(22);
+      } else if (type.length == 4) {
+        picture = str.slice(23);
+      }
+      console.log(picture);
+      let params = new FormData();
+      params.append("picBase64Str", picture);
+      params.append("picFormat", type);
+      params.append("picType", "customerIcon");
+      await this.$http
+        .post(url, params, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          this.addList.customerIcon = res.data.data;
+        });
+      if (this.addList.customerType == "个人客户") {
+        this.addList.customerType = 0;
+      } else {
+        this.addList.customerType = 1;
+      }
+
+      if (
+        this.addList.customerStatus == "未分配" ||
+        this.addList.customerStatus == "潜在客户"
+      ) {
+        this.addList.followStaffId = "";
+        this.addList.followStaffName = "";
+      }
+      // 客户不是潜在客户
+      this.addList.potential = 1;
+      this.addList.potentialType = this.type;
+
+      function removeEmptyField(obj) {
+        var newObj = {};
+        if (typeof obj === "string") {
+          obj = JSON.parse(obj);
+        }
+        if (obj instanceof Array) {
+          newObj = [];
+        }
+        if (obj instanceof Object) {
+          for (var attr in obj) {
+            // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
+            if (
+              obj.hasOwnProperty(attr) &&
+              obj[attr] !== "" &&
+              obj[attr] !== null &&
+              obj[attr] !== undefined
+            ) {
+              if (obj[attr] instanceof Object) {
+                // 空数组或空对象不加入新对象(去掉[],{})
+                if (
+                  JSON.stringify(obj[attr]) === "{}" ||
+                  JSON.stringify(obj[attr]) === "[]"
+                ) {
+                  continue;
+                }
+                // 属性值为对象,则递归执行去除方法
+                newObj[attr] = removeEmptyField(obj[attr]);
+              } else if (
+                typeof obj[attr] === "string" &&
+                ((obj[attr].indexOf("{") > -1 && obj[attr].indexOf("}") > -1) ||
+                  (obj[attr].indexOf("[") > -1 && obj[attr].indexOf("]") > -1))
+              ) {
+                // 属性值为JSON时
+                try {
+                  var attrObj = JSON.parse(obj[attr]);
+                  if (attrObj instanceof Object) {
+                    newObj[attr] = removeEmptyField(attrObj);
+                  }
+                } catch (e) {
+                  newObj[attr] = obj[attr];
+                }
+              } else {
+                newObj[attr] = obj[attr];
+              }
+            }
+          }
+        }
+        return newObj;
+      }
+      this.addList = removeEmptyField(this.addList);
+      console.log(this.addList);
+      url = "/api/se/customer/insert";
+      let postData = this.addList;
+      const result = (await this.$http.post(url, postData)).data;
+      if (result.code == "200") {
+        Toast("成功添加客户");
+      }
+      this.addList = this.addListTemp;
+      this.uploader = [];
+      this.showform = false;
+      this.cusList = [];
+      this.finished = false;
+      this.pageProps.pageNum = 1;
+      this.onLoad();
+    },
+    dealImage(base64, w, callback) {
+      var newImage = new Image();
+      var quality = 0.6; //压缩系数0-1之间
+      newImage.src = base64;
+      newImage.setAttribute("crossOrigin", "Anonymous"); //url为外域时需要
+      var imgWidth, imgHeight;
+      newImage.onload = function () {
+        imgWidth = this.width;
+        imgHeight = this.height;
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        if (Math.max(imgWidth, imgHeight) > w) {
+          if (imgWidth > imgHeight) {
+            canvas.width = w;
+            canvas.height = (w * imgHeight) / imgWidth;
+          } else {
+            canvas.height = w;
+            canvas.width = (w * imgWidth) / imgHeight;
+          }
+        } else {
+          canvas.width = imgWidth;
+          canvas.height = imgHeight;
+          quality = 0.6;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+        var base64 = canvas.toDataURL("image/jpeg", quality);
+        callback(base64);
+      };
     },
     // 新建客户-提交
     async onClickSumbmit() {
@@ -1267,112 +1400,95 @@ export default {
           // this.uploadCusIcon(str, type, type.length);
           let url = "/api/file/pic/base64StrToPic";
           let picture;
-          if (type.length == 3) {
-            picture = str.slice(22);
-          } else if (type.length == 4) {
-            picture = str.slice(23);
-          }
-          console.log(picture);
-          let params = new FormData();
-          params.append("picBase64Str", picture);
-          params.append("picFormat", type);
-          params.append("picType", "customerIcon");
-          await this.$http
-            .post(url, params, {
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            })
-            .then((res) => {
-              console.log(res.data.data);
-              this.addList.customerIcon = res.data.data;
-            });
-        }
-
-        // 传输
-        if (this.addList.customerType == "个人客户") {
-          this.addList.customerType = 0;
+          this.dealImage(str, 1000, this.userImg);
         } else {
-          this.addList.customerType = 1;
-        }
-
-        if (
-          this.addList.customerStatus == "未分配" ||
-          this.addList.customerStatus == "潜在客户"
-        ) {
-          this.addList.followStaffId = "";
-          this.addList.followStaffName = "";
-        }
-        // 客户不是潜在客户
-        this.addList.potential = 1;
-        this.addList.potentialType = this.type;
-
-        function removeEmptyField(obj) {
-          var newObj = {};
-          if (typeof obj === "string") {
-            obj = JSON.parse(obj);
+          // 传输
+          if (this.addList.customerType == "个人客户") {
+            this.addList.customerType = 0;
+          } else {
+            this.addList.customerType = 1;
           }
-          if (obj instanceof Array) {
-            newObj = [];
+
+          if (
+            this.addList.customerStatus == "未分配" ||
+            this.addList.customerStatus == "潜在客户"
+          ) {
+            this.addList.followStaffId = "";
+            this.addList.followStaffName = "";
           }
-          if (obj instanceof Object) {
-            for (var attr in obj) {
-              // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
-              if (
-                obj.hasOwnProperty(attr) &&
-                obj[attr] !== "" &&
-                obj[attr] !== null &&
-                obj[attr] !== undefined
-              ) {
-                if (obj[attr] instanceof Object) {
-                  // 空数组或空对象不加入新对象(去掉[],{})
-                  if (
-                    JSON.stringify(obj[attr]) === "{}" ||
-                    JSON.stringify(obj[attr]) === "[]"
-                  ) {
-                    continue;
-                  }
-                  // 属性值为对象,则递归执行去除方法
-                  newObj[attr] = removeEmptyField(obj[attr]);
-                } else if (
-                  typeof obj[attr] === "string" &&
-                  ((obj[attr].indexOf("{") > -1 &&
-                    obj[attr].indexOf("}") > -1) ||
-                    (obj[attr].indexOf("[") > -1 &&
-                      obj[attr].indexOf("]") > -1))
+          // 客户不是潜在客户
+          this.addList.potential = 1;
+          this.addList.potentialType = this.type;
+
+          function removeEmptyField(obj) {
+            var newObj = {};
+            if (typeof obj === "string") {
+              obj = JSON.parse(obj);
+            }
+            if (obj instanceof Array) {
+              newObj = [];
+            }
+            if (obj instanceof Object) {
+              for (var attr in obj) {
+                // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
+                if (
+                  obj.hasOwnProperty(attr) &&
+                  obj[attr] !== "" &&
+                  obj[attr] !== null &&
+                  obj[attr] !== undefined
                 ) {
-                  // 属性值为JSON时
-                  try {
-                    var attrObj = JSON.parse(obj[attr]);
-                    if (attrObj instanceof Object) {
-                      newObj[attr] = removeEmptyField(attrObj);
+                  if (obj[attr] instanceof Object) {
+                    // 空数组或空对象不加入新对象(去掉[],{})
+                    if (
+                      JSON.stringify(obj[attr]) === "{}" ||
+                      JSON.stringify(obj[attr]) === "[]"
+                    ) {
+                      continue;
                     }
-                  } catch (e) {
+                    // 属性值为对象,则递归执行去除方法
+                    newObj[attr] = removeEmptyField(obj[attr]);
+                  } else if (
+                    typeof obj[attr] === "string" &&
+                    ((obj[attr].indexOf("{") > -1 &&
+                      obj[attr].indexOf("}") > -1) ||
+                      (obj[attr].indexOf("[") > -1 &&
+                        obj[attr].indexOf("]") > -1))
+                  ) {
+                    // 属性值为JSON时
+                    try {
+                      var attrObj = JSON.parse(obj[attr]);
+                      if (attrObj instanceof Object) {
+                        newObj[attr] = removeEmptyField(attrObj);
+                      }
+                    } catch (e) {
+                      newObj[attr] = obj[attr];
+                    }
+                  } else {
                     newObj[attr] = obj[attr];
                   }
-                } else {
-                  newObj[attr] = obj[attr];
                 }
               }
             }
+            return newObj;
           }
-          return newObj;
-        }
-        this.addList = removeEmptyField(this.addList);
-        console.log(this.addList);
-        let url = "/api/se/customer/insert";
-        let postData = this.addList;
-        const result = (await this.$http.post(url, postData)).data;
-        if (result.code == "200") {
-          Toast("成功添加客户");
+          this.addList = removeEmptyField(this.addList);
+          console.log(this.addList);
+          let url = "/api/se/customer/insert";
+          let postData = this.addList;
+          const result = (await this.$http.post(url, postData)).data;
+          if (result.code == "200") {
+            Toast("成功添加客户");
+            this.addList = this.addListTemp;
+            console.log(result.data);
+          }
           this.addList = this.addListTemp;
-          console.log(result.data);
+          this.uploader = [];
+          this.showform = false;
+          this.cusList = [];
+          this.pageProps.pageNum = 1;
+          this.finished = false;
+          this.onLoad();
         }
-        this.addList = this.addListTemp;
-        this.uploader = [];
-        this.showform = false;
-        this.cusList = [];
-        this.pageProps.pageNum = 1;
-        this.finished = false;
-        this.onLoad();
       }
     },
     // 新建客户-头像格式判断
