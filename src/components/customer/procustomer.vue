@@ -99,75 +99,77 @@
       </div>
       <div class="list-highcollapse"></div>
       <!-- 客户列表 -->
-      <van-list
-        class="list"
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <!-- 客户列表-滑动单元格 -->
-        <van-swipe-cell v-for="item in cusList" :key="item.id">
-          <van-row @click="onDetail(item)" class="list-content">
-            <!--客户信息行-->
-            <van-row>
-              <!-- 客户列表-头像 -->
-              <van-col span="4" offset="1">
-                <van-image
-                  round
-                  width="40"
-                  height="40"
-                  :src="item.customerIcon"
-                  v-if="item.customerIcon"
-                />
-                <!-- 没有头像的客户头像样式 -->
-                <div v-if="!item.customerIcon" class="list-img-none">
-                  {{ item.customerName[0] }}
-                </div>
-              </van-col>
-              <!-- 客户列表-客户姓名 -->
-              <van-col span="11" class="list-content-name"
-                ><div class="van-ellipsis">
-                  {{ item.customerName }}
-                </div></van-col
-              >
-              <!-- 客户列表-进入客户池时间 -->
-              <van-col span="8" class="list-content-time"
-                >{{ item.enterPoolDate }}进入客户池</van-col
-              >
-              <!-- 客户列表-客户公司信息 -->
-              <van-col span="16" class="list-content-msg">{{
-                item.belongCompany
-              }}</van-col>
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <van-list
+          class="list"
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <!-- 客户列表-滑动单元格 -->
+          <van-swipe-cell v-for="item in cusList" :key="item.id">
+            <van-row @click="onDetail(item)" class="list-content">
+              <!--客户信息行-->
+              <van-row>
+                <!-- 客户列表-头像 -->
+                <van-col span="4" offset="1">
+                  <van-image
+                    round
+                    width="40"
+                    height="40"
+                    :src="item.customerIcon"
+                    v-if="item.customerIcon"
+                  />
+                  <!-- 没有头像的客户头像样式 -->
+                  <div v-if="!item.customerIcon" class="list-img-none">
+                    {{ item.customerName[0] }}
+                  </div>
+                </van-col>
+                <!-- 客户列表-客户姓名 -->
+                <van-col span="11" class="list-content-name"
+                  ><div class="van-ellipsis">
+                    {{ item.customerName }}
+                  </div></van-col
+                >
+                <!-- 客户列表-进入客户池时间 -->
+                <van-col span="8" class="list-content-time"
+                  >{{ item.enterPoolDate }}进入客户池</van-col
+                >
+                <!-- 客户列表-客户公司信息 -->
+                <van-col span="16" class="list-content-msg">{{
+                  item.belongCompany
+                }}</van-col>
+              </van-row>
+              <!-- 客户标签行 -->
+              <van-row>
+                <van-col span="4"></van-col>
+                <!-- 显示标签 -->
+                <van-col class="list-content-tag"
+                  ><van-tag
+                    color="#E7F7E3"
+                    text-color="#67C74D"
+                    v-for="item2 in item.customerLabels"
+                    :key="item2.id"
+                    >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+                  ></van-col
+                >
+              </van-row>
             </van-row>
-            <!-- 客户标签行 -->
-            <van-row>
-              <van-col span="4"></van-col>
-              <!-- 显示标签 -->
-              <van-col class="list-content-tag"
-                ><van-tag
-                  color="#E7F7E3"
-                  text-color="#67C74D"
-                  v-for="item2 in item.customerLabels"
-                  :key="item2.id"
-                  >{{ item2.labelType + ":" + item2.labelName }}</van-tag
-                ></van-col
-              >
-            </van-row>
-          </van-row>
-          <!-- 客户列表-滑动删除 -->
-          <template #right>
-            <van-button
-              square
-              text="删除"
-              type="danger"
-              class="delete-button"
-              @click="detOn(item.id)"
-            />
-          </template>
-          <van-divider />
-        </van-swipe-cell>
-      </van-list>
+            <!-- 客户列表-滑动删除 -->
+            <template #right>
+              <van-button
+                square
+                text="删除"
+                type="danger"
+                class="delete-button"
+                @click="detOn(item.id)"
+              />
+            </template>
+            <van-divider />
+          </van-swipe-cell>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <!-- 客户列表-滑动单元格-删除对话框 -->
     <van-dialog
@@ -490,6 +492,8 @@ export default {
   data() {
     return {
       type: "",
+      // 刷新
+      refreshing: false,
       dialogShow: false,
       // 客户类型-排序-种类
       sortCusType: "createTime",
@@ -865,7 +869,15 @@ export default {
     onClickLeft() {
       this.$router.back("/potential");
     },
-
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false;
+      this.pageProps.pageNum = 1;
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true;
+      this.onLoad();
+    },
     // 客户排序-客户分类选择-排序
     onOrderList(cusVal) {
       if (cusVal == 0) {
@@ -908,6 +920,11 @@ export default {
     },
     // 客户列表-列表加载
     async onLoad() {
+      if (this.refreshing) {
+        this.cusList = [];
+        this.refreshing = false;
+      }
+
       let url = "/api/se/customer/query";
       // url = this.urlSortChoose(url);
       url += "?";
