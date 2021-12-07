@@ -112,24 +112,19 @@ export  default  {
     onOrderList(clueVal) {
       if (clueVal == 0) {
         this.clueClass = "全部线索";
-        this.list=[];
-        this.onLoad();
       }
       else if (clueVal == 1) {
         this.clueClass = "新线索";
-        this.list=[];
-        this.onLoad();
       }
       else if (clueVal == 2) {
         this.clueClass = "跟进中";
-        this.list=[];
-        this.onLoad();
       }
       else if (clueVal == 3) {
         this.clueClass = "转换为商机";
-        this.list=[];
-        this.onLoad();
       }
+      this.pageProps.currentPage=1;
+      this.list=[];
+      this.onLoad();
     },
     // 线索列表-搜索功能-取消
     onSearchCancel() {
@@ -181,7 +176,7 @@ export  default  {
         active:this.active
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-      if (result.length == 0) {
+      if (result.length != postData.pageCount) {
         // 已加载全部数据
         this.finished = true;
         Toast('已加载全部数据！');
