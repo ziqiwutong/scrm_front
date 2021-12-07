@@ -119,10 +119,12 @@ export default {
   created() {
     this.$store.commit('updateTabBarActive', 2);
     this.shareId = JSON.parse(getUserId()).userID;
+    this.dropdownValue = this.$store.state.articleType;
   },
   watch: {
     dropdownValue: {
       handler() {
+        this.$store.commit('updateContextListArticleType', this.dropdownValue);
         this.pageProps.pageNum = 1;
         this.list = [];
         this.onLoad();
@@ -247,6 +249,7 @@ export default {
     },
     // 跳转至文章详情页
     toArticleDetail(articleId) {
+      this.$store.commit('updateContextListArticleType', this.dropdownValue);
       // 带着articleId&shareId去请求文章详情页
       this.$router.push({
         name: 'articleDetail',
@@ -259,6 +262,7 @@ export default {
     },
     // 转载公众号
     reprintArticle(item) {
+      this.$store.commit('updateContextListArticleType', this.dropdownValue);
       this.$router.push('/reprintArticle');
     }
   }

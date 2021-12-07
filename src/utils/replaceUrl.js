@@ -37,7 +37,9 @@ export function getUrl() {
       getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
       saveWxUserMsg:'/fzk/mk/article/addReadRecord',
       queryProductList:'/api/queryProductList',
-      sendAppCode:'/fzk/mk/iuap/userInfo'
+      sendAppCode:'/fzk/mk/iuap/userInfo',
+      getWmProduct:'/wm/se/weimob/queryProduct',
+      getDistributeUrl:'/wm/se/weimob/distributeUrl'
     }
   };
 

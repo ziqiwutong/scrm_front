@@ -58,7 +58,8 @@ export default {
         articleAuthor: '',
         articleAccountName: '',
         articlePower: '',
-        coverImg:''
+        coverImg:'',
+        materialType:'1'
       }
       if (response.code == 200) {// 表示已经拿到数据了
         repArticleDetail.articleContext = result.html;

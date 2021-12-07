@@ -97,15 +97,22 @@ export default {
       // 滚动前，滚动条距文档顶部的距离
       oldScrollTop: 0,
       stompClient: '',
-      ws_timer: ''
+      ws_timer: '',
+      distributeUrl: '',
+      productCount: 0
     }
   },
   created() {
     this.judgeEnv();
     this.articleId = this.$route.query.articleid;
     this.shareId = this.$route.query.shareid;
-    this.showCard = this.$route.query.ifshowshareman;
+    if (this.$route.query.ifshowshareman === 'false' || this.$route.query.ifshowshareman === false){
+      this.showCard = false;
+    }else{
+      this.showCard = true;
+    }
     this.getArticle();
+    this.getDistributeUrl();
   },
   mounted() {
     if (this.showCard == false) {
@@ -126,6 +133,9 @@ export default {
         }
       }, 5000);
     }
+    setTimeout(() => {
+      this.addUrlToProduct();
+    }, 500);
   },
   destroyed() {
     let user = navigator.userAgent.toLowerCase();
@@ -407,7 +417,28 @@ export default {
         // 滚动条向下滚动了
         this.showCard = false;
       }
-    }
+    },
+    // 获取分销链接
+    async getDistributeUrl() {
+      let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
+      let getData = {
+        id: 2785775511
+      }
+      const result = (await this.$http.get(url, {params: getData})).data.data;
+      if (result.length > 0) {
+        this.distributeUrl = result;
+      }
+    },
+    // 为产品绑定分销链接
+    addUrlToProduct() {
+      let productUrl = document.querySelectorAll('.productDiv');
+      for (let index = this.productCount; index < productUrl.length; index++) {
+        productUrl[index].addEventListener('click', () => {
+          location.href = this.distributeUrl;
+        });
+      }
+      this.productCount = productUrl.length;
+    },
   }
 }
 </script>

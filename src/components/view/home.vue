@@ -113,10 +113,10 @@ export default {
     // alert(this.$route.query.code);
     this.sendCode();
     // 为了测试，这里暂时写的是6，其实应该是从user里面获取
-    // let userID = "6";
-    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-    //   this.getToken(userID);
-    // }
+    let userID = "6";
+    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+      this.getToken(userID);
+    }
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -160,7 +160,7 @@ export default {
       }
       this.$store.commit('updateUserMessage', userMessage);
       console.log(this.userMessage);
-      this.getToken(userMessage.userId);
+      // this.getToken(userMessage.userId);
     }
   }
 }
