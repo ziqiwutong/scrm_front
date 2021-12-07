@@ -16,7 +16,7 @@
       v-if="cusDetail.customerIcon"
     />
     <div v-if="!cusDetail.customerIcon" class="list-img-none">
-      {{ cusDetail.customerName[0] }}
+      <!-- {{ cusDetail.customerName[0] }} -->
     </div>
     <van-row class="cuscont">
       <!-- 共有-客户姓名 -->
@@ -411,11 +411,7 @@
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
-            <van-uploader
-              multiple
-              v-model="uploader"
-              :max-count="1"
-            />
+            <van-uploader multiple v-model="uploader" :max-count="1" />
           </template>
         </van-field>
         <!-- 客户信息-姓名 -->
@@ -1088,11 +1084,39 @@ export default {
   },
   created() {
     let cuslist = this.$route.query.cuslist;
-    this.getCusDetail(cuslist);
-    this.getCusRelation();
-    this.getTelAdress();
+    this.cusDetail.customerName = "某某某"
+    this.getCusDetailByID(cuslist.id);
   },
   methods: {
+    // 根据id查询客户信息
+    async getCusDetailByID(id) {
+      let url = "/api/se/customer/queryById";
+      const res = await this.$http.get(url, {
+        params: {
+          id: id,
+        },
+      });
+      if (res.data.code == 200) {
+        this.cusDetail = res.data.data;
+        for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
+          if (i != this.cusDetail.customerLabels.length - 1) {
+            this.labelCusList +=
+              this.cusDetail.customerLabels[i].labelType +
+              ":" +
+              this.cusDetail.customerLabels[i].labelName +
+              "/ ";
+          } else
+            this.labelCusList +=
+              this.cusDetail.customerLabels[i].labelType +
+              ":" +
+              this.cusDetail.customerLabels[i].labelName;
+        this.getCusRelation();
+        this.getTelAdress();
+      } else {
+        Toast("加载失败");
+      }
+    },
+
     // 号码归属地查询
     async getTelAdress() {
       if (this.cusDetail.telephone != null) {
@@ -1607,7 +1631,7 @@ export default {
       }
       this.cusDetail = removeEmptyField(this.cusDetail);
       // 传输
-       url = "/api/se/customer/update";
+      url = "/api/se/customer/update";
       let postData = this.cusDetail;
       console.log(postData);
       const result = (await this.$http.post(url, postData)).data;
@@ -1911,7 +1935,7 @@ export default {
 //背景
 .back {
   background-color: #f8f8f8;
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
 }
@@ -1933,7 +1957,7 @@ export default {
   top: 70px;
   left: 5%;
   width: 80%;
-  height: 280px;
+  height: 275px;
   padding: 5%;
   z-index: 2;
   overflow: auto;

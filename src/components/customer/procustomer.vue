@@ -14,10 +14,11 @@
         <!-- 功能栏 -->
         <van-row>
           <!-- 筛选功能 -->
-          <van-col span="8">
+          <van-col span="6">
             <van-dropdown-menu
               active-color="#1989fa"
               :close-on-click-outside="false"
+              v-model="tScrShow"
             >
               <van-dropdown-item title="筛选" ref="item">
                 <van-row v-for="item in scrList" :key="item.name">
@@ -86,7 +87,7 @@
             />
           </form>
           <!-- 搜索图标 -->
-          <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
+          <van-col class="nav-search-btn" span="1" offset="7" v-if="isSearch"
             ><van-icon name="search" size="30" @click="toSearch"
           /></van-col>
           <!-- 分割线 -->
@@ -535,7 +536,7 @@ export default {
       // 点击加号-扫描名片-弹出层
       pictureShow: false,
       // 扫描名片-传入文件
-
+      tScrShow:false,
       // 新建客户-弹出层
       showform: false,
       // 新建客户-时间-弹窗
@@ -1118,7 +1119,7 @@ export default {
       this.pageProps.pageNum = 1;
       this.finished = false;
       this.onLoad();
-      this.scrShow = false;
+      this.$refs.item.toggle();
     },
 
     // 新建客户-弹窗
@@ -1593,8 +1594,12 @@ export default {
   color: #1e1c27;
   font-size: 13px;
 }
+/deep/.van-dropdown-menu{
+
+}
 /deep/.van-dropdown-menu__bar {
   box-shadow: unset !important;
+  
 }
 //搜索框
 .nav-search-btn {
