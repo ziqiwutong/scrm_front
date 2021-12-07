@@ -7,7 +7,7 @@
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
                          to="/customer"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                         url="/potential"/>
+                         to="/potential"/>
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
@@ -30,7 +30,7 @@
         </van-grid>
         <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
-                         url="/communicationList"/>
+                         to="/communicationList"/>
           <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
       </div>
@@ -111,7 +111,7 @@ export default {
   },
   created: function () {
     // alert(this.$route.query.code);
-    this.sendCode();
+    // this.sendCode();
     // 这里只是为了测试，上线后会放在sendcode函数的末尾执行
     this.getToken('6');
     // 修改tabbar被选中状态

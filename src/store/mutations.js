@@ -13,28 +13,30 @@ export default {
   },
   // 更新转载的公众号内容
   updateEditReqArticle(state, articleMessage) {
-    state.repArticleDetail.articleContext = articleMessage.articleContext;
-    state.repArticleDetail.articleTitle = articleMessage.articleTitle;
-    state.repArticleDetail.articleAuthor = articleMessage.articleAuthor;
-    state.repArticleDetail.articleAccountName = articleMessage.articleAccountName;
-    state.repArticleDetail.articlePower = articleMessage.articlePower;
-    state.repArticleDetail.coverImg = articleMessage.coverImg;
-    state.repArticleDetail.productIds = articleMessage.productIds;
+    state.repArticleDetail = articleMessage;
   },
-  // 更新转载的公众号内容
+  // 更新转载的公众号内容-用户保存了页面
   updateReqArticleContext(state, articleContext) {
     state.repArticleDetail.articleContext = articleContext;
+  },
+  // 更新转载的公众号内容-素材类别
+  updateReqArticleMaterialType(state, materialType) {
+    state.repArticleDetail.materialType = materialType;
   },
   // 更新文章关联的产品
   updateArticleProductList(state, productIds) {
     state.repArticleDetail.productIds = productIds;
   },
-  // 更新微信给授权用户提供的code
+  // 更新微信给授权用户提供的code的状态
   updateArticleOAuth(state, status) {
     state.hasOAuth = status;
   },
   // 更新微信用户转客户时存储的信息
   updateWxUserMsg(state, wxUser) {
     state.wxUser = wxUser;
-  }
+  },
+  // 更新转载的公众号内容-用户保存了页面
+  updateContextListArticleType(state, articleType) {
+    state.articleType = articleType;
+  },
 }
