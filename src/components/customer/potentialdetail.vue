@@ -91,9 +91,10 @@
     </div>
     <div>
       <van-button class="button-hang" @click="toAddCus">转化为客户</van-button>
-      <van-button class="button-hang" @click="changeCusDetail"
+      <van-button class="button-hang1" @click="changeCusDetail"
         >修改信息</van-button
       >
+      <div class="buttom"></div>
     </div>
     <!-- 新建潜在客户 -->
     <van-popup
@@ -1136,9 +1137,36 @@ export default {
   },
   created() {
     let cuslist = this.$route.query.cuslist;
-    this.getCusDetail(cuslist);
+    this.getCusDetailByID(cuslist.id);
   },
   methods: {
+        // 根据id查询客户信息
+    async getCusDetailByID(id) {
+      let url = "/api/se/customer/queryById";
+      const res = await this.$http.get(url, {
+        params: {
+          id: id,
+        },
+      });
+      if (res.data.code == 200) {
+        this.cusDetail = res.data.data;
+        for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
+          if (i != this.cusDetail.customerLabels.length - 1) {
+            this.labelCusList +=
+              this.cusDetail.customerLabels[i].labelType +
+              ":" +
+              this.cusDetail.customerLabels[i].labelName +
+              "/ ";
+          } else
+            this.labelCusList +=
+              this.cusDetail.customerLabels[i].labelType +
+              ":" +
+              this.cusDetail.customerLabels[i].labelName;
+      } else {
+        Toast("加载失败");
+      }
+    },
+
     // 更多操作-编辑客户-编辑高亮显示
     changeCus() {
       if (this.cusDetail.customerType == 1) {
@@ -2848,8 +2876,18 @@ export default {
 .button-hang {
   height: 50px;
   width: 120px;
-  margin-right: 20px;
-  margin-left: 10%;
+  margin-left: 3%;
+  font-size: 15px;
+  color: #ffffff;
+  background-color: #6487e0;
+}
+.buttom {
+  height: 20px;
+}
+.button-hang1 {
+  height: 50px;
+  width: 120px;
+  margin-left: 28%;
   font-size: 15px;
   color: #ffffff;
   background-color: #6487e0;
