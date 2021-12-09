@@ -51,6 +51,7 @@
         placeholder="线索录入人"
         :rules="[{ required: true, message: '请填写线索录入人' }]"
       />
+      <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/>
       <van-field
         v-model="clueDiscover"
         type="clueDiscover"
@@ -78,9 +79,12 @@ import { Toast } from 'vant';
 
 <script>
 import {Toast} from "vant";
-
+import AddForm from "../../component/AddForm";
 export default {
   name: "addClue",
+  components:{
+    AddForm,
+  },
   data() {
     return {
       clueName: '',
@@ -99,6 +103,7 @@ export default {
       maxDate: new Date(2025, 10, 1),
       //时间-现在时间
       currentDate: new Date(),
+      testVal: false,
     };
   },
   methods: {
@@ -125,6 +130,9 @@ export default {
     },
     toClueList(){
       this.$router.push('/clueList');
+    },
+    onTestCancel(){
+      this.testVal=false
     },
     // 时间-时间录入处理
     dateConfirm(date) {

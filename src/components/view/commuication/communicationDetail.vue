@@ -275,10 +275,10 @@ export default {
     },
     async test(){
       let url = "/api/se/customer/query";
-      let postData = {
-        customerId:this.customerId
-      }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      // let postData = {
+      //   customerId:this.customerId
+      // }
+      const res = await this.$http.get(url);
     },
     async onLoad() {
       let url = "/api/se/communication/queryCommunicationLog";
