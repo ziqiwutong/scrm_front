@@ -28,6 +28,7 @@ export default {
   width: 100vw;
   top: 0px;
   background-color: white;
+  z-index: 99;
 }
 
 .header span {
