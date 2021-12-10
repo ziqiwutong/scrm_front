@@ -176,7 +176,7 @@ export default {
       let postData = {
         clueId:this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params:postData})).data.data;
       // console.log(result[0])
       this.clueName=result[0].clueName;
       this.value=result[0].clueDate;

@@ -26,7 +26,10 @@
         label="更新录入人"
         placeholder="更新录入人"
         :rules="[{ required: true, message: '请填写更新录入人' }]"
+        readonly
+        @click="testVal = true"
       />
+        <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/>
         <!--提交-->
         <div class="submit">
           <van-button round size="normal" type="info" @click="Submit">提交更新</van-button>
@@ -43,12 +46,19 @@
 <script>
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
+import AddForm from "../../component/AddForm";
+import AbbList from "../../component/AbbList";
 export default {
   name: "editClueStatus",
+  components:{
+    AddForm,
+    AbbList,
+  },
   data() {
     return {
       clueNotes: '',
       clueEditor:'',
+      testVal: false,
     };
   },
   created () {
@@ -62,7 +72,7 @@ export default {
       let postData = {
         id:this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params:postData})).data.data;
       console.log(result);
       this.clueNotes=result.clueNotes;
       this.clueEditor=result.clueEditor;
@@ -106,7 +116,13 @@ export default {
         }
       });
     },
-
+    onTestCancel(){
+      this.testVal=false;
+    },
+    testConsole(val){
+      console.log(val);
+      this.clueEditor=val.name;
+    },
   },
 }
 </script>

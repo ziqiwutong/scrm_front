@@ -129,7 +129,7 @@ export default {
     async onLoad() {
       let url = "/api/se/clue/queryClueStatus";
       let postData = {clueId:this.$route.query.clueId};
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params:postData})).data.data
       this.list = [];
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);

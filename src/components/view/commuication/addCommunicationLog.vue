@@ -162,11 +162,11 @@ export default {
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
       if(result.code === 200) {
-        Toast('订单修改成功');
+        Toast('新建沟通记录成功');
         this.onClickLeft(this.id);
       }
       else
-        Toast('订单修改失败,错误码' + result.code);
+        Toast('新建沟通记录失败,错误码' + result.code);
     },
 
     onClickLeft() {

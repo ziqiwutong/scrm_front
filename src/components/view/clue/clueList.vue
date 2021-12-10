@@ -175,7 +175,7 @@ export  default  {
         currentPage: this.pageProps.currentPage++,
         active:this.active
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params:postData})).data.data
       if (result.length != postData.pageCount) {
         // 已加载全部数据
         this.finished = true;

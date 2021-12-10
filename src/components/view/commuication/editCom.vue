@@ -165,7 +165,7 @@ export default {
         customerId:this.customerId,
         communicationWay:this.communicationWay,
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params:postData})).data.data;
       console.log(result);
       // console.log(result);
       this.customer=result[0].customerName;
