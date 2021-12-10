@@ -536,7 +536,7 @@ export default {
       // 点击加号-扫描名片-弹出层
       pictureShow: false,
       // 扫描名片-传入文件
-      tScrShow:false,
+      tScrShow: false,
       // 新建客户-弹出层
       showform: false,
       // 新建客户-时间-弹窗
@@ -921,6 +921,8 @@ export default {
     },
     // 客户列表-列表加载
     async onLoad() {
+      let type = this.$route.query.type;
+      this.type = type;
       if (this.refreshing) {
         this.cusList = [];
         this.refreshing = false;
@@ -1582,6 +1584,19 @@ export default {
     this.type = type;
     this.onLoad();
   },
+  watch: {
+    $route: {
+      handler(val) {
+        let type = this.$route.query.type;
+        this.type = type;
+        this.onLoad();
+      },
+      // 一进页面就执行
+      immediate: true,
+      // 深度观察监听
+      deep: true,
+    },
+  },
 };
 </script>
 
@@ -1594,12 +1609,10 @@ export default {
   color: #1e1c27;
   font-size: 13px;
 }
-/deep/.van-dropdown-menu{
-
+/deep/.van-dropdown-menu {
 }
 /deep/.van-dropdown-menu__bar {
   box-shadow: unset !important;
-  
 }
 //搜索框
 .nav-search-btn {
