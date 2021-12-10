@@ -29,7 +29,19 @@
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
 
-      <AbbList :type=3 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
+      <van-popup
+        v-model="boSelectCustomerShow"
+        position="bottom"
+        :overlay="false"
+        duration="0"
+      >
+        <AbbCusList
+          :type="3"
+          v-show="boSelectCustomerShow"
+          @returnClick="boSelectCustomerShow = false"
+          @onCh="getCustomerInfo"
+        />
+      </van-popup>
 
 
       <!-- 点击选择负责人 -->
@@ -44,8 +56,21 @@
         @click="boSelectResponsibleShow = true"
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
-      <AbbList :type=1 v-show="boSelectResponsibleShow" @returnClick="boSelectResponsibleShow = false"
-               @onCh="getResponsibleInfo"/>
+
+      <van-popup
+        v-model="boSelectResponsibleShow"
+        position="bottom"
+        :style="{ height: '100%' }"
+        :overlay="false"
+        duration="0"
+      >
+        <AbbList
+          :type="1"
+          v-show="boSelectResponsibleShow"
+          @returnClick="boSelectResponsibleShow = false"
+          @onCh="getResponsibleInfo"
+        />
+      </van-popup>
 
 
       <!-- 编辑商机跟进流程 -->
@@ -185,12 +210,14 @@ import {Toast} from "vant";
 import qs from 'qs';
 import {getUrl} from "../../../utils/replaceUrl";
 import AbbList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbCusList";
 
 
 export default {
   name: "addBizOpp",
   components: {
     AbbList,
+    AbbCusList,
   },
   data() {
     return {

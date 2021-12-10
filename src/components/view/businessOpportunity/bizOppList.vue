@@ -278,6 +278,7 @@ export default {
 
 <style lang="less" scoped>
 .header {
+  height: 12vw;
   position: fixed;
   top: 0;
   left: 0;
@@ -288,7 +289,8 @@ export default {
 
 // 商机下拉选择框样式
 /deep/ .van-dropdown-menu__bar {
-
+  width: fit-content;
+  margin-left: 3vw;
   box-shadow: 0 0 0 rgb(0, 0, 0);
 }
 
@@ -324,7 +326,7 @@ export default {
 */
 .divider {
   position: relative;
-  top: 11vw;
+  top: 12vw;
   background: #f8f8f8;
   height: 2vw;
 }
