@@ -138,6 +138,7 @@
       />
     </van-popup>
 
+
   </div>
 
 
@@ -149,16 +150,16 @@ import { Toast } from 'vant';
 import { areaList } from "@vant/area-data";
 import {getUrl} from "../../../utils/replaceUrl";
 import AbbCusList from "../../component/AbbList";
-import AddForm from "../../component/AddForm";
+// import AddForm from "../../component/AddForm";
 export default {
   name: "orderCreate",
   components: {
     AbbCusList,
-    AddForm
   },
 
   data() {
     return {
+      // showform:false,
       userShow:false,
       testVal:false,
       customerInfo: {
@@ -201,6 +202,7 @@ export default {
   methods: {
 
 
+
     onConfirm(value) {
       this. orderType = value;
       this.showPicker = false;
@@ -238,8 +240,7 @@ export default {
       },
       chooseBuyer()
       {
-        // console.log(1)
-        this.testVal = true
+        this.userShow = true
       },
 
       async onSubmit()

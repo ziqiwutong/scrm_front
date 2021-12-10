@@ -66,7 +66,7 @@
 
                   </van-col>
                   <van-col class="productName" span="8" offset="2">{{item.productName}}</van-col>
-                  <van-col class="price" span="8" offset="0">售价:<span class="pricecolor">￥{{item.productPrice}}</span></van-col>
+                  <van-col class="price" span="8" offset="0"><div class="van-ellipsis">售价:<span class="pricecolor">￥{{item.productPrice}}</span></div></van-col>
                   <van-col class="stock" span="8" offset="10">库存:{{item.productInventory}}件</van-col>
                   <van-col class="View" span="10" offset="2">{{item.productView}}人浏览</van-col>
 <!--                  <van-col  class="button" span="6" offset="4">-->
@@ -447,6 +447,7 @@ export default {
       if(result.code === 200) {
         Toast('产品删除成功');
         this.list=[];
+        this.pageProps.pageNum=1;
         this.onLoad();
       }
       else
@@ -655,9 +656,9 @@ h3{
   padding-top: 4px;
   //color: #4876F1;
 }
-/deep/ .van-ellipsis{
-  color:rgb(72, 118, 241);
-}
+///deep/ .van-ellipsis{
+//  color:rgb(72, 118, 241);
+//}
 /deep/ .van-ellipsis-active{
   color:#030303;
 }

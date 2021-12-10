@@ -201,7 +201,7 @@ export default {
       let url = "/api/se/product/productDetail"
       let postData = {
         productID: this.$route.query.productID,
-        shareID: self.shareId
+        // shareID: self.shareId
       }
       // console.log(this.shareId)
       // const result = (await self.$http.get(url, {params: postData})).data.data;
