@@ -1,10 +1,8 @@
 <template>
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
-      <!-- <van-button @click="test">测试1</van-button> -->
-      <!-- <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/> -->
+      <van-button @click="test">测试1</van-button>
       <!-- <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
-
       <!-- 导航栏 -->
       <div class="nav-fix">
         <van-row>
@@ -267,49 +265,13 @@
       :overlay="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
+      <AbbList
+        :type="1"
+        v-show="followShow"
+        @returnClick="onFollowCancel"
+        @onCh="onFollowAdd"
       />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
-            <div v-if="!item.userIcon" class="list-img-none">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-             
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
-        </van-row>
-      </van-cell>
     </van-popup>
-
-    <!-- 创建人弹出框 -->
 
     <!-- 筛选-地区弹窗 -->
     <van-popup v-model="showScrArea" position="bottom">
@@ -514,385 +476,27 @@
       <div class="browse-shady" @click="latCancel"></div>
       <div class="browse-shady-other" @click="latCancel"></div>
     </div>
-    <!-- 新建客户 -->
+    <!-- 新建客户弹窗 -->
     <van-popup
       v-model="showform"
       position="bottom"
       :overlay="false"
       duration="0"
     >
-      <!-- 新建客户-导航栏 -->
-      <van-nav-bar
-        title="新建客户"
-        left-text="返回"
-        right-text="保存"
-        @click-left="onClickAddRe"
-        @click-right="onClickAddSave"
-      />
-      <!-- 新建客户-表单 -->
-      <van-form>
-        <van-row class="add-title">客户类型</van-row>
-        <!-- 客户类型 -->
-        <van-field
-          v-model="addList.sex"
-          name="validator"
-          label="客户类型"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[8].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[8], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <van-row class="add-title">客户信息</van-row>
-        <!-- 客户信息-头像 -->
-        <van-field name="uploader" label="头像">
-          <template #input>
-            <van-uploader multiple v-model="uploader" :max-count="1" />
-          </template>
-        </van-field>
-        <!-- 客户信息-姓名 -->
-        <van-field
-          v-model="addList.customerName"
-          name="validator"
-          label="姓名*"
-          placeholder="请输入"
-          :rules="[{ required: true, message: '请填写用户名' }]"
-        />
-        <!-- 客户信息-手机号 -->
-        <van-field
-          v-model="addList.telephone"
-          name="validator"
-          label="手机"
-          placeholder="请输入"
-        />
-        <!-- 客户信息-地区选择 -->
-        <van-field
-          readonly
-          clickable
-          name="area"
-          :value="addList.city"
-          label="地区选择"
-          placeholder="点击选择省市区"
-          @click="showArea = true"
-        />
-        <!-- 客户信息-地址 -->
-        <van-field
-          v-model="addList.address"
-          name="validator"
-          label="地址"
-          placeholder="请输入"
-        />
-        <van-row class="add-title">联系信息</van-row>
-        <!-- 个人信息-微信昵称 -->
-        <van-field
-          v-model="addList.wxName"
-          name="validator"
-          label="微信昵称"
-          placeholder="请输入"
-        />
-        <!-- 个人信息-微信号 -->
-        <van-field
-          v-model="addList.wx"
-          name="validator"
-          label="微信号"
-          placeholder="请输入"
-        />
-        <!-- 个人信息-性别 -->
-        <van-field
-          v-model="addList.sex"
-          name="validator"
-          label="性别"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[0].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[0], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-年龄范围 -->
-        <van-field
-          v-model="addList.ageRange"
-          name="validator"
-          label="年龄范围"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[1].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[1], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-来源 -->
-        <van-field
-          v-model="addList.origin"
-          name="validator"
-          label="来源"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[3].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[3], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-职位 -->
-        <van-field
-          v-model="addList.position"
-          name="validator"
-          label="职位"
-          placeholder="请输入"
-        />
-        <!-- 联系信息-生日信息 -->
-        <van-field
-          v-model="addList.birthday"
-          readonly
-          name="validator"
-          label="生日"
-          placeholder="选择时间"
-          @click="toDate()"
-        />
-        <!-- 联系信息-个人喜好 -->
-        <van-field
-          v-model="addList.hobby"
-          name="validator"
-          label="个人喜好"
-          placeholder="请输入"
-        />
-        <van-row class="add-title">公司信息</van-row>
-        <!-- 公司信息-公司 -->
-        <van-field
-          v-model="addList.belongCompany"
-          name="validator"
-          label="公司"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-法定代表人 -->
-        <van-field
-          v-model="addList.legalPerson"
-          name="validator"
-          label="法定代表人"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-客户等级 -->
-        <van-field
-          v-model="addList.customerLevel"
-          name="validator"
-          label="客户等级"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[4].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[4], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-企业类型 -->
-        <van-field
-          v-model="addList.companyType"
-          name="validator"
-          label="企业类型"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[5].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[5], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-行业分类 -->
-        <van-field
-          v-model="addList.industry"
-          name="validator"
-          label="行业分类"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[6].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
-                @click="cutTabClickOnly(addLabelList[6], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-注册资本 -->
-        <van-field
-          v-model="addList.registeredCapital"
-          name="validator"
-          label="注册资本"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[7].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[7], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-员工数量 -->
-        <van-field
-          v-model="addList.companySize"
-          name="validator"
-          label="员工数量"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[9].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[9], index)"
-                >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-成立日期 -->
-        <van-field
-          v-model="addList.establishDate"
-          readonly
-          name="validator"
-          label="成立日期"
-          placeholder="选择时间"
-          @click="toDate1()"
-        />
-
-        <!-- 公司信息-经营状态 -->
-        <van-field
-          v-model="addList.operatingStatus"
-          name="validator"
-          label="经营状态"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-经营范围 -->
-        <van-field
-          v-model="addList.businessRange"
-          name="validator"
-          label="经营范围"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-备注 -->
-        <van-field
-          v-model="addList.addNote"
-          name="validator"
-          label="备注"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-客户状态 -->
-        <van-field
-          v-model="addList.customerStatus"
-          readonly
-          clickable
-          name="area"
-          label="客户状态"
-          placeholder="点击选择客户状态"
-          @click="addCusStaShow = true"
-        >
-        </van-field>
-        <!-- 公司信息-跟进人 -->
-        <van-field
-          v-model="addList.followStaffName"
-          name="validator"
-          label="跟进人"
-          placeholder="请输入"
-          readonly
-          clickable
-          v-if="addList.customerStatus == this.columns[0]"
-          @click="toAddFollow"
-        />
-        <!-- 提交按钮 -->
-        <div style="margin: 16px">
-          <van-button
-            round
-            block
-            type="info"
-            native-type="submit"
-            @click="onClickSumbmit"
-            >提交</van-button
-          >
-        </div>
-      </van-form>
-    </van-popup>
-    <!-- 新建客户-时间弹窗 -->
-    <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-      ><van-datetime-picker
-        v-model="dateVal"
-        type="date"
-        title="选择年月日"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @cancel="dateCancel"
-        @confirm="dateConfirm"
-    /></van-popup>
-    <!-- 新建客户-地区弹窗 -->
-    <van-popup v-model="showArea" position="bottom">
-      <van-area
-        :area-list="areaList"
-        @confirm="onConfirm"
-        @cancel="showArea = false"
-      />
+      <AddForm :type="1" v-show="showform" @returnClick="addCancel" />
     </van-popup>
 
-    <!-- 新建客户-客户状态选择弹出框 -->
     <van-popup
-      v-model="addCusStaShow"
+      v-model="testVal"
       position="bottom"
-      :style="{ height: '30%' }"
+      :overlay="false"
+      duration="0"
     >
-      <van-picker
-        title="客户状态"
-        show-toolbar
-        :columns="columns"
-        @confirm="onCusStaConfirm"
-        @cancel="onCusStaCancel"
+      <AbbCusList
+        :type="2"
+        v-show="testVal"
+        @returnClick="onTestCancel"
+        @onCh="testConsole"
       />
     </van-popup>
     <TabBar />
@@ -904,14 +508,17 @@ import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
 import TabBar from "../component/TabBar";
-import AbbList from "../component/AbbList";
+// import AbbList from "../component/AbbList";
 import AddForm from "../component/AddForm";
+import AbbCusList from "../component/AbbCusList.vue";
+import AbbList from "../component/AbbList.vue";
 export default {
   name: "customer",
   components: {
     TabBar,
-    AbbList,
     AddForm,
+    AbbCusList,
+    AbbList,
   },
   data() {
     return {
@@ -1453,6 +1060,29 @@ export default {
     //   const res = await this.$http.get(url);
     //   console.log(res.data.data)
     // },
+    // 组件关闭后的处理函数
+    onFollowCancel() {
+      this.followShow = false;
+    },
+    // 点击相应用户后的点击处理事件，返回val，包括用户的id和name
+    onFollowAdd(val) {
+      if(this.userType == 1){
+      this.ifChoose = false
+      this.followChsVal.val = val.name;
+      this.followChsVal.id = val.id;
+      }else if(this.userType == 2){
+        this.ifoppoChoose = false
+        this.oppoChsVal.val = val.name
+        this.oppoChsVal.id = val.id
+      }else if(this.userType == 3){
+        this.ifbulidChoose = false
+        this.bulidChsVal.val = val.name
+        this.bulidChsVal.id  = val.id
+      }
+    },
+    addCancel() {
+      this.showform = false;
+    },
     onRefresh() {
       // 清空列表数据
       this.finished = false;
@@ -1740,23 +1370,17 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
-      this.userType = 0;
-      this.followList = [];
-      this.getUserList();
+      this.userType = 1
     },
-    // 筛选-跟进人列表-弹窗
+    // 筛选-商机列表-弹窗
     toOppo() {
       this.followShow = true;
-      this.userType = 1;
-      this.followList = [];
-      this.getUserList();
+      this.userType = 2
     },
-    // 筛选-跟进人列表-弹窗
+    // 筛选-创建人列表-弹窗
     toBuild() {
       this.followShow = true;
-      this.userType = 2;
-      this.followList = [];
-      this.getUserList();
+      this.userType = 3
     },
     toAddFollow() {
       this.followShow = true;
@@ -2661,6 +2285,7 @@ export default {
       }
     },
   },
+
   beforeRouteLeave(to, from, next) {
     from.meta.keepAlive = true;
     this.scollTop =
@@ -2740,6 +2365,7 @@ export default {
   // margin-top: 25px;
   // overflow: scroll;
   // height: 150px;
+  // overflow-y: auto;
 }
 .list-highcollapse {
   height: 120px;

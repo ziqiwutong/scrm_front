@@ -16,7 +16,7 @@
       v-if="cusDetail.customerIcon"
     />
     <div v-if="!cusDetail.customerIcon" class="list-img-none">
-      <!-- {{ cusDetail.customerName[0] }} -->
+      {{ cusDetail.customerName[0] }}
     </div>
     <van-row class="cuscont">
       <!-- 共有-客户姓名 -->
@@ -798,7 +798,6 @@
         @cancel="onCusStaCancel"
       />
     </van-popup>
-    <!--筛选-跟进人弹出框 -->
     <van-popup
       v-model="followShow"
       position="bottom"
@@ -806,45 +805,12 @@
       :overlay="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
+      <AbbList
+        :type="1"
+        v-show="followShow"
+        @returnClick="onFollowCancel"
+        @onCh="onFollowAdd"
       />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
-            <div v-if="!item.userIcon" class="list-img-none1">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
-        </van-row>
-      </van-cell>
     </van-popup>
   </div>
 </template>
@@ -853,7 +819,11 @@
 import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
+import AbbList from "../component/AbbList.vue";
 export default {
+  components: {
+    AbbList,
+  },
   data() {
     return {
       telAdress: "",
@@ -1084,8 +1054,9 @@ export default {
   },
   created() {
     let cuslist = this.$route.query.cuslist;
-    this.cusDetail.customerName = "某某某"
+    this.cusDetail.customerName = cuslist.customerName;
     this.getCusDetailByID(cuslist.id);
+    console.log(this.cusDetail);
   },
   methods: {
     // 根据id查询客户信息
@@ -1325,7 +1296,7 @@ export default {
     },
     // 更多操作-新建商机
     toBusOpprtunity() {
-      Toast("跳转商机界面");
+      // Toast("跳转商机界面");
       this.$router.push({
         name: "addBizOpp",
         query: {
@@ -1336,7 +1307,7 @@ export default {
     },
     // 更多操作-新建订单
     toOrder() {
-      Toast("跳转订单界面");
+      // Toast("跳转订单界面");
       this.$router.push({
         path: "/orderCreate",
         query: {
@@ -1347,10 +1318,16 @@ export default {
     },
     // 更多操作-改跟进人
     changeFollow() {
-      Toast("改变跟进人");
-      this.followList = [];
-      this.getUserList();
       this.followShow = true;
+    },
+    onFollowCancel() {
+      this.followShow = false;
+    },
+    onFollowAdd(val) {
+      this.cusDetail.followStaffName = val.name;
+      this.cusDetail.followStaffId = val.id;
+      this.cusDetail.customerStatus = "跟进中";
+      this.onClickSumbmit();
     },
     // 更多操作-改协助人
     changeHelper() {
@@ -1661,31 +1638,6 @@ export default {
           let url = "/api/file/pic/base64StrToPic";
           let picture;
           this.dealImage(str, 1000, this.userImg);
-          // if (type.length == 3) {
-          //   picture = str.slice(22);
-          // } else if (type.length == 4) {
-          //   picture = str.slice(23);
-          // } else {
-          //   Toast("图片格式错误");
-          //   this.uploader = [];
-          // }
-          // console.log(picture);
-          // if (type.length == 3 || type.length == 4) {
-          //   let params = new FormData();
-          //   params.append("picBase64Str", picture);
-          //   params.append("picFormat", type);
-          //   params.append("picType", "customerIcon");
-          //   await this.$http
-          //     .post(url, params, {
-          //       headers: {
-          //         "Content-Type": "application/x-www-form-urlencoded",
-          //       },
-          //     })
-          //     .then((res) => {
-          //       console.log(res.data.data);
-          //       this.cusDetail.customerIcon = res.data.data;
-          //     });
-          // }
         } else {
           if (this.cusDetail.customerType == "个人客户") {
             this.cusDetail.customerType = 0;
