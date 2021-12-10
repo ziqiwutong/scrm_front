@@ -60,7 +60,7 @@
           name="产品库存"
           label="产品库存"
           placeholder="产品库存"
-          :rules="[{ required: false, message: '请填写产品库存' }]"
+          :rules="[{ required: true, message: '请填写产品库存' }]"
         />
 
         <van-field
@@ -152,6 +152,7 @@ export default {
   data() {
     return {
       //客户表弹出框
+      productID:'',
       followShow:'',
       productName: '',
       productPrice: '',
@@ -189,21 +190,26 @@ export default {
         brandIntro:this.brandIntro
       }
       const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
-
+          this.productID=result.productID;
       if(result.code === 200) {
         Toast('产品创建成功');
+      this.createArticle();
         this.$router.push('productList');
       }
       else
         Toast('产品创建失败,错误码' + result.code);
 
+
+    },
+    createArticle(){
+
     },
     async afterRead(file) {
       let url="/fzk/file/pic/base64StrToPic"
       let postData = {
-        picBase64Str: file.content.substring(22),
-        picFormat:'png',
+        picBase64Str: file.content,
         picType: 'productImage',
+        isCompress:'false'
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       this.productPic1= result;

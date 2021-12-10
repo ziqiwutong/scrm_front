@@ -25,8 +25,8 @@
 <!--        </div>-->
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
 <!--        以下为列表栏-->
@@ -48,10 +48,10 @@
 <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
 <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productBuyAmount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.orderBuyer}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productName}}等</div></van-col>
               </van-row>
               <div class="line">
               <div class="line1"></div>
@@ -72,8 +72,8 @@
       <van-tab  title="待付款">
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -95,10 +95,10 @@
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productBuyAmount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.orderBuyer}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productName}}等</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
@@ -118,8 +118,8 @@
       <van-tab title="交易成功">
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -141,10 +141,10 @@
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productBuyAmount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.orderBuyer}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productName}}等</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
@@ -165,8 +165,8 @@
       <van-tab  title="待收货" >
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -188,10 +188,10 @@
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productBuyAmount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.orderBuyer}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productName}}等</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
@@ -215,8 +215,8 @@
         <!--        </div>-->
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -238,10 +238,10 @@
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productBuyAmount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.orderBuyer}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productName}}等</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
@@ -262,8 +262,8 @@
       <van-tab  title="退款成功" >
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -285,10 +285,10 @@
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productBuyAmount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.orderBuyer}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productName}}等</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
@@ -455,7 +455,12 @@ export default {
     },
     ifShowDialog()
     {
-      this.$router.push('orderCreate')
+      this.$router.push({
+        path: '/orderCreate',
+        query: {
+          type:1
+        }
+      });
     }
   },
 }
@@ -489,7 +494,7 @@ export default {
    width:33%;
 }
 /deep/ .content1 {
-  height:25px;
+  //height:25px;
   //border:1px solid gray;
   background-color: white;
   line-height: 25px;
@@ -497,7 +502,7 @@ export default {
   margin-top: 5px;
  font-weight: bold;
   .van-col{
-    font-size: 13px;
+    font-size: 0.8rem;
     font-family: PingFangSC;
     font-weight: bold;
     color: #3E3C3C;
@@ -556,7 +561,7 @@ export default {
     //line-height: 50px;
     font-weight: 400;
     color: #3E3C3C;
-    text-overflow:ellipsis;
+    //text-overflow:ellipsis;
   }
   .order1{
     text-align: right;
@@ -566,6 +571,8 @@ export default {
   }
   .pName{
     margin-top: 7px;
+    //height: 20px;
+    //margin-top:3px;
     font-family: PingFangSC;
     font-weight: 400;
     color: #727272;

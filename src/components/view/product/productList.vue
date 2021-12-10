@@ -130,7 +130,10 @@ export default {
   data() {
     return {
       ifChoose:'',
+      //
+      shareId: '1',
 
+      //
       colorful:'#4876F1',
       active1: 0,
       priceStatus:0,
@@ -212,12 +215,16 @@ export default {
     // let dropdown = document.querySelector('/deep/.van-dropdown-menu__title');
     // dropdown.classList.add('.van-dropdown-menu__title__active');
   },
+  created(){
+    this.shareId=this.$store.state.userMessage.userId;
+  },
+
   methods: {
     //todo 分享设置、
     showShareDialog(item) {
-      let imageUrl = item.articleImage.replace('/wxResource', 'http://mmbiz.qpic.cn');
+      let imageUrl = item.productPic.replace('/wxResource', 'http://mmbiz.qpic.cn');
       this.shareMsg.title = item.productName;
-      this.shareMsg.imageUrl = item.productPic;
+      this.shareMsg.imageUrl = imageUrl;
       this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl + 'articleDetail?articleid=' + item.id + '&shareid=' + this.shareId + '&ifshowshareman=true';
       this.showShare = true;
     },
@@ -355,6 +362,17 @@ export default {
         }
       });
     },
+    // toArticleDetail(articleId) {
+    //   // 带着articleId&shareId去请求文章详情页
+    //   this.$router.push({
+    //     name: 'articleDetail',
+    //     query: {
+    //       articleid: articleId,
+    //       shareid: this.shareId,
+    //       ifshowshareman: true
+    //     }
+    //   });
+    // },
     async onSearch() {
       let url = "/api/se/product/queryProductByKey";
       let postData = {
