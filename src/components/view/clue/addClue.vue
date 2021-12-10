@@ -51,10 +51,23 @@
         placeholder="线索录入人"
         :rules="[{ required: true, message: '请填写线索录入人' }]"
         readonly
-        @click="testVal = true"
+        @click="followshow = true"
       />
-<!--      <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/>-->
-      <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/>
+
+      <van-popup
+      v-model="followShow"
+      position="bottom"
+      :style="{height:'100%'}"
+      :overlay="false"
+      duration="0"
+      >
+      <AbbList
+      :type="1"
+      v-show="followShow"
+      @returnClick="onFollowCancel"
+      @onCh="onFollowAdd"
+      />
+      </van-popup>
       <van-field
         v-model="clueDiscover"
         type="clueDiscover"
@@ -62,10 +75,7 @@
         label="线索发现人"
         placeholder="线索发现人"
         :rules="[{ required: true, message: '请填写线索线索发现人' }]"
-        readonly
-        @click="testVal1 = true"
       />
-      <AbbList :type=1 v-show="testVal1" @returnClick="onTestCancel1" @onCh="testConsole1"/>
       <van-field
         v-model="clueResponsible"
         type="clueResponsible"
@@ -73,10 +83,7 @@
         label="线索责任人"
         placeholder="线索责任人"
         :rules="[{ required: true, message: '请填写线索线索责任人' }]"
-        readonly
-        @click="testVal2 = true"
       />
-      <AbbList :type=1 v-show="testVal2" @returnClick="onTestCancel2" @onCh="testConsole2"/>
       <div style="margin: 16px;" class="submit">
         <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
@@ -115,9 +122,9 @@ export default {
       maxDate: new Date(2025, 10, 1),
       //时间-现在时间
       currentDate: new Date(),
-      testVal: false,
-      testVal1: false,
-      testVal2: false,
+      followshow: false,
+      followshow1: false,
+      followshow2: false,
     };
   },
   methods: {
@@ -145,26 +152,12 @@ export default {
     toClueList(){
       this.$router.push('/clueList');
     },
-    onTestCancel(){
-      this.testVal=false;
+    onFollowCancel(){
+      this.followshow=false;
     },
-    onTestCancel1(){
-      this.testVal1=false;
-    },
-    onTestCancel2(){
-      this.testVal2=false;
-    },
-    testConsole(val){
-      console.log(val);
-      this.clueEditor=val.name;
-    },
-    testConsole1(val){
-      console.log(val);
-      this.clueDiscover=val.name;
-    },
-    testConsole2(val){
-      console.log(val);
-      this.clueResponsible=val.name;
+    onFollowAdd(val){
+      this.followChsVal.val=val.name;
+      this.followChsVal.id=val.id;
     },
     // 时间-时间录入处理
     dateConfirm(date) {
