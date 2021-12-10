@@ -8,15 +8,15 @@
     </div>
     <div class="stage-list">
       <div
-        v-for="(item, index) in stageResult"
+        v-for="(item, index) in displayData.stageResult"
         class="stage">
-        <div v-if="followStageList[index] === stageResult[index]" class="active-stage-left"></div>
+        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-left"></div>
         <div v-else class="stage-left"></div>
 
-        <div v-if="followStageList[index] === stageResult[index]" class="active-stage-middle"> {{ item }} </div>
-        <div v-else class="stage-middle"> {{ item }} </div>
+        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-middle"> {{ item }}</div>
+        <div v-else class="stage-middle"> {{ item }}</div>
 
-        <div v-if="followStageList[index] === stageResult[index]" class="active-stage-right"></div>
+        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-right"></div>
         <div v-else class="stage-right"></div>
       </div>
     </div>
@@ -29,43 +29,43 @@
       <div class="card">
         <div class="message-line">
           <div class="message-left">商机名称：</div>
-          <div class="message-right">{{ boName }}</div>
+          <div class="message-right">{{ displayData.boName }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">客户名称：</div>
-          <div class="message-right">{{ customerName }}</div>
+          <div class="message-right">{{ displayData.customerName }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机状态：</div>
-          <div class="message-right">{{ boStatus }}</div>
+          <div class="message-right">{{ displayData.boStatus }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机创建：</div>
-          <div class="message-right">{{ createTime }}</div>
+          <div class="message-right">{{ displayData.createTime }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机更新：</div>
-          <div class="message-right">{{ updateTime }}</div>
+          <div class="message-right">{{ displayData.updateTime }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机金额：</div>
-          <div class="message-right">{{ boAmount }}</div>
+          <div class="message-right">{{ displayData.boAmount }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">预计成交日：</div>
-          <div class="message-right">{{ boExpectDate }}</div>
+          <div class="message-right">{{ displayData.boExpectDate }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机录入人：</div>
-          <div class="message-right">{{ boEditor }}</div>
+          <div class="message-right">{{ displayData.boEditor }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">商机负责人：</div>
-          <div class="message-right">{{ boResponsible }}</div>
+          <div class="message-right">{{ displayData.boResponsible }}</div>
         </div>
         <div class="message-line">
           <div class="message-left">备注：</div>
-          <div class="message-right">{{ boNotes }}</div>
+          <div class="message-right">{{ displayData.boNotes }}</div>
         </div>
       </div>
     </div>
@@ -77,20 +77,15 @@
     </div>
 
 
-
-
-
-
-
     <van-popup v-model="editPageShow" position="bottom" :style="{ height: '94%' }">
-      <div class="navbar"  @click="returnFromEdit()">
+      <div class="navbar" @click="returnFromEdit()">
         <van-nav-bar
           title="编辑商机"
           left-text="返回"
           left-arrow
         />
       </div>
-      <van-form @submit="submitEdit()"  class="addBo">
+      <van-form @submit="submitEdit()" class="addBo">
         <!-- 商机名称 -->
         <van-field
           clearable
@@ -116,8 +111,20 @@
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
 
-        <!-- ToDo 此组件还没做好 -->
-        <AbbList :type=3 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
+
+        <van-popup
+          v-model="boSelectCustomerShow"
+          position="bottom"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbCusList
+            :type="3"
+            v-show="boSelectCustomerShow"
+            @returnClick="boSelectCustomerShow = false"
+            @onCh="getCustomerInfo"
+          />
+        </van-popup>
 
 
 
@@ -134,7 +141,22 @@
           @click="boSelectResponsibleShow = true"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
-        <AbbList :type=1 v-show="boSelectResponsibleShow" @returnClick="boSelectResponsibleShow = false" @onCh="getResponsibleInfo"/>
+
+        <van-popup
+          v-model="boSelectResponsibleShow"
+          position="bottom"
+          :style="{ height: '100%' }"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbList
+            :type="1"
+            v-show="boSelectResponsibleShow"
+            @returnClick="boSelectResponsibleShow = false"
+            @onCh="getResponsibleInfo"
+          />
+        </van-popup>
+
 
         <!-- 编辑商机跟进流程 -->
         <van-field
@@ -168,7 +190,7 @@
                 class="selectableStage"
               >
                 <template #right-icon>
-                  <van-checkbox :name="item" ref="checkboxes" />
+                  <van-checkbox :name="item" ref="checkboxes"/>
                 </template>
               </van-cell>
             </van-cell-group>
@@ -189,7 +211,8 @@
         />
         <van-popup v-model="boFollowStageShow" position="bottom">
           <div class="van-picker__toolbar">
-            <button type="button" class="van-picker__cancel" @click="boFollowStageShow = false; boFollowStage=''">取消</button>
+            <button type="button" class="van-picker__cancel" @click="boFollowStageShow = false; boFollowStage=''">取消
+            </button>
             <div class="van-ellipsis van-picker__title">选择已跟进的阶段</div>
             <button type="button" class="van-picker__confirm" @click="confirmFollowStage()">确认</button>
           </div>
@@ -203,7 +226,7 @@
                 :title="item"
                 @click="selectFollowStage(index, item)">
                 <template #right-icon>
-                  <van-radio :name="item" />
+                  <van-radio :name="item"/>
                 </template>
               </van-cell>
             </van-cell-group>
@@ -273,21 +296,47 @@ import {getUrl} from "../../../utils/replaceUrl";
 import qs from 'qs'
 import {Dialog, Toast} from "vant";
 import AbbList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbCusList.vue";
 
 export default {
   name: "bizOppDetail",
   components: {
     AbbList,
+    AbbCusList,
   },
-  data(){
+  data() {
     return {
-      id:"",
-      customerId:"",
-      customerName:"",
-      boName:"",
-      boStatus:"",
+      displayData : {
+        customerId: "",
+        customerName: "",
+        boName: "",
+        boStatus: "",
+        boEditorId: "",
+        boEditor: "",
+        boFullStage: "",
+        boFollowStage: "",
+        //将boFullStage属性分解到stageResult的list里面，用来加载详情页上方的商机步骤栏
+        stageResult: "",
+        //boFollowStage只有在boFullStage目前进行到的阶段的名字，但是页面商机步骤加载需要之前所有阶段到目前进行阶段的名字
+        followStageList: "",
+        boAmount: "",
+        boExpectDate: "",
+        boResponsibleId: "",
+        boResponsible: "",
+        boNotes: "",
+
+        createTime: "",
+        updateTime: "",
+      },
+
+
+      id: "",
+      customerId: "",
+      customerName: "",
+      boName: "",
+      boStatus: "",
       boEditorId: "",
-      boEditor:"",
+      boEditor: "",
       boFullStage: "",
       boFollowStage: "",
       boAmount: "",
@@ -295,14 +344,6 @@ export default {
       boResponsibleId: "",
       boResponsible: "",
       boNotes: "",
-
-      createTime: "",
-      updateTime: "",
-
-
-
-
-
 
 
 
@@ -328,7 +369,6 @@ export default {
       boFullStageString: '',
 
       /*
-      boFollowStage是传递给后端的内容，内容为目前进行到的阶段，
       boFollowStageShow控制选中弹出页的出现
        */
       boFollowStageShow: false,
@@ -359,32 +399,64 @@ export default {
       //接收来自bizOppList的数据，存入当前页面的变量
       this.id = this.$route.query.boId;
 
+      //根据商机id请求商机详情信息
       let url = JSON.parse(getUrl()).bizOppManager.queryBoDetail;
-      let postData = {
+      let getData = {
         id: this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params: getData})).data.data
 
+
+      //将商机详情信息填入 要编辑的变量 和displayData(展示用的变量，展示用的变量不会变化)
       this.customerId = result.customerId;
+      this.displayData.customerId =result.customerId;
+
       this.customerName = result.customerName;
+      this.displayData.customerName = result.customerName;
+
       this.boName = result.boName;
+      this.displayData.boName = result.boName;
+
       this.boStatus = result.boStatus;
+      this.displayData.boStatus = result.boStatus;
+
       this.boEditorId = result.boEditorId;
+      this.displayData.boEditorId = result.boEditorId;
+
       this.boEditor = result.boEditor;
+      this.displayData.boEditor = result.boEditor;
+
       this.boFullStage = result.boFullStage;
+      this.displayData.boFullStage = result.boFullStage;
+
       this.boFollowStage = result.boFollowStage;
+      this.displayData.boFollowStage = result.boFollowStage;
+
       this.boAmount = result.boAmount;
+      this.displayData.boAmount = result.boAmount;
+
       this.boExpectDate = result.boExpectDate;
+      this.displayData.boExpectDate = result.boExpectDate;
+
       this.boResponsibleId = result.boResponsibleId;
+      this.displayData.boResponsibleId = result.boResponsibleId;
+
       this.boResponsible = result.boResponsible;
+      this.displayData.boResponsible = result.boResponsible;
+
       this.boNotes = result.boNotes;
-      this.createTime = result.createTime;
-      this.updateTime = result.updateTime;
+      this.displayData.boNotes = result.boNotes;
+
+      //createTime和updateTime都是系统自动生成的不需要用户编辑，所以只在displayData里面有
+      this.displayData.createTime = result.createTime;
+      this.displayData.updateTime = result.updateTime;
 
 
       //处理接收到的数据，将boFullStage转化为stageResult再转化为boFullStageString，
       //stageResult用来转化 编辑商机流程 的选项的状态，boFullStageString用来显示目前的全部流程
       this.stageResult = this.boFullStage.split("_");
+      this.displayData.stageResult = this.stageResult;
+
       for (let i = 0; i < this.stageResult.length; i++) {
         if (i === 0) {
           this.boFullStageString = this.boFullStageString + this.stageResult[i];
@@ -398,12 +470,36 @@ export default {
           }
         }
       }
+      this.displayData.followStageList = this.followStageList;
+    },
+
+    //当商机编辑后不保存退出时需要重新把display中的data拿出重置编辑的变量
+    reLoadData() {
+      //这里没有重置boEditor和boEditorId是因为这两个变量代表的是创建该商机的人，所以不会改变。
+      this.customerId = this.displayData.customerId;
+      this.customerName = this.displayData.customerName;
+      this.boName = this.displayData.boName;
+      this.boStatus = this.displayData.boStatus;
+      this.boFullStage = this.displayData.boFullStage;
+      this.boFollowStage = this.displayData.boFullStage;
+      this.stageResult = this.displayData.stageResult;
+      this.followStageList = this.displayData.followStageList;
+      this.boAmount = this.displayData.boAmount;
+      this.boExpectDate = this.displayData.boExpectDate;
+      this.boResponsibleId = this.displayData.boResponsibleId;
+      this.boResponsible = this.displayData.boResponsible;
+      this.boNotes = this.displayData.boNotes;
+    },
+
+    //点击返回键跳转回商机列表
+    toBoList(){
+      this.$router.push('/bizOppList');
     },
 
     //从客户列表组件获取客户信息
     getCustomerInfo(val) {
       this.customerId = val.id;
-      this.customerName =val.name;
+      this.customerName = val.name;
     },
 
     //从用户列表组件获取负责人信息
@@ -413,25 +509,31 @@ export default {
     },
 
 
-    toBoList() {
-      this.$router.push('/bizOppList');
-    },
+    deleteBo() {
+      Dialog.confirm({
+        title: '删除商机',
+        message: '删除后无法恢复',
+      })
+        .then(async () => {
+          // 确认
+          let url = JSON.parse(getUrl()).bizOppManager.deleteBo;
+          let postData = {
+            id: this.id,
+          }
+          const result = (await this.$http.post(url, qs.stringify(postData))).data
+
+          if (result.code === 200) {
+            Toast('商机删除成功');
+            this.toBoList();
+          } else {
+            Toast('商机删除失败,错误码' + result.code);
+          }
+        })
+        .catch(() => {
+          // 取消
+        });
 
 
-
-    async deleteBo() {
-      let url = JSON.parse(getUrl()).bizOppManager.deleteBo;
-      let postData = {
-        id: this.id,
-      }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data;
-
-      if (result.code === 200) {
-        Toast('商机删除成功');
-        this.toBoList();
-      } else {
-        Toast('商机删除失败,错误码' + result.code);
-      }
     },
 
     /*
@@ -442,23 +544,25 @@ export default {
       this.ifEdit = true;
     },
 
+    //编辑商机弹出层的返回按钮点击事件
     returnFromEdit() {
       if (this.ifEdit === true) {
         Dialog.confirm({
           title: '退出编辑',
-          message: '商机信息修改后未提交',
+          message: '信息修改后未提交',
         })
           .then(() => {
             // 确认
-            this.ifEdit = false;
-            this.editPageShow=false;
+            this.editPageShow = false;  //关闭弹出层
+            this.ifEdit = false;        //修改检查重置
+            this.reLoadData();          //将修改过的信息重置为未修改的状态
           })
           .catch(() => {
             // 取消
           });
       } else {
         //没有修改可以直接返回
-        this.editPageShow=false;
+        this.editPageShow = false;
       }
     },
 
@@ -481,11 +585,11 @@ export default {
         boNotes: this.boNotes
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data;
-      if(result.code === 200) {
+      if (result.code === 200) {
         Toast('商机提交成功');
-        this.editPageShow=false;
+        this.editPageShow = false;
 
-      }else {
+      } else {
         Toast('商机提交失败,错误码' + result.code);
       }
       //防止提交以后还出现确认弹窗
@@ -504,6 +608,7 @@ export default {
       Toast(this.boExpectDate);
     },
 
+    //自定义商机流程的“全选”按钮
     toggleAll() {
       let length = this.stageList.length;
       for (let i = 0; i < length; i++) {
@@ -511,9 +616,9 @@ export default {
       }
     },
 
+    //自定义商机流程的点击选择
     toggle(index, item) {
       this.$refs.checkboxes[index].toggle();
-
       /*
       当全商机流程编辑过程中把目前的跟进阶段取消了，需要把跟进阶段清空
       因为此处的toggle无论转化的那一个选项是 勾选状态 还是 非勾选状态，
@@ -527,10 +632,10 @@ export default {
     //用来判断当前的跟进阶段，选择第一个为“新商机”，最后一个为“已结束”，其它为”进行中“
     selectFollowStage(index, item) {
       this.boFollowStage = item;
-      if (index === 0){
+      if (index === 0) {
         this.boStatus = "新商机";
         Toast("新商机");
-      } else if (index === this.stageResult.length-1){
+      } else if (index === this.stageResult.length - 1) {
         this.boStatus = "已结束";
         Toast("已结束");
       } else {
@@ -539,8 +644,9 @@ export default {
       }
     },
 
+    //确认提交编辑修改
     confirmEditStage() {
-      this.boEditStageShow=false;
+      this.boEditStageShow = false;
       this.boFullStage = "";
       this.boFullStageString = "";
       let stageListLength = this.stageList.length;
@@ -558,12 +664,14 @@ export default {
             if (0 === position) {
               this.boFullStage = this.boFullStage + this.stageResult[position];
               this.boFullStageString = this.boFullStageString + this.stageResult[position];
-            }else{
+            } else {
               this.boFullStage = this.boFullStage + "_" + this.stageResult[position];
               this.boFullStageString = this.boFullStageString + "\n" + this.stageResult[position];
             }
             position++;
-            if (position === stageResultLength) {break;}
+            if (position === stageResultLength) {
+              break;
+            }
           }
         }
       }
@@ -579,9 +687,9 @@ export default {
     },
 
     confirmFollowStage() {
-      if (this.boFollowStage==='') {
+      if (this.boFollowStage === '') {
         Toast("请选择后确认");
-      }else {
+      } else {
         Toast("选择成功");
         this.boFollowStageShow = false;
       }
@@ -599,12 +707,12 @@ export default {
 /*
 stage-list是容纳stage的div，可滑动
 */
-.stage-list{
+.stage-list {
   padding-top: 6vw;
   padding-left: 6vw;
   padding-bottom: 3vw;
-  white-space: nowrap;/*文本不会换行，文本会在在同一行上继续*/
-  overflow-y:auto;/*可滑动*/
+  white-space: nowrap; /*文本不会换行，文本会在在同一行上继续*/
+  overflow-y: auto; /*可滑动*/
 }
 
 .stage {
@@ -625,6 +733,7 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
   border-bottom: 5vw solid #d7e1fc;
   border-left: 3vw solid #ffffff;
 }
+
 .stage-middle {
   width: 27vw;
   height: 10vw;
@@ -634,6 +743,7 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
   color: #9494D1;
   box-shadow: 0 7px 7px -7px #5E5E5E;
 }
+
 .stage-right {
   width: 0;
   height: 0;
@@ -641,6 +751,7 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
   border-bottom: 5vw solid #ffffff;
   border-left: 3vw solid #d7e1fc;
 }
+
 .active-stage-left {
   width: 0;
   height: 0;
@@ -648,6 +759,7 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
   border-bottom: 5vw solid #6b92fc;
   border-left: 3vw solid #ffffff;
 }
+
 .active-stage-middle {
   width: 27vw;
   height: 10vw;
@@ -657,6 +769,7 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
   color: #ffffff;
   box-shadow: 0 7px 7px -7px #5E5E5E;
 }
+
 .active-stage-right {
   width: 0;
   height: 0;
@@ -682,7 +795,8 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
   padding-top: 6vw;
   padding-bottom: 8vw;
 }
-.card{
+
+.card {
   width: 88%;
   background-color: #f0f4fe;
   box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.19);
@@ -704,28 +818,32 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
 }
 
 .message-left {
-  width: 32%;
-  padding-left: 6%;
+  width: 36%;
+  padding-left: 10%;
+  font-size: 14px;
 }
 
 .message-right {
-  width: 56%;
+  width: 44%;
+  font-size: 14px;
 }
 
 /*
 这里是两个编辑和删除按钮的样式
 */
 .button-block {
-  margin-left: 5%;
+  margin-left: 6%;
   width: 88%;
   display: flex;
   padding-bottom: 4vw;
   justify-content: space-between;
 }
+
 .button-edit-bo {
   height: 13vw;
   width: 40vw;
 }
+
 .button-delete-bo {
   height: 13vw;
   width: 40vw;
@@ -733,17 +851,17 @@ active-stage是已激活，颜色为蓝色，即商机的阶段已经进行
 
 /*改变所有van-field的上下间距,该样式在popup中*/
 .van-field {
-    padding-top: 4vw;
-    padding-bottom: 4vw;
+  padding-top: 4vw;
+  padding-bottom: 4vw;
 }
 
 /*修改van-field里面的label元素距离右边输入栏的距离*/
 /deep/ .van-field__label {
-    margin-right: 10vw;
+  margin-right: 10vw;
 }
 
 .submit {
-  width:90%;
+  width: 90%;
 }
 
 .van-picker__toolbar {

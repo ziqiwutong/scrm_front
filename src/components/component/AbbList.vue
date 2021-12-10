@@ -8,7 +8,13 @@
       :lock-scroll="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
+      <!--   此处两个button添加的native-type是为了防止点击后将vantage的表单组件自动提交，
+             详情见vantage官网 https://youzan.github.io/vant/#/zh-CN/form 最下方的常见问题  -->
+      <van-button
+        native-type="button"
+        class="follow-cancel-btn"
+        @click="folCancel"
+      >取消</van-button>
       <van-cell v-if="this.type == 1">
         部门:
         <SelectTree
@@ -19,7 +25,11 @@
           :accordion="isAccordion"
           @getValue="getValue($event)"
         />
-        <van-button @click="getUser" class="depart-confirm">确定</van-button>
+        <van-button
+          native-type="button"
+          @click="getUser"
+          class="depart-confirm"
+        >确定</van-button>
       </van-cell>
       <van-list
         v-model="abbloading"

@@ -1,10 +1,11 @@
 <template>
+
   <div>
     <div class="navbar" @click="toBoList">
-      <van-nav-bar title="新建商机" left-text="返回" left-arrow />
+      <van-nav-bar title="新建商机" left-text="返回" left-arrow/>
     </div>
 
-    <van-form @submit="onSubmit" class="addBo">
+    <van-form @submit="onSubmit">
       <!-- 商机名称 -->
       <van-field
         clearable
@@ -28,9 +29,19 @@
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
 
-      <!-- ToDo 此组件还没做好 -->
-      <AbbList :type=3 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false" @onCh="getCustomerInfo"/>
-
+      <van-popup
+        v-model="boSelectCustomerShow"
+        position="bottom"
+        :overlay="false"
+        duration="0"
+      >
+        <AbbCusList
+          :type="3"
+          v-show="boSelectCustomerShow"
+          @returnClick="boSelectCustomerShow = false"
+          @onCh="getCustomerInfo"
+        />
+      </van-popup>
 
 
       <!-- 点击选择负责人 -->
@@ -45,7 +56,21 @@
         @click="boSelectResponsibleShow = true"
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
-      <AbbList :type=1 v-show="boSelectResponsibleShow" @returnClick="boSelectResponsibleShow = false" @onCh="getResponsibleInfo"/>
+
+      <van-popup
+        v-model="boSelectResponsibleShow"
+        position="bottom"
+        :style="{ height: '100%' }"
+        :overlay="false"
+        duration="0"
+      >
+        <AbbList
+          :type="1"
+          v-show="boSelectResponsibleShow"
+          @returnClick="boSelectResponsibleShow = false"
+          @onCh="getResponsibleInfo"
+        />
+      </van-popup>
 
 
       <!-- 编辑商机跟进流程 -->
@@ -80,7 +105,7 @@
               class="selectableStage"
             >
               <template #right-icon>
-                <van-checkbox :name="item" ref="checkboxes" />
+                <van-checkbox :name="item" ref="checkboxes"/>
               </template>
             </van-cell>
           </van-cell-group>
@@ -101,7 +126,8 @@
       />
       <van-popup v-model="boFollowStageShow" position="bottom">
         <div class="van-picker__toolbar">
-          <button type="button" class="van-picker__cancel" @click="boFollowStageShow = false; boFollowStage=''">取消</button>
+          <button type="button" class="van-picker__cancel" @click="boFollowStageShow = false; boFollowStage=''">取消
+          </button>
           <div class="van-ellipsis van-picker__title">选择已跟进的阶段</div>
           <button type="button" class="van-picker__confirm" @click="confirmFollowStage()">确认</button>
         </div>
@@ -116,7 +142,7 @@
               @click="selectFollowStage(index, item)"
             >
               <template #right-icon>
-                <van-radio :name="item" />
+                <van-radio :name="item"/>
               </template>
             </van-cell>
           </van-cell-group>
@@ -170,7 +196,6 @@
       />
 
 
-
       <!-- 提交按钮 -->
       <div style="margin: 16px;" class="submit">
         <van-button round block type="info" native-type="submit">提交</van-button>
@@ -180,18 +205,19 @@
 </template>
 
 
-
 <script>
 import {Toast} from "vant";
 import qs from 'qs';
 import {getUrl} from "../../../utils/replaceUrl";
 import AbbList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbCusList";
 
 
 export default {
   name: "addBizOpp",
   components: {
     AbbList,
+    AbbCusList,
   },
   data() {
     return {
@@ -272,23 +298,21 @@ export default {
     },
   },
 
-  created(){
+  created() {
     //当页面加载的时候从vuex获取当前使用者的信息作为 商机编辑者
     this.boEditorId = this.$store.state.userMessage.userId;
     this.boEditor = this.$store.state.userMessage.username;
-    //ToDo 需要获取用户的id作为录入人id
-
   },
   methods: {
     //点击返回键跳转回商机列表
-    toBoList(){
+    toBoList() {
       this.$router.push('/bizOppList');
     },
 
     //从客户列表组件获取客户信息
     getCustomerInfo(val) {
       this.customerId = val.id;
-      this.customerName =val.name;
+      this.customerName = val.name;
     },
 
     //从用户列表组件获取负责人信息
@@ -418,7 +442,7 @@ export default {
         boResponsible: this.boResponsible,
         boNotes: this.boNotes,
       };
-      const result = (await this.$http.post(url, qs.stringify(postData))).data;
+      const result = (await this.$http.get(url, qs.stringify(postData))).data;
 
       if (result.code === 200) {
         Toast("商机提交成功");
@@ -432,6 +456,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 //改变所有van-field的上下间距
 .van-field {
   padding-top: 4vw;

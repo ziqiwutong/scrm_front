@@ -36,6 +36,7 @@
       <van-col class="add-button" span="2" v-if="isSearch">
         <van-icon name="plus" size="25" @click="toAdd"/>
       </van-col>
+      <div class="divider"></div>
     </van-row>
 
     <!--线索表单区域-->
@@ -164,18 +165,17 @@ export default {
     //加载列表中的数据
     async onLoad() {
       let url = JSON.parse(getUrl()).bizOppManager.queryBo;
-      let postData = {
+      let getData = {
         pageCount: this.pageProps.pageCount,
         currentPage: this.pageProps.currentPage++,
         boStatus: this.boStatus,
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params: getData})).data.data
 
       //请求失败处理
       if (result.length === 0) {
         // 已加载全部数据
         this.finished = true;
-        Toast('已加载全部数据！');
       }
 
       //处理数据，根据boStatus填入statusClass，用于改变css样式，范围为newStatus，followedStatus，finishedStatus
@@ -199,6 +199,7 @@ export default {
 
     //重新加载商机列表
     refreshList() {
+      this.pageProps.currentPage=1;
       this.list = [];
       this.onLoad();
     },
@@ -207,18 +208,19 @@ export default {
     //关键字搜索
     async onSearch() {
       let url = JSON.parse(getUrl()).bizOppManager.queryBoByKey;
-      let postData = {
+      this.pageProps.currentPage = 1;
+      let getData = {
         keySearch: this.searchVal
       }
       this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params: getData})).data.data
       for (let i = 0; i < result.length; i++) {
         let array = result[i];
-        if (array.boStatus === '新线索') {
+        if (array.boStatus === '新商机') {
           array.statusClass = "newStatus";
         } else if (array.boStatus === '跟进中') {
           array.statusClass = "followedStatus";
-        } else if (array.boStatus === '转换为商机') {
+        } else if (array.boStatus === '已结束') {
           array.statusClass = "finishedStatus";
         }
         this.list.push(result[i]);
@@ -252,7 +254,7 @@ export default {
       let postData = {
         id: id,
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
+      const result = (await this.$http.get(url, qs.stringify(postData))).data;
       if (result.code === 200) {
         Toast('商机删除成功');
         this.refreshList();
@@ -276,6 +278,7 @@ export default {
 
 <style lang="less" scoped>
 .header {
+  height: 12vw;
   position: fixed;
   top: 0;
   left: 0;
@@ -286,6 +289,8 @@ export default {
 
 // 商机下拉选择框样式
 /deep/ .van-dropdown-menu__bar {
+  width: fit-content;
+  margin-left: 3vw;
   box-shadow: 0 0 0 rgb(0, 0, 0);
 }
 
@@ -316,8 +321,18 @@ export default {
   padding: 2px;
 }
 
+/*
+一条灰色的装饰分割线
+*/
+.divider {
+  position: relative;
+  top: 12vw;
+  background: #f8f8f8;
+  height: 2vw;
+}
+
 .list {
-  margin-top: 50px;
+  margin-top: 17vw;
 }
 
 .boDate {
@@ -352,7 +367,7 @@ export default {
 .van_swipe_cell {
   height: 50pt;
   width: 90%;
-  left: 7%;
+  left: 5%;
   margin-bottom: 5px;
   border-bottom: 1px solid #f7f8fa;
 }
