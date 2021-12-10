@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
-      <van-button @click="test">测试1</van-button>
+      <!-- <van-button @click="test">测试1</van-button> -->
       <!-- <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
       <!-- 导航栏 -->
       <div class="nav-fix">
@@ -486,7 +486,7 @@
       <AddForm :type="1" v-show="showform" @returnClick="addCancel" />
     </van-popup>
 
-    <van-popup
+    <!-- <van-popup
       v-model="testVal"
       position="bottom"
       :overlay="false"
@@ -498,7 +498,7 @@
         @returnClick="onTestCancel"
         @onCh="testConsole"
       />
-    </van-popup>
+    </van-popup> -->
     <TabBar />
   </div>
 </template>

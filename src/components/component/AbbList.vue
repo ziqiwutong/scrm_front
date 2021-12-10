@@ -160,7 +160,7 @@ export default {
       this.getUserList();
     },
     async getData() {
-      let url = "http://118.122.48.47:33333/cms/user/department";
+      let url = "/api/cms/user/department";
       const res = await this.$http.get(url);
       console.log(res.data.data);
       this.list = res.data.data;
