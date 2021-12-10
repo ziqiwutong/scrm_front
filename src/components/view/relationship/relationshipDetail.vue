@@ -8,7 +8,7 @@
     </div>
 
     <div class="tab_block">
-      <van-tabs v-model="active" swipeable>
+      <van-tabs v-model="active" swipeable color="#4876f1">
         <van-tab v-for="index in tabNum" :title="'关系 ' + index" :key="i">
           <!--竖向条-->
           <div class="Step">
@@ -43,6 +43,8 @@
 import {Toast} from "vant";
 import qs from 'qs'
 import TabBar from "../../component/TabBar";
+import {getUrl} from "../../../utils/replaceUrl";
+import {Dialog} from "vant";
 // axios参数包
 export default {
   name: "relationshipDetail",
@@ -67,16 +69,39 @@ export default {
     async onLoad() {
       this.searchData1=this.$route.query.searchData1;
       this.searchData2=this.$route.query.searchData2;
-      let url = "/api/se/customerRest/relation";
+      //ToDo 修改完成后，url要改过来
+      let url = "/sweet/se/customerRest/relation";
+      // let url = JSON.parse(getUrl()).searchRelationship.queryRelation;
       let postData = {
         firmA: this.searchData1,
         firmB: this.searchData2
       };
-      const result = (await this.$http.get(url,{params:postData})).data.data;
-      this.tabNum = result.length;
-      for (let i = 0; i < result.length; i++) {
-        this.list.push(result[i]);
-        this.listNum.push(result[i].length);
+
+      const result = (await this.$http.get(url,{params:postData})).data;
+
+      if (result.code === 200) {  //请求成功，显示数据
+        const data = result.data;
+        this.tabNum = data.length;
+        for (let i = 0; i < data.length; i++) {
+          this.list.push(data[i]);
+          this.listNum.push(data[i].length);
+        }
+      } else if (result.code === 1000) {  //请求成功，但是没有查询到结果
+        Dialog.alert({
+          title: '未查询到公司关系',
+          message: '公司之间没有关系或查询时未输入公司全称',
+        }).then(() => {
+          // on close
+          this.toSearchRelationship();
+        });
+      } else {  //请求失败
+        Dialog.alert({
+          title: '请求失败',
+          message: '请检查网络状况',
+        }).then(() => {
+          // on close
+          this.toSearchRelationship();
+        });
       }
     },
   },

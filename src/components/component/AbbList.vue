@@ -7,11 +7,18 @@
       :overlay="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
+      <!--   此处两个button添加的native-type是为了防止点击后将vantage的表单组件自动提交，
+             详情见vantage官网 https://youzan.github.io/vant/#/zh-CN/form 最下方的常见问题  -->
+      <van-button
+        class="follow-cancel-btn"
+        @click="folCancel"
+        native-type="button"
+      >取消</van-button>
       <van-button
         class="follow-addcus-btn"
         @click="addNewCus"
         v-show="type == 3"
+        native-type="button"
         >新建客户</van-button
       >
       <AddForm :type="1" v-show="addCus" @returnClick="onAddCancel" />

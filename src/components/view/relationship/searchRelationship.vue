@@ -2,38 +2,46 @@
   <!-- Field 是基于 Cell 实现的，可以使用 CellGroup 作为容器来提供外边框。 -->
   <div class="searchRelationship_container">
     <NavBar/>
-    <div class="company_logo_block">
-      <img class="company_logo" src="../../../assets/icon/company_logo.png">
+    <div class="company-logo-block">
+      <img class="company-logo" src="../../../assets/icon/company_logo.png">
     </div>
 
-    <p class="tip">请输入双方关系</p>
+    <p class="tip">请输入查询双方公司全称</p>
 
-    <div class="search1_block">
-      <van-field
-        class="search1"
+    <div class="search-block">
+      <el-autocomplete
+        class="search"
         v-model="value1"
-        left-icon="customer-relationship"
-        placeholder="请输入您想要检索的客户/公司"
-        border=border
-      >
-        <van-icon class-prefix="icon-third" slot="left-icon" name="customer-relationship"/>
-      </van-field>
+        :fetch-suggestions="querySearchAsync"
+        placeholder="请输入您想要检索的公司全称"
+        @input="onEditChange()"
+        @select="handleSelect()">
+        <i
+          slot="prefix"
+          class="icon-third-customer-relationship"
+        />
+      </el-autocomplete>
     </div>
 
-    <div class="search2_block">
-      <van-field
-        class="search2"
+    <div class="search-block">
+      <el-autocomplete
+        class="search"
         v-model="value2"
-        left-icon="customer-relationship"
-        placeholder="请输入您想要检索的客户/公司"
-      >
-        <van-icon class-prefix="icon-third" slot="left-icon" name="customer-relationship"/>
-      </van-field>
+        :fetch-suggestions="querySearchAsync"
+        placeholder="请输入您想要检索的公司全称"
+        @input="onEditChange()"
+        @select="handleSelect()">
+        <i
+          slot="prefix"
+          class="icon-third-customer-relationship"
+        />
+      </el-autocomplete>
     </div>
 
-    <div class="search_button_block">
+
+    <div class="search-button-block">
       <van-button
-        class="search_button"
+        class="search-button"
         round
         type="info"
         @click="sendSearchMessage">
@@ -47,10 +55,13 @@
 <script>
 import NavBar from "../../component/NavBar";
 import TabBar from "../../component/TabBar";
+import {getUrl} from "../../../utils/replaceUrl";
+import Customer from "../../customer/procustomer";
 
 export default {
   name: "searchRelationship",
   components: {
+    Customer,
     NavBar,
     TabBar
   },
@@ -58,11 +69,16 @@ export default {
     return {
       value1: '',
       value2: '',
+
+      ifEdit: false,
+
     };
   },
+
   created() {
     this.$store.commit('updateTabBarActive', 2);
   },
+
   methods: {
     sendSearchMessage() {
       this.$router.push({
@@ -73,23 +89,70 @@ export default {
         }
       });
     },
+
+
+
+    //搜索框模糊查询
+    async querySearchAsync(queryString, cb) {
+      if (queryString !== "" && this.ifEdit === true) {
+        let callBackArr = []; // 准备一个空数组，此数组是最终返给输入框的数组
+
+        //向服务器模糊查询关键字对应的企业列表
+        let url = JSON.parse(getUrl()).searchCustomer.company;
+        let getData = {
+          keyword: queryString
+        }
+        const result = (await this.$http.get(url, {params: getData})).data.data
+        console.log(result);
+
+        if (result.length > 0) {
+          if (result[0].length > 0) {
+            callBackArr.push({ "value": result[0].customerName });
+          }
+
+          if (result[1].length > 0) {
+            let data = result[1];
+            for (let i = 0; i < data.length; i++) {
+              callBackArr.push({ "value": data[i].name });
+            }
+          }
+        } else {
+          cb([{ value: "暂无数据" }]);
+        }
+
+        cb(callBackArr)
+      }
+    },
+
+    /*
+    因为启信宝是按次数收费的，这里的两个函数和ifEdit变量是为了节省使用次数
+    当用户输入内容改变时会使ifEdit变成true，“内容不为空” 且 “ifEdit为true”时才会模糊查询
+    当用户选择时，输入内容会变化，如果没有ifEdit又会触发一次模糊查询，不仅用户体验不好，同时浪费了启信宝的次数
+     */
+    handleSelect() {
+      this.ifEdit = false;
+    },
+
+    onEditChange() {
+      this.ifEdit = true;
+    }
   }
 }
 
 </script>
 
 <style lang="less" scoped>
-.company_logo_block {
-  padding-top: 32vw;
-  padding-bottom: 20vw;
+.company-logo-block {
+  padding-top: 25vw;
+  padding-bottom: 15vw;
   width: 100vw;
   height: 20vw;
   position: relative;
 
-  .company_logo {
+  .company-logo {
     position: absolute;
-    width: 64%;
-    height: 32%;
+    width: 50vw;
+    height: 20vw;
     left: 0;
     right: 0;
     margin: auto;
@@ -97,56 +160,56 @@ export default {
 }
 
 .tip {
-  width: 60vw;
-  font-weight: bolder;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
+  width: 80vw;
+  padding-left: 10vw;
+  font-weight: bold;
+  font-size: 18px;
 }
 
-.search1_block {
+
+.search-block {
   padding-top: 4vw;
   height: 10vw;
-  .search1 {
-    width: 70vw;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    border-bottom: 1px solid grey;
+  display: inline-flex;
+
+  .search {
+    width: 80vw;
+    border: none;
+    padding-left: 10vw;
+
+    i {
+      font-size: 6vw;
+    }
+
+    /deep/ .el-input__prefix {
+      top: 2vw;
+    }
+
+    /deep/ .el-input__inner {
+      padding-left: 14vw;
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid #f2efef;
+    }
   }
 }
 
-.search2_block {
-  padding-top: 1vw;
-  height: 10vw;
-  .search2 {
-    width: 70vw;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-  }
-}
-
-.search_button_block {
+.search-button-block {
   position: relative;
-  padding-top: 20vw;
+  margin-top: 16vw;
   height: 15vw;
 
-  .search_button {
+
+  .search-button {
     position: absolute;
-    width: 64vw;
-    height: 12vw;
+    width: 86vw;
+    height: 13vw;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
+    font-size: 16px;
   }
 }
 

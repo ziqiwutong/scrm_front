@@ -78,6 +78,9 @@ export function getUrl() {
       deleteBo: '/api/se/businessOpportunity/deleteBizOpp',
       addBo: '/api/se/businessOpportunity/addBizOpp',
       queryBoDetail: '/api/se/businessOpportunity/queryBizOpportunityDetail',
+    },
+    searchRelationship: {
+      queryRelation: '/api/se/customerRest/relation',
     }
   };
 
