@@ -15,10 +15,10 @@ const state = {
   tabBarActive: 0,
   userMessage: {
     username: '张楠',
-    userCompany: '泸州老窖集团',
+    userCompany: '泸州老窖集团有限责任公司',
     userImgUrl: '',
-    userId:'6',
-    userPhone:'15689657265'
+    userId: '6',
+    userPhone: '18256895659'
   },
   repArticleDetail: {
     articleContext: '',
@@ -27,13 +27,15 @@ const state = {
     articleAccountName: '',
     articlePower: '',
     coverImg: '',
-    productIds: []
+    productIds: [],
+    materialType: '1'
   },
   wxUser: {
     imgUrl: 'https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/baike/pic/item/8435e5dde71190efaa5405dfc21b9d16fdfa6007.jpg',
     nickName: '1234444'
   },
-  hasOAuth: 'false'
+  hasOAuth: 'false',
+  articleType: 1
 }
 
 // 2. 创建对象
@@ -54,7 +56,8 @@ const store = new Vuex.Store({
         userMessage: val.userMessage,
         repArticleDetail: val.repArticleDetail,
         hasOAuth: val.hasOAuth,
-        wxUser: val.wxUser
+        wxUser: val.wxUser,
+        articleType: val.articleType
       }
     }
   })]

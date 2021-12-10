@@ -4,11 +4,11 @@
 <!--    <div class="posterWrap" id="posterWrap">-->
 <!--      <img :src="productImg" class="backgroundImg">-->
 <!--      <div class="posterDes">-->
-        <div class="posterDesText">
+        <!-- <div class="posterDesText">
           <p style="font-size: 1.2rem;font-family: fangsong;">{{ productName }}</p>
           <p style="font-size: 0.9rem;color: red;font-weight: 600">扫描右侧二维码购买</p>
         </div>
-        <div :id="qrcode1" :ref="qrcode1"></div>
+        <div :id="qrcode1" :ref="qrcode1"></div> -->
 <!--      </div>-->
 <!--    </div>-->
 <!--    <img preview="0" preview-text="描述" style="width: 80vw;" :src="imgUrl">-->
@@ -16,17 +16,17 @@
 </template>
 
 <script>
-import QRCode from 'qrcodejs2'
-import html2canvas from 'html2canvas'
+// import QRCode from 'qrcodejs2'
+// import html2canvas from 'html2canvas'
 
 export default {
   name: 'sweetTest',
   data() {
     return {
-      imgUrl: "",
-      qrcode1:"s111",
-      productName: '必炫-浓香型白酒',
-      productImg: 'https://img1.baidu.com/it/u=2220165727,2771662420&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=499'
+      // imgUrl: "",
+      // qrcode1:"s111",
+      // productName: '必炫-浓香型白酒',
+      // productImg: 'https://img1.baidu.com/it/u=2220165727,2771662420&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=499'
       // productImg:'../../../assets/icon/posterTest01.jpg'
     }
   },
@@ -36,10 +36,10 @@ export default {
   },
   methods: {
     test() {
-      console.log("hhh");
-      html2canvas(document.querySelector("#posterWrap"), {useCORS: true, dpi: 300}).then(canvas => {
-        document.body.appendChild(canvas);
-        this.imgUrl = canvas.toDataURL("image/png");
+      // console.log("hhh");
+      // html2canvas(document.querySelector("#posterWrap"), {useCORS: true, dpi: 300}).then(canvas => {
+      //   document.body.appendChild(canvas);
+      //   this.imgUrl = canvas.toDataURL("image/png");
         // console.log(this.imgUrl);
         // document.querySelector('#imgDiv').style.display = 'block';
 
@@ -55,21 +55,22 @@ export default {
         // }
         // console.log("hello")
         // const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
-      });
+      // });
 
     },
     qrcode() {
-      let qrCode1 = new QRCode(s111, {
-        width: 60,
-        height: 60,
-        text: 'https:///www.baidu.com'
-      })
+      // let qrCode1 = new QRCode(s111, {
+      //   width: 60,
+      //   height: 60,
+      //   text: 'https:///www.baidu.com'
+      // })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+
 .posterDesText {
   display: flex;
   flex-direction: column;

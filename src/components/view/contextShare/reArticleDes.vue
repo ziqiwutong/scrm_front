@@ -80,13 +80,14 @@ export default {
     this.getBase64Image(coverImgTDeal);
     this.title = this.$store.state.repArticleDetail.articleTitle;
     this.source = this.$store.state.repArticleDetail.articleAccountName;
+    this.radio = this.$store.state.repArticleDetail.materialType;
   },
   methods: {
     onClickLeft() {
       this.clearArticleMsg();
       this.$router.push('/reprintArticle');
     },
-    onSubmitPre(){
+    onSubmitPre() {
       if (this.coverImg == '') {
         this.$toast("文章封面不能为空！");
         return;
@@ -94,7 +95,7 @@ export default {
       this.$dialog.confirm({
         title: '温馨提示',
         message: '确定发布文章吗？',
-        confirmButtonColor:'#1989fa'
+        confirmButtonColor: '#1989fa'
       })
         .then(() => {
           this.onSubmit();
@@ -151,7 +152,8 @@ export default {
         articleAccountName: '',
         articlePower: '',
         coverImg: '',
-        productIds: []
+        productIds: [],
+        materialType: '1'
       }
       // 清理vuex
       this.$store.commit('updateEditReqArticle', repArticleDetail);
@@ -194,6 +196,7 @@ export default {
     },
     // 编辑文章
     editArticle() {
+      this.$store.commit('updateReqArticleMaterialType', this.radio);
       this.$router.push({
         name: 'repArticleDetail',
         query: {

@@ -12,8 +12,12 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'http://118.122.48.47:33333/', // 要访问的接口域名
-        // target: 'https://www.fzk-tx.top/', // 要访问的接口域名
-        // target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api/', // 要访问的接口域名
+         //target: 'https://www.fzk-tx.top/', // 要访问的接口域名
+       // target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api/', // 要访问的接口域名
+       //   target: 'http://192.168.211.1:30000/',
+       //  target: 'http://192.168.1.109:30002/',
+        // target: 'http://127.0.0.1:3000/', // 要访问的接口域名
+        // target: 'http://127.0.0.1:40001/', // 要访问的接口域名
         ws: true, // 是否启用websockets
         changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
         pathRewrite: {
@@ -44,7 +48,7 @@ module.exports = {
           '^/fzk': ''
         }
       },
-      '/wxResource':{
+      '/wxResource': {
         target: 'https://mmbiz.qpic.cn/', // 要访问的接口域名
         ws: true, // 是否启用websockets
         changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
@@ -52,12 +56,12 @@ module.exports = {
           '^/wxResource': ''
         }
       },
-      '/wx':{
-        target: 'http://127.0.0.1:3001/', // 要访问的接口域名
+      '/wm':{
+        target: 'http://118.122.48.47:33333/', // 要访问的接口域名
         ws: true, // 是否启用websockets
         changeOrigin: true, // 开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
         pathRewrite: {
-          '^/wx': ''
+          '^/wm': ''
         }
       },
     },

@@ -159,7 +159,7 @@ export default {
     async test(){
       this.id=this.$route.query.id;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/se/communication/queryCommunicationLog";
+      let url = "/api/se/communication/queryCommunicationLogDetail";
       let postData = {
         id:this.id,
         customerId:this.customerId,
@@ -167,13 +167,13 @@ export default {
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
       console.log(result);
-      console.log(result[2]);
+      // console.log(result);
       this.customer=result[0].customerName;
       this.telephone=result[0].telephone;
       this.companyName=result[0].belongCompany;
-      this.radio=result[2].communicationWay.toString();
-      this.communicationTime=result[2].communicationTime;
-      this.comContent=result[2].communicationContent;
+      this.radio=result[1].communicationWay.toString();
+      this.communicationTime=result[1].communicationTime;
+      this.comContent=result[1].communicationContent;
     },
     async Submit() {
       let url = "/api/se/communication/editCommunicationLog";
@@ -270,7 +270,7 @@ export default {
     },
     // 获取用户消息
     async getUserList() {
-      let url = "/api/cms/user/query";
+      let url = "/api/se/cms/user/query";
       if (this.followVal != "") {
         url += "?name=" + this.followVal;
       }
