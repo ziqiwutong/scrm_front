@@ -681,7 +681,7 @@
         @cancel="onCusStaCancel"
       />
     </van-popup>
-    <!--跟进人弹出框 -->
+    <!-- 跟进人弹出框 -->
     <van-popup
       v-model="followShow"
       position="bottom"
@@ -689,45 +689,12 @@
       :overlay="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
+      <AbbList
+        :type="1"
+        v-show="followShow"
+        @returnClick="onFollowCancel"
+        @onCh="onFollowAdd"
       />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
-            <div v-if="!item.userIcon" class="list-img-none1">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
-        </van-row>
-      </van-cell>
     </van-popup>
   </div>
 </template>
@@ -735,7 +702,11 @@
 import { Toast } from "vant";
 import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
+import AbbList from "../component/AbbList.vue";
 export default {
+  components: {
+    AbbList,
+  },
   data() {
     return {
       showCusform: false,
@@ -1140,7 +1111,7 @@ export default {
     this.getCusDetailByID(cuslist.id);
   },
   methods: {
-        // 根据id查询客户信息
+    // 根据id查询客户信息
     async getCusDetailByID(id) {
       let url = "/api/se/customer/queryById";
       const res = await this.$http.get(url, {
@@ -1166,7 +1137,17 @@ export default {
         Toast("加载失败");
       }
     },
-
+    toAddFollow() {
+      this.followShow = true;
+    },
+    onFollowCancel() {
+      this.followShow = false;
+    },
+    onFollowAdd(val) {
+      this.cusDetail.followStaffName = val.name;
+      this.cusDetail.followStaffId = val.id;
+      this.cusDetail.customerStatus = "跟进中";
+    },
     // 更多操作-编辑客户-编辑高亮显示
     changeCus() {
       if (this.cusDetail.customerType == 1) {
@@ -1607,30 +1588,8 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
-      this.userType = 0;
-      this.followList = [];
-      this.getUserList();
     },
     // 筛选-跟进人列表-弹窗
-    toOppo() {
-      this.followShow = true;
-      this.userType = 1;
-      this.followList = [];
-      this.getUserList();
-    },
-    // 筛选-跟进人列表-弹窗
-    toBuild() {
-      this.followShow = true;
-      this.userType = 2;
-      this.followList = [];
-      this.getUserList();
-    },
-    toAddFollow() {
-      this.followShow = true;
-      this.userType = 3;
-      this.followList = [];
-      this.getUserList();
-    },
     // 获取用户消息
     async getUserList() {
       let url = "/api/cms/user/query";
@@ -2331,7 +2290,7 @@ export default {
         relationType: type,
       });
       if (result.data.code == "200") {
-        Toast("成功插入");
+        // Toast("成功插入");
       }
     },
   },

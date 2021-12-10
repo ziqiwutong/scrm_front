@@ -2,9 +2,7 @@
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
       <!-- <van-button @click="test">测试1</van-button> -->
-      <!-- <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/> -->
       <!-- <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
-
       <!-- 导航栏 -->
       <div class="nav-fix">
         <van-row>
@@ -269,13 +267,13 @@
       :overlay="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
+      <AbbList
+        :type="1"
+        v-show="followShow"
+        @returnClick="onFollowCancel"
+        @onCh="onFollowAdd"
       />
+<<<<<<< HEAD
       <van-cell
         v-for="item in followList"
         :key="item.id"
@@ -309,9 +307,9 @@
             }}</van-col>
         </van-row>
       </van-cell>
+=======
+>>>>>>> zjs
     </van-popup>
-
-    <!-- 创建人弹出框 -->
 
     <!-- 筛选-地区弹窗 -->
     <van-popup v-model="showScrArea" position="bottom">
@@ -516,13 +514,14 @@
       <div class="browse-shady" @click="latCancel"></div>
       <div class="browse-shady-other" @click="latCancel"></div>
     </div>
-    <!-- 新建客户 -->
+    <!-- 新建客户弹窗 -->
     <van-popup
       v-model="showform"
       position="bottom"
       :overlay="false"
       duration="0"
     >
+<<<<<<< HEAD
       <!-- 新建客户-导航栏 -->
       <van-nav-bar
         title="新建客户"
@@ -883,22 +882,24 @@
         @confirm="onConfirm"
         @cancel="showArea = false"
       />
+=======
+      <AddForm :type="1" v-show="showform" @returnClick="addCancel" />
+>>>>>>> zjs
     </van-popup>
 
-    <!-- 新建客户-客户状态选择弹出框 -->
-    <van-popup
-      v-model="addCusStaShow"
+    <!-- <van-popup
+      v-model="testVal"
       position="bottom"
-      :style="{ height: '30%' }"
+      :overlay="false"
+      duration="0"
     >
-      <van-picker
-        title="客户状态"
-        show-toolbar
-        :columns="columns"
-        @confirm="onCusStaConfirm"
-        @cancel="onCusStaCancel"
+      <AbbCusList
+        :type="2"
+        v-show="testVal"
+        @returnClick="onTestCancel"
+        @onCh="testConsole"
       />
-    </van-popup>
+    </van-popup> -->
     <TabBar />
   </div>
 </template>
@@ -908,14 +909,17 @@ import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
 import TabBar from "../component/TabBar";
-import AbbList from "../component/AbbList";
+// import AbbList from "../component/AbbList";
 import AddForm from "../component/AddForm";
+import AbbCusList from "../component/AbbCusList.vue";
+import AbbList from "../component/AbbList.vue";
 export default {
   name: "customer",
   components: {
     TabBar,
-    AbbList,
     AddForm,
+    AbbCusList,
+    AbbList,
   },
   data() {
     return {
@@ -1457,6 +1461,29 @@ export default {
     //   const res = await this.$http.get(url);
     //   console.log(res.data.data)
     // },
+    // 组件关闭后的处理函数
+    onFollowCancel() {
+      this.followShow = false;
+    },
+    // 点击相应用户后的点击处理事件，返回val，包括用户的id和name
+    onFollowAdd(val) {
+      if(this.userType == 1){
+      this.ifChoose = false
+      this.followChsVal.val = val.name;
+      this.followChsVal.id = val.id;
+      }else if(this.userType == 2){
+        this.ifoppoChoose = false
+        this.oppoChsVal.val = val.name
+        this.oppoChsVal.id = val.id
+      }else if(this.userType == 3){
+        this.ifbulidChoose = false
+        this.bulidChsVal.val = val.name
+        this.bulidChsVal.id  = val.id
+      }
+    },
+    addCancel() {
+      this.showform = false;
+    },
     onRefresh() {
       // 清空列表数据
       this.finished = false;
@@ -1745,23 +1772,17 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
-      this.userType = 0;
-      this.followList = [];
-      this.getUserList();
+      this.userType = 1
     },
-    // 筛选-跟进人列表-弹窗
+    // 筛选-商机列表-弹窗
     toOppo() {
       this.followShow = true;
-      this.userType = 1;
-      this.followList = [];
-      this.getUserList();
+      this.userType = 2
     },
-    // 筛选-跟进人列表-弹窗
+    // 筛选-创建人列表-弹窗
     toBuild() {
       this.followShow = true;
-      this.userType = 2;
-      this.followList = [];
-      this.getUserList();
+      this.userType = 3
     },
     toAddFollow() {
       this.followShow = true;
@@ -2666,6 +2687,7 @@ export default {
       }
     },
   },
+
   beforeRouteLeave(to, from, next) {
     from.meta.keepAlive = true;
     this.scollTop =
@@ -2745,6 +2767,7 @@ export default {
   // margin-top: 25px;
   // overflow: scroll;
   // height: 150px;
+  // overflow-y: auto;
 }
 .list-highcollapse {
   height: 120px;

@@ -1,12 +1,7 @@
 <template>
   <div>
     <!-- 新建客户 -->
-    <van-popup
-      v-model="showform"
-      position="bottom"
-      :overlay="false"
-      duration="0"
-    >
+    <div>
       <!-- 新建客户-导航栏 -->
       <van-nav-bar
         title="新建客户"
@@ -358,7 +353,14 @@
           >
         </div>
       </van-form>
-    </van-popup>
+    </div>
+    <AbbList
+      :type="1"
+      v-show="followShow"
+      @returnClick="onFollowCancel"
+      @onCh="onFollowAdd"
+    />
+
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
       ><van-datetime-picker
@@ -392,67 +394,24 @@
         @cancel="onCusStaCancel"
       />
     </van-popup>
-    <!-- 新建客户-跟进人弹出框 -->
-    <van-popup
-      v-model="followShow"
-      position="bottom"
-      :style="{ height: '100%' }"
-      :overlay="false"
-      duration="0"
-    >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
-      />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
-            <div v-if="!item.userIcon" class="list-img-none">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-             
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
-        </van-row>
-      </van-cell>
-    </van-popup>
   </div>
 </template>
 
 <script>
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
+import AbbList from "./AbbList.vue";
 export default {
   name: "AddForm",
+  components: {
+    AbbList,
+  },
   props: ["type"],
   data() {
     return {
-      //
+      cusLock: false,
+      // 监听页面变化
+      lisState: true,
       uploader2: [{ url: "" }],
       // 新建客户-弹出层
       showform: true,
@@ -602,7 +561,7 @@ export default {
       // 新建客户-表单
       addList: {
         id: "",
-        customerType: "",
+        customerType: "个人客户",
         belongCompany: "",
         potential: "",
         customerName: "",
@@ -649,7 +608,7 @@ export default {
       // 新建客户表单-刷新模板
       addListTemp: {
         id: "",
-        customerType: "",
+        customerType: "个人客户",
         potential: "",
         belongCompany: "",
         customerName: "",
@@ -714,6 +673,20 @@ export default {
     };
   },
   methods: {
+    onFollowCancel() {
+      this.followShow = false;
+    },
+    onFollowAdd(val) {
+      this.addList.followStaffName = val.name;
+      this.addList.followStaffId = val.id;
+    },
+    followCancel() {
+      this.followShow = false;
+    },
+    followBind(val) {
+      this.addList.followStaffName = val.username;
+      this.addList.followStaffId = val.id;
+    },
     // 新建客户-单选限定
     cutTabClickOnly(item, index) {
       // 特殊处理客户类型没有单选
@@ -825,9 +798,6 @@ export default {
     },
     toAddFollow() {
       this.followShow = true;
-      this.userType = 3;
-      this.followList = [];
-      this.getUserList();
     },
     onScrConfirm(values) {
       this.scrCity = values
@@ -839,6 +809,7 @@ export default {
     },
     // 新建客户-返回
     onClickAddRe() {
+      this.addList = this.addListTemp
       this.$emit("returnClick");
     },
     // 新建客户-保存
@@ -1006,30 +977,6 @@ export default {
           let url = "/api/file/pic/base64StrToPic";
           let picture;
           this.dealImage(str, 1000, this.userImg);
-          // console.log("压缩前：" + str);
-          // str = this.data64Comress;
-          // console.log("压缩后：" + str);
-          // this.data64Comress = "";
-          // console.log(str);
-
-          // if (type.length == 3) {
-          //   picture = str.slice(22);
-          // } else if (type.length == 4) {
-          //   picture = str.slice(23);
-          // }
-          // console.log(picture);
-          // let params = new FormData();
-          // params.append("picBase64Str", picture);
-          // params.append("picFormat", type);
-          // params.append("picType", "customerIcon");
-          // await this.$http
-          //   .post(url, params, {
-          //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          //   })
-          //   .then((res) => {
-          //   console.log(res.data.data);
-          //   this.addList.customerIcon = res.data.data;
-          // });
         } else {
           // 传输
           if (this.addList.customerType == "个人客户") {
@@ -1167,18 +1114,6 @@ export default {
         this.followChsVal.id = item.id;
         this.ifChoose = false;
       }
-      // 筛选-商机负责人
-      else if (this.userType == 1) {
-        this.oppoChsVal.val = item.username;
-        this.oppoChsVal.id = item.id;
-        this.ifoppoChoose = false;
-      }
-      // 筛选-创建人
-      else if (this.userType == 2) {
-        this.bulidChsVal.val = item.username;
-        this.oppoChsVal.id = item.id;
-        this.ifbulidChoose = false;
-      }
       // 新建-跟进人
       else if (this.userType == 3) {
         this.addList.followStaffName = item.username;
@@ -1206,42 +1141,8 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
-      this.userType = 0;
-      this.followList = [];
-      this.getUserList();
     },
     // 获取用户消息
-    async getUserList() {
-      let url = "/api/cms/user/query";
-      if (this.followVal != "") {
-        url += "?name=" + this.followVal;
-      }
-      const res = await this.$http.get(url, {
-        params: {
-          currentPage: this.followPageProps.pageNum,
-          pageCount: this.followPageProps.pageSize,
-        },
-      });
-
-      let userNum = res.data.totalCount;
-      if (userNum != 0)
-        for (let i = 0; i < this.followPageProps.pageSize; i++) {
-          this.followList.push(res.data.data[i]);
-          if (this.followList.length >= userNum) {
-            this.finished = true;
-            this.followPageProps.pageNum = 1;
-            break;
-          }
-        }
-      if (this.followList.length >= userNum) this.finished = true;
-      else {
-        console.log(this.followList.length);
-        this.followPageProps.pageNum++;
-        this.getUserList();
-      }
-
-      console.log(this.followList);
-    },
   },
   created() {
     if (this.type == 2) {
@@ -1289,7 +1190,6 @@ export default {
   font-size: 12px;
   background-color: #f5f5f5;
 }
-
 .active-screen-btn {
   background-color: #4876f1;
   margin: 5px 2% 10px 5%;
@@ -1392,7 +1292,7 @@ export default {
   margin-left: 20%;
 }
 .main-fix {
-  position: fixed;
+  // position: fixed;
   width: 100%;
 }
 
