@@ -36,14 +36,15 @@
         </van-field>
 
         <van-field
+          @click="chooseBuyer"
           v-model="orderBuyer"
+          readonly
           type="orderBuyer"
           name="买家"
           label="买家"
           placeholder="买家"
-          :rules="[{ required: true, message: '请填写买家' }]"
+          :rules="[{ required: true, message: '请选择买家' }]"
         />
-
         <van-field
           v-model="orderStaff"
           type="orderStaff"
@@ -112,16 +113,28 @@
         @cancel="showPicker = false"
       />
     </van-popup>
+    <!--    todo  type换成3-->
+    <AbbList :type=2 v-show="testVal" @returnClick="onTestCancel"
+             @onCh="testConsole"/>
   </div>
 </template>
 
 <script>
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
+import AbbList from "../../component/AbbList";
 export default {
   name: "orderEdit",
+  components: {
+    AbbList,
+  },
   data() {
     return {
+      testVal:false,
+      customerInfo: {
+        id: '',
+        customerName: ''
+      },
       columns: ['撤销', '待付款', '待收货', '交易成功', '退款成功'],
       showPicker: false,
       orderStatus:'',
@@ -142,12 +155,26 @@ export default {
     this.test();
   },
   methods: {
+    chooseBuyer()
+    {
+      // console.log(1)
+      this.testVal = true
+    },
+    onTestCancel(){
+      this.testVal = false
+    },
+    testConsole(val){
+      console.log(val)
+      this.customerInfo.customerName=val.name;
+      this.customerInfo.id=val.id;
+      this.orderBuyer=this.customerInfo.customerName;
+    },
     async afterRead(file) {
       let url="/fzk/file/pic/base64StrToPic"
       let postData = {
-        picBase64Str: file.content.substring(22),
-        picFormat:'png',
+        picBase64Str: file.content,
         picType: 'productImage',
+        isCompress:'false'
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       this.productPic1= result;
@@ -174,16 +201,17 @@ export default {
       this.orderFinish=result.orderFinish;
       this.productBuyAmount=result.productBuyAmount;
       this.priceChange=result.priceChange;
-      this.orderStatus='-1';
-        if(this.orderStatus === '-1')
+      // this.orderStatus='-1';
+      this.orderStatus=result.orderType;
+        if(this.orderStatus === -1)
           this.orderType = '撤销'
-      if(this.orderStatus === '0')
+      if(this.orderStatus === 0)
         this.orderType = '代收款'
-      if(this.orderStatus === '1')
+      if(this.orderStatus === 1)
         this.orderType = '待收货'
-      if(this.orderStatus === '2')
+      if(this.orderStatus === 2)
         this.orderType = '交易成功'
-      if(this.orderStatus === '3')
+      if(this.orderStatus === 3)
         this.orderType = '退款成功'
     },
     async onSubmit() {
@@ -203,13 +231,14 @@ export default {
         productName: this.productName,
         productPrice: this.productPrice,
         orderBuyer: this.orderBuyer,
+        customerID:this.customerInfo.id,
         orderStaff:this.orderStaff,
         productBuyAmount: this.productBuyAmount,
         orderSource:this.orderSource,
         notes:this.notes,
         priceChange:this.priceChange,
         productPic: this.productPic1,
-        orderStatus:this.orderStatus
+        orderType:this.orderStatus,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 

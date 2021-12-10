@@ -232,9 +232,9 @@ export default {
     async afterRead(file) {
       let url="/fzk/file/pic/base64StrToPic"
       let postData = {
-        picBase64Str: file.content.substring(22),
-        picFormat:'png',
+        picBase64Str: file.content,
         picType: 'productImage',
+        isCompress:'false'
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       this.productPic1= result;
