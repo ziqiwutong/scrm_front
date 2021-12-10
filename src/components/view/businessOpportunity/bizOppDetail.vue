@@ -111,20 +111,18 @@
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
 
-<!--        <AbbList :type=3 v-show="boSelectCustomerShow" @returnClick="boSelectCustomerShow = false"-->
-<!--                 @onCh="getCustomerInfo"/>-->
+
         <van-popup
           v-model="boSelectCustomerShow"
           position="bottom"
-          :style="{ height: '100%' }"
           :overlay="false"
           duration="0"
         >
-          <AbbList
-            :type="1"
+          <AbbCusList
+            :type="3"
             v-show="boSelectCustomerShow"
             @returnClick="boSelectCustomerShow = false"
-            @onCh="getCustomerInfo()"
+            @onCh="getCustomerInfo"
           />
         </van-popup>
 
@@ -143,9 +141,22 @@
           @click="boSelectResponsibleShow = true"
           :rules="[{ required: true, message: '填写不能为空' }]"
         />
-          <!--   ToDo bug未修复     -->
-<!--        <AbbList :type=1 v-show="boSelectResponsibleShow" @returnClick="boSelectResponsibleShow = false"-->
-<!--                 @onCh="getResponsibleInfo"/>-->
+
+        <van-popup
+          v-model="boSelectResponsibleShow"
+          position="bottom"
+          :style="{ height: '100%' }"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbList
+            :type="1"
+            v-show="boSelectResponsibleShow"
+            @returnClick="boSelectResponsibleShow = false"
+            @onCh="getResponsibleInfo"
+          />
+        </van-popup>
+
 
         <!-- 编辑商机跟进流程 -->
         <van-field
@@ -285,11 +296,13 @@ import {getUrl} from "../../../utils/replaceUrl";
 import qs from 'qs'
 import {Dialog, Toast} from "vant";
 import AbbList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbCusList.vue";
 
 export default {
   name: "bizOppDetail",
   components: {
     AbbList,
+    AbbCusList,
   },
   data() {
     return {
