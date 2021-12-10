@@ -8,13 +8,16 @@
       :lock-scroll="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
+    <van-row>
+      <van-col>
+      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button></van-col>
       <van-button
-        class="follow-addcus-btn"
+      class="follow-cancel-btn1"
         @click="addNewCus"
         v-show="type == 3"
         >新建客户</van-button
       >
+      </van-row>
       <van-popup
         v-model="addCus"
         position="bottom"
@@ -371,7 +374,13 @@ export default {
 //跟进人-取消
 .follow-cancel-btn {
   border: none;
+
 }
+.follow-cancel-btn1 {
+  border: none;
+  margin-left: 55%;
+}
+
 //客户姓名
 .list-content-name {
   font-size: 15px;

@@ -493,7 +493,7 @@
       duration="0"
     >
       <AbbCusList
-        :type="2"
+        :type="3"
         v-show="testVal"
         @returnClick="onTestCancel"
         @onCh="testConsole"
@@ -1066,18 +1066,18 @@ export default {
     },
     // 点击相应用户后的点击处理事件，返回val，包括用户的id和name
     onFollowAdd(val) {
-      if(this.userType == 1){
-      this.ifChoose = false
-      this.followChsVal.val = val.name;
-      this.followChsVal.id = val.id;
-      }else if(this.userType == 2){
-        this.ifoppoChoose = false
-        this.oppoChsVal.val = val.name
-        this.oppoChsVal.id = val.id
-      }else if(this.userType == 3){
-        this.ifbulidChoose = false
-        this.bulidChsVal.val = val.name
-        this.bulidChsVal.id  = val.id
+      if (this.userType == 1) {
+        this.ifChoose = false;
+        this.followChsVal.val = val.name;
+        this.followChsVal.id = val.id;
+      } else if (this.userType == 2) {
+        this.ifoppoChoose = false;
+        this.oppoChsVal.val = val.name;
+        this.oppoChsVal.id = val.id;
+      } else if (this.userType == 3) {
+        this.ifbulidChoose = false;
+        this.bulidChsVal.val = val.name;
+        this.bulidChsVal.id = val.id;
       }
     },
     addCancel() {
@@ -1370,17 +1370,17 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
-      this.userType = 1
+      this.userType = 1;
     },
     // 筛选-商机列表-弹窗
     toOppo() {
       this.followShow = true;
-      this.userType = 2
+      this.userType = 2;
     },
     // 筛选-创建人列表-弹窗
     toBuild() {
       this.followShow = true;
-      this.userType = 3
+      this.userType = 3;
     },
     toAddFollow() {
       this.followShow = true;
