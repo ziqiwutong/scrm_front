@@ -1190,10 +1190,6 @@ export default {
     onCusStaCancel() {
       this.addCusStaShow = false;
     },
-    // 新建客户-客户状态-取消
-    onCusStaCancel() {
-      this.addCusStaShow = false;
-    },
     // 新建客户-单选限定
     cutTabClickOnly(item, index) {
       if (item.name == "客户类型") {
