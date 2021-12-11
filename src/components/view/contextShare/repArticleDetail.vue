@@ -24,7 +24,7 @@
           <van-cell-group class="cellList" id="cellList">
             <van-cell
               clickable
-              :key="index"
+              :key="item.id"
               @click="toggle(index,item)"
               v-for="(item, index) in list"
             >
@@ -161,7 +161,7 @@ export default {
         pageCount: this.pageProps.pageSize
       }
       const result = (await this.$http.get(url, {params: getData})).data.data
-      if (result.length == 0) {
+      if (result.length < getData.pageCount) {
         // 已加载全部数据
         this.finished = true;
         this.$toast('已加载全部数据！');
@@ -209,10 +209,15 @@ export default {
         this.productList.push(arrayItem.productId);
       } else {// 取消选中时需要从数组中删除这个元素
         for (let i = 0; i < this.checkResult.length; i++) {
-          if (this.$refs.checkboxes[index].name === this.checkResult[i].productName) {// 表示数组中已经有了该元素
+          if (item.productName === this.checkResult[i].productName) {// 表示数组中已经有了该元素
             this.checkResult.splice(i, 1);
             this.productList.splice(i, 1);
-            this.singleAddProduct.splice(i, 1);
+            break;
+          }
+        }
+        for (let j = 0; j < this.singleAddProduct.length; j++) {
+          if (item.productName === this.singleAddProduct[j].productName) {
+            this.singleAddProduct.splice(j, 1);
             break;
           }
         }
@@ -453,6 +458,7 @@ h2 {
   height: 3rem;
   border-top: 1px solid #f3f3f3;
   background-color: white;
+  z-index: 99;
 }
 
 .article-ope div {

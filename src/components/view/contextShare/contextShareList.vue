@@ -67,6 +67,7 @@ import {getUserId} from "../../../network/getToken";
 import {getUrl} from "../../../utils/replaceUrl";
 import yyApi from "../../../utils/yyApi";
 import {ajax} from "../../../utils/ajax";
+import {debounce} from "../../../utils/debounce";
 
 export default {
   name: "contextShareList",
@@ -113,7 +114,12 @@ export default {
         imageUrl: '',
         desc: '点击查看详情->',
         pageUrl: ''
-      }
+      },
+      /*关键字搜索Api计时,用于防抖*/
+      searchApiTime: 0,
+      /*内容列表Api计时,用于防抖*/
+      listApiTime: 0,
+      timer: null
     };
   },
   created() {
@@ -137,9 +143,15 @@ export default {
       this.searchShow = true;
     },
     // 取消搜索
-    onSearchCancel() {
+    onSearchCancel: debounce(function () {
+      this.reloadList();
+    }, 1000, true),
+    reloadList() {
       this.searchShow = false;
       this.searchValue = '';
+      this.pageProps.pageNum = 1;
+      this.list = [];
+      this.onLoad();
     },
     // 关键字搜索
     async onSearch() {
@@ -226,7 +238,7 @@ export default {
     },
     async shareArticleApp(e) {
       // 先去后台拿用友的jsConfig，然后触发分享事件
-      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
       const result = (await this.$http.get(url)).data.data;
       let yyConfig = {
         appId: result.appid,

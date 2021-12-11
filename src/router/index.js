@@ -9,6 +9,7 @@ import repArticleDetail from "../components/view/contextShare/repArticleDetail";
 import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 import sweetTest from "../components/view/contextShare/sweetTest";
+import userInfo from "../components/view/userInfo/userInfo";
 import store from "../store";
 import {Toast} from "vant";
 
@@ -60,6 +61,11 @@ const routes = [
     path: '/sweetTest',
     name:'sweetTest',
     component: sweetTest
+  },
+  {
+    path: '/userInfo',
+    name:'userInfo',
+    component: userInfo
   }
 ]
 

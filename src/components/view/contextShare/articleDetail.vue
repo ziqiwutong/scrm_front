@@ -66,7 +66,7 @@ export default {
       articleId: "123",
       article: "",
       showCard: true,
-      inWX: false,
+      inWX: true,
       shareId: '',
       sharePerImg: "",
       sharePerName: "",
@@ -106,9 +106,9 @@ export default {
     this.judgeEnv();
     this.articleId = this.$route.query.articleid;
     this.shareId = this.$route.query.shareid;
-    if (this.$route.query.ifshowshareman === 'false' || this.$route.query.ifshowshareman === false){
+    if (this.$route.query.ifshowshareman === 'false' || this.$route.query.ifshowshareman === false) {
       this.showCard = false;
-    }else{
+    } else {
       this.showCard = true;
     }
     this.getArticle();
@@ -133,8 +133,11 @@ export default {
         }
       }, 5000);
     }
-    setTimeout(() => {
-      this.addUrlToProduct();
+    let timer = setInterval(() => {
+      if (document.querySelector('.productDiv')) {
+        this.addUrlToProduct();
+        clearInterval(timer);
+      }
     }, 500);
   },
   destroyed() {
@@ -324,7 +327,7 @@ export default {
     },
     async shareArticleApp(e) {
       // 先去后台拿用友的jsConfig，然后触发分享事件
-      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
       const result = (await this.$http.get(url)).data.data;
       let yyConfig = {
         appId: result.appid,

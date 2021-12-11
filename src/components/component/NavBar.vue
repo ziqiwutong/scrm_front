@@ -1,7 +1,7 @@
 y
 <template>
   <!--顶部导航栏-->
-  <div class="header">
+  <div class="header" @click="toUserInfo">
     <div class="left">
       <div class="userImg">
         <img v-if="hasImg" :src="userImgUrl"/>
@@ -35,7 +35,6 @@ export default {
         clearInterval(timer);
       }
     }, 500);
-    this.getUserMessage();
   },
   methods: {
     getUserMessage() {
@@ -50,6 +49,9 @@ export default {
       } else {
         this.hasImg = true;
       }
+    },
+    toUserInfo(){
+      this.$router.push('/userInfo');
     }
   }
 }

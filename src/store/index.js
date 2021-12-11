@@ -16,9 +16,14 @@ const state = {
   userMessage: {
     username: '张楠',
     userCompany: '泸州老窖集团有限责任公司',
-    userImgUrl: '',
+    userImgUrl: 'https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg',
     userId: '6',
-    userPhone: '18256895659'
+    userPhone: '18256895659',
+    email:'123456789@qq.com',
+    sex:'保密',
+    duty:'总经理',
+    deptName:'组织部',
+    wmId:'',
   },
   repArticleDetail: {
     articleContext: '',

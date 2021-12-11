@@ -111,7 +111,7 @@ export default {
   },
   created: function () {
     // alert(this.$route.query.code);
-    this.sendCode();
+    // this.sendCode();
     // 为了测试，这里暂时写的是6，其实应该是从user里面获取
     let userID = "6";
     if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
@@ -145,7 +145,7 @@ export default {
       }
     },
     async sendCode() {
-      let url = JSON.parse(getUrl()).contextShare.sendAppCode;
+      let url = JSON.parse(getUrl()).userInfo.sendAppCode;
       let getData = {
         code: this.$route.query.code
       }
@@ -154,13 +154,17 @@ export default {
         username: wxUserMsg.name,
         userCompany: '泸州老窖集团有限责任公司',
         userImgUrl: wxUserMsg.avatar,
-        userId: '6',//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
-        // userId: wxUserMsg.user_id,//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
-        userPhone: wxUserMsg.mobile
+        userId: wxUserMsg.member_id,//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
+        userPhone: wxUserMsg.mobile,
+        email: wxUserMsg.email,
+        sex: wxUserMsg.sex,
+        duty: wxUserMsg.duty,
+        deptName: wxUserMsg.dept_name,
+        wxId: ''
       }
+      console.log('userid:' + userMessage.userId);
       this.$store.commit('updateUserMessage', userMessage);
-      console.log(this.userMessage);
-      // this.getToken(userMessage.userId);
+      this.getToken(userMessage.userId);
     }
   }
 }
