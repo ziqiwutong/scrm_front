@@ -22,7 +22,23 @@
         label="更新录入人"
         placeholder="更新录入人"
         :rules="[{ required: true, message: '请填写更新录入人' }]"
+        readonly
+        @click="onChooseUserType"
       />
+      <van-popup
+        v-model="followShow"
+        position="bottom"
+        :style="{height:'100%'}"
+        :overlay="false"
+        duration="0"
+      >
+        <AbbList
+          :type="1"
+          v-show="followShow"
+          @returnClick="onFollowCancel"
+          @onCh="onFollowAdd"
+        />
+      </van-popup>
       <div style="margin: 16px;"  class="submit">
         <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
@@ -34,14 +50,21 @@ import { Toast } from 'vant';
 
 <script>
 import {Toast} from "vant";
-
+import AddForm from "../../component/AddForm";
+import AbbList from "../../component/AbbList";
 export default {
   name: "addClueStatus",
+  components:{
+    AddForm,
+    AbbList,
+  },
   data() {
     return {
       clueEditor:'',
       clueNotes: '',
       id:'',
+      userType:'',
+      followShow:false,
     };
   },
   created() {
@@ -71,8 +94,20 @@ export default {
           clueId:this.clueId,
         }
       });
-    }
+    },
+    onChooseUserType(){
+      this.followShow=true;
+      this.userType = 1;
+    },
+    onFollowCancel(){
+      this.followShow=false;
+    },
+    onFollowAdd(val){
+      if(this.userType==1)
+        this.clueEditor=val.name;
+    },
   },
+
 }
 </script>
 

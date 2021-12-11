@@ -51,9 +51,8 @@
         placeholder="线索录入人"
         :rules="[{ required: true, message: '请填写线索录入人' }]"
         readonly
-        @click="followshow = true"
+        @click="onChooseUserType"
       />
-
       <van-popup
       v-model="followShow"
       position="bottom"
@@ -75,6 +74,8 @@
         label="线索发现人"
         placeholder="线索发现人"
         :rules="[{ required: true, message: '请填写线索线索发现人' }]"
+        readonly
+        @click="onChooseUserType1"
       />
       <van-field
         v-model="clueResponsible"
@@ -83,6 +84,8 @@
         label="线索责任人"
         placeholder="线索责任人"
         :rules="[{ required: true, message: '请填写线索线索责任人' }]"
+        readonly
+        @click="onChooseUserType2"
       />
       <div style="margin: 16px;" class="submit">
         <van-button round block type="info" native-type="submit">提交</van-button>
@@ -105,6 +108,7 @@ export default {
   },
   data() {
     return {
+      userType:'',
       clueName: '',
       clueDate: '',
       clueEditor:'',
@@ -113,6 +117,7 @@ export default {
       //线索状态单选框
       radio: '',
       value: '',
+      val: '',
       name: '',
       dateShow: false,
       dateVal: '',
@@ -122,9 +127,7 @@ export default {
       maxDate: new Date(2025, 10, 1),
       //时间-现在时间
       currentDate: new Date(),
-      followshow: false,
-      followshow1: false,
-      followshow2: false,
+      followShow: false,
     };
   },
   methods: {
@@ -152,12 +155,28 @@ export default {
     toClueList(){
       this.$router.push('/clueList');
     },
+    onChooseUserType(){
+      this.followShow=true;
+     this.userType = 1;
+    },
+    onChooseUserType1(){
+      this.followShow=true;
+      this.userType = 2;
+    },
+    onChooseUserType2(){
+      this.followShow=true;
+      this.userType = 3;
+    },
     onFollowCancel(){
-      this.followshow=false;
+      this.followShow=false;
     },
     onFollowAdd(val){
-      this.followChsVal.val=val.name;
-      this.followChsVal.id=val.id;
+      if(this.userType==1)
+       this.clueEditor=val.name;
+      if(this.userType==2)
+        this.clueDiscover=val.name;
+      if(this.userType==3)
+        this.clueResponsible=val.name;
     },
     // 时间-时间录入处理
     dateConfirm(date) {

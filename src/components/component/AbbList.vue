@@ -29,19 +29,11 @@
           :accordion="isAccordion"
           @getValue="getValue($event)"
         />
-<<<<<<< HEAD
-        <van-button
-          native-type="button"
-          @click="getUser"
-          class="depart-confirm"
-        >确定</van-button>
-=======
         </van-col>
         <van-col offset="1" span="4.5">
-        <van-button @click="getUser" class="depart-confirm">确定</van-button>
+        <van-button @click="getUser" class="depart-confirm" native-type="button">确定</van-button>
         </van-col>
         </van-row>
->>>>>>> zjs
       </van-cell>
       <van-list
         v-model="abbloading"

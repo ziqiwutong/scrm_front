@@ -16,47 +16,21 @@
           placeholder="请选择客户"
           :rules="[{ required: true, message: '请选择客户' }]"
           readonly
-          @click="toAddFollow"
+          @click="userShow=true"
         />
         <van-popup
-          v-model="followShow"
+          v-model="userShow"
           position="bottom"
-          :style="{ height: '100%' }"
           :overlay="false"
           duration="0"
-        >
-          <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-          <van-search
-            v-model="followVal"
-            placeholder="请输入搜索关键词"
-            @search="onFollowSearch"
-            @cancel="onFollowSearchCancel"
-          />
-          <van-cell
-            v-for="item in followList"
-            :key="item.id"
-            @click="followConfirm(item)"
           >
-            <!-- 跟进人-跟进人信息 -->
-            <van-row>
-              <!-- 跟进人-跟进人头像 -->
-              <van-col span="4"
-              ><van-image round width="40" height="40" :src="item.userIcon"
-              /></van-col>
-              <!-- 跟进人-跟进人姓名 -->
-              <van-col span="6" class="list-content-name"
-              ><div class="van-ellipsis">
-                {{ item.username }}
-              </div></van-col
-              >
-              <!-- 跟进人-跟进人公司信息 -->
-              <van-col offset="2" class="list-content-msg">{{
-                  item.telephone
-                }}</van-col>
-            </van-row>
-          </van-cell>
-        </van-popup>
-
+          <AbbCusList
+          :type="3"
+          v-show="userShow"
+          @returnClick="onUserCancel"
+          @onCh="onUserAdd"
+          />
+          </van-popup>
         <van-field
           v-model="telephone"
           name="联系电话"
@@ -114,10 +88,15 @@
 <script>
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
+import AbbCusList from"../../component/AbbCusList.vue";
 export default {
   name: "addCommunicationLog",
+  components:{
+    AbbCusList,
+  },
   data() {
     return {
+      userShow:'',
       id:'',
       cuslist:[],
       followVal: "",
@@ -298,6 +277,14 @@ export default {
       }
 
       console.log(this.followList);
+    },
+    //组件关闭后的处理函数
+    onUserCancel(){
+      this.userShow =false;
+    },
+//点击相应用户后的点击处理事件，返回val，包括用户的id和name
+    onUserAdd (val){
+      this.customer=val.name;
     },
   },
 }

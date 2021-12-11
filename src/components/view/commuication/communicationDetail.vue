@@ -299,11 +299,12 @@ export default {
       const res=result.data;
       this.array = [];
       this.list = [];
-      console.log(this.array)
-      console.log("tempList:");
-      console.log(tempList);
-
-      if(res[0]==null)
+      // console.log(this.array)
+      // console.log("tempList:");
+      // console.log(tempList);
+      // console.log(res)
+      // console.log(res.data)
+      if(tempList[0]==null)
       {
         console.log(1);
         this.array.visitTimes=0;

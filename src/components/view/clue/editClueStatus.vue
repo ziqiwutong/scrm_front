@@ -27,9 +27,22 @@
         placeholder="更新录入人"
         :rules="[{ required: true, message: '请填写更新录入人' }]"
         readonly
-        @click="testVal = true"
+        @click="onChooseUserType"
       />
-        <AbbList :type=1 v-show="testVal" @returnClick="onTestCancel" @onCh="testConsole"/>
+        <van-popup
+          v-model="followShow"
+          position="bottom"
+          :style="{height:'100%'}"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbList
+            :type="1"
+            v-show="followShow"
+            @returnClick="onFollowCancel"
+            @onCh="onFollowAdd"
+          />
+        </van-popup>
         <!--提交-->
         <div class="submit">
           <van-button round size="normal" type="info" @click="Submit">提交更新</van-button>
@@ -58,7 +71,8 @@ export default {
     return {
       clueNotes: '',
       clueEditor:'',
-      testVal: false,
+      userType:'',
+      followShow:false,
     };
   },
   created () {
@@ -116,12 +130,16 @@ export default {
         }
       });
     },
-    onTestCancel(){
-      this.testVal=false;
+    onChooseUserType(){
+      this.followShow=true;
+      this.userType = 1;
     },
-    testConsole(val){
-      console.log(val);
-      this.clueEditor=val.name;
+    onFollowCancel(){
+      this.followShow=false;
+    },
+    onFollowAdd(val){
+      if(this.userType==1)
+        this.clueEditor=val.name;
     },
   },
 }
