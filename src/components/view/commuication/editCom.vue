@@ -8,43 +8,43 @@
     <!--  提交栏-->
     <div class="commit">
       <van-form >
-        <van-field
-          v-model="customer"
-          type="customer"
-          name="客户"
-          label="客户"
-          placeholder="请选择客户"
-          :rules="[{ required: true, message: '请选择客户' }]"
-          readonly
-          @click="userShow=true"
-        />
-        <van-popup
-          v-model="userShow"
-          position="bottom"
-          :overlay="false"
-          duration="0"
-          >
-          <AbbCusList
-          :type="3"
-          v-show="userShow"
-          @returnClick="onUserCancel"
-          @onCh="onUserAdd"
-          />
-          </van-popup>
-        <van-field
-          v-model="telephone"
-          name="联系电话"
-          label="联系电话"
-          placeholder="请填写联系电话"
-          :rules="[{ required: true, message: '请填写联系电话' }]"
-        />
-        <van-field
-          v-model="companyName"
-          name="客户公司"
-          label="客户公司"
-          placeholder="请填写客户公司"
-          :rules="[{ required: true, message: '请填写客户公司' }]"
-        />
+<!--        <van-field-->
+<!--          v-model="customer"-->
+<!--          type="customer"-->
+<!--          name="客户"-->
+<!--          label="客户"-->
+<!--          placeholder="请选择客户"-->
+<!--          :rules="[{ required: true, message: '请选择客户' }]"-->
+<!--          readonly-->
+<!--          @click="userShow=true"-->
+<!--        />-->
+<!--        <van-popup-->
+<!--          v-model="userShow"-->
+<!--          position="bottom"-->
+<!--          :overlay="false"-->
+<!--          duration="0"-->
+<!--          >-->
+<!--          <AbbCusList-->
+<!--          :type="3"-->
+<!--          v-show="userShow"-->
+<!--          @returnClick="onUserCancel"-->
+<!--          @onCh="onUserAdd"-->
+<!--          />-->
+<!--          </van-popup>-->
+<!--        <van-field-->
+<!--          v-model="telephone"-->
+<!--          name="联系电话"-->
+<!--          label="联系电话"-->
+<!--          placeholder="请填写联系电话"-->
+<!--          :rules="[{ required: true, message: '请填写联系电话' }]"-->
+<!--        />-->
+<!--        <van-field-->
+<!--          v-model="companyName"-->
+<!--          name="客户公司"-->
+<!--          label="客户公司"-->
+<!--          placeholder="请填写客户公司"-->
+<!--          :rules="[{ required: true, message: '请填写客户公司' }]"-->
+<!--        />-->
         <van-field name="radio" label="沟通方式" label-width="6em">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal" class="clueType">
@@ -57,12 +57,25 @@
         </van-field>
 
         <van-field
-          v-model="communicationTime"
-          name="沟通时间"
-          label="沟通时间"
-          placeholder="沟通时间"
-          :rules="[{ required: true, message: '请填写沟通时间，格式如下“2021-09-01 10:30:18”' }]"
+          readonly
+          clickable
+          name="datetimePicker"
+          :value="value"
+          label="时间选择"
+          placeholder="点击选择时间"
+          @click="dateShow = true"
         />
+        <van-popup v-model="dateShow" position="bottom">
+          <van-datetime-picker
+            v-model="dateVal"
+            type="datetime"
+            title="选择年月日"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @cancel="dateShow = false"
+            @confirm="dateConfirm"
+          />
+        </van-popup>
         <van-field
           v-model="comContent"
           rows="2"
@@ -74,11 +87,9 @@
           show-word-limit
         />
 
-        <div class="submit">
-          <van-button round size="large" type="info" @click="Submit">提交记录</van-button>
-        </div>
-        <div class="deleteUpdate">
-          <van-button plain round size="large" type="info" @click="clueDelete">删除记录</van-button>
+        <div class="button-block">
+          <van-button round class="button-edit-bo" type="info" @click="Submit">提交记录</van-button>
+          <van-button plain round  class="button-delete-bo" type="info" @click="clueDelete">删除记录</van-button>
         </div>
       </van-form>
     </div>
@@ -118,6 +129,7 @@ export default {
       minDate: new Date(2020, 0, 1),
       // 时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+      currentDate: new Date(),
       followShow: false,
       // 筛选-跟进人列表
       followList: [],
@@ -129,41 +141,45 @@ export default {
     };
   },
   created () {
-    this.test();
     this.cuslist = this.$route.query.cuslist;
+    this.test();
     console.log(this.cuslist)
   },
 
   methods: {
     async test(){
       this.id=this.$route.query.id;
+      let temp = this.cuslist.id;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
       let url = "/api/se/communication/queryCommunicationLogDetail";
       let postData = {
         id:this.id,
-        customerId:this.customerId,
+        customerId:temp,
         communicationWay:this.communicationWay,
       }
       const result = (await this.$http.get(url, {params:postData})).data.data;
       console.log(result);
       // console.log(result);
+      var a= result[1].communicationTime;
+      var b =a.lastIndexOf(':');
+      a=a.substring(0,b);
       this.customer=result[0].customerName;
       this.telephone=result[0].telephone;
       this.companyName=result[0].belongCompany;
       this.radio=result[1].communicationWay.toString();
-      this.communicationTime=result[1].communicationTime;
+      this.value=a;
       this.comContent=result[1].communicationContent;
     },
     async Submit() {
       let url = "/api/se/communication/editCommunicationLog";
       let postData = {
-        customerId:this.customerId,
+        customerId:this.cuslist.id,
         id: this.id,
         customerName:this.customerName,
         telephone:this.telephone,
         communicationWay:this.radio,
         communicationContent:this.comContent,
-        communicationTime:this.communicationTime,
+        communicationTime:this.value+":"+"00",
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
@@ -179,7 +195,7 @@ export default {
       let url = "/api/se/communication/deleteCommunicationLog";
       let postData = {
         communicationWay:this.radio,
-        customerId:this.customerId,
+        customerId:this.cuslist.id,
         id:this.id,
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data;
@@ -286,6 +302,23 @@ export default {
     onUserAdd (val){
       this.customer=val.name;
     },
+    // 时间-时间录入处理
+    dateConfirm(date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      var h = date.getHours();
+      var min =date.getMinutes();
+      // var s =date.getSeconds();
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      h = h < 10 ? "0" +h :h;
+      min =min <10 ? "0"+ min:min;
+      // s =s <10 ? "0"+s:s;
+      // this.value = y + "-" + m + "-" + d +" "+h+":"+min+":"+s;
+      this.value = y + "-" + m + "-" + d +" "+h+":"+min;
+      this.dateShow = false;
+    },
   },
 }
 </script>
@@ -336,18 +369,23 @@ export default {
 .follow-cancel-btn {
   border: none;
 }
-.submit {
-  position: absolute;
-  top: 420px;
-  left: 50px;
-  width: 120px;
+.button-block {
+  margin-left: 6%;
+  width: 88%;
+  display: flex;
+  padding-bottom: 4vw;
+  justify-content: space-between;
+  padding-top: 4vw;
 }
 
-.deleteUpdate {
-  position: absolute;
-  top: 420px;
-  left: 240px;
-  width: 120px;
+.button-edit-bo {
+  height: 13vw;
+  width: 40vw;
+}
+
+.button-delete-bo {
+  height: 13vw;
+  width: 40vw;
 }
 </style>
 

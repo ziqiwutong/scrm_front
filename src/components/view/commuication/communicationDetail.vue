@@ -70,7 +70,7 @@
           </van-tab>
           <van-tab title="线下">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
                 <template #right-icon>
                   <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
                 </template>
@@ -82,7 +82,7 @@
           </van-tab>
           <van-tab title="电话">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
                 <template #right-icon>
                   <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
                 </template>
@@ -106,7 +106,7 @@
           </van-tab>
           <van-tab title="微信">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
                 <template #right-icon>
                   <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
                 </template>
@@ -321,12 +321,13 @@ export default {
     },
 
     // 打电话
-    onCallPhone() {
+   onCallPhone() {
       let tel = "tel:" + this.cusDetail.telephone;
       window.location.href = tel;
       this.cusRelation = [];
-      this.newCusRelation(this.cusDetail.id, "打电话", "");
-      this.getCusRelation();
+      // this.newCusRelation(this.cusDetail.id, "打电话", "");
+      // this.getCusRelation();
+      this.newCommunicationLog(1);
     },
     // 复制电话号码
     copyCode() {
@@ -340,9 +341,13 @@ export default {
     onOpenWx() {
       window.location.href = "weixin://";
       this.cusRelation = [];
-      this.newCusRelation(this.cusDetail.id, "发微信", "");
-      this.getCusRelation();
-      this.getCusRelation();
+      // this.newCusRelation(this.cusDetail.id, "发微信", "");
+      // this.getCusRelation();
+      // this.getCusRelation();
+      this.newCommunicationLog(3);
+      console.log(123)
+      this.list=[];
+      this.onLoad();
     },
     //发微信
     sendWx() {
@@ -381,35 +386,49 @@ export default {
         }
         Toast.success("短信发送成功");
         this.cusRelation = [];
-        this.newCusRelation(this.cusDetail.id, "发短信", "");
-
-        this.getCusRelation();
+        // this.newCusRelation(this.cusDetail.id, "发短信", "");
+        //
+        // this.getCusRelation();
+        this.newCommunicationLog(2);
         this.message = "";
       }
     },
     // 客户关系-新建
-    async newCusRelation(id, type, detail) {
-      let url = "/api/se/customer/relation/insert";
-      const result = await this.$http.post(url, {
-        customerId: id,
-        relationType: type,
-        relationDetail: detail,
-      });
-      if (result.data.code == "200") {
+    // async newCusRelation(id, type, detail) {
+    //   let url = "/api/se/customer/relation/insert";
+    //   const result = await this.$http.post(url, {
+    //     customerId: this.cuslist.id,
+    //     relationType: type,
+    //     relationDetail: detail,
+    //   });
+    //   if (result.data.code == "200") {
+    //     // Toast("成功插入");
+    //     this.getCusStatus();
+    //   }
+    // },
+    async newCommunicationLog(radio){
+      let url = "/api/se/communication/addCommunicationLog";
+      let postData = {
+        customerId: this.cuslist.id ,
+        communicationWay:radio,
+      }
+      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+      if (result.code == "200") {
         // Toast("成功插入");
-        this.getCusStatus();
+        console.log(1222)
+        this.onLoad();
       }
     },
     // 获取客户关系
-    async getCusRelation() {
-      this.cusRelation = [];
-      let url = "/api/se/customer/relation/query";
-      const result = await this.$http.get(url + "?id=" + this.cusDetail.id);
-      if (result.data.code == "200") {
-        this.cusRelation = result.data.data;
-      }
-      console.log(this.cusRelation);
-    },
+    // async getCusRelation() {
+    //   this.cusRelation = [];
+    //   let url = "/api/se/customer/relation/query";
+    //   const result = await this.$http.get(url + "?id=" + this.cuslist.id);
+    //   if (result.data.code == "200") {
+    //     this.cusRelation = result.data.data;
+    //   }
+    //   console.log(this.cusRelation);
+    // },
     // 标签页-客户关系请求
     getCusStatus() {
       Toast("获取客户关系");

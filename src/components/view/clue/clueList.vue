@@ -1,7 +1,7 @@
 <template>
   <div >
     <!-- 导航栏 -->
-    <van-row>
+    <van-row class="header">
       <!-- 导航-线索类型筛选-->
       <div>
         <van-col span="6">
@@ -36,6 +36,7 @@
       <van-col class="addbtn" span="2" v-if="isSearch"
       ><van-icon name="plus" size="25" @click="toAdd" />
       </van-col>
+      <div class="divider"></div>
     </van-row>
     <!--线索表单区域-->
     <div class="list" >
@@ -150,7 +151,7 @@ export  default  {
         keySearch: this.searchVal
       }
       this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params:postData})).data.data
       for (let i = 0; i < result.length; i++) {
         let array = result[i];
         if(array.clueStatus == '新线索'){
@@ -257,6 +258,21 @@ export  default  {
 </script>
 
 <style lang="less" scoped>
+.header {
+  height: 12vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 99;
+}
+.divider {
+  position: relative;
+  top: 12vw;
+  background: #f8f8f8;
+  height: 2vw;
+}
 .clue_container {
   height:100%;
 }
@@ -296,7 +312,7 @@ export  default  {
 }
 
 .list {
-  padding-top: 20px;
+  padding-top: 17vw;
 }
 .clueDate {
   font-size: 13px;
@@ -328,7 +344,7 @@ export  default  {
 .van_swipe_cell {
   height: 50pt;
   width: 90%;
-  left: 7%;
+  left: 5%;
   margin-bottom: 5px;
   border-bottom: 1px solid #f7f8fa;
 }
@@ -346,6 +362,8 @@ export  default  {
 }
 
 /deep/.van-dropdown-menu__bar {
+  width: fit-content;
+  margin-left: 3vw;
   box-shadow: unset !important;
 }
 </style>

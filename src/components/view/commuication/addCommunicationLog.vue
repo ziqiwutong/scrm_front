@@ -8,43 +8,43 @@
     <!--  提交栏-->
     <div class="commit">
       <van-form @submit="onSubmit">
-        <van-field
-          v-model="customer"
-          type="customer"
-          name="客户"
-          label="客户"
-          placeholder="请选择客户"
-          :rules="[{ required: true, message: '请选择客户' }]"
-          readonly
-          @click="userShow=true"
-        />
-        <van-popup
-          v-model="userShow"
-          position="bottom"
-          :overlay="false"
-          duration="0"
-        >
-          <AbbCusList
-            :type="3"
-            v-show="userShow"
-            @returnClick="onUserCancel"
-            @onCh="onUserAdd"
-          />
-        </van-popup>
-        <van-field
-          v-model="telephone"
-          name="联系电话"
-          label="联系电话"
-          placeholder="请填写联系电话"
-          :rules="[{ required: true, message: '请填写联系电话' }]"
-        />
-        <van-field
-          v-model="companyName"
-          name="客户公司"
-          label="客户公司"
-          placeholder="请填写客户公司"
-          :rules="[{ required: true, message: '请填写客户公司' }]"
-        />
+<!--        <van-field-->
+<!--          v-model="customer"-->
+<!--          type="customer"-->
+<!--          name="客户"-->
+<!--          label="客户"-->
+<!--          placeholder="请选择客户"-->
+<!--          :rules="[{ required: true, message: '请选择客户' }]"-->
+<!--          readonly-->
+<!--          @click="userShow=true"-->
+<!--        />-->
+<!--        <van-popup-->
+<!--          v-model="userShow"-->
+<!--          position="bottom"-->
+<!--          :overlay="false"-->
+<!--          duration="0"-->
+<!--        >-->
+<!--          <AbbCusList-->
+<!--            :type="3"-->
+<!--            v-show="userShow"-->
+<!--            @returnClick="onUserCancel"-->
+<!--            @onCh="onUserAdd"-->
+<!--          />-->
+<!--        </van-popup>-->
+<!--        <van-field-->
+<!--          v-model="telephone"-->
+<!--          name="联系电话"-->
+<!--          label="联系电话"-->
+<!--          placeholder="请填写联系电话"-->
+<!--          :rules="[{ required: true, message: '请填写联系电话' }]"-->
+<!--        />-->
+<!--        <van-field-->
+<!--          v-model="companyName"-->
+<!--          name="客户公司"-->
+<!--          label="客户公司"-->
+<!--          placeholder="请填写客户公司"-->
+<!--          :rules="[{ required: true, message: '请填写客户公司' }]"-->
+<!--        />-->
         <van-field name="radio" label="沟通方式" label-width="6em">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal" class="clueType">
@@ -57,12 +57,25 @@
         </van-field>
 
         <van-field
-          v-model="communicationTime"
-          name="沟通时间"
-          label="沟通时间"
-          placeholder="沟通时间"
-          :rules="[{ required: true, message: '请填写沟通时间，格式如下“2021-09-01 10:30:18”' }]"
+          readonly
+          clickable
+          name="datetimePicker"
+          :value="value"
+          label="时间选择"
+          placeholder="点击选择时间"
+          @click="dateShow = true"
         />
+        <van-popup v-model="dateShow" position="bottom">
+          <van-datetime-picker
+            v-model="dateVal"
+            type="datetime"
+            title="选择年月日"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @cancel="dateShow = false"
+            @confirm="dateConfirm"
+          />
+        </van-popup>
 
         <van-field
           v-model="communicationContent"
@@ -100,7 +113,7 @@ export default {
       customer:'',
       telephone:'',
       companyName:'',
-      customerId:1,
+      customerId:'',
       communicationContent:'',
       //线索状态单选框
       radio: '',
@@ -125,18 +138,20 @@ export default {
   },
   created () {
    // this.customerId=this.$route.query.customerId;
+    this.cuslist = this.$route.query.cuslist;
   },
   methods: {
     async onSubmit() {
       let url = "/api/se/communication/addCommunicationLog";
+      let temp = this.cuslist.id;
+      console.log('t:' + temp);
       let postData = {
-        customerId: this.customerId,
+        customerId:  temp ,
         customerName:this.customerName,
         telephone:this.telephone,
         customer:this.customer,
         companyName:this.companyName,
-        clueResponsible:this.clueResponsible,
-        communicationTime:this.communicationTime,
+        communicationTime:this.value+":"+"00",
         communicationContent:this.communicationContent,
         communicationWay:this.radio,
       }
@@ -149,7 +164,23 @@ export default {
       else
         Toast('新建沟通记录失败,错误码' + result.code);
     },
-
+    // 时间-时间录入处理
+    dateConfirm(date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      var h = date.getHours();
+      var min =date.getMinutes();
+      // var s =date.getSeconds();
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      h = h < 10 ? "0" +h :h;
+      min =min <10 ? "0"+ min:min;
+      // s =s <10 ? "0"+s:s;
+      // this.value = y + "-" + m + "-" + d +" "+h+":"+min+":"+s;
+      this.value = y + "-" + m + "-" + d +" "+h+":"+min;
+      this.dateShow = false;
+    },
     onClickLeft() {
       this.$router.push({ name: "communicationDetail", query: { cuslist: this.$route.query.cuslist } });
     },
