@@ -406,7 +406,21 @@ export default {
   components: {
     AbbList,
   },
-  props: ["type"],
+  // props: {"type",'fCusDetail',"lq"}
+  props: {
+    type: {
+      type: Number,
+      required: true,
+    },
+    fCusDetail: {
+      type: Object,
+      required: false,
+    },
+    lq: {
+      type: Boolean,
+      required: false,
+    },
+  },
   data() {
     return {
       cusLock: false,
@@ -809,7 +823,7 @@ export default {
     },
     // 新建客户-返回
     onClickAddRe() {
-      this.addList = this.addListTemp
+      this.addList = this.addListTemp;
       this.$emit("returnClick");
     },
     // 新建客户-保存
@@ -1151,6 +1165,19 @@ export default {
       this.uploader2[0].url = this.$store.state.wxUser.imgUrl;
       //   this.addList.wxName =  this.$store.state.;
     }
+  },
+  watch: {
+    lq: {
+      handler() {
+        console.log(this.lq);
+        console.log(this.fCusDetail);
+        if (this.fCusDetail != null) {
+          this.addList = this.fCusDetail;
+          console.log(this.addList);
+        }
+      },
+      immediate: true,
+    },
   },
 };
 </script>

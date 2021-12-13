@@ -87,7 +87,7 @@
             />
           </form>
           <!-- 搜索图标 -->
-          <van-col class="nav-search-btn" span="1" offset="7" v-if="isSearch"
+          <van-col class="nav-search-btn" span="1" offset="6" v-if="isSearch"
             ><van-icon name="search" size="30" @click="toSearch"
           /></van-col>
           <!-- 分割线 -->
@@ -1589,6 +1589,9 @@ export default {
       handler(val) {
         let type = this.$route.query.type;
         this.type = type;
+        this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
         this.onLoad();
       },
       // 一进页面就执行
