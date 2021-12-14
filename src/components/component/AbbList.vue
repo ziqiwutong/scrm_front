@@ -11,28 +11,28 @@
       <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
       <van-cell v-if="this.type == 1">
         <van-row>
-          <van-col span="3" class="font_center">
-        部门:
-        </van-col>
-        <van-col>
-        <SelectTree
-          :props="props"
-          :options="optionData"
-          :value="valueId"
-          :clearable="isClearable"
-          :accordion="isAccordion"
-          @getValue="getValue($event)"
-        />
-        </van-col>
-        <van-col offset="1" span="4.5">
-        <van-button @click="getUser" class="depart-confirm">确定</van-button>
-        </van-col>
+          <van-col span="3" class="font_center"> 部门: </van-col>
+          <van-col>
+            <SelectTree
+              :props="props"
+              :options="listData"
+              :value="valueId"
+              :clearable="isClearable"
+              :accordion="isAccordion"
+              @getValue="getValue($event)"
+            />
+          </van-col>
+          <van-col offset="1" span="4.5">
+            <van-button @click="getUser" class="depart-confirm"
+              >确定</van-button
+            >
+          </van-col>
         </van-row>
       </van-cell>
       <van-list
         v-model="abbloading"
         :finished="abbfinished"
-        finished-text="没有更多了"
+        finished-text="没有更多用户了"
         @load="getUserList"
       >
         <van-cell
@@ -131,13 +131,31 @@ export default {
           updateTime: null,
         },
       ],
+      listData:[],
     };
   },
   computed: {
     /* 转树形数据 */
-    optionData() {
+    // optionData() {
+    //   Toast("数据加载中请稍后")
+    //   let cloneData = JSON.parse(JSON.stringify(this.list)); // 对源数据深度克隆
+    //   let resData = cloneData.filter((father) => {
+    //     // 循环所有项，并添加children属性
+    //     let branchArr = cloneData.filter(
+    //       (child) => father.id == child.parentId
+    //     ); // 返回每一项的子级数组
+    //     branchArr.length > 0 ? (father.children = branchArr) : ""; //给父级添加一个children属性，并赋值
+    //     return father.parentId == 0; //返回第一层
+    //   });
+    //   Toast("数据加载完毕")
+    //   return resData
+    // },
+  },
+  methods: {
+   optionData() {
+      Toast("数据加载中请稍后");
       let cloneData = JSON.parse(JSON.stringify(this.list)); // 对源数据深度克隆
-      return cloneData.filter((father) => {
+      let resData = cloneData.filter((father) => {
         // 循环所有项，并添加children属性
         let branchArr = cloneData.filter(
           (child) => father.id == child.parentId
@@ -145,9 +163,9 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : ""; //给父级添加一个children属性，并赋值
         return father.parentId == 0; //返回第一层
       });
+      Toast("数据加载完毕");
+      return resData;
     },
-  },
-  methods: {
     onFollowSearch() {
       this.followList = [];
       this.followPageProps.pageNum = 1;
@@ -172,6 +190,7 @@ export default {
       const res = await this.$http.get(url);
       console.log(res.data.data);
       this.list = res.data.data;
+      this.listData = this.optionData()
     },
     getValue(value) {
       this.valueId = value;
@@ -273,11 +292,10 @@ export default {
   margin-left: 60%;
   border: none;
 }
-.font_center{
+.font_center {
   margin-top: 2%;
 }
 .depart-confirm {
   height: 40px;
-
 }
 </style>

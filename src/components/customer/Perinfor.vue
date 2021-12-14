@@ -16,7 +16,12 @@
       v-if="cusDetail.customerIcon"
     />
     <div v-if="!cusDetail.customerIcon" class="list-img-none">
-      {{ cusDetail.customerName[0] }}
+      <div v-if="!cusDetail.customerName">
+       某
+      </div>
+      <div v-if="cusDetail.customerName">
+        {{ cusDetail.customerName[0] }}
+      </div>
     </div>
     <van-row class="cuscont">
       <!-- 共有-客户姓名 -->
@@ -1052,11 +1057,12 @@ export default {
       showCusType: "",
     };
   },
-  created() {
-    let cuslist = this.$route.query.cuslist;
-    this.cusDetail.customerName = cuslist.customerName;
-    this.getCusDetailByID(cuslist.id);
+  async created() {
+    let cuslist = this.$route.query.id;
+    // this.cusDetail.customerName = cuslist.customerName;
+    await this.getCusDetailByID(cuslist);
     console.log(this.cusDetail);
+    console.log(cuslist);
   },
   methods: {
     // 根据id查询客户信息
@@ -1299,9 +1305,10 @@ export default {
       // Toast("跳转商机界面");
       this.$router.push({
         name: "addBizOpp",
-        query: {
-          id: this.cusDetail.id,
+        params: {
+          customerId: this.cusDetail.id,
           customerName: this.cusDetail.customerName,
+          from: "/perinfor",
         },
       });
     },
@@ -1313,6 +1320,7 @@ export default {
         query: {
           id: this.cusDetail.id,
           customerName: this.cusDetail.customerName,
+          type:2
         },
       });
     },
@@ -1871,6 +1879,7 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
+    console.log(from, "beforeRouteEnter");
     if (to.path == "/customer") {
       to.meta.keepAlive = true;
     } else {

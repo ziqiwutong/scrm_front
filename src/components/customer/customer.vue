@@ -528,9 +528,8 @@ export default {
   },
   data() {
     return {
-
-      lq:false,
-      cusDetail:{
+      lq: false,
+      cusDetail: {
         id: "",
         customerType: "",
         belongCompany: "",
@@ -1306,7 +1305,7 @@ export default {
     // 客户列表-客户详情跳转
     onDetail(item) {
       // this.$router.replace("/perinfor");
-      this.$router.push({ name: "perinfor", query: { cuslist: item } });
+      this.$router.push({ name: "perinfor", query: { id: item.id } });
     },
     // 客户列表-滑动删除-弹出框
     detOn(val) {
@@ -2184,6 +2183,7 @@ export default {
       };
     },
     async userScrImg(base64) {
+      Toast("正在处理名片信息请稍后");
       let str = base64;
       let type = this.uploadPicType(str);
       let url = "/api/file/pic/base64StrToPic";
@@ -2204,7 +2204,6 @@ export default {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         })
         .then((res) => {
-          console.log(res.data.data);
           //url
           scrIconUrl = res.data.data;
         });
@@ -2225,7 +2224,7 @@ export default {
             this.cusDetail.telephone = scrP.mobile[0];
             this.cusDetail.position = scrP.title[0];
             this.cusDetail.customerName = scrP.name[0];
-            this.lq = !this.lq
+            this.lq = !this.lq;
             this.showform = true;
           }
         });
@@ -2241,6 +2240,7 @@ export default {
         let url = "/api/file/pic/base64StrToPic";
         let picture;
         let scrIconUrl;
+
         this.dealImage(str, 1000, this.userScrImg);
       }
 
