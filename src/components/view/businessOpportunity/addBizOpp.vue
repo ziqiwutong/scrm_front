@@ -328,8 +328,14 @@ export default {
         }
       );
 
-      } else if (this.returnData.returnPath === "/clue") {
-        this.$router.push('/clueDetail');
+      } else if (this.returnData.returnPath === "/clueDetail") {
+        this.$router.push({
+          path: '/clueDetail',
+          query: {
+            clueId:this.returnData.clueId,
+
+          }
+        });
         //做一些数据传输
 
       } else {
@@ -472,7 +478,7 @@ export default {
         boResponsible: this.boResponsible,
         boNotes: this.boNotes,
       };
-      const result = (await this.$http.get(url, qs.stringify(postData))).data;
+      const result = (await this.$http.post(url, qs.stringify(postData))).data;
 
       if (result.code === 200) {
         Toast("商机提交成功");

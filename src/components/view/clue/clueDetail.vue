@@ -169,6 +169,15 @@ export default {
       });
     },
     async sendToBizOpp() {
+      this.$router.push({
+        name: 'addBizOpp',
+        params: {
+          from: '/clueDetail',
+          clueName: this.list[0].clueName,
+          clueResponsible:this.list[0].clueResponsible ,
+          clueId: this.clueId,
+        }
+      });
       let url = "/api/se/clue/editClue";
       this.businessOpporitunityFlag=1;
       this.clueStatus='转换为商机';
@@ -185,9 +194,8 @@ export default {
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
       if (result.code === 200) {
         Toast('线索转换商机成功');
-        this.$router.push('addBizOpp');
       } else
-        Toast('线索转换商机,错误码' + result1.code);
+        Toast('线索转换商机,错误码' + result.code);
     },
   },
   created() {
