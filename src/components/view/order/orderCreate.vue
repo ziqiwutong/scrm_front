@@ -45,6 +45,22 @@
           placeholder="买家"
           :rules="[{ required: true, message: '请选择买家' }]"
         />
+        <!--    todo  type换成3-->
+        <van-popup
+          v-model="userShow"
+          position="bottom"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbCusList
+            :type="3"
+            v-show="userShow"
+            @returnClick="onUserCancel"
+            @onCh="onUserAdd"
+          />
+        </van-popup>
+
+
 
         <van-field
           v-model="orderStaff"
@@ -123,20 +139,7 @@
         @cancel="showPicker = false"
       />
     </van-popup>
-<!--    todo  type换成3-->
-    <van-popup
-      v-model="userShow"
-      position="bottom"
-      :overlay="false"
-      duration="0"
-    >
-      <AbbCusList
-        :type="3"
-        v-show="userShow"
-        @returnClick="onUserCancel"
-        @onCh="onUserAdd"
-      />
-    </van-popup>
+
 
 
   </div>
@@ -149,7 +152,7 @@ import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
 import { areaList } from "@vant/area-data";
 import {getUrl} from "../../../utils/replaceUrl";
-import AbbCusList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbCusList";
 // import AddForm from "../../component/AddForm";
 export default {
   name: "orderCreate",

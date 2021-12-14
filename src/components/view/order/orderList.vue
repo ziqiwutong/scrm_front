@@ -346,6 +346,7 @@ export default {
   },
 
 created(){
+  this.toJSON();
   this.active = parseInt(this.$route.query.active);
   if(this.active === 0) this.onClick(this.active,'全部');
   if(this.active === 1) this.onClick(this.active,'待付款');
@@ -387,11 +388,13 @@ created(){
       });
     },
     async onSearch() {
+      this.pageProps.pageNum=1;
+      this.list=[];
       let url = "/api/se/order/query";
       let postData = {
         currentPage: this.pageProps.pageNum++,
         pageCount: this.pageProps.pageSize,
-        // active:this.active,
+        keyword:this.searchValue,
         orderStatus: this.orderStatus
       }
       // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
@@ -425,7 +428,6 @@ created(){
         // active:this.active,
         orderStatus: this.orderStatus
       }
-      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       const result = (await this.$http.get(url,{params:postData})).data.data;
       if (result.length == 0) {
         // 已加载全部数据
@@ -456,25 +458,23 @@ created(){
             message: '确定删除吗？'
           }).then(() => {
             instance.close();
-             this.deletefun(instance.$attrs.title.orderID);//此处需要刷新页面
+             this.deletefun(instance.$attrs.title.id);//此处需要刷新页面
           });
           break;
       }
     },
-   async deletefun(orderID){
-     let url = "/api/se/order/deleteOrder";
+    toJSON(){},
+   async deletefun(id){
+     let url = "/api/se/order/delete";
      let postData = {
-       orderID: orderID
+       id: id
      }
-     const result = (await this.$http.post(url, qs.stringify(postData))).data
-     if(result.code === 200) {
+     const result1 = (await this.$http.post(url,postData,{headers: {"Content-Type": "application/json" } })).data
+     if (result1.code === 200) {
        Toast('订单删除成功');
-       this.list=[];
-       this.onLoad();
-       // this.$router.push('orderList');
-     }
-     else
-       Toast('订单删除失败,错误码' + result.code);
+       this.$router.push('orderList');
+     } else
+       Toast('订单删除失败,' + result1.msg);
     },
     ifShowDialog()
     {
@@ -492,24 +492,7 @@ created(){
   //margin-bottom: 40px;
   background-color: #F3F4F8;
 }
-//.orderList_tab{
-//  height: 100%;
-//}
-///deep/ .vant-tab-wrap{
-//.van-tabs__wrap{
-//  width: 100%;
-//}
-//}
-///deep/ .van-tabs__content {
-//  height: 100%;
-//}
-///deep/ .van-tab__pane{
-//  height: 100%;
-//}
-///deep/ .van-list{
-//  height: 100%;
-//  margin-bottom: 50px;
-//}
+
 /deep/ .van-tab{
    width:33%;
 }

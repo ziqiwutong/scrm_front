@@ -16,7 +16,7 @@
             class="follow-cancel-btn"
             @click="folCancel"
             native-type="button"
-            >取消</van-button
+          >取消</van-button
           ></van-col
         >
         <van-button
@@ -24,7 +24,7 @@
           @click="addNewCus"
           v-show="type == 3"
           native-type="button"
-          >新建客户</van-button
+        >新建客户</van-button
         >
       </van-row>
       <van-popup
@@ -70,77 +70,77 @@
           <van-row v-if="type == 1">
             <!-- 跟进人-跟进人头像 -->
             <van-col span="4"
-              ><van-image
-                round
-                width="40"
-                height="40"
-                :src="item.avatar"
-                v-if="item.avatar"
-              />
+            ><van-image
+              round
+              width="40"
+              height="40"
+              :src="item.avatar"
+              v-if="item.avatar"
+            />
               <div v-if="!item.avatar" class="list-img-none">
                 {{ item.name[0] }}
               </div>
             </van-col>
             <!-- 跟进人-跟进人姓名 -->
             <van-col span="6" class="list-content-name"
-              ><div class="van-ellipsis">
-                {{ item.name }}
-              </div></van-col
+            ><div class="van-ellipsis">
+              {{ item.name }}
+            </div></van-col
             >
             <!-- 跟进人-跟进人公司信息 -->
             <van-col offset="2" class="list-content-msg">{{
-              item.duty
-            }}</van-col>
+                item.duty
+              }}</van-col>
           </van-row>
           <van-row v-if="type == 2">
             <!-- 跟进人-跟进人头像 -->
             <van-col span="4"
-              ><van-image
-                round
-                width="40"
-                height="40"
-                :src="item.customerIcon"
-                v-if="item.customerIcon"
-              />
+            ><van-image
+              round
+              width="40"
+              height="40"
+              :src="item.customerIcon"
+              v-if="item.customerIcon"
+            />
               <div v-if="!item.customerIcon" class="list-img-none">
                 {{ item.customerName[0] }}
               </div>
             </van-col>
             <!-- 跟进人-跟进人姓名 -->
             <van-col span="6" class="list-content-name"
-              ><div class="van-ellipsis">
-                {{ item.customerName }}
-              </div></van-col
+            ><div class="van-ellipsis">
+              {{ item.customerName }}
+            </div></van-col
             >
             <!-- 跟进人-跟进人公司信息 -->
             <van-col offset="2" class="list-content-msg">{{
-              item.telephone
-            }}</van-col>
+                item.telephone
+              }}</van-col>
           </van-row>
           <van-row v-if="type == 3">
             <!-- 跟进人-跟进人头像 -->
             <van-col span="4"
-              ><van-image
-                round
-                width="40"
-                height="40"
-                :src="item.customerIcon"
-                v-if="item.customerIcon"
-              />
+            ><van-image
+              round
+              width="40"
+              height="40"
+              :src="item.customerIcon"
+              v-if="item.customerIcon"
+            />
               <div v-if="!item.customerIcon" class="list-img-none">
                 {{ item.customerName[0] }}
               </div>
             </van-col>
             <!-- 跟进人-跟进人姓名 -->
             <van-col span="6" class="list-content-name"
-              ><div class="van-ellipsis">
-                {{ item.customerName }}
-              </div></van-col
+            ><div class="van-ellipsis">
+              {{ item.customerName }}
+            </div></van-col
             >
             <!-- 跟进人-跟进人公司信息 -->
             <van-col offset="2" class="list-content-msg">{{
-              item.telephone
-            }}</van-col>
+                item.telephone
+              }}</van-col>
           </van-row>
         </van-cell>
       </van-list>
