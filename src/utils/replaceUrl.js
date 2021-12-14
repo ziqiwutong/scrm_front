@@ -31,13 +31,15 @@ export function getUrl() {
       readRecordList: '/fzk/mk/article/shareRecord',
       queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
-      wxConfig: '/fzk/mk/wx/jsApi',
-      yyConfig: '/fzk/mk/iuap/jsApi',
-      editArticle: '/fzk/mk/article/update',
-      getWxUserMsg: '/fzk/mk/wx/getWxUserInfo',
-      saveWxUserMsg: '/fzk/mk/article/addReadRecord',
-      queryProductList: '/api/queryProductList',
-      sendAppCode: '/fzk/mk/iuap/userInfo'
+      wxConfig:'/fzk/mk/wx/jsApi',
+      yyConfig:'/fzk/mk/iuap/jsApi',
+      editArticle:'/fzk/mk/article/update',
+      getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
+      saveWxUserMsg:'/fzk/mk/article/addReadRecord',
+      queryProductList:'/api/queryProductList',
+      sendAppCode:'/fzk/mk/iuap/userInfo',
+      getWmProduct:'/wm/se/weimob/queryProduct',
+      getDistributeUrl:'/wm/se/weimob/distributeUrl'
     },
     searchCustomer: {
       personal: '/api/se/customerRest/personal',
@@ -50,18 +52,42 @@ export function getUrl() {
   let development = {
     baseUrl: 'http://scrm.natapp1.cc/',
     contextShare: {
-      queryList: '/api/queryArticleList',
-      searchByKey: '/api/queryArticleByKey',
+      queryList: '/fzk/mk/article/queryPage',
+      searchByKey: '/fzk/mk/article/queryByTitle',
       addArticle: '/fzk/mk/article/insert',
-      articleDetail: '/api/queryArticle',
-      deleteArticle: '/api/deleteArticle',
-      readRecordList: '/api/allReadRecord',
-      queryShareMan: '/api/queryShareMan',
+      articleDetail: '/fzk/mk/article/detail',
+      deleteArticle: '/fzk/mk/article/delete',
+      readRecordList: '/fzk/mk/article/shareRecord',
+      queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
-      wxConfig: '/wx/jsApi'
+      wxConfig:'/fzk/mk/wx/jsApi',
+      yyConfig:'/fzk/mk/iuap/jsApi',
+      editArticle:'/fzk/mk/article/update',
+      getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
+      saveWxUserMsg:'/fzk/mk/article/addReadRecord',
+      queryProductList:'/api/queryProductList',
+      sendAppCode:'/fzk/mk/iuap/userInfo',
+      getWmProduct:'/wm/se/weimob/queryProduct',
+      getDistributeUrl:'/wm/se/weimob/distributeUrl'
+    },
+    searchCustomer: {
+      personal: '/api/se/customerRest/personal',
+      company: '/api/se/customerRest/company',
+      companyDetail:'/api/se/customerRest/companyDetail'
+    },
+    bizOppManager: {
+      queryBo: '/api/se/businessOpportunity/queryBizOpportunity',
+      queryBoByKey: '/api/se/businessOpportunity/queryBizOppByKey',
+      editBo:'/api/se/businessOpportunity/editBizOpp',
+      deleteBo: '/api/se/businessOpportunity/deleteBizOpp',
+      addBo: '/api/se/businessOpportunity/addBizOpp',
+      queryBoDetail: '/api/se/businessOpportunity/queryBizOpportunityDetail',
+    },
+    searchRelationship: {
+      queryRelation: '/api/se/customerRest/relation',
     }
   };
 
-  let env = JSON.stringify(developmentT);
+  let env = JSON.stringify(development);
   return env;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main_fix">
     <van-nav-bar title="潜在客户" />
     <div class="main">
       <van-grid clickable :column-num="3" :border="false" class="van-grid">
@@ -177,9 +177,12 @@ export default {
   background-color: #f3f4f8;
   height: 100%;
 }
+.main_fix{
+}
 .background {
   background-color: #f6f6f6;
-  height: 300px;
+  // height: 100%;
+  overflow: hidden;
 }
 </style>
 

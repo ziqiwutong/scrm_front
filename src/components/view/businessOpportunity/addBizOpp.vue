@@ -1,9 +1,11 @@
 <template>
+
   <div>
     <div class="navbar" @click="toBoList">
-      <van-nav-bar title="新建商机" left-text="返回" left-arrow />
+      <van-nav-bar title="新建商机" left-text="返回" left-arrow/>
     </div>
-    <van-form @submit="onSubmit" class="addBo">
+
+    <van-form @submit="onSubmit">
       <!-- 商机名称 -->
       <van-field
         clearable
@@ -26,25 +28,21 @@
         @click="boSelectCustomerShow = true"
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
+
       <van-popup
         v-model="boSelectCustomerShow"
         position="bottom"
-        :style="{ height: '100%' }"
+        :overlay="false"
+        duration="0"
       >
-        <div class="van-picker__toolbar">
-          <button
-            type="button"
-            class="van-picker__cancel"
-            @click="boSelectCustomerShow = false"
-          >
-            取消
-          </button>
-          <div class="van-ellipsis van-picker__title">选择目标客户</div>
-          <button type="button" class="van-picker__confirm">
-            新建客户
-          </button>
-        </div>
+        <AbbCusList
+          :type="3"
+          v-show="boSelectCustomerShow"
+          @returnClick="boSelectCustomerShow = false"
+          @onCh="getCustomerInfo"
+        />
       </van-popup>
+
 
       <!-- 点击选择负责人 -->
       <van-field
@@ -58,19 +56,22 @@
         @click="boSelectResponsibleShow = true"
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
-      <van-popup v-model="boSelectResponsibleShow" position="bottom">
-        <div class="van-picker__toolbar">
-          <button
-            type="button"
-            class="van-picker__cancel"
-            @click="boSelectResponsibleShow = false"
-          >
-            取消
-          </button>
-          <div class="van-ellipsis van-picker__title">选择商机负责人</div>
-          <button type="button" class="van-picker__confirm"></button>
-        </div>
+
+      <van-popup
+        v-model="boSelectResponsibleShow"
+        position="bottom"
+        :style="{ height: '100%' }"
+        :overlay="false"
+        duration="0"
+      >
+        <AbbList
+          :type="1"
+          v-show="boSelectResponsibleShow"
+          @returnClick="boSelectResponsibleShow = false"
+          @onCh="getResponsibleInfo"
+        />
       </van-popup>
+
 
       <!-- 编辑商机跟进流程 -->
       <van-field
@@ -87,23 +88,11 @@
         @click="boEditStageShow = true"
         :rules="[{ required: true, message: '填写不能为空' }]"
       />
-      <van-popup
-        v-model="boEditStageShow"
-        position="bottom"
-        @close="confirmEditStage()"
-      >
+      <van-popup v-model="boEditStageShow" position="bottom" @close="confirmEditStage()">
         <div class="van-picker__toolbar">
-          <button type="button" class="van-picker__cancel" @click="toggleAll()">
-            全选
-          </button>
+          <button type="button" class="van-picker__cancel" @click="toggleAll()">全选</button>
           <div class="van-ellipsis van-picker__title">选择所需阶段</div>
-          <button
-            type="button"
-            class="van-picker__confirm"
-            @click="confirmEditStage()"
-          >
-            确认
-          </button>
+          <button type="button" class="van-picker__confirm" @click="confirmEditStage()">确认</button>
         </div>
         <van-checkbox-group v-model="stageResult">
           <van-cell-group>
@@ -116,7 +105,7 @@
               class="selectableStage"
             >
               <template #right-icon>
-                <van-checkbox :name="item" ref="checkboxes" />
+                <van-checkbox :name="item" ref="checkboxes"/>
               </template>
             </van-cell>
           </van-cell-group>
@@ -137,24 +126,10 @@
       />
       <van-popup v-model="boFollowStageShow" position="bottom">
         <div class="van-picker__toolbar">
-          <button
-            type="button"
-            class="van-picker__cancel"
-            @click="
-              boFollowStageShow = false;
-              boFollowStage = '';
-            "
-          >
-            取消
+          <button type="button" class="van-picker__cancel" @click="boFollowStageShow = false; boFollowStage=''">取消
           </button>
           <div class="van-ellipsis van-picker__title">选择已跟进的阶段</div>
-          <button
-            type="button"
-            class="van-picker__confirm"
-            @click="confirmFollowStage()"
-          >
-            确认
-          </button>
+          <button type="button" class="van-picker__confirm" @click="confirmFollowStage()">确认</button>
         </div>
 
         <van-radio-group v-model="boFollowStage">
@@ -167,7 +142,7 @@
               @click="selectFollowStage(index, item)"
             >
               <template #right-icon>
-                <van-radio :name="item" />
+                <van-radio :name="item"/>
               </template>
             </van-cell>
           </van-cell-group>
@@ -220,37 +195,41 @@
         show-word-limit
       />
 
+
       <!-- 提交按钮 -->
-      <div style="margin: 16px" class="submit">
-        <van-button round block type="info" native-type="submit"
-          >提交</van-button
-        >
+      <div style="margin: 16px;" class="submit">
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
   </div>
 </template>
 
 
-
-
-
 <script>
-import { Toast } from "vant";
-import qs from "qs";
+import {Toast} from "vant";
+import qs from 'qs';
+import {getUrl} from "../../../utils/replaceUrl";
+import AbbList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbCusList";
+
 
 export default {
   name: "addBizOpp",
+  components: {
+    AbbList,
+    AbbCusList,
+  },
   data() {
     return {
-      customerId: 1003,
-      customerName: "李琦桢",
+      customerId: "",
+      customerName: "",
       boSelectCustomerShow: false,
 
-      boEditorID: 1003,
-      boEditor: "李琦桢",
+      boEditorId: "",
+      boEditor: "",
 
-      boResponsibleID: 1003,
-      boResponsible: "李琦桢",
+      boResponsibleId: "",
+      boResponsible: "",
       boSelectResponsibleShow: false,
 
       boName: "",
@@ -307,17 +286,42 @@ export default {
       boNotes: "",
     };
   },
+
+  watch: {
+    $route: {
+      immediate: true,
+      handler: function (to, from) {
+        //拿到目标参数 to.query.id 去再次请求数据接口
+        this.customerId = to.query.id;
+        this.customerName = to.query.customerName;
+      },
+    },
+  },
+
+  created() {
+    //当页面加载的时候从vuex获取当前使用者的信息作为 商机编辑者
+    this.boEditorId = this.$store.state.userMessage.userId;
+    this.boEditor = this.$store.state.userMessage.username;
+  },
   methods: {
-    async onLoad() {
-      this.boEditor = this.$store.state.userMessage.username;
-      //需要获取用户的id作为录入人id
-    },
-
+    //点击返回键跳转回商机列表
     toBoList() {
-      this.$router.push("/bizOppList");
+      this.$router.push('/bizOppList');
     },
 
-    // 时间录入处理
+    //从客户列表组件获取客户信息
+    getCustomerInfo(val) {
+      this.customerId = val.id;
+      this.customerName = val.name;
+    },
+
+    //从用户列表组件获取负责人信息
+    getResponsibleInfo(val) {
+      this.boResponsibleId = val.id;
+      this.boResponsible = val.name;
+    },
+
+    //获取预计成交时间转化为String形式
     boExpectDateConfirm(date) {
       let y = date.getFullYear();
       let m = date.getMonth() + 1;
@@ -329,6 +333,7 @@ export default {
       Toast(this.boExpectDate);
     },
 
+    //编辑商机流程的全选按钮
     toggleAll() {
       let length = this.stageList.length;
       for (let i = 0; i < length; i++) {
@@ -336,6 +341,7 @@ export default {
       }
     },
 
+    //编辑商机流程的点击事件，点击后切换状态(勾选or不勾选)
     toggle(index, item) {
       this.$refs.checkboxes[index].toggle();
 
@@ -420,25 +426,23 @@ export default {
     //表单提交
     async onSubmit() {
       //POST方式向后端提交数据
-      // let url = JSON.parse(getUrl()).bizOppManager.addBo;
-      let url = "/api/se/businessOpportunity/addBizOpp";
+      let url = JSON.parse(getUrl()).bizOppManager.addBo;
       let postData = {
-        //ToDo 改变量名
         customerId: this.customerId,
         customerName: this.customerName,
         boName: this.boName,
         boStatus: this.boStatus,
-        boEditorId: this.boEditorID,
+        boEditorId: this.boEditorId,
         boEditor: this.boEditor,
         boFullStage: this.boFullStage,
         boFollowStage: this.boFollowStage,
         boAmount: this.boAmount,
         boExpectDate: this.boExpectDate,
-        boResponsibleId: this.boResponsibleID,
+        boResponsibleId: this.boResponsibleId,
         boResponsible: this.boResponsible,
         boNotes: this.boNotes,
       };
-      const result = (await this.$http.post(url, qs.stringify(postData))).data;
+      const result = (await this.$http.get(url, qs.stringify(postData))).data;
 
       if (result.code === 200) {
         Toast("商机提交成功");
@@ -448,31 +452,11 @@ export default {
       }
     },
   },
-  created() {},
-  watch: {
-    $route: {
-      immediate: true,
-      handler: function (to, from) {
-        //拿到目标参数 to.query.id 去再次请求数据接口
-        this.customerId = to.query.id;
-        this.customerName = to.query.customerName;
-      },
-    },
-  },
-
-  //   $route(to, from) {
-  //     // from 对象中要 router 来源信息.
-  //     // do your want
-  //     console.log(from)
-  //     let cuslist = this.$route.query.cuslist;
-  //     this.customerId = cuslist.id;
-  //     this.customerName = cuslist.customerName;
-  //   },
-  // },
 };
 </script>
 
 <style lang="less" scoped>
+
 //改变所有van-field的上下间距
 .van-field {
   padding-top: 4vw;
@@ -506,5 +490,6 @@ export default {
   margin-top: 2vw;
   margin-bottom: 2vw;
 }
+
 </style>
 

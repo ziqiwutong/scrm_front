@@ -10,7 +10,7 @@ import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 import sweetTest from "../components/view/contextShare/sweetTest";
 import store from "../store";
-import {Toast} from "vant";
+import { Toast } from "vant";
 import orderList from "../components/view/order/orderList";
 import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
@@ -23,7 +23,6 @@ import clueDetail from "../components/view/clue/clueDetail";
 import addClue from "../components/view/clue/addClue";
 import editClueStatus from "../components/view/clue/editClueStatus";
 import PotentDetail from "../components/customer/potentialdetail"
-
 import orderCreate from "../components/view/order/orderCreate";
 import orderDetail from "../components/view/order/orderDetail";
 import orderEdit from "../components/view/order/orderEdit";
@@ -32,18 +31,19 @@ import addClueStatus from "../components/view/clue/addClueStatus";
 import bizOppList from "../components/view/businessOpportunity/bizOppList";
 import bizOppDetail from "../components/view/businessOpportunity/bizOppDetail";
 import addBizOpp from "../components/view/businessOpportunity/addBizOpp";
-import editBizOpp from "../components/view/businessOpportunity/editBizOpp";
 import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
 import productEdit from "../components/view/product/productEdit";
 import procustomer from "../components/customer/procustomer"
-
 import searchList from "../components/view/searchCustomer/searchList";
 import searchCustomer from "../components/view/searchCustomer/searchCustomer";
 import bkIntroduce from "../components/view/searchCustomer/bkIntroduce";
 import searchCompanyDetail from "../components/view/searchCustomer/searchCompanyDetail";
-
+import communicationList from "../components/view/commuication/communicationList";
+import communicationDetail from "../components/view/commuication/communicationDetail";
+import addCommunicationLog  from "../components/view/commuication/addCommunicationLog"
+import editCom from "../components/view/commuication/editCom"
 Vue.use(Router)
 
 const routes = [
@@ -90,7 +90,10 @@ const routes = [
   {
     path: '/procustomer',
     name: 'procustomer',
-    component: procustomer
+    component: procustomer,
+    meta: {
+      keepAlive: true // 需要被缓存
+    }
   },
   {
     path: '/potential',
@@ -162,16 +165,13 @@ const routes = [
   },
   {
     path: '/bizOppDetail',
+    name: 'bizOppDetail',
     component: bizOppDetail
   },
   {
     path: '/addBizOpp',
     name: "addBizOpp",
     component: addBizOpp
-  },
-  {
-    path: '/editBizOpp',
-    component: editBizOpp
   },
   {
     path: '/orderEdit',
@@ -232,9 +232,27 @@ const routes = [
     path: '/searchCompanyDetail',
     name: 'searchCompanyDetail',
     component: searchCompanyDetail
+  },
+  {
+    path: '/communicationList',
+    component: communicationList
+  },
+  {
+    path: '/communicationDetail',
+    name: 'communicationDetail',
+    component: communicationDetail,
+  },
+  {
+    path: '/addCommunicationLog',
+    name:'addCommunicationLog',
+    component: addCommunicationLog,
+  },
+  {
+    path: '/editCom',
+    name: 'editCom',
+    component: editCom,
   }
 ];
-
 
 const router = new Router({
 

@@ -26,14 +26,26 @@
         label="更新录入人"
         placeholder="更新录入人"
         :rules="[{ required: true, message: '请填写更新录入人' }]"
+        readonly
+        @click="onChooseUserType"
       />
-        <!--提交-->
-        <div class="submit">
-          <van-button round size="normal" type="info" @click="Submit">提交更新</van-button>
-        </div>
-        <!--删除更新-->
-        <div class="deleteUpdate">
-          <van-button plain round size="normal" type="info" @click="clueDelete">删除更新</van-button>
+        <van-popup
+          v-model="followShow"
+          position="bottom"
+          :style="{height:'100%'}"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbList
+            :type="1"
+            v-show="followShow"
+            @returnClick="onFollowCancel"
+            @onCh="onFollowAdd"
+          />
+        </van-popup>
+        <div class="button-block">
+          <van-button round class="button-edit-bo" type="info" @click="Submit">提交更新</van-button>
+          <van-button plain round  class="button-delete-bo" type="info" @click="clueDelete">删除更新</van-button>
         </div>
       </van-form>
     </div>
@@ -43,12 +55,20 @@
 <script>
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
+import AddForm from "../../component/AddForm";
+import AbbList from "../../component/AbbList";
 export default {
   name: "editClueStatus",
+  components:{
+    AddForm,
+    AbbList,
+  },
   data() {
     return {
       clueNotes: '',
       clueEditor:'',
+      userType:'',
+      followShow:false,
     };
   },
   created () {
@@ -62,7 +82,7 @@ export default {
       let postData = {
         id:this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params:postData})).data.data;
       console.log(result);
       this.clueNotes=result.clueNotes;
       this.clueEditor=result.clueEditor;
@@ -106,7 +126,17 @@ export default {
         }
       });
     },
-
+    onChooseUserType(){
+      this.followShow=true;
+      this.userType = 1;
+    },
+    onFollowCancel(){
+      this.followShow=false;
+    },
+    onFollowAdd(val){
+      if(this.userType==1)
+        this.clueEditor=val.name;
+    },
   },
 }
 </script>
@@ -122,18 +152,38 @@ export default {
   }
 }
 
+/*改变所有van-field的上下间距,该样式在popup中*/
+.van-field {
+  padding-top: 4vw;
+  padding-bottom: 4vw;
+  padding-left: 8vw;
+}
+
+/*修改van-field里面的label元素距离右边输入栏的距离*/
+/deep/ .van-field__label {
+  margin-right: 10vw;
+}
+
 .clueEdit_container{
   padding-top: 52px;
 }
-.submit {
-  position: absolute;
-  top: 200px;
-  left: 40px;
+
+.button-block {
+  margin-top: 4vw;
+  margin-left: 6%;
+  width: 88%;
+  display: flex;
+  padding-bottom: 4vw;
+  justify-content: space-between;
 }
 
-.deleteUpdate {
-  position: absolute;
-  top: 200px;
-  left: 250px;
+.button-edit-bo {
+  height: 13vw;
+  width: 40vw;
+}
+
+.button-delete-bo {
+  height: 13vw;
+  width: 40vw;
 }
 </style>

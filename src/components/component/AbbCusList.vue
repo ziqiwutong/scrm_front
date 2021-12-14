@@ -10,17 +10,41 @@
     >
       <!--   此处两个button添加的native-type是为了防止点击后将vantage的表单组件自动提交，
              详情见vantage官网 https://youzan.github.io/vant/#/zh-CN/form 最下方的常见问题  -->
-      <van-button
-        native-type="button"
-        class="follow-cancel-btn"
-        @click="folCancel"
-      >取消</van-button>
-      <van-cell v-if="this.type == 1">
-        <van-row>
-          <van-col span="3" class="font_center">
-        部门:
-        </van-col>
+      <van-row>
         <van-col>
+          <van-button
+            class="follow-cancel-btn"
+            @click="folCancel"
+            native-type="button"
+            >取消</van-button
+          ></van-col
+        >
+        <van-button
+          class="follow-cancel-btn1"
+          @click="addNewCus"
+          v-show="type == 3"
+          native-type="button"
+          >新建客户</van-button
+        >
+      </van-row>
+      <van-popup
+        v-model="addCus"
+        position="bottom"
+        :overlay="false"
+        duration="0"
+      >
+        <AddForm :type="1" v-show="addCus" @returnClick="onAddCancel" />
+      </van-popup>
+      <!-- <AddForm :type="1" v-show="addCus" @returnClick="onAddCancel" /> -->
+      <van-search
+        v-model="followVal"
+        placeholder="请输入搜索关键词"
+        @search="onFollowSearch"
+        @cancel="onFollowSearchCancel"
+        v-if="this.type != 1"
+      />
+      <van-cell v-if="this.type == 1">
+        部门:
         <SelectTree
           :props="props"
           :options="optionData"
@@ -29,11 +53,7 @@
           :accordion="isAccordion"
           @getValue="getValue($event)"
         />
-        </van-col>
-        <van-col offset="1" span="4.5">
-        <van-button @click="getUser" class="depart-confirm" native-type="button">确定</van-button>
-        </van-col>
-        </van-row>
+        <van-button @click="getUser" class="depart-confirm">确定</van-button>
       </van-cell>
       <van-list
         v-model="abbloading"
@@ -72,6 +92,56 @@
               item.duty
             }}</van-col>
           </van-row>
+          <van-row v-if="type == 2">
+            <!-- 跟进人-跟进人头像 -->
+            <van-col span="4"
+              ><van-image
+                round
+                width="40"
+                height="40"
+                :src="item.customerIcon"
+                v-if="item.customerIcon"
+              />
+              <div v-if="!item.customerIcon" class="list-img-none">
+                {{ item.customerName[0] }}
+              </div>
+            </van-col>
+            <!-- 跟进人-跟进人姓名 -->
+            <van-col span="6" class="list-content-name"
+              ><div class="van-ellipsis">
+                {{ item.customerName }}
+              </div></van-col
+            >
+            <!-- 跟进人-跟进人公司信息 -->
+            <van-col offset="2" class="list-content-msg">{{
+              item.telephone
+            }}</van-col>
+          </van-row>
+          <van-row v-if="type == 3">
+            <!-- 跟进人-跟进人头像 -->
+            <van-col span="4"
+              ><van-image
+                round
+                width="40"
+                height="40"
+                :src="item.customerIcon"
+                v-if="item.customerIcon"
+              />
+              <div v-if="!item.customerIcon" class="list-img-none">
+                {{ item.customerName[0] }}
+              </div>
+            </van-col>
+            <!-- 跟进人-跟进人姓名 -->
+            <van-col span="6" class="list-content-name"
+              ><div class="van-ellipsis">
+                {{ item.customerName }}
+              </div></van-col
+            >
+            <!-- 跟进人-跟进人公司信息 -->
+            <van-col offset="2" class="list-content-msg">{{
+              item.telephone
+            }}</van-col>
+          </van-row>
         </van-cell>
       </van-list>
     </van-popup>
@@ -79,11 +149,13 @@
 </template>
 
 <script>
+import AddForm from "./AddForm.vue";
 import SelectTree from "./SelectTree.vue";
 import { Toast } from "vant";
 export default {
   name: "AbbList",
   components: {
+    AddForm,
     SelectTree,
   },
 
@@ -174,7 +246,7 @@ export default {
       this.getUserList();
     },
     async getData() {
-      let url = "/api/cms/user/department";
+      let url = "http://118.122.48.47:33333/cms/user/department";
       const res = await this.$http.get(url);
       console.log(res.data.data);
       this.list = res.data.data;
@@ -211,40 +283,98 @@ export default {
     // 获取用户消息
     async getUserList() {
       //用户列表
-      if (this.valueId == null) {
-        this.preid = 0;
-      } else {
-        if (this.type == 1) {
-          let url = "/api/cms/user/query";
-          const res = await this.$http.get(url, {
-            params: {
-              count: 10,
-              preId: this.preid,
-              departmentId: this.valueId,
-            },
-          });
-          this.abbloading = false;
-          const tempList = res.data.data;
-          this.cusNum = res.data.totalCount;
-          if (tempList.length == 0) {
-            // 已加载全部数据
-            this.abbfinished = true;
-            Toast("已加载全部数据！");
-          } else {
-            for (let i = 0; i < tempList.length; i++) {
-              this.followList.push(tempList[i]);
-              if (i == tempList.length - 1) {
-                this.preid = tempList[i].id;
-              }
+      if (this.type == 1) {
+        let url = "/api/cms/user/query";
+        const res = await this.$http.get(url, {
+          params: {
+            count: 10,
+            preId: this.preid,
+            departmentId: this.valueId,
+          },
+        });
+        this.abbloading = false;
+        const tempList = res.data.data;
+        this.cusNum = res.data.totalCount;
+        if (tempList.length == 0) {
+          // 已加载全部数据
+          this.abbfinished = true;
+          Toast("已加载全部数据！");
+        } else {
+          for (let i = 0; i < tempList.length; i++) {
+            this.followList.push(tempList[i]);
+            if (i == tempList.length - 1) {
+              this.preid = tempList[i].id;
             }
-            this.getUserList();
+          }
+          this.getUserList();
+        }
+      }
+      // 客户列表
+      else if (this.type == 2) {
+        this.abbloading = true;
+        let url = "/api/se/customer/query";
+        if (this.followVal != "") {
+          url += "?like_customerName=" + this.followVal;
+        }
+        const res = await this.$http.get(url, {
+          params: {
+            currentPage: this.followPageProps.pageNum++,
+            pageCount: this.followPageProps.pageSize,
+          },
+        });
+        this.abbfinished = false;
+        this.abbloading = false;
+        const tempList = res.data.data;
+        this.cusNum = res.data.totalCount;
+        if (tempList.length == 0) {
+          // 已加载全部数据
+          this.abbfinished = true;
+          Toast("已加载全部数据！");
+        } else {
+          for (let i = 0; i < tempList.length; i++) {
+            this.followList.push(tempList[i]);
+          }
+        }
+      } else if (this.type == 3) {
+        this.abbloading = true;
+        let url = "/api/se/customer/query";
+        if (this.followVal != "") {
+          url += "?like_customerName=" + this.followVal;
+        }
+        const res = await this.$http.get(url, {
+          params: {
+            currentPage: this.followPageProps.pageNum++,
+            pageCount: this.followPageProps.pageSize,
+          },
+        });
+
+        this.abbloading = false;
+        const tempList = res.data.data;
+        this.cusNum = res.data.totalCount;
+        if (tempList.length == 0) {
+          // 已加载全部数据
+          this.abbfinished = true;
+          Toast("已加载全部数据！");
+        } else {
+          for (let i = 0; i < tempList.length; i++) {
+            this.followList.push(tempList[i]);
           }
         }
       }
     },
+    // 判断状态
+    judgeState() {
+      if (this.type == 1) {
+        this.getData();
+      } else if (this.type == 2) {
+        this.getUserList();
+      } else if (this.type == 3) {
+        this.getUserList();
+      }
+    },
   },
   created() {
-    this.getData();
+    this.judgeState();
   },
 };
 </script>
@@ -254,6 +384,11 @@ export default {
 .follow-cancel-btn {
   border: none;
 }
+.follow-cancel-btn1 {
+  border: none;
+  margin-left: 55%;
+}
+
 //客户姓名
 .list-content-name {
   font-size: 15px;
@@ -279,12 +414,10 @@ export default {
   margin-left: 60%;
   border: none;
 }
-.font_center{
-  margin-top: 2%;
-}
 .depart-confirm {
-  height: 40px;
-
+  margin-left: 5%;
+  height: 100%;
+  margin-top: 0%;
+  width: 18%;
 }
 </style>
-

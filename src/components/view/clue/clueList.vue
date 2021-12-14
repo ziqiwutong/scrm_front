@@ -1,7 +1,7 @@
 <template>
   <div >
     <!-- 导航栏 -->
-    <van-row>
+    <van-row class="header">
       <!-- 导航-线索类型筛选-->
       <div>
         <van-col span="6">
@@ -36,6 +36,7 @@
       <van-col class="addbtn" span="2" v-if="isSearch"
       ><van-icon name="plus" size="25" @click="toAdd" />
       </van-col>
+      <div class="divider"></div>
     </van-row>
     <!--线索表单区域-->
     <div class="list" >
@@ -87,8 +88,9 @@ export  default  {
         { text: "全部线索", value: 0 },
         { text: "新线索", value: 1 },
         { text: "跟进中", value: 2 },
-        { text: "已转换为商机", value: 3 },
+        { text: "转换为商机", value: 3 },
       ],
+      clueClass: "全部线索",
       // 搜索-搜索内容
       searchVal: "",
       // 搜索-搜索图标展示（同时绑定新建和分割线的显示）
@@ -109,12 +111,21 @@ export  default  {
   methods: {
     //clueList线索分类选择
     onOrderList(clueVal) {
-      if (clueVal == 0) this.clueClass = "全部线索";
-      else if (clueVal == 1) this.clueClass = "新线索";
-      else if (clueVal == 2) this.clueClass = "跟进中";
-      else if (clueVal == 3) this.clueClass = "已转换为商机";
-      console.log(this.clueClass);
-      console.log(this.listOrder);
+      if (clueVal == 0) {
+        this.clueClass = "全部线索";
+      }
+      else if (clueVal == 1) {
+        this.clueClass = "新线索";
+      }
+      else if (clueVal == 2) {
+        this.clueClass = "跟进中";
+      }
+      else if (clueVal == 3) {
+        this.clueClass = "转换为商机";
+      }
+      this.pageProps.currentPage=1;
+      this.list=[];
+      this.onLoad();
     },
     // 线索列表-搜索功能-取消
     onSearchCancel() {
@@ -140,7 +151,7 @@ export  default  {
         keySearch: this.searchVal
       }
       this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params:postData})).data.data
       for (let i = 0; i < result.length; i++) {
         let array = result[i];
         if(array.clueStatus == '新线索'){
@@ -158,13 +169,15 @@ export  default  {
     },
     async onLoad() {
       let url = "/api/se/clue/queryClue";
+      url = this.urlCusTypeChoose(url);
+      console.log(url);
       let postData = {
-        pageCount: this.pageProps.pageCount++,
-        currentPage: this.pageProps.currentPage,
+        pageCount: this.pageProps.pageCount,
+        currentPage: this.pageProps.currentPage++,
         active:this.active
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-      if (result.length == 0) {
+      const result = (await this.$http.get(url, {params:postData})).data.data
+      if (result.length != postData.pageCount) {
         // 已加载全部数据
         this.finished = true;
         Toast('已加载全部数据！');
@@ -212,11 +225,23 @@ export  default  {
       const result = (await this.$http.post(url, qs.stringify(postData))).data
       if(result.code === 200) {
         Toast('线索删除成功');
+        this.list=[];
+        this.onLoad();
       }
       else
         Toast('线索删除失败,错误码' + result.code);
     },
     onDetail() {
+    },
+    urlCusTypeChoose(url) {
+      if (this.clueClass == "全部线索")
+        return url + "?" + "clueList=全部线索";
+      else if (this.clueClass == "新线索")
+        return url + "?" + "clueList=新线索";
+      else if (this.clueClass == "跟进中")
+        return url + "?" + "clueList=跟进中";
+      else if (this.clueClass == "转换为商机")
+        return url + "?" + "clueList=转换为商机";
     },
     // 跳转至线索详情页
     toCLueDetail(clueId) {
@@ -233,6 +258,21 @@ export  default  {
 </script>
 
 <style lang="less" scoped>
+.header {
+  height: 12vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 99;
+}
+.divider {
+  position: relative;
+  top: 12vw;
+  background: #f8f8f8;
+  height: 2vw;
+}
 .clue_container {
   height:100%;
 }
@@ -272,7 +312,7 @@ export  default  {
 }
 
 .list {
-  padding-top: 20px;
+  padding-top: 17vw;
 }
 .clueDate {
   font-size: 13px;
@@ -304,7 +344,7 @@ export  default  {
 .van_swipe_cell {
   height: 50pt;
   width: 90%;
-  left: 7%;
+  left: 5%;
   margin-bottom: 5px;
   border-bottom: 1px solid #f7f8fa;
 }
@@ -322,6 +362,8 @@ export  default  {
 }
 
 /deep/.van-dropdown-menu__bar {
+  width: fit-content;
+  margin-left: 3vw;
   box-shadow: unset !important;
 }
 </style>

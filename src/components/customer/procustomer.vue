@@ -1,168 +1,176 @@
 <template>
   <div>
     <div :class="this.sortShow ? 'main-fix' : ''">
-      <!-- 导航栏 -->
-      <van-nav-bar
-        :title="this.type"
-        left-text="返回"
-        left-arrow
-        @click-left="onClickLeft"
-        class="nav-color"
-      >
-      </van-nav-bar>
-      <!-- 功能栏 -->
-      <van-row>
-        <!-- 筛选功能 -->
-        <van-col span="8">
-          <van-dropdown-menu
-            active-color="#1989fa"
-            :close-on-click-outside="false"
+      <div class="nav-fix">
+        <!-- 导航栏 -->
+        <van-nav-bar
+          :title="this.type"
+          left-text="返回"
+          left-arrow
+          @click-left="onClickLeft"
+          class="nav-color"
+        >
+        </van-nav-bar>
+        <!-- 功能栏 -->
+        <van-row>
+          <!-- 筛选功能 -->
+          <van-col span="6">
+            <van-dropdown-menu
+              active-color="#1989fa"
+              :close-on-click-outside="false"
+              v-model="tScrShow"
+            >
+              <van-dropdown-item title="筛选" ref="item">
+                <van-row v-for="item in scrList" :key="item.name">
+                  <p class="screen-name">{{ item.name }}</p>
+                  <van-button
+                    v-for="item1 in item.class"
+                    :key="item1.name"
+                    :class="
+                      item1.isSelected ? 'active-screen-btn' : 'screen-btn'
+                    "
+                    @click="cutTabClick(item1)"
+                  >
+                    {{ item1.name }}</van-button
+                  >
+                </van-row>
+                <div class="screen-name">
+                  所在地区
+                  <p
+                    class="follow-choose"
+                    @click="toScreArea"
+                    v-show="this.ifAreaChoose"
+                  >
+                    请选择>>>
+                  </p>
+                  <p
+                    class="follow-choose"
+                    @click="toScreArea"
+                    v-show="!this.ifAreaChoose"
+                  >
+                    {{ this.scrCity }}
+                  </p>
+                </div>
+                <!-- 筛选按钮 -->
+                <div style="padding: 5px 16px">
+                  <van-button
+                    type="default"
+                    @click="reset"
+                    class="screen-reset-btn"
+                    hairline
+                    >重置</van-button
+                  >
+                  <van-button
+                    type="info"
+                    @click="screen"
+                    class="screen-confirm-btn"
+                    >确定</van-button
+                  >
+                </div>
+              </van-dropdown-item>
+            </van-dropdown-menu>
+          </van-col>
+          <!-- 记录客户总数 -->
+          <van-col class="nav-cusnum-font" v-if="isSearch"
+            >客户总数:{{ this.cusNum }}</van-col
           >
-            <van-dropdown-item title="筛选" ref="item">
-              <van-row v-for="item in scrList" :key="item.name">
-                <p class="screen-name">{{ item.name }}</p>
-                <van-button
-                  v-for="item1 in item.class"
-                  :key="item1.name"
-                  :class="item1.isSelected ? 'active-screen-btn' : 'screen-btn'"
-                  @click="cutTabClick(item1)"
+          <!-- 搜索客户 -->
+          <form action="/">
+            <van-search
+              v-if="!isSearch"
+              v-model="searchVal"
+              show-action
+              placeholder="请输入搜索关键词"
+              @search="onSearch"
+              @cancel="onSearchCancel"
+              class="nav-search-box"
+            />
+          </form>
+          <!-- 搜索图标 -->
+          <van-col class="nav-search-btn" span="1" offset="6" v-if="isSearch"
+            ><van-icon name="search" size="30" @click="toSearch"
+          /></van-col>
+          <!-- 分割线 -->
+          <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
+          <!-- 新建客户 -->
+          <van-col class="nav-add-btn" span="1" v-if="isSearch"
+            ><van-icon name="plus" size="30" @click="toAdd" />
+          </van-col>
+        </van-row>
+      </div>
+      <div class="list-highcollapse"></div>
+      <!-- 客户列表 -->
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <van-list
+          class="list"
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <!-- 客户列表-滑动单元格 -->
+          <van-swipe-cell v-for="item in cusList" :key="item.id">
+            <van-row @click="onDetail(item)" class="list-content">
+              <!--客户信息行-->
+              <van-row>
+                <!-- 客户列表-头像 -->
+                <van-col span="4" offset="1">
+                  <van-image
+                    round
+                    width="40"
+                    height="40"
+                    :src="item.customerIcon"
+                    v-if="item.customerIcon"
+                  />
+                  <!-- 没有头像的客户头像样式 -->
+                  <div v-if="!item.customerIcon" class="list-img-none">
+                    {{ item.customerName[0] }}
+                  </div>
+                </van-col>
+                <!-- 客户列表-客户姓名 -->
+                <van-col span="11" class="list-content-name"
+                  ><div class="van-ellipsis">
+                    {{ item.customerName }}
+                  </div></van-col
                 >
-                  {{ item1.name }}</van-button
+                <!-- 客户列表-进入客户池时间 -->
+                <van-col span="8" class="list-content-time"
+                  >{{ item.enterPoolDate }}进入客户池</van-col
+                >
+                <!-- 客户列表-客户公司信息 -->
+                <van-col span="16" class="list-content-msg">{{
+                  item.belongCompany
+                }}</van-col>
+              </van-row>
+              <!-- 客户标签行 -->
+              <van-row>
+                <van-col span="4"></van-col>
+                <!-- 显示标签 -->
+                <van-col class="list-content-tag"
+                  ><van-tag
+                    color="#E7F7E3"
+                    text-color="#67C74D"
+                    v-for="item2 in item.customerLabels"
+                    :key="item2.id"
+                    >{{ item2.labelType + ":" + item2.labelName }}</van-tag
+                  ></van-col
                 >
               </van-row>
-              <div class="screen-name">
-                所在地区
-                <p
-                  class="follow-choose"
-                  @click="toScreArea"
-                  v-show="this.ifAreaChoose"
-                >
-                  请选择>>>
-                </p>
-                <p
-                  class="follow-choose"
-                  @click="toScreArea"
-                  v-show="!this.ifAreaChoose"
-                >
-                  {{ this.scrCity }}
-                </p>
-              </div>
-              <!-- 筛选按钮 -->
-              <div style="padding: 5px 16px">
-                <van-button
-                  type="default"
-                  @click="reset"
-                  class="screen-reset-btn"
-                  hairline
-                  >重置</van-button
-                >
-                <van-button
-                  type="info"
-                  @click="screen"
-                  class="screen-confirm-btn"
-                  >确定</van-button
-                >
-              </div>
-            </van-dropdown-item>
-          </van-dropdown-menu>
-        </van-col>
-        <!-- 记录客户总数 -->
-        <van-col class="nav-cusnum-font" v-if="isSearch"
-          >客户总数:{{ this.cusNum }}</van-col
-        >
-        <!-- 搜索客户 -->
-        <form action="/">
-          <van-search
-            v-if="!isSearch"
-            v-model="searchVal"
-            show-action
-            placeholder="请输入搜索关键词"
-            @search="onSearch"
-            @cancel="onSearchCancel"
-            class="nav-search-box"
-          />
-        </form>
-        <!-- 搜索图标 -->
-        <van-col class="nav-search-btn" span="1" offset="4" v-if="isSearch"
-          ><van-icon name="search" size="30" @click="toSearch"
-        /></van-col>
-        <!-- 分割线 -->
-        <van-col class="nav-separate" span="1" v-if="isSearch">|</van-col>
-        <!-- 新建客户 -->
-        <van-col class="nav-add-btn" span="1" v-if="isSearch"
-          ><van-icon name="plus" size="30" @click="toAdd" />
-        </van-col>
-      </van-row>
-      <!-- 客户列表 -->
-      <van-list
-        class="list"
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <!-- 客户列表-滑动单元格 -->
-        <van-swipe-cell v-for="item in cusList" :key="item.id">
-          <van-row @click="onDetail(item)" class="list-content">
-            <!--客户信息行-->
-            <van-row>
-              <!-- 客户列表-头像 -->
-              <van-col span="4" offset="1">
-                <van-image
-                  round
-                  width="40"
-                  height="40"
-                  :src="item.customerIcon"
-                  v-if="item.customerIcon"
-                />
-                <!-- 没有头像的客户头像样式 -->
-                <div v-if="!item.customerIcon" class="list-img-none">
-                  {{ item.customerName[0] }}
-                </div>
-              </van-col>
-              <!-- 客户列表-客户姓名 -->
-              <van-col span="11" class="list-content-name"
-                ><div class="van-ellipsis">
-                  {{ item.customerName }}
-                </div></van-col
-              >
-              <!-- 客户列表-进入客户池时间 -->
-              <van-col span="8" class="list-content-time"
-                >{{ item.enterPoolDate }}进入客户池</van-col
-              >
-              <!-- 客户列表-客户公司信息 -->
-              <van-col span="16" class="list-content-msg">{{
-                item.belongCompany
-              }}</van-col>
             </van-row>
-            <!-- 客户标签行 -->
-            <van-row>
-              <van-col span="4"></van-col>
-              <!-- 显示标签 -->
-              <van-col class="list-content-tag"
-                ><van-tag
-                  color="#E7F7E3"
-                  text-color="#67C74D"
-                  v-for="item2 in item.customerLabels"
-                  :key="item2.id"
-                  >{{ item2.labelType + ":" + item2.labelName }}</van-tag
-                ></van-col
-              >
-            </van-row>
-          </van-row>
-          <!-- 客户列表-滑动删除 -->
-          <template #right>
-            <van-button
-              square
-              text="删除"
-              type="danger"
-              class="delete-button"
-              @click="detOn(item.id)"
-            />
-          </template>
-          <van-divider />
-        </van-swipe-cell>
-      </van-list>
+            <!-- 客户列表-滑动删除 -->
+            <template #right>
+              <van-button
+                square
+                text="删除"
+                type="danger"
+                class="delete-button"
+                @click="detOn(item.id)"
+              />
+            </template>
+            <van-divider />
+          </van-swipe-cell>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <!-- 客户列表-滑动单元格-删除对话框 -->
     <van-dialog
@@ -267,13 +275,7 @@
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
-            <van-uploader
-              multiple
-              :max-size="500 * 1024"
-              @oversize="onOversize"
-              v-model="uploader"
-              :max-count="1"
-            />
+            <van-uploader multiple v-model="uploader" :max-count="1" />
           </template>
         </van-field>
         <!-- 客户信息-姓名 -->
@@ -491,6 +493,8 @@ export default {
   data() {
     return {
       type: "",
+      // 刷新
+      refreshing: false,
       dialogShow: false,
       // 客户类型-排序-种类
       sortCusType: "createTime",
@@ -527,18 +531,18 @@ export default {
       // 点击加号-弹出层信息
       actions: [
         { name: "新增潜在客户", callback: this.formClick },
-        { name: "扫描名片", callback: this.onPicture },
+        // { name: "扫描名片", callback: this.onPicture },
       ],
       // 点击加号-扫描名片-弹出层
       pictureShow: false,
       // 扫描名片-传入文件
-
+      tScrShow: false,
       // 新建客户-弹出层
       showform: false,
       // 新建客户-时间-弹窗
       dateShow: false,
       // 新建客户-时间-选择值
-      dateVal: "",
+      dateVal: new Date(2000, 0, 1),
       // 新建客户-时间-时间最小值
       minDate: new Date(1920, 0, 1),
       // 新建客户-时间-时间最大值
@@ -859,13 +863,22 @@ export default {
       ifbulidChoose: true,
       //分类
       userType: 0,
+      data64: "",
     };
   },
   methods: {
     onClickLeft() {
       this.$router.back("/potential");
     },
-
+    onRefresh() {
+      // 清空列表数据
+      this.finished = false;
+      this.pageProps.pageNum = 1;
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true;
+      this.onLoad();
+    },
     // 客户排序-客户分类选择-排序
     onOrderList(cusVal) {
       if (cusVal == 0) {
@@ -894,6 +907,8 @@ export default {
     // 客户列表-搜索功能
     onSearch() {
       this.cusList = [];
+      this.pageProps.pageNum = 1;
+      this.finished = false;
       this.onLoad();
     },
     // 客户列表-搜索功能-关闭弹窗
@@ -906,6 +921,13 @@ export default {
     },
     // 客户列表-列表加载
     async onLoad() {
+      let type = this.$route.query.type;
+      this.type = type;
+      if (this.refreshing) {
+        this.cusList = [];
+        this.refreshing = false;
+      }
+
       let url = "/api/se/customer/query";
       // url = this.urlSortChoose(url);
       url += "?";
@@ -1099,7 +1121,7 @@ export default {
       this.pageProps.pageNum = 1;
       this.finished = false;
       this.onLoad();
-      this.scrShow = false;
+      this.$refs.item.toggle();
     },
 
     // 新建客户-弹窗
@@ -1229,11 +1251,150 @@ export default {
     // 新建客户-返回
     onClickAddRe() {
       this.showform = false;
+      this.addList = this.addListTemp;
     },
     // 新建客户-保存
     onClickAddSave() {
       this.showform = false;
       this.onClickSumbmit();
+    },
+    // 处理回调函数的坑 冗杂没救了
+    async userImg(base64) {
+      let str = this.uploader[0].content;
+      let type = this.uploadPicType(str);
+      // this.uploadCusIcon(str, type, type.length);
+      let url = "/api/file/pic/base64StrToPic";
+      let picture;
+      str = base64;
+      if (type.length == 3) {
+        picture = str.slice(22);
+      } else if (type.length == 4) {
+        picture = str.slice(23);
+      }
+      console.log(picture);
+      let params = new FormData();
+      params.append("picBase64Str", picture);
+      params.append("picFormat", type);
+      params.append("picType", "customerIcon");
+      await this.$http
+        .post(url, params, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+        .then((res) => {
+          console.log(res.data.data);
+          this.addList.customerIcon = res.data.data;
+        });
+      if (this.addList.customerType == "个人客户") {
+        this.addList.customerType = 0;
+      } else {
+        this.addList.customerType = 1;
+      }
+
+      if (
+        this.addList.customerStatus == "未分配" ||
+        this.addList.customerStatus == "潜在客户"
+      ) {
+        this.addList.followStaffId = "";
+        this.addList.followStaffName = "";
+      }
+      // 客户不是潜在客户
+      this.addList.potential = 1;
+      this.addList.potentialType = this.type;
+
+      function removeEmptyField(obj) {
+        var newObj = {};
+        if (typeof obj === "string") {
+          obj = JSON.parse(obj);
+        }
+        if (obj instanceof Array) {
+          newObj = [];
+        }
+        if (obj instanceof Object) {
+          for (var attr in obj) {
+            // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
+            if (
+              obj.hasOwnProperty(attr) &&
+              obj[attr] !== "" &&
+              obj[attr] !== null &&
+              obj[attr] !== undefined
+            ) {
+              if (obj[attr] instanceof Object) {
+                // 空数组或空对象不加入新对象(去掉[],{})
+                if (
+                  JSON.stringify(obj[attr]) === "{}" ||
+                  JSON.stringify(obj[attr]) === "[]"
+                ) {
+                  continue;
+                }
+                // 属性值为对象,则递归执行去除方法
+                newObj[attr] = removeEmptyField(obj[attr]);
+              } else if (
+                typeof obj[attr] === "string" &&
+                ((obj[attr].indexOf("{") > -1 && obj[attr].indexOf("}") > -1) ||
+                  (obj[attr].indexOf("[") > -1 && obj[attr].indexOf("]") > -1))
+              ) {
+                // 属性值为JSON时
+                try {
+                  var attrObj = JSON.parse(obj[attr]);
+                  if (attrObj instanceof Object) {
+                    newObj[attr] = removeEmptyField(attrObj);
+                  }
+                } catch (e) {
+                  newObj[attr] = obj[attr];
+                }
+              } else {
+                newObj[attr] = obj[attr];
+              }
+            }
+          }
+        }
+        return newObj;
+      }
+      this.addList = removeEmptyField(this.addList);
+      console.log(this.addList);
+      url = "/api/se/customer/insert";
+      let postData = this.addList;
+      const result = (await this.$http.post(url, postData)).data;
+      if (result.code == "200") {
+        Toast("成功添加客户");
+      }
+      this.addList = this.addListTemp;
+      this.uploader = [];
+      this.showform = false;
+      this.cusList = [];
+      this.finished = false;
+      this.pageProps.pageNum = 1;
+      this.onLoad();
+    },
+    dealImage(base64, w, callback) {
+      var newImage = new Image();
+      var quality = 0.6; //压缩系数0-1之间
+      newImage.src = base64;
+      newImage.setAttribute("crossOrigin", "Anonymous"); //url为外域时需要
+      var imgWidth, imgHeight;
+      newImage.onload = function () {
+        imgWidth = this.width;
+        imgHeight = this.height;
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        if (Math.max(imgWidth, imgHeight) > w) {
+          if (imgWidth > imgHeight) {
+            canvas.width = w;
+            canvas.height = (w * imgHeight) / imgWidth;
+          } else {
+            canvas.height = w;
+            canvas.width = (w * imgWidth) / imgHeight;
+          }
+        } else {
+          canvas.width = imgWidth;
+          canvas.height = imgHeight;
+          quality = 0.6;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+        var base64 = canvas.toDataURL("image/jpeg", quality);
+        callback(base64);
+      };
     },
     // 新建客户-提交
     async onClickSumbmit() {
@@ -1259,111 +1420,95 @@ export default {
           // this.uploadCusIcon(str, type, type.length);
           let url = "/api/file/pic/base64StrToPic";
           let picture;
-          if (type.length == 3) {
-            picture = str.slice(22);
-          } else if (type.length == 4) {
-            picture = str.slice(23);
-          }
-          console.log(picture);
-          let params = new FormData();
-          params.append("picBase64Str", picture);
-          params.append("picFormat", type);
-          params.append("picType", "customerIcon");
-          await this.$http
-            .post(url, params, {
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            })
-            .then((res) => {
-              console.log(res.data.data);
-              this.addList.customerIcon = res.data.data;
-            });
-        }
-
-        // 传输
-        if (this.addList.customerType == "个人客户") {
-          this.addList.customerType = 0;
+          this.dealImage(str, 1000, this.userImg);
         } else {
-          this.addList.customerType = 1;
-        }
-
-        if (
-          this.addList.customerStatus == "未分配" ||
-          this.addList.customerStatus == "潜在客户"
-        ) {
-          this.addList.followStaffId = "";
-          this.addList.followStaffName = "";
-        }
-        // 客户不是潜在客户
-        this.addList.potential = 1;
-        this.addList.potentialType = this.type;
-
-        function removeEmptyField(obj) {
-          var newObj = {};
-          if (typeof obj === "string") {
-            obj = JSON.parse(obj);
+          // 传输
+          if (this.addList.customerType == "个人客户") {
+            this.addList.customerType = 0;
+          } else {
+            this.addList.customerType = 1;
           }
-          if (obj instanceof Array) {
-            newObj = [];
+
+          if (
+            this.addList.customerStatus == "未分配" ||
+            this.addList.customerStatus == "潜在客户"
+          ) {
+            this.addList.followStaffId = "";
+            this.addList.followStaffName = "";
           }
-          if (obj instanceof Object) {
-            for (var attr in obj) {
-              // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
-              if (
-                obj.hasOwnProperty(attr) &&
-                obj[attr] !== "" &&
-                obj[attr] !== null &&
-                obj[attr] !== undefined
-              ) {
-                if (obj[attr] instanceof Object) {
-                  // 空数组或空对象不加入新对象(去掉[],{})
-                  if (
-                    JSON.stringify(obj[attr]) === "{}" ||
-                    JSON.stringify(obj[attr]) === "[]"
-                  ) {
-                    continue;
-                  }
-                  // 属性值为对象,则递归执行去除方法
-                  newObj[attr] = removeEmptyField(obj[attr]);
-                } else if (
-                  typeof obj[attr] === "string" &&
-                  ((obj[attr].indexOf("{") > -1 &&
-                    obj[attr].indexOf("}") > -1) ||
-                    (obj[attr].indexOf("[") > -1 &&
-                      obj[attr].indexOf("]") > -1))
+          // 客户不是潜在客户
+          this.addList.potential = 1;
+          this.addList.potentialType = this.type;
+
+          function removeEmptyField(obj) {
+            var newObj = {};
+            if (typeof obj === "string") {
+              obj = JSON.parse(obj);
+            }
+            if (obj instanceof Array) {
+              newObj = [];
+            }
+            if (obj instanceof Object) {
+              for (var attr in obj) {
+                // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
+                if (
+                  obj.hasOwnProperty(attr) &&
+                  obj[attr] !== "" &&
+                  obj[attr] !== null &&
+                  obj[attr] !== undefined
                 ) {
-                  // 属性值为JSON时
-                  try {
-                    var attrObj = JSON.parse(obj[attr]);
-                    if (attrObj instanceof Object) {
-                      newObj[attr] = removeEmptyField(attrObj);
+                  if (obj[attr] instanceof Object) {
+                    // 空数组或空对象不加入新对象(去掉[],{})
+                    if (
+                      JSON.stringify(obj[attr]) === "{}" ||
+                      JSON.stringify(obj[attr]) === "[]"
+                    ) {
+                      continue;
                     }
-                  } catch (e) {
+                    // 属性值为对象,则递归执行去除方法
+                    newObj[attr] = removeEmptyField(obj[attr]);
+                  } else if (
+                    typeof obj[attr] === "string" &&
+                    ((obj[attr].indexOf("{") > -1 &&
+                      obj[attr].indexOf("}") > -1) ||
+                      (obj[attr].indexOf("[") > -1 &&
+                        obj[attr].indexOf("]") > -1))
+                  ) {
+                    // 属性值为JSON时
+                    try {
+                      var attrObj = JSON.parse(obj[attr]);
+                      if (attrObj instanceof Object) {
+                        newObj[attr] = removeEmptyField(attrObj);
+                      }
+                    } catch (e) {
+                      newObj[attr] = obj[attr];
+                    }
+                  } else {
                     newObj[attr] = obj[attr];
                   }
-                } else {
-                  newObj[attr] = obj[attr];
                 }
               }
             }
+            return newObj;
           }
-          return newObj;
+          this.addList = removeEmptyField(this.addList);
+          console.log(this.addList);
+          let url = "/api/se/customer/insert";
+          let postData = this.addList;
+          const result = (await this.$http.post(url, postData)).data;
+          if (result.code == "200") {
+            Toast("成功添加客户");
+            this.addList = this.addListTemp;
+            console.log(result.data);
+          }
+          this.addList = this.addListTemp;
+          this.uploader = [];
+          this.showform = false;
+          this.cusList = [];
+          this.pageProps.pageNum = 1;
+          this.finished = false;
+          this.onLoad();
         }
-        this.addList = removeEmptyField(this.addList);
-        console.log(this.addList);
-        let url = "/api/se/customer/insert";
-        let postData = this.addList;
-        const result = (await this.$http.post(url, postData)).data;
-        if (result.code == "200") {
-          Toast("成功添加客户");
-          console.log(result.data);
-        }
-        this.addList = this.addListTemp;
-        this.uploader = [];
-        this.showform = false;
-        this.cusList = [];
-        this.pageProps.pageNum = 1;
-        this.finished = false;
-        this.onLoad();
       }
     },
     // 新建客户-头像格式判断
@@ -1428,10 +1573,32 @@ export default {
       }
     },
   },
+  beforeRouteLeave(to, from, next) {
+    from.meta.keepAlive = true;
+    this.scollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    next();
+  },
   created() {
     let type = this.$route.query.type;
     this.type = type;
     this.onLoad();
+  },
+  watch: {
+    $route: {
+      handler(val) {
+        let type = this.$route.query.type;
+        this.type = type;
+        this.cusList = [];
+        this.pageProps.pageNum = 1;
+        this.finished = false;
+        this.onLoad();
+      },
+      // 一进页面就执行
+      immediate: true,
+      // 深度观察监听
+      deep: true,
+    },
   },
 };
 </script>
@@ -1444,6 +1611,8 @@ export default {
 /deep/.van-dropdown-menu__title {
   color: #1e1c27;
   font-size: 13px;
+}
+/deep/.van-dropdown-menu {
 }
 /deep/.van-dropdown-menu__bar {
   box-shadow: unset !important;
@@ -1721,5 +1890,14 @@ export default {
   color: #ffffff;
   text-align: center;
   line-height: 40px;
+}
+.nav-fix {
+  position: fixed;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+.list-highcollapse {
+  height: 80px;
 }
 </style>

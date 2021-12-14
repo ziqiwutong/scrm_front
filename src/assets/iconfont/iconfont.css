@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
-  src: url('iconfont.woff2?t=1638438831529') format('woff2'),
-       url('iconfont.woff?t=1638438831529') format('woff'),
-       url('iconfont.ttf?t=1638438831529') format('truetype');
+  src: url('iconfont.woff2?t=1637831707785') format('woff2'),
+       url('iconfont.woff?t=1637831707785') format('woff'),
+       url('iconfont.ttf?t=1637831707785') format('truetype');
 }
 [class^="icon-third"], [class*="icon-third"]/*这里有空格*/
 .iconfont {
@@ -25,7 +25,19 @@
   content: "\e606";
 }
 
-.icon-third-duanxin:before {
+.icon-third-visit:before {
+  content: "\e63f";
+}
+
+.icon-third-wechat:before {
+  content: "\e605";
+}
+
+.icon-third-call:before {
+  content: "\e606";
+}
+
+.icon-third-message:before {
   content: "\e607";
 }
 

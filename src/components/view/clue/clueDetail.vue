@@ -1,21 +1,24 @@
 <template>
   <div class="container">
     <!--返回箭头-->
-    <div class="back_arrow" @click="toClueList">
-      <van-icon name="arrow-left"/>
-      <div>返回</div>
-    </div>
+    <HeaderNavBar @returnClick="toClueList" />
     <!--竖向进度条-->
     <div class="Step">
-      <van-steps direction="vertical"  :active="list.length" active-color="#cccccc">
+      <van-steps
+        direction="vertical"
+        :active="list.length"
+        active-color="#cccccc"
+      >
         <van-step >
           <template v-slot:inactive-icon>
             <van-icon class-prefix="icon-third" name="circle-company" color="#3490f4"/>
           </template>
           <p>线索</p>
-          <p>{{ list[0].clueName }}</p>
-          <div class="edit" @click="toEditClue(list[0].id)">
-            <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
+          <div class="cluetitle">
+            <p>{{ list[0].clueName }}</p>
+            <div  @click="toEditClue(list[0].id)">
+              <van-button plain type="info" size="mini">编辑</van-button>
+            </div>
           </div>
           <div class="cluedetail">
             <p>录入人：{{ list[0].clueEditor }}</p>
@@ -29,9 +32,11 @@
             <van-icon class-prefix="icon-third" name="circle-company" color="#3490f4"/>
           </template>
           <p>更新</p>
-          <p>{{ item.clueNotes }}</p>
-          <div class="edit" @click="toEditClueStatus(item.id)">
-            <van-button plain type="info" size="mini" class="editBtn2">编辑</van-button>
+          <div class="cluetitle">
+            <p>{{ item.clueNotes }}</p>
+            <div @click="toEditClueStatus(item.id)">
+              <van-button plain type="info" size="mini">编辑</van-button>
+            </div>
           </div>
           <div class="cluedetail">
             <p>录入人：{{ item.clueEditor }}</p>
@@ -39,14 +44,6 @@
           </div>
         </van-step>
       </van-steps>
-      <!--转换为商机-->
-      <div class="toBizOpp">
-        <van-button round size="normal" type="info" @click="toBizOpp"> 转换为商机</van-button>
-      </div>
-      <!--删除线索-->
-      <div class="deleteClue">
-        <van-button plain round size="normal" type="info" @click="clueDelete1"> 删除线索</van-button>
-      </div>
       <!--新增线索更新-->
       <div class="addUpdate">
         <van-image
@@ -56,6 +53,12 @@
           @click="addClueStatus()"
         />
       </div>
+      <div class="clueBtn">
+        <!--转换为商机-->
+          <van-button round class="button-edit-bo" type="info" @click="toBizOpp"> 转换为商机</van-button>
+        <!--删除线索-->
+          <van-button plain round class="button-delete-bo" type="info" @click="clueDelete1"> 删除线索</van-button>
+      </div>
     </div>
   </div>
 
@@ -63,14 +66,21 @@
 
 <script>
 import {Toast} from "vant";
-import qs from 'qs'// axios参数包
+import qs from 'qs'
+import HeaderNavBar from "../../component/HeaderNavBar";
+// axios参数包
 export default {
   name: "clueDetail",
+  components: {HeaderNavBar},
   data() {
     return {
       id:'',
       clueId:'',
       active: 1,
+      boDate:'',
+      boStatus: '',
+      loading: false,
+      finished: false,
       list: [
         {
           clueName:'',
@@ -80,9 +90,6 @@ export default {
         }
       ],
     };
-  },
-  updated() {
-    this.onLoad();
   },
   methods: {
     toClueList() {
@@ -118,7 +125,7 @@ export default {
     async onLoad() {
       let url = "/api/se/clue/queryClueStatus";
       let postData = {clueId:this.$route.query.clueId};
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params:postData})).data.data
       this.list = [];
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
@@ -162,45 +169,44 @@ export default {
       });
     },
     async sendToBizOpp() {
-      let url = "/api/se/clue/toBizOpp";
+      let url = "/api/se/clue/editClue";
+      this.businessOpporitunityFlag=1;
+      this.clueStatus='转换为商机';
       let postData = {
-        id: this.id
+        id: this.$route.query.id,
+        clueName:this.clueName,
+        clueDate:this.clueDate,
+        clueEditor:this.clueEditor,
+        clueDiscover:this.clueDiscover,
+        clueResponsible:this.clueResponsible,
+        clueStatus:this.clueStatus,
+        businessOpporitunityFlag:this.businessOpporitunityFlag,
       }
-      const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
-      if (result1.code === 200) {
+      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+      if (result.code === 200) {
         Toast('线索转换商机成功');
-        this.$router.push('clueList');
+        this.$router.push('addBizOpp');
       } else
         Toast('线索转换商机,错误码' + result1.code);
     },
   },
   created() {
-    this.onLoad();
     this.clueId = this.$route.query.clueId;
+    this.onLoad();
   }
 }
 </script>
 
 <style lang="less" scoped>
-.back_arrow {
-  bclue-width: 0px;
-  position: absolute;
-  left: 5px;
-  top: 13px;
-  width: 30px;
-  height: 30px;
-}
-
-.back_arrow div {
-  position: fixed;
-  top: 10px;
-  left: 25px
+.container {
+  width: 100vw;
+  overflow-x: hidden;
+  padding-bottom: 1rem;
 }
 
 .Step {
-  position: absolute;
-  top: 40px;
-  left: 12px;
+  margin-top: 40px;
+  margin-left: 12px;
 }
 
 .Step p {
@@ -209,17 +215,10 @@ export default {
   width: 225px;
   margin: 2px 0;
 }
-
-.editBtn1 {
-  position: absolute;
-  right: 0px;
-  top: 20%;
-}
-
-.editBtn2 {
-  position: absolute;
-  right: 0px;
-  top: 25%;
+.cluetitle{
+  display: inline-flex;
+  justify-content: space-between;
+  width: 80vw;
 }
 
 .cluedetail {
@@ -231,23 +230,32 @@ export default {
   color: #929396;
 }
 
-.toBizOpp {
-  position: absolute;
-  bottom: -55px;
-  left: 40px;
+
+.clueBtn{
+  //display: inline-flex;
+  //justify-content: space-around;
+  //width: 100vw;
+  margin-left: 3%;
+  width: 92%;
+  display: flex;
+  padding-top: 2vw;
+  padding-bottom: 4vw;
+  justify-content: space-between;
 }
 
-.deleteClue {
-  position: absolute;
-  bottom: -55px;
-  left: 220px;
-  width:50%;
+.button-edit-bo {
+  height: 13vw;
+  width: 40vw;
 }
+
+.button-delete-bo {
+  height: 13vw;
+  width: 40vw;
+}
+
 
 .addUpdate {
-  position: absolute;
-  bottom: -10px;
-  left: 9px;
+  margin-left: 12px;
 }
 
 .van_step {

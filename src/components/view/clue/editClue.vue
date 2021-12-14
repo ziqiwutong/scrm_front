@@ -50,7 +50,6 @@
           </template>
         </van-field>
 
-
         <van-field
           v-model="clueEditor"
           type="clueEditor"
@@ -58,25 +57,44 @@
           label="线索录入人"
           placeholder="线索录入人"
           :rules="[{ required: true, message: '请填写线索录入人' }]"
+          readonly
+          @click="onChooseUserType"
         />
-
+        <van-popup
+          v-model="followShow"
+          position="bottom"
+          :style="{height:'100%'}"
+          :overlay="false"
+          duration="0"
+        >
+          <AbbList
+            :type="1"
+            v-show="followShow"
+            @returnClick="onFollowCancel"
+            @onCh="onFollowAdd"
+          />
+        </van-popup>
         <van-field
           v-model="clueDiscover"
           type="clueDiscover"
           name="线索发现人"
           label="线索发现人"
           placeholder="线索发现人"
-          :rules="[{ required: true, message: '请填写线索发现人' }]"
+          :rules="[{ required: true, message: '请填写线索线索发现人' }]"
+          readonly
+          @click="onChooseUserType1"
         />
-
         <van-field
           v-model="clueResponsible"
           type="clueResponsible"
           name="线索责任人"
           label="线索责任人"
           placeholder="线索责任人"
-          :rules="[{ required: true, message: '请填写线索责任人' }]"
+          :rules="[{ required: true, message: '请填写线索线索责任人' }]"
+          readonly
+          @click="onChooseUserType2"
         />
+
 
         <div style="margin: 16px;">
           <van-button round block type="info" native-type="submit">提交</van-button>
@@ -89,10 +107,17 @@
 <script>
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
+import AddForm from "../../component/AddForm";
+import AbbList from "../../component/AbbList";
 export default {
   name: "editClue",
+  components:{
+    AddForm,
+    AbbList,
+  },
   data() {
     return {
+      followVal: "",
       clueName: '',
       clueDate: '',
       clueEditor:'',
@@ -109,6 +134,15 @@ export default {
       minDate: new Date(2020, 0, 1),
       // 时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+      followShow: false,
+      // 筛选-跟进人列表
+      followList: [],
+      // 跟进人加载-分页
+      followPageProps: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      userType:'',
     };
   },
   created () {
@@ -123,7 +157,7 @@ export default {
       let postData = {
         clueId:this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params:postData})).data.data;
       // console.log(result[0])
       this.clueName=result[0].clueName;
       this.value=result[0].clueDate;
@@ -155,13 +189,13 @@ export default {
         Toast('订单修改失败,错误码' + result.code);
     },
 
-   onClickLeft(clueId) {
-     this.$router.push({
-       path: '/clueDetail',
-       query: {
-         clueId:this.id,
-       }
-     });
+    onClickLeft(clueId) {
+      this.$router.push({
+        path: '/clueDetail',
+        query: {
+          clueId:this.id,
+        }
+      });
     },
     // 时间-时间录入处理
     dateConfirm(date) {
@@ -172,6 +206,114 @@ export default {
       d = d < 10 ? "0" + d : d;
       this.value = y + "-" + m + "-" + d;
       this.dateShow = false;
+    },
+    toAddFollow() {
+      this.userType = 0;
+      this.followShow = true;
+      this.followList = [];
+      this.getUserList();
+    },
+    toAddDiscover() {
+      this.userType = 1;
+      this.followShow = true;
+      this.followList = [];
+      this.getUserList();
+    },
+    toAddResponsible() {
+      this.userType = 2;
+      this.followShow = true;
+      this.followList = [];
+      this.getUserList();
+    },
+    // 跟进人搜索
+    onFollowSearch() {
+      this.followList = [];
+      this.followPageProps.pageNum = 1;
+      this.getUserList();
+    },
+    // 跟进人搜索取消
+    onFollowSearchCancel() {
+      this.followVal = "";
+      this.followList = [];
+      this.followPageProps.pageNum = 1;
+      this.getUserList();
+    },
+    folCancel() {
+      this.followShow = false;
+      this.userType=""
+    },
+    // 跟进人-选择
+    followConfirm(item) {
+      this.followShow = false;
+      // 筛选-跟进人
+      if (this.userType == 0) {
+        this.clueEditor = item.username;
+        this.ifChoose = false;
+      }
+      // 筛选-商机负责人
+      else if (this.userType == 1) {
+        this.clueDiscover = item.username;
+        this.ifoppoChoose = false;
+      }
+      // 筛选-创建人
+      else if (this.userType == 2) {
+        this.clueResponsible = item.username;
+        this.ifbulidChoose = false;
+      }
+    },
+    // 获取用户消息
+    async getUserList() {
+      let url = "/api/cms/user/query";
+      if (this.followVal != "") {
+        url += "?name=" + this.followVal;
+      }
+      const res = await this.$http.get(url, {
+        params: {
+          currentPage: this.followPageProps.pageNum,
+          pageCount: this.followPageProps.pageSize,
+        },
+      });
+
+      let userNum = res.data.totalCount;
+      for (let i = 0; i < this.followPageProps.pageSize; i++) {
+        this.followList.push(res.data.data[i]);
+        if (this.followList.length >= userNum) {
+          this.finished = true;
+          this.followPageProps.pageNum = 1;
+          break;
+        }
+      }
+      if (this.followList.length >= userNum) this.finished = true;
+      else {
+        console.log(this.followList.length);
+        this.followPageProps.pageNum++;
+        this.getUserList();
+      }
+
+      console.log(this.followList);
+    },
+    onChooseUserType(){
+      this.followShow=true;
+      this.userType = 1;
+    },
+    onChooseUserType1(){
+      this.followShow=true;
+      this.userType = 2;
+    },
+    onChooseUserType2(){
+      this.followShow=true;
+      this.userType = 3;
+    },
+    onFollowCancel(){
+      this.followShow=false;
+    },
+    onFollowAdd(val){
+      if(this.userType==1)
+        this.clueEditor=val.name;
+      if(this.userType==2)
+        this.clueDiscover=val.name;
+      if(this.userType==3)
+        this.clueResponsible=val.name;
     },
   },
 }
@@ -194,5 +336,9 @@ export default {
 
 .clueType {
   width:300px;
+}
+//跟进人-取消
+.follow-cancel-btn {
+  border: none;
 }
 </style>

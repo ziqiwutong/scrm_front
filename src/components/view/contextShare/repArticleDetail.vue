@@ -29,14 +29,14 @@
               v-for="(item, index) in list"
             >
               <template #right-icon>
-                <van-checkbox :name="item.productId" ref="checkboxes" checked-color="#6600ff"/>
+                <van-checkbox :name="item.id" ref="checkboxes" checked-color="#6600ff"/>
               </template>
               <div class="list">
                 <div class="left">
                   <van-image
                     width="50"
                     height="50"
-                    :src="item.productImg"
+                    :src="item.productImage"
                   />
                 </div>
                 <div class="right">
@@ -96,7 +96,7 @@ export default {
       finished: false,
       pageProps: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 20
       },
       imgUrl: "",
       productName: '',
@@ -104,7 +104,9 @@ export default {
       frontPage: '',
       articleId: '',
       shareId: '',
-      ifShowShareMan: false
+      ifShowShareMan: false,
+      distributeUrl: '',
+      productCount: 0
     }
   },
   created() {
@@ -115,6 +117,7 @@ export default {
       this.shareId = this.$route.query.shareId;
       this.ifShowShareMan = this.$route.query.ifShowShareMan;
     }
+    this.getDistributeUrl();
   },
   methods: {
     renderPage() {
@@ -152,13 +155,12 @@ export default {
     },
     // 在弹窗中加载产品列表
     async getProductList() {
-      // todo 要跟后台确定下插入产品的逻辑和接口
-      let url = JSON.parse(getUrl()).contextShare.queryProductList;
-      let postData = {
-        pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize
+      let url = JSON.parse(getUrl()).contextShare.getWmProduct;
+      let getData = {
+        currentPage: this.pageProps.pageNum++,
+        pageCount: this.pageProps.pageSize
       }
-      const result = (await this.$http.get(url, {params: postData})).data.data
+      const result = (await this.$http.get(url, {params: getData})).data.data
       if (result.length == 0) {
         // 已加载全部数据
         this.finished = true;
@@ -197,9 +199,9 @@ export default {
       this.$refs.checkboxes[index].toggle();
       if (!this.$refs.checkboxes[index].checked) {// 选中时才加入数组
         let arrayItem = {
-          productId: item.productId,
+          productId: item.id,
           productName: item.productName,
-          productImg: item.productImg,
+          productImg: item.productImage,
           productLink: item.productLink
         }
         this.singleAddProduct.push(arrayItem);
@@ -240,22 +242,30 @@ export default {
       let productArray = this.singleAddProduct;
       for (let i = 0; i < productArray.length; i++) {
         let item = {
-          posterWrapId: productArray[i].productId,
-          qrcodeId: "qrcode" + productArray[i].productId,
           productName: productArray[i].productName,
           productImg: productArray[i].productImg,
-          productLink: productArray[i].productLink
+          productLink: this.distributeUrl
         }
-        this.article += `<div>
+        this.article += `<div class="productDiv">
           <p class="productName" style="">产品名称:${item.productName}</p>
           <img class="productImg" style="width: 100%;" src="${item.productImg}">
             </div>`;
       }
-      // this.$store.commit('updateReqArticleContext', this.article);
       this.closeDialog();
       this.$nextTick(() => {
         this.adjustSize();
+        this.addUrlToProduct();
       })
+    },
+    // 为产品绑定分销链接
+    addUrlToProduct() {
+      let productUrl = document.querySelectorAll('.productDiv');
+      for (let index = this.productCount; index < productUrl.length; index++) {
+        productUrl[index].addEventListener('click', () => {
+          location.href = this.distributeUrl;
+        });
+      }
+      this.productCount = productUrl.length;
     },
     // 得到产品海报--废弃
     getPost(imgUrl, posterId) {
@@ -282,7 +292,7 @@ export default {
     async saveArticle() {
       if (this.frontPage == '0') {
         this.$store.commit('updateReqArticleContext', this.article);
-        this.$store.commit('updateArticleProductList',this.productList);
+        this.$store.commit('updateArticleProductList', this.productList);
         this.$router.push('/reArticleDes')
       } else {
         // 向后台发送编辑文章的请求
@@ -293,7 +303,7 @@ export default {
           articleContext: self.article,
           articleTitle: self.title,
           articleImage: this.$store.state.repArticleDetail.coverImg,
-          productIds:this.productList
+          productIds: this.productList
         }
         const result = (await self.$http.put(url, postData)).data;
         if (result.code == '200') {
@@ -328,6 +338,17 @@ export default {
       // 清理vuex
       this.$store.commit('updateEditReqArticle', repArticleDetail);
     },
+    // 获取分销链接
+    async getDistributeUrl() {
+      let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
+      let getData = {
+        id: 2785775511
+      }
+      const result = (await this.$http.get(url, {params: getData})).data.data;
+      if (result.length > 0) {
+        this.distributeUrl = result;
+      }
+    }
   }
 }
 </script>

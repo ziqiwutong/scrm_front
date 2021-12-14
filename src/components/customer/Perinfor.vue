@@ -411,13 +411,7 @@
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
-            <van-uploader
-              multiple
-              :max-size="500 * 1024"
-              @oversize="onOversize"
-              v-model="uploader"
-              :max-count="1"
-            />
+            <van-uploader multiple v-model="uploader" :max-count="1" />
           </template>
         </van-field>
         <!-- 客户信息-姓名 -->
@@ -804,7 +798,6 @@
         @cancel="onCusStaCancel"
       />
     </van-popup>
-    <!--筛选-跟进人弹出框 -->
     <van-popup
       v-model="followShow"
       position="bottom"
@@ -812,45 +805,12 @@
       :overlay="false"
       duration="0"
     >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
+      <AbbList
+        :type="1"
+        v-show="followShow"
+        @returnClick="onFollowCancel"
+        @onCh="onFollowAdd"
       />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-            ><van-image
-              round
-              width="40"
-              height="40"
-              :src="item.userIcon"
-              v-if="item.userIcon"
-            />
-            <div v-if="!item.userIcon" class="list-img-none1">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-            ><div class="van-ellipsis">
-              {{ item.username }}
-            </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-            item.telephone
-          }}</van-col>
-        </van-row>
-      </van-cell>
     </van-popup>
   </div>
 </template>
@@ -859,7 +819,11 @@
 import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
+import AbbList from "../component/AbbList.vue";
 export default {
+  components: {
+    AbbList,
+  },
   data() {
     return {
       telAdress: "",
@@ -1019,7 +983,7 @@ export default {
       // 新建客户-时间弹窗
       dateShow: false,
       // 新建客户-时间选择值
-      dateVal: "",
+      dateVal: new Date(2000, 0, 1),
       // 新建客户-时间-时间最小值
       minDate: new Date(2020, 0, 1),
       // 新建客户-时间-时间最大值
@@ -1090,11 +1054,40 @@ export default {
   },
   created() {
     let cuslist = this.$route.query.cuslist;
-    this.getCusDetail(cuslist);
-    this.getCusRelation();
-    this.getTelAdress();
+    this.cusDetail.customerName = cuslist.customerName;
+    this.getCusDetailByID(cuslist.id);
+    console.log(this.cusDetail);
   },
   methods: {
+    // 根据id查询客户信息
+    async getCusDetailByID(id) {
+      let url = "/api/se/customer/queryById";
+      const res = await this.$http.get(url, {
+        params: {
+          id: id,
+        },
+      });
+      if (res.data.code == 200) {
+        this.cusDetail = res.data.data;
+        for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
+          if (i != this.cusDetail.customerLabels.length - 1) {
+            this.labelCusList +=
+              this.cusDetail.customerLabels[i].labelType +
+              ":" +
+              this.cusDetail.customerLabels[i].labelName +
+              "/ ";
+          } else
+            this.labelCusList +=
+              this.cusDetail.customerLabels[i].labelType +
+              ":" +
+              this.cusDetail.customerLabels[i].labelName;
+        this.getCusRelation();
+        this.getTelAdress();
+      } else {
+        Toast("加载失败");
+      }
+    },
+
     // 号码归属地查询
     async getTelAdress() {
       if (this.cusDetail.telephone != null) {
@@ -1299,20 +1292,41 @@ export default {
     },
     // 更多操作-新建商机
     toBusOpprtunity() {
-      Toast("跳转商机界面");
-      this.$router.push({ name: "addBizOpp", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
+      // Toast("跳转商机界面");
+      this.$router.push({
+        name: "addBizOpp",
+        query: {
+          id: this.cusDetail.id,
+          customerName: this.cusDetail.customerName,
+        },
+      });
     },
     // 更多操作-新建订单
     toOrder() {
+      // Toast("跳转订单界面");
+      this.$router.push({
+        path: "/orderCreate",
+        query: {
+          id: this.cusDetail.id,
+          customerName: this.cusDetail.customerName,
+        },
+      });
       Toast("跳转订单界面");
       this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,type:2,customerName:this.cusDetail.customerName} });
+      // this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
     },
     // 更多操作-改跟进人
     changeFollow() {
-      Toast("改变跟进人");
-      this.followList = [];
-      this.getUserList();
       this.followShow = true;
+    },
+    onFollowCancel() {
+      this.followShow = false;
+    },
+    onFollowAdd(val) {
+      this.cusDetail.followStaffName = val.name;
+      this.cusDetail.followStaffId = val.id;
+      this.cusDetail.customerStatus = "跟进中";
+      this.onClickSumbmit();
     },
     // 更多操作-改协助人
     changeHelper() {
@@ -1464,7 +1478,153 @@ export default {
         .join("/");
       this.showArea = false;
     },
+    dealImage(base64, w, callback) {
+      var newImage = new Image();
+      var quality = 0.6; //压缩系数0-1之间
+      newImage.src = base64;
+      newImage.setAttribute("crossOrigin", "Anonymous"); //url为外域时需要
+      var imgWidth, imgHeight;
+      newImage.onload = function () {
+        imgWidth = this.width;
+        imgHeight = this.height;
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        if (Math.max(imgWidth, imgHeight) > w) {
+          if (imgWidth > imgHeight) {
+            canvas.width = w;
+            canvas.height = (w * imgHeight) / imgWidth;
+          } else {
+            canvas.height = w;
+            canvas.width = (w * imgWidth) / imgHeight;
+          }
+        } else {
+          canvas.width = imgWidth;
+          canvas.height = imgHeight;
+          quality = 0.6;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+        var base64 = canvas.toDataURL("image/jpeg", quality);
+        callback(base64);
+      };
+    },
+    // 处理回调函数的坑 冗杂没救了
+    async userImg(base64) {
+      let str = this.uploader[0].content;
+      let type = this.uploadPicType(str);
+      // this.uploadCusIcon(str, type, type.length);
+      let url = "/api/file/pic/base64StrToPic";
+      let picture;
+      str = base64;
+      if (type.length == 3) {
+        picture = str.slice(22);
+      } else if (type.length == 4) {
+        picture = str.slice(23);
+      } else {
+        Toast("图片格式错误");
+        this.uploader = [];
+      }
+      console.log(picture);
+      if (type.length == 3 || type.length == 4) {
+        let params = new FormData();
+        params.append("picBase64Str", picture);
+        params.append("picFormat", type);
+        params.append("picType", "customerIcon");
+        await this.$http
+          .post(url, params, {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          })
+          .then((res) => {
+            console.log(res.data.data);
+            this.cusDetail.customerIcon = res.data.data;
+          });
+      }
 
+      if (this.cusDetail.customerType == "个人客户") {
+        this.cusDetail.customerType = 0;
+      } else if (this.cusDetail.customerType == "公司客户") {
+        this.cusDetail.customerType = 1;
+      }
+      this.cusDetail.potential = 0;
+      if (
+        this.cusDetail.customerStatus == "未分配" ||
+        this.cusDetail.customerStatus == "潜在客户"
+      ) {
+        this.cusDetail.followStaffId = "";
+        this.cusDetail.followStaffName = "";
+      }
+      function removeEmptyField(obj) {
+        var newObj = {};
+        if (typeof obj === "string") {
+          obj = JSON.parse(obj);
+        }
+        if (obj instanceof Array) {
+          newObj = [];
+        }
+        if (obj instanceof Object) {
+          for (var attr in obj) {
+            // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
+            if (
+              obj.hasOwnProperty(attr) &&
+              obj[attr] !== "" &&
+              obj[attr] !== null &&
+              obj[attr] !== undefined
+            ) {
+              if (obj[attr] instanceof Object) {
+                // 空数组或空对象不加入新对象(去掉[],{})
+                if (
+                  JSON.stringify(obj[attr]) === "{}" ||
+                  JSON.stringify(obj[attr]) === "[]"
+                ) {
+                  continue;
+                }
+                // 属性值为对象,则递归执行去除方法
+                newObj[attr] = removeEmptyField(obj[attr]);
+              } else if (
+                typeof obj[attr] === "string" &&
+                ((obj[attr].indexOf("{") > -1 && obj[attr].indexOf("}") > -1) ||
+                  (obj[attr].indexOf("[") > -1 && obj[attr].indexOf("]") > -1))
+              ) {
+                // 属性值为JSON时
+                try {
+                  var attrObj = JSON.parse(obj[attr]);
+                  if (attrObj instanceof Object) {
+                    newObj[attr] = removeEmptyField(attrObj);
+                  }
+                } catch (e) {
+                  newObj[attr] = obj[attr];
+                }
+              } else {
+                newObj[attr] = obj[attr];
+              }
+            }
+          }
+
+          return newObj;
+        }
+      }
+      this.cusDetail = removeEmptyField(this.cusDetail);
+      // 传输
+      url = "/api/se/customer/update";
+      let postData = this.cusDetail;
+      console.log(postData);
+      const result = (await this.$http.post(url, postData)).data;
+      // console.log(result)
+      if (result.code == "200") {
+        Toast("成功修改客户");
+        this.showform = false;
+        this.newCusRelation(
+          this.cusDetail.id,
+          "更新客户资料",
+          result.data.updateTime
+        );
+      }
+      // this.addList = this.addListTemp;
+      this.getCusRelation();
+      this.showform = false;
+    },
     // 编辑客户-提交
     async onClickSumbmit() {
       if (this.cusDetail.customerName == "") {
@@ -1476,117 +1636,94 @@ export default {
           let type = this.uploadPicType(str);
           let url = "/api/file/pic/base64StrToPic";
           let picture;
-          if (type.length == 3) {
-            picture = str.slice(22);
-          } else if (type.length == 4) {
-            picture = str.slice(23);
-          } else {
-            Toast("图片格式错误");
-            this.uploader = [];
+          this.dealImage(str, 1000, this.userImg);
+        } else {
+          if (this.cusDetail.customerType == "个人客户") {
+            this.cusDetail.customerType = 0;
+          } else if (this.cusDetail.customerType == "公司客户") {
+            this.cusDetail.customerType = 1;
           }
-          console.log(picture);
-          if (type.length == 3 || type.length == 4) {
-            let params = new FormData();
-            params.append("picBase64Str", picture);
-            params.append("picFormat", type);
-            params.append("picType", "customerIcon");
-            await this.$http
-              .post(url, params, {
-                headers: {
-                  "Content-Type": "application/x-www-form-urlencoded",
-                },
-              })
-              .then((res) => {
-                console.log(res.data.data);
-                this.cusDetail.customerIcon = res.data.data;
-              });
+          this.cusDetail.potential = 0;
+          if (
+            this.cusDetail.customerStatus == "未分配" ||
+            this.cusDetail.customerStatus == "潜在客户"
+          ) {
+            this.cusDetail.followStaffId = "";
+            this.cusDetail.followStaffName = "";
           }
-        }
 
-        if (this.cusDetail.customerType == "个人客户") {
-          this.cusDetail.customerType = 0;
-        } else if (this.cusDetail.customerType == "公司客户") {
-          this.cusDetail.customerType = 1;
-        }
-        this.cusDetail.potential = 0;
-        if (
-          this.cusDetail.customerStatus == "未分配" ||
-          this.cusDetail.customerStatus == "潜在客户"
-        ) {
-          this.cusDetail.followStaffId = "";
-          this.cusDetail.followStaffName = "";
-        }
-        function removeEmptyField(obj) {
-          var newObj = {};
-          if (typeof obj === "string") {
-            obj = JSON.parse(obj);
-          }
-          if (obj instanceof Array) {
-            newObj = [];
-          }
-          if (obj instanceof Object) {
-            for (var attr in obj) {
-              // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
-              if (
-                obj.hasOwnProperty(attr) &&
-                obj[attr] !== "" &&
-                obj[attr] !== null &&
-                obj[attr] !== undefined
-              ) {
-                if (obj[attr] instanceof Object) {
-                  // 空数组或空对象不加入新对象(去掉[],{})
-                  if (
-                    JSON.stringify(obj[attr]) === "{}" ||
-                    JSON.stringify(obj[attr]) === "[]"
-                  ) {
-                    continue;
-                  }
-                  // 属性值为对象,则递归执行去除方法
-                  newObj[attr] = removeEmptyField(obj[attr]);
-                } else if (
-                  typeof obj[attr] === "string" &&
-                  ((obj[attr].indexOf("{") > -1 &&
-                    obj[attr].indexOf("}") > -1) ||
-                    (obj[attr].indexOf("[") > -1 &&
-                      obj[attr].indexOf("]") > -1))
+          function removeEmptyField(obj) {
+            var newObj = {};
+            if (typeof obj === "string") {
+              obj = JSON.parse(obj);
+            }
+            if (obj instanceof Array) {
+              newObj = [];
+            }
+            if (obj instanceof Object) {
+              for (var attr in obj) {
+                // 属性值不为'',null,undefined才加入新对象里面(去掉'',null,undefined)
+                if (
+                  obj.hasOwnProperty(attr) &&
+                  obj[attr] !== "" &&
+                  obj[attr] !== null &&
+                  obj[attr] !== undefined
                 ) {
-                  // 属性值为JSON时
-                  try {
-                    var attrObj = JSON.parse(obj[attr]);
-                    if (attrObj instanceof Object) {
-                      newObj[attr] = removeEmptyField(attrObj);
+                  if (obj[attr] instanceof Object) {
+                    // 空数组或空对象不加入新对象(去掉[],{})
+                    if (
+                      JSON.stringify(obj[attr]) === "{}" ||
+                      JSON.stringify(obj[attr]) === "[]"
+                    ) {
+                      continue;
                     }
-                  } catch (e) {
+                    // 属性值为对象,则递归执行去除方法
+                    newObj[attr] = removeEmptyField(obj[attr]);
+                  } else if (
+                    typeof obj[attr] === "string" &&
+                    ((obj[attr].indexOf("{") > -1 &&
+                      obj[attr].indexOf("}") > -1) ||
+                      (obj[attr].indexOf("[") > -1 &&
+                        obj[attr].indexOf("]") > -1))
+                  ) {
+                    // 属性值为JSON时
+                    try {
+                      var attrObj = JSON.parse(obj[attr]);
+                      if (attrObj instanceof Object) {
+                        newObj[attr] = removeEmptyField(attrObj);
+                      }
+                    } catch (e) {
+                      newObj[attr] = obj[attr];
+                    }
+                  } else {
                     newObj[attr] = obj[attr];
                   }
-                } else {
-                  newObj[attr] = obj[attr];
                 }
               }
             }
+            return newObj;
           }
-          return newObj;
+          this.cusDetail = removeEmptyField(this.cusDetail);
+          // 传输
+          let url = "/api/se/customer/update";
+          let postData = this.cusDetail;
+          console.log(postData);
+          const result = (await this.$http.post(url, postData)).data;
+          // console.log(result)
+          if (result.code == "200") {
+            Toast("成功修改客户");
+            this.showform = false;
+            this.newCusRelation(
+              this.cusDetail.id,
+              "更新客户资料",
+              result.data.updateTime
+            );
+          }
         }
-        this.cusDetail = removeEmptyField(this.cusDetail);
-        // 传输
-        let url = "/api/se/customer/update";
-        let postData = this.cusDetail;
-        console.log(postData);
-        const result = (await this.$http.post(url, postData)).data;
-        // console.log(result)
-        if (result.code == "200") {
-          Toast("成功修改客户");
-          this.showform = false;
-          this.newCusRelation(
-            this.cusDetail.id,
-            "更新客户资料",
-            result.data.updateTime
-          );
-        }
+        // this.addList = this.addListTemp;
+        this.getCusRelation();
+        this.showform = false;
       }
-      // this.addList = this.addListTemp;
-      this.getCusRelation();
-      this.showform = false;
     },
     // 新建客户-头像格式判断
     uploadPicType(str) {
@@ -1733,16 +1870,16 @@ export default {
       }
     },
   },
-  // beforeRouteEnter(to, from, next) {
-  //   if (to.path == "/customer") {
-  //     to.meta.keepAlive = true;
-  //   } else {
-  //     to.meta.keepAlive = false;
-  //   }
-  //   next((vm) => {
-  //     document.body.scrollTop = vm.scrollTop;
-  //   });
-  // },
+  beforeRouteEnter(to, from, next) {
+    if (to.path == "/customer") {
+      to.meta.keepAlive = true;
+    } else {
+      to.meta.keepAlive = false;
+    }
+    next((vm) => {
+      document.body.scrollTop = vm.scrollTop;
+    });
+  },
 };
 </script>
 
@@ -1750,7 +1887,7 @@ export default {
 //背景
 .back {
   background-color: #f8f8f8;
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
 }
@@ -1772,7 +1909,7 @@ export default {
   top: 70px;
   left: 5%;
   width: 80%;
-  height: 280px;
+  height: 275px;
   padding: 5%;
   z-index: 2;
   overflow: auto;

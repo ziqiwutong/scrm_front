@@ -393,10 +393,13 @@ export default {
 
 /deep/ .van-list {
   margin-top: 125px;
+  height: calc(100vh - 125px);
+  overflow-y: auto;
 }
 
 .myShareList {
   margin-top: 100px;
+  height: calc(100vh - 100px);
 }
 
 .checkListHeader {
@@ -404,9 +407,10 @@ export default {
 }
 
 .checkList {
+  margin-top: 50px;
   margin-bottom: 65px;
   overflow-y: auto;
-  margin-top: 50px;
+  height: calc(100vh - 115px);
 }
 
 .checkReader {

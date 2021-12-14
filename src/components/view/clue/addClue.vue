@@ -50,7 +50,23 @@
         label="线索录入人"
         placeholder="线索录入人"
         :rules="[{ required: true, message: '请填写线索录入人' }]"
+        readonly
+        @click="onChooseUserType"
       />
+      <van-popup
+      v-model="followShow"
+      position="bottom"
+      :style="{height:'100%'}"
+      :overlay="false"
+      duration="0"
+      >
+      <AbbList
+      :type="1"
+      v-show="followShow"
+      @returnClick="onFollowCancel"
+      @onCh="onFollowAdd"
+      />
+      </van-popup>
       <van-field
         v-model="clueDiscover"
         type="clueDiscover"
@@ -58,6 +74,8 @@
         label="线索发现人"
         placeholder="线索发现人"
         :rules="[{ required: true, message: '请填写线索线索发现人' }]"
+        readonly
+        @click="onChooseUserType1"
       />
       <van-field
         v-model="clueResponsible"
@@ -66,6 +84,8 @@
         label="线索责任人"
         placeholder="线索责任人"
         :rules="[{ required: true, message: '请填写线索线索责任人' }]"
+        readonly
+        @click="onChooseUserType2"
       />
       <div style="margin: 16px;" class="submit">
         <van-button round block type="info" native-type="submit">提交</van-button>
@@ -78,11 +98,17 @@ import { Toast } from 'vant';
 
 <script>
 import {Toast} from "vant";
-
+import AddForm from "../../component/AddForm";
+import AbbList from "../../component/AbbList";
 export default {
   name: "addClue",
+  components:{
+    AddForm,
+    AbbList,
+  },
   data() {
     return {
+      userType:'',
       clueName: '',
       clueDate: '',
       clueEditor:'',
@@ -91,12 +117,17 @@ export default {
       //线索状态单选框
       radio: '',
       value: '',
+      val: '',
+      name: '',
       dateShow: false,
       dateVal: '',
       // 时间-时间最小值
       minDate: new Date(2020, 0, 1),
       // 时间-时间最大值
       maxDate: new Date(2025, 10, 1),
+      //时间-现在时间
+      currentDate: new Date(),
+      followShow: false,
     };
   },
   methods: {
@@ -123,6 +154,29 @@ export default {
     },
     toClueList(){
       this.$router.push('/clueList');
+    },
+    onChooseUserType(){
+      this.followShow=true;
+     this.userType = 1;
+    },
+    onChooseUserType1(){
+      this.followShow=true;
+      this.userType = 2;
+    },
+    onChooseUserType2(){
+      this.followShow=true;
+      this.userType = 3;
+    },
+    onFollowCancel(){
+      this.followShow=false;
+    },
+    onFollowAdd(val){
+      if(this.userType==1)
+       this.clueEditor=val.name;
+      if(this.userType==2)
+        this.clueDiscover=val.name;
+      if(this.userType==3)
+        this.clueResponsible=val.name;
     },
     // 时间-时间录入处理
     dateConfirm(date) {
