@@ -57,6 +57,7 @@ import NavBar from "../../component/NavBar";
 import TabBar from "../../component/TabBar";
 import {getUrl} from "../../../utils/replaceUrl";
 import Customer from "../../customer/procustomer";
+import {Toast} from "vant";
 
 export default {
   name: "searchRelationship",
@@ -81,13 +82,17 @@ export default {
 
   methods: {
     sendSearchMessage() {
-      this.$router.push({
-        name:'relationshipDetail',
-        query:{
-          searchData1: this.value1,
-          searchData2: this.value2
-        }
-      });
+      if (this.value1 !== "" && this.value2 !== "") {
+        this.$router.push({
+          name:'relationshipDetail',
+          query:{
+            searchData1: this.value1,
+            searchData2: this.value2
+          }
+        });
+      } else {
+        Toast("请正确输入查询公司信息");
+      }
     },
 
 
