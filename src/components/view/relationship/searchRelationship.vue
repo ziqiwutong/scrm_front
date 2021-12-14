@@ -58,6 +58,7 @@ import TabBar from "../../component/TabBar";
 import {getUrl} from "../../../utils/replaceUrl";
 import Customer from "../../customer/procustomer";
 import {Toast} from "vant";
+import {debounce} from "../../../utils/debounce";
 
 export default {
   name: "searchRelationship",
@@ -72,6 +73,9 @@ export default {
       value2: '',
 
       ifEdit: false,
+
+      //搜索自动补全防抖 储存计时器用的
+      timer: '',
 
     };
   },
@@ -96,36 +100,44 @@ export default {
     },
 
 
-
     //搜索框模糊查询
-    async querySearchAsync(queryString, cb) {
+    querySearchAsync(queryString, cb) {
       if (queryString !== "" && this.ifEdit === true) {
-        let callBackArr = []; // 准备一个空数组，此数组是最终返给输入框的数组
-
-        //向服务器模糊查询关键字对应的企业列表
-        let url = JSON.parse(getUrl()).searchCustomer.company;
-        let getData = {
-          keyword: queryString
+        //防抖
+        if (this.timer) {
+          clearTimeout(this.timer);
         }
-        const result = (await this.$http.get(url, {params: getData})).data.data
-        console.log(result);
+        this.timer = setTimeout(async () => {
 
-        if (result.length > 0) {
-          if (result[0].length > 0) {
-            callBackArr.push({ "value": result[0].customerName });
+          //执行的内容，向后端查询企业
+          let callBackArr = []; // 准备一个空数组，此数组是最终返给输入框的数组
+
+          //向服务器模糊查询关键字对应的企业列表
+          let url = JSON.parse(getUrl()).searchCustomer.company;
+          let getData = {
+            keyword: queryString
           }
+          const result = (await this.$http.get(url, {params: getData})).data.data
+          console.log(result);
 
-          if (result[1].length > 0) {
-            let data = result[1];
-            for (let i = 0; i < data.length; i++) {
-              callBackArr.push({ "value": data[i].name });
+          if (result.length > 0) {
+            if (result[0].length > 0) {
+              callBackArr.push({"value": result[0].customerName});
             }
-          }
-        } else {
-          cb([{ value: "暂无数据" }]);
-        }
 
-        cb(callBackArr)
+            if (result[1].length > 0) {
+              let data = result[1];
+              for (let i = 0; i < data.length; i++) {
+                callBackArr.push({"value": data[i].name});
+              }
+            }
+          } else {
+            cb([{value: "暂无数据"}]);
+          }
+
+          cb(callBackArr)
+
+        }, 2000)
       }
     },
 
