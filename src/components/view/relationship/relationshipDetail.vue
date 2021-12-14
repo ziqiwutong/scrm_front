@@ -9,7 +9,7 @@
 
     <div class="tab_block">
       <van-tabs v-model="active" swipeable color="#4876f1">
-        <van-tab v-for="index in tabNum" :title="'关系 ' + index" :key="i">
+        <van-tab v-for="index in tabNum" :title="'关系 ' + index" :key="index">
           <!--竖向条-->
           <div class="Step">
             <van-steps direction="vertical" :active="listNum[index-1]" active-color="#cccccc">
@@ -69,9 +69,8 @@ export default {
     async onLoad() {
       this.searchData1=this.$route.query.searchData1;
       this.searchData2=this.$route.query.searchData2;
-      //ToDo 修改完成后，url要改过来
-      let url = "/sweet/se/customerRest/relation";
-      // let url = JSON.parse(getUrl()).searchRelationship.queryRelation;
+
+      let url = JSON.parse(getUrl()).searchRelationship.queryRelation;
       let postData = {
         firmA: this.searchData1,
         firmB: this.searchData2

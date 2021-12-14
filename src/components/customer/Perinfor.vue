@@ -1295,9 +1295,10 @@ export default {
       // Toast("跳转商机界面");
       this.$router.push({
         name: "addBizOpp",
-        query: {
-          id: this.cusDetail.id,
+        params: {
+          customerId: this.cusDetail.id,
           customerName: this.cusDetail.customerName,
+          from: "/perinfor",
         },
       });
     },

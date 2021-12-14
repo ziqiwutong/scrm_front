@@ -36,8 +36,9 @@
       <van-col class="add-button" span="2" v-if="isSearch">
         <van-icon name="plus" size="25" @click="toAdd"/>
       </van-col>
-      <div class="divider"></div>
     </van-row>
+
+    <div class="divider"></div>
 
     <!--线索表单区域-->
     <div class="list">
@@ -145,10 +146,6 @@ export default {
     toAdd() {
       this.$router.push({
         name: "addBizOpp",
-        query: {
-          id: "",
-          customerName: ""
-        }
       });
     },
 
@@ -287,6 +284,16 @@ export default {
   z-index: 99;
 }
 
+/*
+一条灰色的装饰分割线
+*/
+.divider {
+  position: relative;
+  top: 12vw;
+  background: #f8f8f8;
+  height: 2vw;
+}
+
 // 商机下拉选择框样式
 /deep/ .van-dropdown-menu__bar {
   width: fit-content;
@@ -321,15 +328,7 @@ export default {
   padding: 2px;
 }
 
-/*
-一条灰色的装饰分割线
-*/
-.divider {
-  position: relative;
-  top: 12vw;
-  background: #f8f8f8;
-  height: 2vw;
-}
+
 
 .list {
   margin-top: 17vw;
