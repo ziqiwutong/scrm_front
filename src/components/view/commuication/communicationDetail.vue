@@ -533,7 +533,7 @@ export default {
 }
 
 .phoneNumber {
-  margin-top: 3px;
+  margin-top: 2.5px;
   color: #4881F2;
 }
 

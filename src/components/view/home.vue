@@ -39,7 +39,7 @@
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
                          to="/contextShareList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
-                         to="/sweetTest"/>
+                         @click="toShop"/>
         </van-grid>
       </div>
       <div class="main">
@@ -106,14 +106,18 @@ export default {
       ],
       autoHeight: {
         height: ""
-      }
+      },
+      distributeUrl: ''
     }
   },
   created: function () {
     // alert(this.$route.query.code);
-    // this.sendCode();
-    // 这里只是为了测试，上线后会放在sendcode函数的末尾执行
-    this.getToken('6');
+    this.sendCode();
+    // 为了测试，这里暂时写的是6，其实应该是从user里面获取
+    // let userID = "4862341";
+    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+    //   this.getToken(userID);
+    // }
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -142,7 +146,7 @@ export default {
       }
     },
     async sendCode() {
-      let url = JSON.parse(getUrl()).contextShare.sendAppCode;
+      let url = JSON.parse(getUrl()).userInfo.sendAppCode;
       let getData = {
         code: this.$route.query.code
       }
@@ -151,13 +155,33 @@ export default {
         username: wxUserMsg.name,
         userCompany: '泸州老窖集团有限责任公司',
         userImgUrl: wxUserMsg.avatar,
-        userId: '6',//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
-        // userId: wxUserMsg.user_id,//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
-        userPhone: wxUserMsg.mobile
+        userId: wxUserMsg.member_id,//userId应该是从后台获取。这个id需要用友id要和scrm的用户id对接
+        userPhone: wxUserMsg.mobile,
+        email: wxUserMsg.email,
+        sex: wxUserMsg.sex,
+        duty: wxUserMsg.duty,
+        deptName: wxUserMsg.dept_name,
+        wmId: ''
       }
+      console.log('userid:' + userMessage.userId);
       this.$store.commit('updateUserMessage', userMessage);
-      console.log(this.userMessage);
-      // this.getToken(userMessage.userId);
+      this.getToken(userMessage.userId);
+      this.getDistributeUrl();
+    },
+    // 获取分销链接
+    async getDistributeUrl() {
+      let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
+      // 微盟id要从url里进行截取
+      let getData = {
+        id: 2785775511
+      }
+      const result = (await this.$http.get(url, {params: getData})).data.data;
+      if (result.length > 0) {
+        this.distributeUrl = result;
+      }
+    },
+    toShop(){
+      location.href = this.distributeUrl;
     }
   }
 }

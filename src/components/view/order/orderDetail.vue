@@ -231,6 +231,7 @@ export default {
      // this.productPic=result.productPic;
      // this.productName=result.productName;
      this.productPrice=result.originPrice;
+     this.id=result.id;
      this.orderBuyer=result.customerName;
      this.orderStaff=result.orderStaff;
      this.notes=result.notes;
@@ -268,16 +269,16 @@ export default {
      });
    },
    async sendDelete() {
-     let url = "/api/se/order/deleteOrder";
+     let url = "/api/se/order/delete";
      let postData = {
-       orderID: this.orderID
+       id: this.id
      }
-     const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
+     const result1 = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
      if (result1.code === 200) {
        Toast('订单删除成功');
          this.$router.push('orderList');
      } else
-       Toast('订单删除失败,错误码' + result1.code);
+       Toast('订单删除失败,' + result1.msg);
    },
    //   onLoad() {
    //   this.list = [];

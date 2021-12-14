@@ -85,7 +85,7 @@ export default {
   async created() {
     let url = JSON.parse(getUrl()).searchCustomer.companyDetail;
     let getData = {
-      registerNo: this.$route.params.registerNo
+      keyword: this.$route.params.keyword
     }
     const result = (await this.$http.get(url, {params: getData})).data.data
     this.companyName = result.companyName;
@@ -114,7 +114,7 @@ export default {
         name: 'searchList',
         params: {
           type: 1,
-          searchMessage: this.$route.params.searchMessage
+          searchMessage: this.$route.params.searchMessage,
         }
       })
     },

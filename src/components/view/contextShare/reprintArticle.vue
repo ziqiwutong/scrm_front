@@ -58,8 +58,8 @@ export default {
         articleAuthor: '',
         articleAccountName: '',
         articlePower: '',
-        coverImg:'',
-        materialType:'1'
+        coverImg: '',
+        materialType: '1'
       }
       if (response.code == 200) {// 表示已经拿到数据了
         repArticleDetail.articleContext = result.html;
@@ -70,6 +70,7 @@ export default {
         repArticleDetail.coverImg = result.coverImg;
         this.$toast.clear();
         this.$store.commit('updateEditReqArticle', repArticleDetail);
+        this.$store.commit('updateTempArticle', repArticleDetail.articleContext);
         this.$router.push('/reArticleDes');
       } else {
         this.$toast.fail('转载失败,\n请再次尝试！');

@@ -4,7 +4,7 @@
 
     <div  style=" padding-top: 45px;
   padding-bottom: 60px;">
-      <img  :src=productPic  width="100%" style=" display: table-cell;
+      <img  :src=productImage  width="100%" style=" display: table-cell;
   text-align:center;
   margin: 0 auto" />
       <div>
@@ -29,10 +29,6 @@
   letter-spacing:1px;">{{productIntro}}</div>
         </div>
       </div>
-
-      <div class="article-msg">
-      </div>
-      <div v-html="article" class="article"></div>
     </div>
 
     <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
@@ -130,6 +126,7 @@ export default {
     }
   },
   created() {
+
     this.articleId = this.$route.query.articleId;
     // this.shareId = this.$store.state.userMessage.userId;
      this.shareId = 1; //此为测试代码

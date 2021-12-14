@@ -1234,7 +1234,17 @@ export default {
     },
     // 客户详情-返回
     onClickLeft() {
-      this.$router.back("/customer");
+      if (this.$route.query.type){
+        this.$router.push({
+          name: 'searchList',
+          params: {
+            searchMessage: this.$route.query.searchMessage,
+            type: this.$route.query.type
+          }
+        });
+      }else{
+        this.$router.back("/customer");
+      }
     },
     // 多选-发短信-弹窗
     toShrtMsg() {
@@ -1313,6 +1323,7 @@ export default {
         },
       });
       Toast("跳转订单界面");
+      this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,type:2,customerName:this.cusDetail.customerName} });
       // this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
     },
     // 更多操作-改跟进人

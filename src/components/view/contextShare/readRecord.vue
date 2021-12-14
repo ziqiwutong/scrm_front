@@ -77,7 +77,8 @@
             v-for="(item, index) in list"
           >
             <template #right-icon>
-              <van-checkbox :name="item.openid" ref="checkboxes" checked-color="#6600ff"/>
+              <van-checkbox :name="item.openid" ref="checkboxes" checked-color="#6600ff"
+                            :disabled="item.readerStatus === null?false:true"/>
             </template>
             <div class="list">
               <div class="left">
@@ -343,7 +344,7 @@ export default {
     async batchAddCustomer() {
       this.toAddForm = true;
     },
-    // 多选列表加载--后台的关于文章详情的逻辑是一次请求所有的数据，因此不需要上拉加载操作了
+    // 多选列表加载
     checkBoxLoad() {
       let self = this;
       if (this.list.length > 0) {//列表不为空时才判断是否滚动到页面底部

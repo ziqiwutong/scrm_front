@@ -36,8 +36,8 @@
       <van-col class="addbtn" span="2" v-if="isSearch"
       ><van-icon name="plus" size="25" @click="toAdd" />
       </van-col>
-      <div class="divider"></div>
     </van-row>
+    <div class="divider"></div>
     <!--线索表单区域-->
     <div class="list" >
       <van-list

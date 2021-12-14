@@ -21,7 +21,12 @@ export function getUrl() {
 
   // 开发环境
   let developmentT = {
-    baseUrl: 'http://scrm.natapp1.cc/',
+    baseUrl:'http://scrm.natapp1.cc/',
+    userInfo:{
+      sendAppCode:'/api/cms/iuap/userInfo',
+      yyConfig:'/api/cms/iuap/jsApi',
+      saveAppendInfo:'/api/cms/user/saveAppendInfo'
+    },
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',
       searchByKey: '/fzk/mk/article/queryByTitle',
@@ -32,12 +37,10 @@ export function getUrl() {
       queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
       wxConfig:'/fzk/mk/wx/jsApi',
-      yyConfig:'/fzk/mk/iuap/jsApi',
       editArticle:'/fzk/mk/article/update',
       getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
       saveWxUserMsg:'/fzk/mk/article/addReadRecord',
       queryProductList:'/api/queryProductList',
-      sendAppCode:'/fzk/mk/iuap/userInfo',
       getWmProduct:'/wm/se/weimob/queryProduct',
       getDistributeUrl:'/wm/se/weimob/distributeUrl'
     },
@@ -50,7 +53,12 @@ export function getUrl() {
 
   // 开发环境
   let development = {
-    baseUrl: 'http://scrm.natapp1.cc/',
+    baseUrl:'http://scrm.natapp1.cc/',
+    userInfo:{
+      sendAppCode:'/api/cms/iuap/userInfo',
+      yyConfig:'/api/cms/iuap/jsApi',
+      saveAppendInfo:'/api/cms/user/saveAppendInfo'
+    },
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',
       searchByKey: '/fzk/mk/article/queryByTitle',
@@ -61,12 +69,10 @@ export function getUrl() {
       queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
       wxConfig:'/fzk/mk/wx/jsApi',
-      yyConfig:'/fzk/mk/iuap/jsApi',
       editArticle:'/fzk/mk/article/update',
       getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
       saveWxUserMsg:'/fzk/mk/article/addReadRecord',
       queryProductList:'/api/queryProductList',
-      sendAppCode:'/fzk/mk/iuap/userInfo',
       getWmProduct:'/wm/se/weimob/queryProduct',
       getDistributeUrl:'/wm/se/weimob/distributeUrl'
     },

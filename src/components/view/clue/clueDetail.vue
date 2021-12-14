@@ -130,6 +130,10 @@ export default {
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
       }
+      console.log("clueId:")
+      console.log(this.clueId)
+      console.log("clueName:")
+      console.log(this.list[0].clueName)
     },
     showShareDialog() {
       this.showShare = true
@@ -169,25 +173,34 @@ export default {
       });
     },
     async sendToBizOpp() {
+      this.$router.push({
+        name: 'addBizOpp',
+        params: {
+          from: '/clueDetail',
+          clueName: this.list[0].clueName,
+          // clueResponsible:this.list[0].clueResponsible ,
+          // clueResponsibleId:'',
+          clueId: this.clueId,
+        }
+      });
       let url = "/api/se/clue/editClue";
       this.businessOpporitunityFlag=1;
       this.clueStatus='转换为商机';
       let postData = {
-        id: this.$route.query.id,
-        clueName:this.clueName,
-        clueDate:this.clueDate,
-        clueEditor:this.clueEditor,
-        clueDiscover:this.clueDiscover,
-        clueResponsible:this.clueResponsible,
+        id: this.clueId,
+        clueName:this.list[0].clueName,
+        clueDate:this.list[0].clueDate,
+        clueEditor:this.list[0].clueEditor,
+        clueDiscover:this.list[0].clueDiscover,
+        clueResponsible:this.list[0].clueResponsible,
         clueStatus:this.clueStatus,
         businessOpporitunityFlag:this.businessOpporitunityFlag,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
       if (result.code === 200) {
         Toast('线索转换商机成功');
-        this.$router.push('addBizOpp');
       } else
-        Toast('线索转换商机,错误码' + result1.code);
+        Toast('线索转换商机,错误码' + result.code);
     },
   },
   created() {
