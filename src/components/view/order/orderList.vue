@@ -25,8 +25,8 @@
 <!--        </div>-->
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
 <!--        以下为列表栏-->
@@ -38,27 +38,27 @@
             @load="onLoad"
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
-              <van-row class="van-row1" @click="onDetail(item.orderID)" >
+              <van-row class="van-row1" @click="onDetail(item.orderNum)" >
                 <van-col span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src=item.productPic
+                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
                     />
 <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
 <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productList.length === 0 ? '暂无' :item.productList[0].productName + '等' }}</div></van-col>
               </van-row>
               <div class="line">
               <div class="line1"></div>
               </div>
               <van-row class="van-row2">
                 <van-col class="oName" span="6" offset="1">订单号</van-col>
-                <van-col  span="10" class="order1" offset="6" >{{item.orderID}}</van-col>
+                <van-col  span="10" class="order1" offset="6" >{{item.orderNum}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -72,8 +72,8 @@
       <van-tab  title="待付款">
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -85,27 +85,27 @@
             @load="onLoad"
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
-              <van-row class="van-row1" @click="onDetail(item.orderID)" >
+              <van-row class="van-row1" @click="onDetail(item.orderNum)" >
                 <van-col span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src=item.productPic
+                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productList.length === 0 ? '暂无' :item.productList[0].productName + '等' }}</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
               </div>
               <van-row class="van-row2">
                 <van-col class="oName" span="6" offset="1">订单号</van-col>
-                <van-col  span="10" class="order1" offset="6" >{{item.orderID}}</van-col>
+                <van-col  span="10" class="order1" offset="6" >{{item.orderNum}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -118,8 +118,8 @@
       <van-tab title="交易成功">
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -131,27 +131,27 @@
             @load="onLoad"
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
-              <van-row class="van-row1" @click="onDetail(item.orderID)" >
+              <van-row class="van-row1" @click="onDetail(item.orderNum)" >
                 <van-col span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src=item.productPic
+                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productList.length === 0 ? '暂无' :item.productList[0].productName + '等' }}</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
               </div>
               <van-row class="van-row2">
                 <van-col class="oName" span="6" offset="1">订单号</van-col>
-                <van-col  span="10" class="order1" offset="6" >{{item.orderID}}</van-col>
+                <van-col  span="10" class="order1" offset="6" >{{item.orderNum}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -165,8 +165,8 @@
       <van-tab  title="待收货" >
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -178,27 +178,27 @@
             @load="onLoad"
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
-              <van-row class="van-row1" @click="onDetail(item.orderID)" >
+              <van-row class="van-row1" @click="onDetail(item.orderNum)" >
                 <van-col span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src=item.productPic
+                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productList.length === 0 ? '暂无' :item.productList[0].productName + '等' }}</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
               </div>
               <van-row class="van-row2">
                 <van-col class="oName" span="6" offset="1">订单号</van-col>
-                <van-col  span="10" class="order1" offset="6" >{{item.orderID}}</van-col>
+                <van-col  span="10" class="order1" offset="6" >{{item.orderNum}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -215,8 +215,8 @@
         <!--        </div>-->
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -228,27 +228,27 @@
             @load="onLoad"
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
-              <van-row class="van-row1" @click="onDetail(item.orderID)" >
+              <van-row class="van-row1" @click="onDetail(item.orderNum)" >
                 <van-col span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src=item.productPic
+                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productList.length === 0 ? '暂无' :item.productList[0].productName + '等' }}</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
               </div>
               <van-row class="van-row2">
                 <van-col class="oName" span="6" offset="1">订单号</van-col>
-                <van-col  span="10" class="order1" offset="6" >{{item.orderID}}</van-col>
+                <van-col  span="10" class="order1" offset="6" >{{item.orderNum}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -262,8 +262,8 @@
       <van-tab  title="退款成功" >
         <van-row class="content1">
           <van-col span="3" offset="2">商品</van-col>
-          <van-col span="4" offset="2" >价格(元)</van-col>
-          <van-col span="4" offset="2" >数量(件)</van-col>
+          <van-col span="5" offset="1" >总价格(元)</van-col>
+          <van-col span="5" offset="1" >总数量(件)</van-col>
           <van-col span="5" offset="2">买家</van-col>
         </van-row>
         <!--        以下为列表栏-->
@@ -275,27 +275,27 @@
             @load="onLoad"
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
-              <van-row class="van-row1" @click="onDetail(item.orderID)" >
+              <van-row class="van-row1" @click="onDetail(item.orderNum)" >
                 <van-col span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src=item.productPic
+                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
                 </van-col>
-                <van-col span="6" class="pprice" offset="1" >￥{{item.productPrice}}</van-col>
-                <van-col span="3" class="pamount" offset="1">×{{item.productBuyAmount}}</van-col>
-                <van-col span="6" class="second">{{item.orderBuyer}}</van-col>
-                <van-col class="pName" span="9" offset="1">{{item.productName}}</van-col>
+                <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
+                <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
+                <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
+                <van-col class="pName" span="7" offset="1"><div class="van-multi-ellipsis--l2">{{item.productList.length === 0 ? '暂无' :item.productList[0].productName + '等' }}</div></van-col>
               </van-row>
               <div class="line">
                 <div class="line1"></div>
               </div>
               <van-row class="van-row2">
                 <van-col class="oName" span="6" offset="1">订单号</van-col>
-                <van-col  span="10" class="order1" offset="6" >{{item.orderID}}</van-col>
+                <van-col  span="10" class="order1" offset="6" >{{item.orderNum}}</van-col>
               </van-row>
               <!-- 滑动删除 -->
               <template #right>
@@ -331,24 +331,35 @@ export default {
       createContext: "+创建订单",
       searchValue: "",
       searchShow: false,
-      active: '',
+      active:0,
       list: [],    //以下三个是list参数
       //error: false,
       loading: false,
       finished: false,
-      orderStatus:4
+      orderStatus:''
     }
   },
   components: {
     CreateContext,
     TabBar
   },
+
+created(){
+  this.active = parseInt(this.$route.query.active);
+  if(this.active === 0) this.onClick(this.active,'全部');
+  if(this.active === 1) this.onClick(this.active,'待付款');
+  if(this.active === 2) this.onClick(this.active,'交易成功');
+  if(this.active === 3) this.onClick(this.active,'待收货');
+  if(this.active === 4) this.onClick(this.active,'撤销');
+  if(this.active === 5) this.onClick(this.active,'退款成功');
+  console.log(this.active)
+},
   methods: {
-    onClick(name, title){
+    onClick(name,title){
       this.pageProps.pageNum=1;
       this.list=[];
       if(title === '全部')
-        this.orderStatus = 4 ;
+        this.orderStatus = '' ;
       if(title === '待付款')
         this.orderStatus = 0;
       if(title === '交易成功')
@@ -369,41 +380,21 @@ export default {
       this.$router.push({
         path: '/orderDetail',
         query: {
+          active:this.active,
           orderID: orderID
         }
       });
     },
     async onSearch() {
-      let url = "/api/se/order/queryOrderByKey";
+      let url = "/api/se/order/query";
       let postData = {
-        keySearch: this.searchValue,
-        orderType: this.orderStatus
-      }
-      this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-      for (let i = 0; i < result.length; i++) {
-        this.list.push(result[i]);
-      }
-      // 加载状态结束
-      this.loading = false;
-      this.finished = true;
-      Toast('已加载全部数据！');
-    },
-
-    onSearchCancel() {
-      this.searchShow = false;
-      this.searchValue = '';
-    },
-
-    async onLoad() {
-      let url = "/api/se/order/queryOrder";
-      let postData = {
-        pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize,
+        currentPage: this.pageProps.pageNum++,
+        pageCount: this.pageProps.pageSize,
         // active:this.active,
-        orderType: this.orderStatus
+        orderStatus: this.orderStatus
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url,{params:postData})).data.data;
       if (result.length == 0) {
         // 已加载全部数据
         this.finished = true;
@@ -415,10 +406,41 @@ export default {
       // console.log(this.list);
       // 加载状态结束
       this.loading = false;
+      // console.log()
+      console.log(this.list);
+      // console.log(this.list[0].productList[0].productName)
     },
-    // onCancel1() {
-    //   this.show = false;
-    // },
+
+    onSearchCancel() {
+      this.searchShow = false;
+      this.searchValue = '';
+    },
+
+    async onLoad() {
+      let url = "/api/se/order/query";
+      let postData = {
+        currentPage: this.pageProps.pageNum++,
+        pageCount: this.pageProps.pageSize,
+        // active:this.active,
+        orderStatus: this.orderStatus
+      }
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url,{params:postData})).data.data;
+      if (result.length == 0) {
+        // 已加载全部数据
+        this.finished = true;
+        Toast('已加载全部数据！');
+      }
+      for (let i = 0; i < result.length; i++) {
+        this.list.push(result[i]);
+      }
+      // console.log(this.list);
+      // 加载状态结束
+      this.loading = false;
+      // console.log()
+    console.log(this.list);
+      // console.log(this.list[0].productList[0].productName)
+      },
     async beforeClose({position, instance}) {
       switch (position) {
         case 'cell':
@@ -455,7 +477,12 @@ export default {
     },
     ifShowDialog()
     {
-      this.$router.push('orderCreate')
+      this.$router.push({
+        path: '/orderCreate',
+        query: {
+          type:1
+        }
+      });
     }
   },
 }
@@ -489,7 +516,7 @@ export default {
    width:33%;
 }
 /deep/ .content1 {
-  height:25px;
+  //height:25px;
   //border:1px solid gray;
   background-color: white;
   line-height: 25px;
@@ -497,7 +524,7 @@ export default {
   margin-top: 5px;
  font-weight: bold;
   .van-col{
-    font-size: 13px;
+    font-size: 0.8rem;
     font-family: PingFangSC;
     font-weight: bold;
     color: #3E3C3C;
@@ -556,7 +583,7 @@ export default {
     //line-height: 50px;
     font-weight: 400;
     color: #3E3C3C;
-    text-overflow:ellipsis;
+    //text-overflow:ellipsis;
   }
   .order1{
     text-align: right;
@@ -566,6 +593,8 @@ export default {
   }
   .pName{
     margin-top: 7px;
+    //height: 20px;
+    //margin-top:3px;
     font-family: PingFangSC;
     font-weight: 400;
     color: #727272;

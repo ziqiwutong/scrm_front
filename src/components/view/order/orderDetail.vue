@@ -142,34 +142,36 @@
     </div>
 
     <div class="order_price">
-    <div class="price_left">
-      <van-row class="van-row2" >
-        <van-col span="4" offset="1">
-          <van-image class="img1"
-            round
-            width="60"
-            height="60"
-            :src=this.productPic
-          />
-        </van-col>
-        <van-col class="words1" span="15" offset="4">￥{{productPrice}}×{{productBuyAmount}}</van-col>
-        <van-col  class="words2" span="16" offset="10">{{productName}}</van-col>
-      </van-row>
-    </div>
-      <div class="price_right">
-        <van-row class="right_row">
-          <van-col class="top" span="10" offset="3">商品总价</van-col>
-          <van-col class="top" span="11">￥{{ productPrice }}</van-col>
-          <van-col span="10" offset="3">改价</van-col>
-          <van-col span="11">￥{{ priceChange }}</van-col>
-          <van-col class="real1" span="10" offset="3">实收金额</van-col>
-          <van-col class="real2" span="11">￥{{realPrice}}</van-col>
-        </van-row>
-
-      </div>
+      <!--        finished-text="没有更多了"-->
+        <van-swipe-cell  v-for="(item,i) in list" :key="i"  :title="item">
+          <van-row class="van-row1">
+            <div  @click="onDetail(item.productID)">
+              <van-col span="4" offset="1">
+                <van-image
+                  width="120%"
+                  height="60px"
+                  :src=item.productImage
+                />
+              </van-col>
+              <van-col class="productName" span="11" offset="2"><div class="van-ellipsis">{{item.productName}}</div></van-col>
+              <van-col class="price" span="5" offset="1"><span class="pricecolor">￥{{item.originPrice}}</span></van-col>
+              <van-col class="stock" span="4" offset="19">×{{item.productAmount}}</van-col>
+              <!--                  <van-col  class="button" span="6" offset="4">-->
+              <!--                  </van-col>-->
+            </div>
+          </van-row>
+          </van-swipe-cell>
       <div class="button1">
+        <van-row class="vanrow3" >
+                    <van-col class="top" span="7" offset="3">商品总价</van-col>
+                    <van-col class="top" span="6">￥{{ this.productPrice }}</van-col>
+                    <van-col span="7" offset="3">改价</van-col>
+                    <van-col span="6">￥{{this.priceChange === null ? '0' : this.priceChange }}</van-col>
+                    <van-col class="real1" span="7" offset="3">实收金额</van-col>
+                    <van-col class="real2" span="6">￥{{this.realPrice}}</van-col>
+        </van-row>
         <van-button class="button-1" block  @click="orderEdit1" color="#4876F1"  type="info">编辑</van-button>
-        <van-button class="button-1" block @click="orderDelete1" type="danger">删除</van-button>
+        <van-button class="button-2" block @click="orderDelete1" type="danger">删除</van-button>
       </div>
     </div>
 
@@ -183,6 +185,14 @@ export default {
   name: "orderDetail",
   data() {
     return {
+      list:[],
+      pageProps: {
+        pageNum: 1,
+        pageSize: 10
+      },
+      loading: false,
+      finished: false,
+      //以上为商品列表
       orderType:'',
       active: '',
       orderID:'',
@@ -213,26 +223,33 @@ export default {
    async test(){
      this.orderID=this.$route.query.orderID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-     let url = "/api/se/order/orderDetail";
+     let url = "/api/se/order/queryByOrderNum";
      let postData = {
-       orderID:this.orderID
+       orderNum:this.orderID
      }
-     const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
-     this.productName=result.productName;
-     this.productPrice=result.productPrice;
-     this.orderBuyer=result.orderBuyer;
+     const result = (await this.$http.get(url,{params:postData})).data.data;
+     // this.productPic=result.productPic;
+     // this.productName=result.productName;
+     this.productPrice=result.originPrice;
+     this.orderBuyer=result.customerName;
      this.orderStaff=result.orderStaff;
      this.notes=result.notes;
      this.orderSource=result.orderSource;
-     this.orderTime=result.orderTime.split(" ")[0];
-     this.orderFinish=result.orderFinish.split(" ")[0];
-     this.productBuyAmount=result.productBuyAmount;
-     this.priceChange=result.priceChange;
-     this.realPrice=this.productPrice - this.priceChange;
-     this.orderType=result.orderType;
+     this.priceChange=result.changePrice;
+     this.realPrice=result.receivedAmount;
+     this.orderType=result.orderStatus;
+     this.list=result.productList;
+     this.orderTime=result.createTime.split(" ")[0];
+     this.orderFinish=result.payTime.split(" ")[0];
    },
    onClickLeft() {
-     this.$router.push('orderList')
+     // let orderStatus =
+     this.$router.push({
+       path: '/orderList',
+       query: {
+         active:this.$route.query.active
+       }
+     })
    },
    orderEdit1(orderID){
      // console.log(123123);
@@ -261,7 +278,17 @@ export default {
          this.$router.push('orderList');
      } else
        Toast('订单删除失败,错误码' + result1.code);
-   }
+   },
+   //   onLoad() {
+   //   this.list = [];
+   //   for (let i = 0; i < result.length; i++) {
+   //     this.list.push(result[i]);
+   //   }
+   //   // 加载状态结束
+   //   this.loading = false;
+   //   this.finished = true;
+   //   // Toast('已加载全部数据！');
+   // },
  }
 
 }
@@ -272,6 +299,8 @@ export default {
 ///deep/ .van-nav-bar__text{
 //  //color:black;
 //}
+
+
 /deep/ .van-nav-bar__left{
   font-size: 1rem;
   //color:black;
@@ -449,12 +478,12 @@ margin-top: 20px;
 }
 .order_price{
   position: relative;
-  border-top:2vh solid rgba(215, 215, 215, 0.129411764705882) ;
+  //border-top:2vh solid rgba(215, 215, 215, 0.129411764705882) ;
   //height:28vh;
   //padding-top: 10px;
-  height: 200px;
+  //height: 200px;
   //margin: auto 0;
-  background-color: white;
+  background-color: rgba(215, 215, 215, 0.12941176);
 }
 .price_left{
   height: 150px;
@@ -526,22 +555,69 @@ margin-top: 20px;
 }
 .button1{
   //z-index: 100;
-  position: absolute;
-  right:25px;
-  bottom:20px;
+  position: relative;
+  //right:25px;
+  //bottom:20px;
   //margin-top: 10px;
-  height: 35px;
-  //width: 140px;
+  //height: 35px;
+  width: 100% ;
   display: flex;
   margin-top: 10px;
-  margin-right:15px;
+  background-color: white;
+  //margin-right:15px;
+  margin-bottom: 10px;
+  .button-2{
+    position: absolute;
+    right:15px;
+    bottom:8px;
+  }
+  .button-1{
+    position: absolute;
+    right:85px;
+    bottom:8px;
+  }
 }
 /deep/ .van-button--block{
   //height:35px;
   //width: 110px;
-  height: 2.3rem;
-  width: 6rem;
+  height: 2rem;
+  width: 4rem;
   margin-left:10px;
+}
+/deep/ .van-row1 {
+  height: 80px;
+  //justify-content: center;
+  background-color: white;
+  //border: 1px solid lightgray;
+  margin-top: 7px;
+  //margin-bottom: 4px;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: 5px;
+  //border-bottom: whitesmoke 1px;
+  .van-col {
+    margin-top: 12px;
+  }
+
+  .price{
+    font-size: 13px;
+  }
+.stock{
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+  .productName{
+    .van-ellipsis{
+      font-size: 1rem;
+    }
+    //height: 40px;
+  }
+}
+//以上为列表蓝
+
+.vanrow3{
+
 }
 
 </style>

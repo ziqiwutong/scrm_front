@@ -124,8 +124,21 @@
       />
     </van-popup>
 <!--    todo  type换成3-->
-    <AbbList :type=3 v-show="testVal" @returnClick="onTestCancel"
-             @onCh="testConsole"/>
+    <van-popup
+      v-model="userShow"
+      position="bottom"
+      :overlay="false"
+      duration="0"
+    >
+      <AbbCusList
+        :type="3"
+        v-show="userShow"
+        @returnClick="onUserCancel"
+        @onCh="onUserAdd"
+      />
+    </van-popup>
+
+
   </div>
 
 
@@ -136,15 +149,18 @@ import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
 import { areaList } from "@vant/area-data";
 import {getUrl} from "../../../utils/replaceUrl";
-import AbbList from "../../component/AbbList";
+import AbbCusList from "../../component/AbbList";
+// import AddForm from "../../component/AddForm";
 export default {
   name: "orderCreate",
   components: {
-    AbbList,
+    AbbCusList,
   },
 
   data() {
     return {
+      // showform:false,
+      userShow:false,
       testVal:false,
       customerInfo: {
         id: '',
@@ -171,8 +187,35 @@ export default {
       //  以上为新建客户弹出框
     };
   },
+  watch: {
+    $route: {
+      immediate: true,
+      handler: function (to, from) {
+        //拿到目标参数 to.query.id 去再次请求数据接口
+        this.customerInfo.id = to.query.id;
+        this.customerInfo.customerName = to.query.customerName;
+         this.orderBuyer=to.query.customerName;
+      },
+    },
+  },
+
   methods: {
+
+
+
+    onConfirm(value) {
+      this. orderType = value;
+      this.showPicker = false;
+    },
 //
+    onUserCancel() {
+      this.userShow = false;
+    },
+    onUserAdd (val) {
+      this.customerInfo.name = val.name;
+      this.customerInfo.id = val.id;
+    },
+
     onTestCancel(){
       this.testVal = false
     },
@@ -197,9 +240,7 @@ export default {
       },
       chooseBuyer()
       {
-        // console.log(1)
-        this.testVal = true
-        this.onLoad();
+        this.userShow = true
       },
 
       async onSubmit()
@@ -219,6 +260,7 @@ export default {
           productName: this.productName,
           productPrice: this.productPrice,
           orderBuyer: this.orderBuyer,
+          customerID:this.customerInfo.id,
           orderStaff: this.orderStaff,
           productBuyAmount: this.productBuyAmount,
           orderSource: this.orderSource,
@@ -239,16 +281,25 @@ export default {
       },
       async afterRead(file)
       {
+        console.log(file);
         let url = "/fzk/file/pic/base64StrToPic"
         let postData = {
-          picBase64Str: file.content.substring(22),
-          picFormat: 'png',
+          picBase64Str: file.content,
           picType: 'productImage',
+          isCompress:'true'
         }
         const result = (await this.$http.post(url, qs.stringify(postData))).data.data
         this.productPic1 = result;
       },
       onClickLeft(){
+      if(this.$route.query.type == 2)
+        this.$router.push({
+          path: '/perinfor',
+          query: {
+            id: this.customerInfo.id
+          }
+        });
+       else if(this.$route.query.type == 1)
         this.$router.push('orderList');
       }
 

@@ -273,42 +273,6 @@
         @returnClick="onFollowCancel"
         @onCh="onFollowAdd"
       />
-<<<<<<< HEAD
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-          ><van-image
-            round
-            width="40"
-            height="40"
-            :src="item.userIcon"
-            v-if="item.userIcon"
-          />
-            <div v-if="!item.userIcon" class="list-img-none">
-              {{ item.username[0] }}
-            </div>
-          </van-col>
-             
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-          ><div class="van-ellipsis">
-            {{ item.username }}
-          </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-              item.telephone
-            }}</van-col>
-        </van-row>
-      </van-cell>
-=======
->>>>>>> zjs
     </van-popup>
 
     <!-- 筛选-地区弹窗 -->
@@ -521,370 +485,13 @@
       :overlay="false"
       duration="0"
     >
-<<<<<<< HEAD
-      <!-- 新建客户-导航栏 -->
-      <van-nav-bar
-        title="新建客户"
-        left-text="返回"
-        right-text="保存"
-        @click-left="onClickAddRe"
-        @click-right="onClickAddSave"
+      <AddForm
+        :type="1"
+        v-show="showform"
+        @returnClick="addCancel"
+        :fCusDetail="this.cusDetail"
+        :lq="this.lq"
       />
-      <!-- 新建客户-表单 -->
-      <van-form>
-        <van-row class="add-title">客户类型</van-row>
-        <!-- 客户类型 -->
-        <van-field
-          v-model="addList.sex"
-          name="validator"
-          label="客户类型"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[8].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[8], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <van-row class="add-title">客户信息</van-row>
-        <!-- 客户信息-头像 -->
-        <van-field name="uploader" label="头像">
-          <template #input>
-            <van-uploader multiple v-model="uploader" :max-count="1" />
-          </template>
-        </van-field>
-        <!-- 客户信息-姓名 -->
-        <van-field
-          v-model="addList.customerName"
-          name="validator"
-          label="姓名*"
-          placeholder="请输入"
-          :rules="[{ required: true, message: '请填写用户名' }]"
-        />
-        <!-- 客户信息-手机号 -->
-        <van-field
-          v-model="addList.telephone"
-          name="validator"
-          label="手机"
-          placeholder="请输入"
-        />
-        <!-- 客户信息-地区选择 -->
-        <van-field
-          readonly
-          clickable
-          name="area"
-          :value="addList.city"
-          label="地区选择"
-          placeholder="点击选择省市区"
-          @click="showArea = true"
-        />
-        <!-- 客户信息-地址 -->
-        <van-field
-          v-model="addList.address"
-          name="validator"
-          label="地址"
-          placeholder="请输入"
-        />
-        <van-row class="add-title">联系信息</van-row>
-        <!-- 个人信息-微信昵称 -->
-        <van-field
-          v-model="addList.wxName"
-          name="validator"
-          label="微信昵称"
-          placeholder="请输入"
-        />
-        <!-- 个人信息-微信号 -->
-        <van-field
-          v-model="addList.wx"
-          name="validator"
-          label="微信号"
-          placeholder="请输入"
-        />
-        <!-- 个人信息-性别 -->
-        <van-field
-          v-model="addList.sex"
-          name="validator"
-          label="性别"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[0].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[0], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-年龄范围 -->
-        <van-field
-          v-model="addList.ageRange"
-          name="validator"
-          label="年龄范围"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[1].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[1], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-来源 -->
-        <van-field
-          v-model="addList.origin"
-          name="validator"
-          label="来源"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[3].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[3], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 联系信息-职位 -->
-        <van-field
-          v-model="addList.position"
-          name="validator"
-          label="职位"
-          placeholder="请输入"
-        />
-        <!-- 联系信息-生日信息 -->
-        <van-field
-          v-model="addList.birthday"
-          readonly
-          name="validator"
-          label="生日"
-          placeholder="选择时间"
-          @click="toDate()"
-        />
-        <!-- 联系信息-个人喜好 -->
-        <van-field
-          v-model="addList.hobby"
-          name="validator"
-          label="个人喜好"
-          placeholder="请输入"
-        />
-        <van-row class="add-title">公司信息</van-row>
-        <!-- 公司信息-公司 -->
-        <van-field
-          v-model="addList.belongCompany"
-          name="validator"
-          label="公司"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-法定代表人 -->
-        <van-field
-          v-model="addList.legalPerson"
-          name="validator"
-          label="法定代表人"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-客户等级 -->
-        <van-field
-          v-model="addList.customerLevel"
-          name="validator"
-          label="客户等级"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[4].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[4], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-企业类型 -->
-        <van-field
-          v-model="addList.companyType"
-          name="validator"
-          label="企业类型"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[5].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[5], index)"
-              >{{ item.name }}
-
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-行业分类 -->
-        <van-field
-          v-model="addList.industry"
-          name="validator"
-          label="行业分类"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[6].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
-                @click="cutTabClickOnly(addLabelList[6], index)"
-              >{{ item.name }}
-
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-注册资本 -->
-        <van-field
-          v-model="addList.registeredCapital"
-          name="validator"
-          label="注册资本"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[7].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[7], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-员工数量 -->
-        <van-field
-          v-model="addList.companySize"
-          name="validator"
-          label="员工数量"
-          placeholder="请输入"
-        >
-          <template #input>
-            <van-cell class="add-van-cell">
-              <van-button
-                v-for="(item, index) in addLabelList[9].class"
-                :key="item.name"
-                :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
-                @click="cutTabClickOnly(addLabelList[9], index)"
-              >{{ item.name }}
-              </van-button>
-            </van-cell>
-          </template>
-        </van-field>
-        <!-- 公司信息-成立日期 -->
-        <van-field
-          v-model="addList.establishDate"
-          readonly
-          name="validator"
-          label="成立日期"
-          placeholder="选择时间"
-          @click="toDate1()"
-        />
-
-        <!-- 公司信息-经营状态 -->
-        <van-field
-          v-model="addList.operatingStatus"
-          name="validator"
-          label="经营状态"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-经营范围 -->
-        <van-field
-          v-model="addList.businessRange"
-          name="validator"
-          label="经营范围"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-备注 -->
-        <van-field
-          v-model="addList.addNote"
-          name="validator"
-          label="备注"
-          placeholder="请输入"
-        />
-        <!-- 公司信息-客户状态 -->
-        <van-field
-          v-model="addList.customerStatus"
-          readonly
-          clickable
-          name="area"
-          label="客户状态"
-          placeholder="点击选择客户状态"
-          @click="addCusStaShow = true"
-        >
-        </van-field>
-        <!-- 公司信息-跟进人 -->
-        <van-field
-          v-model="addList.followStaffName"
-          name="validator"
-          label="跟进人"
-          placeholder="请输入"
-          readonly
-          clickable
-          v-if="addList.customerStatus == this.columns[0]"
-          @click="toAddFollow"
-        />
-        <!-- 提交按钮 -->
-        <div style="margin: 16px">
-          <van-button
-            round
-            block
-            type="info"
-            native-type="submit"
-            @click="onClickSumbmit"
-          >提交</van-button
-          >
-        </div>
-      </van-form>
-    </van-popup>
-    <!-- 新建客户-时间弹窗 -->
-    <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-      ><van-datetime-picker
-        v-model="dateVal"
-        type="date"
-        title="选择年月日"
-        :min-date="minDate"
-        :max-date="maxDate"
-        @cancel="dateCancel"
-        @confirm="dateConfirm"
-    /></van-popup>
-    <!-- 新建客户-地区弹窗 -->
-    <van-popup v-model="showArea" position="bottom">
-      <van-area
-        :area-list="areaList"
-        @confirm="onConfirm"
-        @cancel="showArea = false"
-      />
-=======
-      <AddForm :type="1" v-show="showform" @returnClick="addCancel" />
->>>>>>> zjs
     </van-popup>
 
     <!-- <van-popup
@@ -894,7 +501,7 @@
       duration="0"
     >
       <AbbCusList
-        :type="2"
+        :type="3"
         v-show="testVal"
         @returnClick="onTestCancel"
         @onCh="testConsole"
@@ -923,6 +530,54 @@ export default {
   },
   data() {
     return {
+
+      lq:false,
+      cusDetail:{
+        id: "",
+        customerType: "",
+        belongCompany: "",
+        potential: "",
+        customerName: "",
+        historyName: "",
+        customerIcon: "",
+        telephone: "",
+        city: "",
+        customerStatus: "未分配",
+        followStaffId: "",
+        followStaffName: "",
+        enterPoolDate: "",
+        origin: "",
+        orderAmount: "",
+        orderNumber: "",
+        customerLevel: "",
+        customizeField: "",
+        wx: "",
+        wxName: "",
+        sex: "",
+        ageRange: "",
+        birthday: "",
+        position: "",
+        hobby: "",
+        legalPerson: "",
+        operatingStatus: "",
+        establishDate: "",
+        approvalDate: "",
+        registeredCapital: "",
+        paidCapital: "",
+        companyType: "",
+        companySize: "",
+        industry: "",
+        industryCode: "",
+        address: "",
+        businessRange: "",
+        socialCreditCode: "",
+        organizationCode: "",
+        registrationAuthority: "",
+        potentialType: "",
+        creditStatus: "",
+        createTime: "",
+        updateTime: "",
+      },
       // 刷新
       refreshing: false,
       testtxt: "查找客户列表",
@@ -1467,18 +1122,18 @@ export default {
     },
     // 点击相应用户后的点击处理事件，返回val，包括用户的id和name
     onFollowAdd(val) {
-      if(this.userType == 1){
-      this.ifChoose = false
-      this.followChsVal.val = val.name;
-      this.followChsVal.id = val.id;
-      }else if(this.userType == 2){
-        this.ifoppoChoose = false
-        this.oppoChsVal.val = val.name
-        this.oppoChsVal.id = val.id
-      }else if(this.userType == 3){
-        this.ifbulidChoose = false
-        this.bulidChsVal.val = val.name
-        this.bulidChsVal.id  = val.id
+      if (this.userType == 1) {
+        this.ifChoose = false;
+        this.followChsVal.val = val.name;
+        this.followChsVal.id = val.id;
+      } else if (this.userType == 2) {
+        this.ifoppoChoose = false;
+        this.oppoChsVal.val = val.name;
+        this.oppoChsVal.id = val.id;
+      } else if (this.userType == 3) {
+        this.ifbulidChoose = false;
+        this.bulidChsVal.val = val.name;
+        this.bulidChsVal.id = val.id;
       }
     },
     addCancel() {
@@ -1772,17 +1427,17 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
-      this.userType = 1
+      this.userType = 1;
     },
     // 筛选-商机列表-弹窗
     toOppo() {
       this.followShow = true;
-      this.userType = 2
+      this.userType = 2;
     },
     // 筛选-创建人列表-弹窗
     toBuild() {
       this.followShow = true;
-      this.userType = 3
+      this.userType = 3;
     },
     toAddFollow() {
       this.followShow = true;
@@ -2227,30 +1882,6 @@ export default {
           let url = "/api/file/pic/base64StrToPic";
           let picture;
           this.dealImage(str, 1000, this.userImg);
-          // console.log("压缩前：" + str);
-          // str = this.data64Comress;
-          // console.log("压缩后：" + str);
-          // this.data64Comress = "";
-          // console.log(str);
-
-          // if (type.length == 3) {
-          //   picture = str.slice(22);
-          // } else if (type.length == 4) {
-          //   picture = str.slice(23);
-          // }
-          // console.log(picture);
-          // let params = new FormData();
-          // params.append("picBase64Str", picture);
-          // params.append("picFormat", type);
-          // params.append("picType", "customerIcon");
-          // await this.$http
-          //   .post(url, params, {
-          //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          //   })
-          //   .then((res) => {
-          //   console.log(res.data.data);
-          //   this.addList.customerIcon = res.data.data;
-          // });
         } else {
           // 传输
           if (this.addList.customerType == "个人客户") {
@@ -2592,11 +2223,12 @@ export default {
           if (res.data.data == null) Toast("识别图片失败，请手动新建");
           else {
             let scrP = res.data.data;
-            this.addList.address = scrP.address;
-            this.addList.belongCompany = scrP.company;
-            this.addList.telephone = scrP.mobile;
-            this.addList.position = scrP.title;
-            this.addList.customerName = scrP.name;
+            this.cusDetail.address = scrP.address[0];
+            this.cusDetail.belongCompany = scrP.company[0];
+            this.cusDetail.telephone = scrP.mobile[0];
+            this.cusDetail.position = scrP.title[0];
+            this.cusDetail.customerName = scrP.name[0];
+            this.lq = !this.lq
             this.showform = true;
           }
         });
@@ -2613,49 +2245,6 @@ export default {
         let picture;
         let scrIconUrl;
         this.dealImage(str, 1000, this.userScrImg);
-        // // console.log(str);
-        // // this.dealImage(str, 1000);
-        // // str = this.data64Comress;
-        // this.data64Comress = "";
-        // if (type.length == 3) {
-        //   picture = str.slice(22);
-        // } else if (type.length == 4) {
-        //   picture = str.slice(23);
-        // }
-
-        // let params = new FormData();
-        // params.append("picBase64Str", picture);
-        // params.append("picFormat", type);
-        // params.append("picType", "customerIcon");
-        // await this.$http
-        //   .post(url, params, {
-        //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data.data);
-        //     //url
-        //     scrIconUrl = res.data.data;
-        //   });
-        // url = "/api/se/customerRest/businessCard";
-
-        // await this.$http
-        //   .get(url, {
-        //     params: {
-        //       image: scrIconUrl,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     if (res.data.data.name[0] == "") Toast("识别图片失败，请手动新建");
-        //     else {
-        //       let scrP = res.data.data;
-        //       this.addList.address = scrP.address;
-        //       this.addList.belongCompany = scrP.company;
-        //       this.addList.telephone = scrP.mobile;
-        //       this.addList.position = scrP.title;
-        //       this.addList.customerName = scrP.name;
-        //       this.showform = true;
-        //     }
-        //   });
       }
 
       this.pictureShow = false;

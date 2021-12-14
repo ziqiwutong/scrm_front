@@ -178,46 +178,47 @@ export default {
     async test(){
       this.productID=this.$route.query.productID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/se/product/productDetail";
+      let url = "/api/se/product/queryById";
       let postData = {
-        productID:this.productID
+        id:this.productID
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
-      for (let i = 0; i < result.length; i++) {
-        this.list.push(result[i]);
-      }
+      const result = (await this.$http.get(url,{params:postData})).data.data;
+      // for (let i = 0; i < result.length; i++) {
+      //   this.list.push(result[i]);
+      // }
         this.productName=result.productName;
         this.productPrice=result.productPrice;
         this.productInventory=result.productInventory;
-        this.productType=result.productType;
-        this.productCertificate=result.productCertificate;
+        this.productType=result.typeName;
+        this.productCertificate=result.certificate;
         // this.notes=result.notes;
-        this.productPic1=result.productPic;
-         this.productPic.push({url: result.productPic});
+        // this.productPic1=result.productImage;
+         this.productPic.push({url: result.productImage});
         console.log(this.productPic[0])
+      this.productPic1=result.productImage;
         this.retailPrice=result.retailPrice;
         this.wholesalePrice=result.wholesalePrice;
         this.priceDescribe=result.priceDescribe;
         this.productIntro=result.productIntro;
-        this.brandIntro = result.brandIntro;
+        this.brandIntro = result.brand;
 
     },
     async onSubmit() {
-      let url = "/api/se/product/editProduct";
+      let url = "/api/se/product/update";
       let postData = {
-        productID:this.productID,
         productName: this.productName,
         productPrice: this.productPrice,
         productInventory: this.productInventory,
-        productType:this.productType,
-        productCertificate: this.productCertificate,
+        typeName:this.productType,
+        certificate: this.productCertificate,
+        id:this.productID,
         priceChange:this.priceChange,
-        productPic: this.productPic1,
+        productImage: this.productPic1,
         retailPrice:this.retailPrice,
         wholesalePrice:this.wholesalePrice,
         priceDescribe:this.priceDescribe,
         productIntro:this.productIntro,
-        brandIntro:this.brandIntro
+        brand:this.brandIntro
       }
       const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
@@ -232,12 +233,12 @@ export default {
     async afterRead(file) {
       let url="/fzk/file/pic/base64StrToPic"
       let postData = {
-        picBase64Str: file.content.substring(22),
-        picFormat:'png',
+        picBase64Str: file.content,
         picType: 'productImage',
+        isCompress:'false'
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-      this.productPic1= result;
+       this.productPic1=result;
     },
     onClickLeft() {
       this.$router.push('productList');

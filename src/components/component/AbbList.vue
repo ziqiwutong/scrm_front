@@ -16,7 +16,11 @@
         @click="folCancel"
       >取消</van-button>
       <van-cell v-if="this.type == 1">
+        <van-row>
+          <van-col span="3" class="font_center">
         部门:
+        </van-col>
+        <van-col>
         <SelectTree
           :props="props"
           :options="optionData"
@@ -25,11 +29,11 @@
           :accordion="isAccordion"
           @getValue="getValue($event)"
         />
-        <van-button
-          native-type="button"
-          @click="getUser"
-          class="depart-confirm"
-        >确定</van-button>
+        </van-col>
+        <van-col offset="1" span="4.5">
+        <van-button @click="getUser" class="depart-confirm" native-type="button">确定</van-button>
+        </van-col>
+        </van-row>
       </van-cell>
       <van-list
         v-model="abbloading"
@@ -207,30 +211,34 @@ export default {
     // 获取用户消息
     async getUserList() {
       //用户列表
-      if (this.type == 1) {
-        let url = "/api/cms/user/query";
-        const res = await this.$http.get(url, {
-          params: {
-            count: 10,
-            preId: this.preid,
-            departmentId: this.valueId,
-          },
-        });
-        this.abbloading = false;
-        const tempList = res.data.data;
-        this.cusNum = res.data.totalCount;
-        if (tempList.length == 0) {
-          // 已加载全部数据
-          this.abbfinished = true;
-          Toast("已加载全部数据！");
-        } else {
-          for (let i = 0; i < tempList.length; i++) {
-            this.followList.push(tempList[i]);
-            if (i == tempList.length - 1) {
-              this.preid = tempList[i].id;
+      if (this.valueId == null) {
+        this.preid = 0;
+      } else {
+        if (this.type == 1) {
+          let url = "/api/cms/user/query";
+          const res = await this.$http.get(url, {
+            params: {
+              count: 10,
+              preId: this.preid,
+              departmentId: this.valueId,
+            },
+          });
+          this.abbloading = false;
+          const tempList = res.data.data;
+          this.cusNum = res.data.totalCount;
+          if (tempList.length == 0) {
+            // 已加载全部数据
+            this.abbfinished = true;
+            Toast("已加载全部数据！");
+          } else {
+            for (let i = 0; i < tempList.length; i++) {
+              this.followList.push(tempList[i]);
+              if (i == tempList.length - 1) {
+                this.preid = tempList[i].id;
+              }
             }
+            this.getUserList();
           }
-          this.getUserList();
         }
       }
     },
@@ -271,11 +279,12 @@ export default {
   margin-left: 60%;
   border: none;
 }
+.font_center{
+  margin-top: 2%;
+}
 .depart-confirm {
-  margin-left: 5%;
-  height: 100%;
-  margin-top: 0%;
-  width: 18%;
+  height: 40px;
+
 }
 </style>
 

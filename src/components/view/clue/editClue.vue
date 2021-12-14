@@ -50,7 +50,6 @@
           </template>
         </van-field>
 
-
         <van-field
           v-model="clueEditor"
           type="clueEditor"
@@ -59,68 +58,43 @@
           placeholder="线索录入人"
           :rules="[{ required: true, message: '请填写线索录入人' }]"
           readonly
-          @click="toAddFollow"
+          @click="onChooseUserType"
         />
         <van-popup
           v-model="followShow"
           position="bottom"
-          :style="{ height: '100%' }"
+          :style="{height:'100%'}"
           :overlay="false"
           duration="0"
         >
-          <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-          <van-search
-            v-model="followVal"
-            placeholder="请输入搜索关键词"
-            @search="onFollowSearch"
-            @cancel="onFollowSearchCancel"
+          <AbbList
+            :type="1"
+            v-show="followShow"
+            @returnClick="onFollowCancel"
+            @onCh="onFollowAdd"
           />
-          <van-cell
-            v-for="item in followList"
-            :key="item.id"
-            @click="followConfirm(item)"
-          >
-            <!-- 跟进人-跟进人信息 -->
-            <van-row>
-              <!-- 跟进人-跟进人头像 -->
-              <van-col span="4"
-              ><van-image round width="40" height="40" :src="item.userIcon"
-              /></van-col>
-              <!-- 跟进人-跟进人姓名 -->
-              <van-col span="6" class="list-content-name"
-              ><div class="van-ellipsis">
-                {{ item.username }}
-              </div></van-col
-              >
-              <!-- 跟进人-跟进人公司信息 -->
-              <van-col offset="2" class="list-content-msg">{{
-                  item.telephone
-                }}</van-col>
-            </van-row>
-          </van-cell>
         </van-popup>
-
         <van-field
           v-model="clueDiscover"
           type="clueDiscover"
           name="线索发现人"
           label="线索发现人"
           placeholder="线索发现人"
-          :rules="[{ required: true, message: '请填写线索发现人' }]"
+          :rules="[{ required: true, message: '请填写线索线索发现人' }]"
           readonly
-          @click="toAddDiscover"
+          @click="onChooseUserType1"
         />
-
         <van-field
           v-model="clueResponsible"
           type="clueResponsible"
           name="线索责任人"
           label="线索责任人"
           placeholder="线索责任人"
-          :rules="[{ required: true, message: '请填写线索责任人' }]"
+          :rules="[{ required: true, message: '请填写线索线索责任人' }]"
           readonly
-          @click="toAddResponsible"
+          @click="onChooseUserType2"
         />
+
 
         <div style="margin: 16px;">
           <van-button round block type="info" native-type="submit">提交</van-button>
@@ -133,8 +107,14 @@
 <script>
 import qs from 'qs'// axios参数包
 import { Toast } from 'vant';
+import AddForm from "../../component/AddForm";
+import AbbList from "../../component/AbbList";
 export default {
   name: "editClue",
+  components:{
+    AddForm,
+    AbbList,
+  },
   data() {
     return {
       followVal: "",
@@ -162,6 +142,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
       },
+      userType:'',
     };
   },
   created () {
@@ -176,7 +157,7 @@ export default {
       let postData = {
         clueId:this.id
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+      const result = (await this.$http.get(url, {params:postData})).data.data;
       // console.log(result[0])
       this.clueName=result[0].clueName;
       this.value=result[0].clueDate;
@@ -310,6 +291,29 @@ export default {
       }
 
       console.log(this.followList);
+    },
+    onChooseUserType(){
+      this.followShow=true;
+      this.userType = 1;
+    },
+    onChooseUserType1(){
+      this.followShow=true;
+      this.userType = 2;
+    },
+    onChooseUserType2(){
+      this.followShow=true;
+      this.userType = 3;
+    },
+    onFollowCancel(){
+      this.followShow=false;
+    },
+    onFollowAdd(val){
+      if(this.userType==1)
+        this.clueEditor=val.name;
+      if(this.userType==2)
+        this.clueDiscover=val.name;
+      if(this.userType==3)
+        this.clueResponsible=val.name;
     },
   },
 }
