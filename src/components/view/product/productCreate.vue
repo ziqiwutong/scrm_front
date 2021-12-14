@@ -173,21 +173,21 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/se/product/addProduct";
+      let url = "/api/se/product/insert";
       let postData = {
         productName: this.productName,
         productPrice: this.productPrice,
         productInventory: this.productInventory,
-        productType:this.productType,
-        productCertificate: this.productCertificate,
+        typeName:this.productType,
+        certificate: this.productCertificate,
         // notes:this.notes,
         priceChange:this.priceChange,
-        productPic: this.productPic1,
+        productImage: this.productPic1,
         retailPrice:this.retailPrice,
         wholesalePrice:this.wholesalePrice,
         priceDescribe:this.priceDescribe,
         productIntro:this.productIntro,
-        brandIntro:this.brandIntro
+        brand:this.brandIntro
       }
       const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
           this.productID=result.productID;

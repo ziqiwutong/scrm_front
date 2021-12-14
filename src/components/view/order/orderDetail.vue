@@ -143,60 +143,30 @@
 
     <div class="order_price">
       <!--        finished-text="没有更多了"-->
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        @load="onLoad"
-      >
         <van-swipe-cell  v-for="(item,i) in list" :key="i"  :title="item">
-<!--          <div class="price_left">-->
-<!--      <van-row class="van-row2" >-->
-<!--        <van-col span="4" offset="1">-->
-<!--          <van-image class="img1"-->
-<!--            round-->
-<!--            width="60"-->
-<!--            height="60"-->
-<!--            :src=item.productPic-->
-<!--          />-->
-<!--        </van-col>-->
-<!--        <van-col class="words1" span="15" offset="4">￥{{item.productPrice}}×{{item.productBuyAmount}}</van-col>-->
-<!--        <van-col  class="words2" span="16" offset="10">{{item.productName}}</van-col>-->
-<!--      </van-row>-->
-<!--    </div>-->
-<!--      <div class="price_right">-->
-<!--        <van-row class="right_row">-->
-<!--          <van-col class="top" span="10" offset="3">商品总价</van-col>-->
-<!--          <van-col class="top" span="11">￥{{ item.productPrice }}</van-col>-->
-<!--          <van-col span="10" offset="3">改价</van-col>-->
-<!--          <van-col span="11">￥{{ item.priceChange }}</van-col>-->
-<!--          <van-col class="real1" span="10" offset="3">实收金额</van-col>-->
-<!--          <van-col class="real2" span="11">￥{{item.realPrice}}</van-col>-->
-<!--        </van-row>-->
-<!--      </div>-->
           <van-row class="van-row1">
             <div  @click="onDetail(item.productID)">
               <van-col span="4" offset="1">
                 <van-image
                   width="120%"
                   height="60px"
-                  :src=item.productPic
+                  :src=item.productImage
                 />
               </van-col>
               <van-col class="productName" span="11" offset="2"><div class="van-ellipsis">{{item.productName}}</div></van-col>
-              <van-col class="price" span="5" offset="1"><span class="pricecolor">￥{{item.productPrice}}</span></van-col>
-              <van-col class="stock" span="4" offset="19">×12{{item.productBuyAmount}}</van-col>
+              <van-col class="price" span="5" offset="1"><span class="pricecolor">￥{{item.originPrice}}</span></van-col>
+              <van-col class="stock" span="4" offset="19">×{{item.productAmount}}</van-col>
               <!--                  <van-col  class="button" span="6" offset="4">-->
               <!--                  </van-col>-->
             </div>
           </van-row>
           </van-swipe-cell>
-      </van-list>
       <div class="button1">
         <van-row class="vanrow3" >
                     <van-col class="top" span="7" offset="3">商品总价</van-col>
                     <van-col class="top" span="6">￥{{ this.productPrice }}</van-col>
                     <van-col span="7" offset="3">改价</van-col>
-                    <van-col span="6">￥{{ this.priceChange }}</van-col>
+                    <van-col span="6">￥{{this.priceChange === null ? '0' : this.priceChange }}</van-col>
                     <van-col class="real1" span="7" offset="3">实收金额</van-col>
                     <van-col class="real2" span="6">￥{{this.realPrice}}</van-col>
         </van-row>
@@ -253,27 +223,33 @@ export default {
    async test(){
      this.orderID=this.$route.query.orderID;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-     let url = "/api/se/order/orderDetail";
+     let url = "/api/se/order/queryByOrderNum";
      let postData = {
-       orderID:this.orderID
+       orderNum:this.orderID
      }
-     const result = (await this.$http.post(url, qs.stringify(postData))).data.data;
+     const result = (await this.$http.get(url,{params:postData})).data.data;
      // this.productPic=result.productPic;
      // this.productName=result.productName;
-     this.productPrice=result.productPrice;
-     this.orderBuyer=result.orderBuyer;
+     this.productPrice=result.originPrice;
+     this.orderBuyer=result.customerName;
      this.orderStaff=result.orderStaff;
      this.notes=result.notes;
      this.orderSource=result.orderSource;
-     this.productBuyAmount=result.productBuyAmount;
-     this.priceChange=result.priceChange;
-     this.realPrice=this.productPrice - this.priceChange;
-     this.orderType=result.orderType;
-     this.orderTime=result.orderTime.split(" ")[0];
-     this.orderFinish=result.orderFinish.split(" ")[0];
+     this.priceChange=result.changePrice;
+     this.realPrice=result.receivedAmount;
+     this.orderType=result.orderStatus;
+     this.list=result.productList;
+     this.orderTime=result.createTime.split(" ")[0];
+     this.orderFinish=result.payTime.split(" ")[0];
    },
    onClickLeft() {
-     this.$router.push('orderList')
+     // let orderStatus =
+     this.$router.push({
+       path: '/orderList',
+       query: {
+         active:this.$route.query.active
+       }
+     })
    },
    orderEdit1(orderID){
      // console.log(123123);
@@ -303,22 +279,16 @@ export default {
      } else
        Toast('订单删除失败,错误码' + result1.code);
    },
-   async onLoad() {
-     let url = "/api/se/product/queryProductByKey";
-     let postData = {
-       keySearch: '白',
-       // orderType: this.active
-     }
-     this.list = [];
-     const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-     for (let i = 0; i < result.length; i++) {
-       this.list.push(result[i]);
-     }
-     // 加载状态结束
-     this.loading = false;
-     this.finished = true;
-     // Toast('已加载全部数据！');
-   },
+   //   onLoad() {
+   //   this.list = [];
+   //   for (let i = 0; i < result.length; i++) {
+   //     this.list.push(result[i]);
+   //   }
+   //   // 加载状态结束
+   //   this.loading = false;
+   //   this.finished = true;
+   //   // Toast('已加载全部数据！');
+   // },
  }
 
 }

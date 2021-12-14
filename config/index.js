@@ -11,10 +11,11 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://www.fzk-tx.top/', // 要访问的接口域名
+        // target: 'https://www.fzk-tx.top/', // 要访问的接口域名
+        target: 'http://118.122.48.47:33333/', // 要访问的接口域名
         // target: 'https://www.fastmock.site/mock/e89826b10151d3ddafd81e87b0cf7110/api/', // 要访问的接口域名
         // target:  'https://www.fzk-tx.top ',     //后端接口
-        // target: 'http://192.168.43.25:30002/',  //后端接口
+         //target: 'http://192.168.43.25:30002/',  //后端接口
         // target: 'http://192.168.1.101:30001/', // 要访问的接口域名
         // target: 'http://127.0.0.1:3000/', // 要访问的接口域名
         // target: 'http://127.0.0.1:40001/', // 要访问的接口域名

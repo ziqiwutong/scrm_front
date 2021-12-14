@@ -54,21 +54,20 @@
             >
               <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
                 <van-row class="van-row1">
-                <div  @click="onDetail(item.productID)">
+                <div  @click="onDetail(item.id)">
                   <van-col span="4" offset="1">
                     <van-image
                       width="135%"
                       height="75px"
-                      :src=item.productPic
+                      :src=item.productImage
                     />
-<!--                      src=item.productPic-->
-<!--                      />-->
 
                   </van-col>
                   <van-col class="productName" span="8" offset="2">{{item.productName}}</van-col>
                   <van-col class="price" span="8" offset="0"><div class="van-ellipsis">售价:<span class="pricecolor">￥{{item.productPrice}}</span></div></van-col>
-                  <van-col class="stock" span="8" offset="10">库存:{{item.productInventory}}件</van-col>
-                  <van-col class="View" span="10" offset="2">{{item.productView}}人浏览</van-col>
+                  <van-col class="stock1" span="8" offset="2">销量:{{item.productSales}}件</van-col>
+                  <van-col class="stock" span="8" offset="0">库存:{{item.productInventory}}件</van-col>
+                  <van-col class="View" span="10" offset="2">{{item.productViewTimes}}人浏览</van-col>
 <!--                  <van-col  class="button" span="6" offset="4">-->
 <!--                  </van-col>-->
                 </div>
@@ -89,11 +88,12 @@
     <van-popup v-model="scrShow" closeable position="bottom" class="scrpop">
       <van-row v-for="item in scrList" :key="item.name">
         <p class="scrname">{{ item.name }}</p>
+
         <van-button
-          v-for="item1 in item.class"
+          v-for="(item1,index) in item.class"
           :key="item1.name"
           :class="item1.isSelected ? 'actscrbtn' : 'scrbtn'"
-          @click="cutTabClick(item1)"
+          @click="cutTabClick(item,index)"
         >
           {{ item1.name }}</van-button
         >
@@ -163,12 +163,6 @@ export default {
       //error: false,
       loading: false,
       finished: false,
-      // productName:"必炫",
-      // productPrice:"1999",
-      // productBuyAmount:"3",
-      // orderBuyer:"王佳乐",
-      // orderID:"123978129038123",
-      //  productPic1:"",
     //以下为标签栏
 
     //  以下为筛选数据
@@ -222,7 +216,7 @@ export default {
   methods: {
     //todo 分享设置、
     showShareDialog(item) {
-      let imageUrl = item.productPic.replace('/wxResource', 'http://mmbiz.qpic.cn');
+      let imageUrl = item.productImage.replace('/wxResource', 'http://mmbiz.qpic.cn');
       this.shareMsg.title = item.productName;
       this.shareMsg.imageUrl = imageUrl;
       this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl + 'articleDetail?articleid=' + item.id + '&shareid=' + this.shareId + '&ifshowshareman=true';
@@ -262,9 +256,23 @@ export default {
       this.ifChoose = true;
     },
     // 筛选-按钮点击高亮事件
-    cutTabClick(item) {
+    cutTabClick(item,index) {
       //然后通过这个属性判断是否选中点亮和取消
-      item.isSelected = !item.isSelected;
+      // if(item.name === '价格' ){
+        if(item.class[index].isSelected === true)
+          item.class[index].isSelected = false;
+        else
+        for (let i = 0; i < item.class.length; i++) {
+          if (i == index) {
+            item.class[i].isSelected = true;
+          } else {
+            item.class[i].isSelected = false;
+          }
+        }
+
+      // }
+      // else
+      //   item.class[index].isSelected = !item.class[index].isSelected;
     },
     // 筛选-跟进人列表-弹窗
     toFollow() {
@@ -282,9 +290,13 @@ export default {
       for (i = 0; i < this.scrList.length; i++) {
         for (j = 0; j < this.scrList[i].class.length; j++) {
           if (this.scrList[i].class[j].isSelected === true) {
+            if(this.scrList[i].name === '价格')
+              this.selectList.push(
+               j
+              );
+            else
             this.selectList.push(
-              // this.scrList[i].name + ":" + this.scrList[i].class[j].name
-              j+5*i
+              this.scrList[i].name + ":" + this.scrList[i].class[j].name
             );
           }
         }
@@ -293,16 +305,46 @@ export default {
       this.send();
     },
     async send(){  //发送筛选请求
+      let url = "/api/se/product/query";
+      // let barAct1=this.barAct;
+      // if( this.barAct == 2 && this.priceStatus == 0) barAct1 =3;
+      this.list = [];
       this.pageProps.pageNum=1;
-      this.list=[];
-      let url = "/api/se/product/queryProduct";
-      let postData = {
-        pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize,
-        type: 4,
-        sort:this.selectList,
+      let asc;
+      let desc;
+      let bet_productPrice;
+      let like_productName;
+      if(this.barAct === 1) asc='productSales';
+      else  if(this.barAct === 2&&this.priceStatus === 1) asc='productPrice';
+      else if(this.barAct === 2&&this.priceStatus === 0)  desc='productPrice';
+      for (let i = 0; i < this.selectList.length; i++) {
+        if (this.selectList[i] === 0) bet_productPrice = '0' + '▓' + '500';
+        else if (this.selectList[i] === 1) bet_productPrice = '500' + '▓' + '1000';
+        else if (this.selectList[i] === 2) bet_productPrice = '1000' + '▓' + '2000';
+        else if (this.selectList[i] === 3) bet_productPrice = '2000' + '▓' + '3000';
+        else if (this.selectList[i] === 4) bet_productPrice = '3000' + '▓' + '99999';
+        //多区间模糊查询
+        // for (let i = 1; i < this.selectList.length; i++){
+        //   if(this.selectList[i].substr(0,4) === '产品类型') {
+        //     if(i === 1) in_productName=in_productName.concat(this.selectList[i].substr(5));
+        //     else
+        //     in_productName = in_productName.concat('▓', this.selectList[i].substr(5));
+        //   }
+        // }
+        else
+        like_productName = this.selectList[i].substr(5);
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      console.log(like_productName)
+      let postData = {
+        currentPage: this.pageProps.pageNum++,
+        pageCount: this.pageProps.pageSize,
+        asc:asc,
+        desc:desc,
+        bet_productPrice:bet_productPrice,
+        like_productName:like_productName
+      }
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url,{params:postData})).data.data;
       if (result.length == 0) {
         // 已加载全部数据
         this.finished = true;
@@ -311,15 +353,11 @@ export default {
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
       }
-      console.log(this.list);
+      // console.log(this.list);
       // 加载状态结束
-      this.loading = false;
       this.scrShow = false;
+      this.loading = false;
     },
-    //以上为筛选内容
-    // toFollow(){
-    //
-    // },
 
     toSort(){
    this.scrShow = true;
@@ -374,20 +412,34 @@ export default {
     //   });
     // },
     async onSearch() {
-      let url = "/api/se/product/queryProductByKey";
-      let postData = {
-        keySearch: this.searchValue,
-        // orderType: this.active
-      }
+      let url = "/api/se/product/query";
       this.list = [];
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      this.pageProps.pageNum=1;
+      let asc;
+      let desc;
+      if(this.barAct === 1) asc='productSales';
+      else  if(this.barAct === 2&&this.priceStatus === 1) asc='productPrice';
+      else if(this.barAct === 2&&this.priceStatus === 0)  desc='productPrice';
+      let postData = {
+        currentPage: this.pageProps.pageNum++,
+        pageCount: this.pageProps.pageSize,
+        asc:asc,
+        desc:desc,
+        like_productName:this.searchValue
+      }
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url,{params:postData})).data.data;
+      if (result.length == 0) {
+        // 已加载全部数据
+        this.finished = true;
+        Toast('已加载全部数据！');
+      }
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
       }
+      console.log(this.list);
       // 加载状态结束
       this.loading = false;
-      this.finished = true;
-      Toast('已加载全部数据！');
     },
 
     onSearchCancel() {
@@ -396,16 +448,22 @@ export default {
     },
 
     async onLoad() {
-      let url = "/api/se/product/queryProduct";
-      let barAct1=this.barAct;
-      if( this.barAct == 2 && this.priceStatus == 0) barAct1 =3;
-      // if( this.barAct == 3 ) barAct1 =4;
+      let url = "/api/se/product/query";
+      // let barAct1=this.barAct;
+      // if( this.barAct == 2 && this.priceStatus == 0) barAct1 =3;
+      let asc;
+      let desc;
+      if(this.barAct === 1) asc='productSales';
+     else  if(this.barAct === 2&&this.priceStatus === 1) asc='productPrice';
+      else if(this.barAct === 2&&this.priceStatus === 0)  desc='productPrice';
       let postData = {
-        pageNum: this.pageProps.pageNum++,
-        pageSize: this.pageProps.pageSize,
-        type: barAct1
+        currentPage: this.pageProps.pageNum++,
+        pageCount: this.pageProps.pageSize,
+        asc:asc,
+        desc:desc
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url,{params:postData})).data.data;
       if (result.length == 0) {
         // 已加载全部数据
         this.finished = true;
@@ -433,17 +491,20 @@ export default {
             message: '确定删除吗？'
           }).then(() => {
             instance.close();
-            this.deletefun(instance.$attrs.title.productID);//此处需要刷新页面
+            // console.log(instance.$attrs.title)
+            this.deletefun(instance.$attrs.title.id);//此处需要刷新页面
           });
           break;
       }
     },
     async deletefun(productID){
-      let url = "/api/se/product/deleteProduct";
+      let url = "/api/se/product/delete";
+      console.log(productID)
       let postData = {
-        productID: productID
+        id:productID
       }
-      const result = (await this.$http.post(url, qs.stringify(postData))).data
+      // const result = (await this.$http.post(url, qs.stringify(postData))).data
+      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
       if(result.code === 200) {
         Toast('产品删除成功');
         this.list=[];
@@ -625,6 +686,12 @@ h3{
   text-align: right;
   font-weight: lighter;
 }
+  .stock1{
+    margin-top: 8px;
+    font-size:12px;
+    text-align: left;
+    font-weight: lighter;
+  }
   .price{
     text-align: right;
     font-size: 14px;
