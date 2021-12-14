@@ -10,7 +10,10 @@
       <div v-html="article" class="article"></div>
     </div>
     <van-share-sheet v-model="showShare" title="立即分享" :options="options" @select="shareArticleApp"/>
-    <BusinessCard class="bsCard" :userImgUrl="sharePerImg" :username="sharePerName" :userCompany="sharePerCompany"
+    <BusinessCard v-if="loading === false" class="bsCard"
+                  :userImgUrl="sharePerImg"
+                  :username="sharePerName"
+                  :userCompany="sharePerCompany"
                   :userPhone="sharePerPhone"
                   v-show="showCard"/>
     <div v-show="!inWX" class="bottomTab">
@@ -62,6 +65,7 @@ export default {
       navTitle: "文章详情",
       title: "",
       author: "",
+      loading: true,
       date: "",
       articleId: "123",
       article: "",
@@ -247,10 +251,10 @@ export default {
       }
       self.date = '';
       self.article = result.article.articleContext;
-      self.sharePerImg = result.user.userIcon;
-      self.sharePerName = result.user.username;
+      self.sharePerImg = result.user.avatar;
+      self.sharePerName = result.user.name;
       self.sharePerCompany = '泸州老窖集团有限责任公司';
-      self.sharePerPhone = result.user.telephone;
+      self.sharePerPhone = result.user.mobile;
 
       self.articleMsg.articleContext = result.article.articleContext;
       self.articleMsg.articleTitle = result.article.articleTitle;
@@ -258,6 +262,7 @@ export default {
       self.articleMsg.articleAccountName = result.article.articleAccountName;
       self.articleMsg.articlePower = result.article.articlePower;
       self.articleMsg.coverImg = result.article.articleImage;
+      this.loading = false;
       // 页面渲染完成后在执行
       self.$nextTick(() => {
         self.adjustSize();
@@ -270,7 +275,7 @@ export default {
     deleteArticle() {
       let self = this;
       this.$dialog.confirm({
-        title: '温馨提示',
+        title: '',
         message: '您确定删除这篇文章吗',
         confirmButtonColor: '#645fd7',
       })
@@ -395,6 +400,7 @@ export default {
     editArticle() {
       let shareId = JSON.parse(getUserId()).userID;
       this.$store.commit('updateEditReqArticle', this.articleMsg);
+      this.$store.commit('updateTempArticle', this.article);
       this.$router.push({
         name: 'repArticleDetail',
         query: {
@@ -424,6 +430,7 @@ export default {
     // 获取分销链接
     async getDistributeUrl() {
       let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
+      // 微盟id要从url里进行截取
       let getData = {
         id: 2785775511
       }
@@ -468,6 +475,11 @@ export default {
 .article /deep/ * {
   max-width: 100% !important;
   box-sizing: border-box;
+}
+
+/deep/ p {
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 h2 {

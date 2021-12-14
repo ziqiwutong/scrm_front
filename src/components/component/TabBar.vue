@@ -31,7 +31,7 @@ export default {
 
     },
     toApplication(){
-      this.$router.push("/contextShare")
+      this.$router.push("/contextShareList")
     }
   }
 }

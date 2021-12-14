@@ -113,7 +113,7 @@ export default {
     // alert(this.$route.query.code);
     // this.sendCode();
     // 为了测试，这里暂时写的是6，其实应该是从user里面获取
-    let userID = "6";
+    let userID = "4862341";
     if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
       this.getToken(userID);
     }
@@ -160,7 +160,7 @@ export default {
         sex: wxUserMsg.sex,
         duty: wxUserMsg.duty,
         deptName: wxUserMsg.dept_name,
-        wxId: ''
+        wmId: ''
       }
       console.log('userid:' + userMessage.userId);
       this.$store.commit('updateUserMessage', userMessage);

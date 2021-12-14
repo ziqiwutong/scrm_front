@@ -19,11 +19,11 @@ const state = {
     userImgUrl: 'https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg',
     userId: '6',
     userPhone: '18256895659',
-    email:'123456789@qq.com',
-    sex:'保密',
-    duty:'总经理',
-    deptName:'组织部',
-    wmId:'',
+    email: '123456789@qq.com',
+    sex: '保密',
+    duty: '总经理',
+    deptName: '组织部',
+    wmId: '11',
   },
   repArticleDetail: {
     articleContext: '',
@@ -35,6 +35,7 @@ const state = {
     productIds: [],
     materialType: '1'
   },
+  articleContextTemp: '',//用来存储临时文章页面
   wxUser: {
     imgUrl: 'https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/baike/pic/item/8435e5dde71190efaa5405dfc21b9d16fdfa6007.jpg',
     nickName: '1234444'
@@ -62,7 +63,8 @@ const store = new Vuex.Store({
         repArticleDetail: val.repArticleDetail,
         hasOAuth: val.hasOAuth,
         wxUser: val.wxUser,
-        articleType: val.articleType
+        articleType: val.articleType,
+        articleContextTemp: val.articleContextTemp
       }
     }
   })]
