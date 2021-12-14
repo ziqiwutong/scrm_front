@@ -1,7 +1,7 @@
 <template>
 
   <div>
-    <div class="navbar" @click="toBoList">
+    <div class="navbar" @click="returnBack()">
       <van-nav-bar title="新建商机" left-text="返回" left-arrow/>
     </div>
 
@@ -197,7 +197,7 @@
 
 
       <!-- 提交按钮 -->
-      <div style="margin: 16px;" class="submit">
+      <div class="submit">
         <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
@@ -221,6 +221,14 @@ export default {
   },
   data() {
     return {
+      //确定要返回的页面，返回要带上的参数
+      returnData: {
+        returnPath: "/bizOppList", //默认返回的页面是商机列表
+
+        customerId: "",
+        customerName: "",
+      },
+
       customerId: "",
       customerName: "",
       boSelectCustomerShow: false,
@@ -287,26 +295,60 @@ export default {
     };
   },
 
-  watch: {
-    $route: {
-      immediate: true,
-      handler: function (to, from) {
-        //拿到目标参数 to.query.id 去再次请求数据接口
-        this.customerId = to.query.id;
-        this.customerName = to.query.customerName;
-      },
-    },
-  },
 
   created() {
     //当页面加载的时候从vuex获取当前使用者的信息作为 商机编辑者
     this.boEditorId = this.$store.state.userMessage.userId;
     this.boEditor = this.$store.state.userMessage.username;
+
+    //判断从不同页面跳转的，做不同的操作
+    this.returnData.returnPath = this.$route.params.from;
+    if (this.returnData.returnPath === "/perinfor") {
+      this.customerId = this.$route.params.customerId;
+      this.returnData.customerId = this.$route.params.customerId;
+
+      this.customerName = this.$route.params.customerName;
+      this.returnData.customerName = this.$route.params.customerName;
+    } else if (this.returnData.returnPath === "/clueDetail") {
+     this.clueId=this.$route.params.clueId;
+      this.returnData.clueId = this.$route.params.clueId;
+
+      this.boName = this.$route.params.clueName;
+      this.returnData.boName = this.$route.params.clueName;
+
+      this.boResponsible = this.$route.params.clueResponsible;
+      this.returnData.boResponsible = this.$route.params.clueResponsible;
+    }
   },
   methods: {
-    //点击返回键跳转回商机列表
-    toBoList() {
-      this.$router.push('/bizOppList');
+    //点击返回键跳转来源的页面
+    returnBack() {
+      if (this.returnData.returnPath === "/perinfor") {
+        this.$router.push({
+          name: 'perinfor',
+          query: {
+            cuslist: {
+              id: this.returnData.customerId,
+              customerName: this.returnData.customerName,
+            }
+          }
+        }
+      );
+
+      } else if (this.returnData.returnPath === "/clueDetail") {
+        this.$router.push({
+          path: '/clueDetail',
+          query: {
+            clueId:this.returnData.clueId,
+          }
+        });
+        //做一些数据传输
+
+      } else {
+        this.$router.push('/bizOppList');
+      }
+
+
     },
 
     //从客户列表组件获取客户信息
@@ -442,7 +484,7 @@ export default {
         boResponsible: this.boResponsible,
         boNotes: this.boNotes,
       };
-      const result = (await this.$http.get(url, qs.stringify(postData))).data;
+      const result = (await this.$http.post(url, qs.stringify(postData))).data;
 
       if (result.code === 200) {
         Toast("商机提交成功");
@@ -469,7 +511,9 @@ export default {
 }
 
 .submit {
+  margin-left: 5vw;
   width: 90%;
+  padding-bottom: 6vw;
 }
 
 .van-picker__toolbar {
