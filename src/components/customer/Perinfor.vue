@@ -1234,7 +1234,17 @@ export default {
     },
     // 客户详情-返回
     onClickLeft() {
-      this.$router.back("/customer");
+      if (this.$route.query.type){
+        this.$router.push({
+          name: 'searchList',
+          params: {
+            searchMessage: this.$route.query.searchMessage,
+            type: this.$route.query.type
+          }
+        });
+      }else{
+        this.$router.back("/customer");
+      }
     },
     // 多选-发短信-弹窗
     toShrtMsg() {

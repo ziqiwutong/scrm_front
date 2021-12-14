@@ -11,6 +11,10 @@ export default {
   updateUserMessage(state, userMessage) {
     state.userMessage = userMessage;
   },
+  // 更新微盟id
+  updateWmId(state, wmId) {
+    state.userMessage.wmId = wmId;
+  },
   // 更新转载的公众号内容
   updateEditReqArticle(state, articleMessage) {
     state.repArticleDetail = articleMessage;
@@ -39,4 +43,8 @@ export default {
   updateContextListArticleType(state, articleType) {
     state.articleType = articleType;
   },
+  // 更新文章的临时页面
+  updateTempArticle(state, articleContextTemp) {
+    state.articleContextTemp = articleContextTemp;
+  }
 }
