@@ -58,7 +58,7 @@
       >
       <van-row
         ><van-col class="title">企业地址</van-col
-        ><van-col class="detail">{{ this.cusDetail.address }}</van-col></van-row
+        ><van-col class="detail1">{{ this.cusDetail.address }}</van-col></van-row
       >
       <van-row
         ><van-col class="title">所属省市区</van-col
@@ -71,19 +71,19 @@
         }}</van-col></van-row
       >
       <van-row
-        ><van-col class="title">行业代码</van-col
+        ><van-col class="title">工商注册号</van-col
         ><van-col class="detail">{{
           this.cusDetail.industryCode
         }}</van-col></van-row
       >
       <van-row
-        ><van-col class="title">组织结构代码</van-col
+        ><van-col class="title">组织机构号</van-col
         ><van-col class="detail">{{
           this.cusDetail.organizationCode
         }}</van-col></van-row
       >
       <van-row
-        ><van-col class="title">登记机关</van-col
+        ><van-col class="title">所属工商局</van-col
         ><van-col class="detail">{{
           this.cusDetail.registrationAuthority
         }}</van-col></van-row
@@ -1108,31 +1108,35 @@ export default {
   },
   created() {
     let cuslist = this.$route.query.cuslist;
-    this.getCusDetailByID(cuslist.id);
+    this.getCusDetailByID(cuslist.socialCreditCode);
   },
   methods: {
+    changeCusForm(res){
+      console.log(res)
+      this.cusDetail = []
+      this.cusDetail.operatingStatus = res.engageStatus
+      this.cusDetail.establishDate = res.startDate
+      this.cusDetail.approvalDate = res.checkDate
+      this.cusDetail.legalPerson = res.legalPerson
+      this.cusDetail.customerName = res.companyName
+      this.cusDetail.socialCreditCode = res.creditNo
+      this.cusDetail.companyType = res.companyKind
+      this.cusDetail.address = res.address
+      this.cusDetail.registrationAuthority = res.belongOrg
+      this.cusDetail.organizationCode = res.orgNo
+      this.cusDetail.industryCode = res.registerNo
+    },
     // 根据id查询客户信息
     async getCusDetailByID(id) {
-      let url = "/api/se/customer/queryById";
+      let url = "/api/se/customerRest/companyDetail";
       const res = await this.$http.get(url, {
         params: {
-          id: id,
+          keyword: id,
         },
       });
       if (res.data.code == 200) {
-        this.cusDetail = res.data.data;
-        for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
-          if (i != this.cusDetail.customerLabels.length - 1) {
-            this.labelCusList +=
-              this.cusDetail.customerLabels[i].labelType +
-              ":" +
-              this.cusDetail.customerLabels[i].labelName +
-              "/ ";
-          } else
-            this.labelCusList +=
-              this.cusDetail.customerLabels[i].labelType +
-              ":" +
-              this.cusDetail.customerLabels[i].labelName;
+        this.changeCusForm(res.data.data)
+
       } else {
         Toast("加载失败");
       }
@@ -2821,6 +2825,18 @@ export default {
   color: #1f2752;
 }
 .detail {
+  background-color: #ffffff;
+  width: 65%;
+  height: 60px;
+  text-align: center;
+  padding: 5%;
+  color: #1f2752;
+  border-color: #f5f5f5;
+  border-style: solid;
+  border-width: 1px;
+
+}
+.detail1{
   background-color: #ffffff;
   width: 65%;
   height: 60px;
