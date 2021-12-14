@@ -55,13 +55,9 @@
       </div>
       <div class="clueBtn">
         <!--转换为商机-->
-        <div>
-          <van-button round size="normal" type="info" @click="toBizOpp"> 转换为商机</van-button>
-        </div>
+          <van-button round class="button-edit-bo" type="info" @click="toBizOpp"> 转换为商机</van-button>
         <!--删除线索-->
-        <div>
-          <van-button plain round size="normal" type="info" @click="clueDelete1"> 删除线索</van-button>
-        </div>
+          <van-button plain round class="button-delete-bo" type="info" @click="clueDelete1"> 删除线索</van-button>
       </div>
     </div>
   </div>
@@ -129,7 +125,7 @@ export default {
     async onLoad() {
       let url = "/api/se/clue/queryClueStatus";
       let postData = {clueId:this.$route.query.clueId};
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url, {params:postData})).data.data
       this.list = [];
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
@@ -236,11 +232,26 @@ export default {
 
 
 .clueBtn{
-  display: inline-flex;
-  justify-content: space-around;
-  width: 100vw;
+  //display: inline-flex;
+  //justify-content: space-around;
+  //width: 100vw;
+  margin-left: 3%;
+  width: 92%;
+  display: flex;
+  padding-top: 2vw;
+  padding-bottom: 4vw;
+  justify-content: space-between;
 }
 
+.button-edit-bo {
+  height: 13vw;
+  width: 40vw;
+}
+
+.button-delete-bo {
+  height: 13vw;
+  width: 40vw;
+}
 
 
 .addUpdate {

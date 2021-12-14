@@ -8,67 +8,43 @@
     <!--  提交栏-->
     <div class="commit">
       <van-form @submit="onSubmit">
-    <van-field
-      v-model="customer"
-      type="customer"
-      name="客户"
-      label="客户"
-      placeholder="请选择客户"
-      :rules="[{ required: true, message: '请选择客户' }]"
-    />
-    <van-popup
-      v-model="followShow"
-      position="bottom"
-      :style="{ height: '100%' }"
-      :overlay="false"
-      duration="0"
-    >
-      <van-button class="follow-cancel-btn" @click="folCancel">取消</van-button>
-      <van-search
-        v-model="followVal"
-        placeholder="请输入搜索关键词"
-        @search="onFollowSearch"
-        @cancel="onFollowSearchCancel"
-      />
-      <van-cell
-        v-for="item in followList"
-        :key="item.id"
-        @click="followConfirm(item)"
-      >
-        <!-- 跟进人-跟进人信息 -->
-        <van-row>
-          <!-- 跟进人-跟进人头像 -->
-          <van-col span="4"
-          ><van-image round width="40" height="40" :src="item.userIcon"
-          /></van-col>
-          <!-- 跟进人-跟进人姓名 -->
-          <van-col span="6" class="list-content-name"
-          ><div class="van-ellipsis">
-            {{ item.username }}
-          </div></van-col
-          >
-          <!-- 跟进人-跟进人公司信息 -->
-          <van-col offset="2" class="list-content-msg">{{
-              item.telephone
-            }}</van-col>
-        </van-row>
-      </van-cell>
-    </van-popup>
-
-        <van-field
-          v-model="telephone"
-          name="联系电话"
-          label="联系电话"
-          placeholder="请填写联系电话"
-          :rules="[{ required: true, message: '请填写联系电话' }]"
-        />
-        <van-field
-          v-model="companyName"
-          name="客户公司"
-          label="客户公司"
-          placeholder="请填写客户公司"
-          :rules="[{ required: true, message: '请填写客户公司' }]"
-        />
+<!--        <van-field-->
+<!--          v-model="customer"-->
+<!--          type="customer"-->
+<!--          name="客户"-->
+<!--          label="客户"-->
+<!--          placeholder="请选择客户"-->
+<!--          :rules="[{ required: true, message: '请选择客户' }]"-->
+<!--          readonly-->
+<!--          @click="userShow=true"-->
+<!--        />-->
+<!--        <van-popup-->
+<!--          v-model="userShow"-->
+<!--          position="bottom"-->
+<!--          :overlay="false"-->
+<!--          duration="0"-->
+<!--        >-->
+<!--          <AbbCusList-->
+<!--            :type="3"-->
+<!--            v-show="userShow"-->
+<!--            @returnClick="onUserCancel"-->
+<!--            @onCh="onUserAdd"-->
+<!--          />-->
+<!--        </van-popup>-->
+<!--        <van-field-->
+<!--          v-model="telephone"-->
+<!--          name="联系电话"-->
+<!--          label="联系电话"-->
+<!--          placeholder="请填写联系电话"-->
+<!--          :rules="[{ required: true, message: '请填写联系电话' }]"-->
+<!--        />-->
+<!--        <van-field-->
+<!--          v-model="companyName"-->
+<!--          name="客户公司"-->
+<!--          label="客户公司"-->
+<!--          placeholder="请填写客户公司"-->
+<!--          :rules="[{ required: true, message: '请填写客户公司' }]"-->
+<!--        />-->
         <van-field name="radio" label="沟通方式" label-width="6em">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal" class="clueType">
@@ -81,12 +57,25 @@
         </van-field>
 
         <van-field
-          v-model="communicationTime"
-          name="沟通时间"
-          label="沟通时间"
-          placeholder="沟通时间"
-          :rules="[{ required: true, message: '请填写沟通时间，格式如下“2021-09-01 10:30:18”' }]"
+          readonly
+          clickable
+          name="datetimePicker"
+          :value="value"
+          label="时间选择"
+          placeholder="点击选择时间"
+          @click="dateShow = true"
         />
+        <van-popup v-model="dateShow" position="bottom">
+          <van-datetime-picker
+            v-model="dateVal"
+            type="datetime"
+            title="选择年月日"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @cancel="dateShow = false"
+            @confirm="dateConfirm"
+          />
+        </van-popup>
 
         <van-field
           v-model="communicationContent"
@@ -109,17 +98,22 @@
 
 <script>
 import qs from 'qs'// axios参数包
+import AbbCusList from"../../component/AbbCusList.vue";
 import { Toast } from 'vant';
 export default {
   name: "addCommunicationLog",
+  components:{
+    AbbCusList,
+  },
   data() {
     return {
+      userShow:'',
       followVal: "",
       communicationTime: '',
       customer:'',
       telephone:'',
       companyName:'',
-      customerId:1,
+      customerId:'',
       communicationContent:'',
       //线索状态单选框
       radio: '',
@@ -144,31 +138,49 @@ export default {
   },
   created () {
    // this.customerId=this.$route.query.customerId;
+    this.cuslist = this.$route.query.cuslist;
   },
   methods: {
     async onSubmit() {
       let url = "/api/se/communication/addCommunicationLog";
+      let temp = this.cuslist.id;
+      console.log('t:' + temp);
       let postData = {
-        customerId: this.customerId,
+        customerId:  temp ,
         customerName:this.customerName,
         telephone:this.telephone,
         customer:this.customer,
         companyName:this.companyName,
-        clueResponsible:this.clueResponsible,
-        communicationTime:this.communicationTime,
+        communicationTime:this.value+":"+"00",
         communicationContent:this.communicationContent,
         communicationWay:this.radio,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
       if(result.code === 200) {
-        Toast('订单修改成功');
+        Toast('新建沟通记录成功');
         this.onClickLeft(this.id);
       }
       else
-        Toast('订单修改失败,错误码' + result.code);
+        Toast('新建沟通记录失败,错误码' + result.code);
     },
-
+    // 时间-时间录入处理
+    dateConfirm(date) {
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      var h = date.getHours();
+      var min =date.getMinutes();
+      // var s =date.getSeconds();
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      h = h < 10 ? "0" +h :h;
+      min =min <10 ? "0"+ min:min;
+      // s =s <10 ? "0"+s:s;
+      // this.value = y + "-" + m + "-" + d +" "+h+":"+min+":"+s;
+      this.value = y + "-" + m + "-" + d +" "+h+":"+min;
+      this.dateShow = false;
+    },
     onClickLeft() {
       this.$router.push({ name: "communicationDetail", query: { cuslist: this.$route.query.cuslist } });
     },
@@ -256,6 +268,14 @@ export default {
       }
 
       console.log(this.followList);
+    },
+    //组件关闭后的处理函数
+    onUserCancel(){
+      this.userShow =false;
+    },
+//点击相应用户后的点击处理事件，返回val，包括用户的id和name
+    onUserAdd (val){
+      this.customer=val.name;
     },
   },
 }
