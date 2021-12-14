@@ -310,7 +310,14 @@ export default {
       this.customerName = this.$route.params.customerName;
       this.returnData.customerName = this.$route.params.customerName;
     } else if (this.returnData.returnPath === "/clueDetail") {
+     this.clueId=this.$route.params.clueId;
+      this.returnData.clueId = this.$route.params.clueId;
 
+      this.boName = this.$route.params.clueName;
+      this.returnData.boName = this.$route.params.clueName;
+
+      this.boResponsible = this.$route.params.clueResponsible;
+      this.returnData.boResponsible = this.$route.params.clueResponsible;
     }
   },
   methods: {
@@ -333,7 +340,6 @@ export default {
           path: '/clueDetail',
           query: {
             clueId:this.returnData.clueId,
-
           }
         });
         //做一些数据传输

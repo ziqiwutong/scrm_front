@@ -130,6 +130,10 @@ export default {
       for (let i = 0; i < result.length; i++) {
         this.list.push(result[i]);
       }
+      console.log("clueId:")
+      console.log(this.clueId)
+      console.log("clueName:")
+      console.log(this.list[0].clueName)
     },
     showShareDialog() {
       this.showShare = true
@@ -174,7 +178,8 @@ export default {
         params: {
           from: '/clueDetail',
           clueName: this.list[0].clueName,
-          clueResponsible:this.list[0].clueResponsible ,
+          // clueResponsible:this.list[0].clueResponsible ,
+          // clueResponsibleId:'',
           clueId: this.clueId,
         }
       });
@@ -182,12 +187,12 @@ export default {
       this.businessOpporitunityFlag=1;
       this.clueStatus='转换为商机';
       let postData = {
-        id: this.$route.query.id,
-        clueName:this.clueName,
-        clueDate:this.clueDate,
-        clueEditor:this.clueEditor,
-        clueDiscover:this.clueDiscover,
-        clueResponsible:this.clueResponsible,
+        id: this.clueId,
+        clueName:this.list[0].clueName,
+        clueDate:this.list[0].clueDate,
+        clueEditor:this.list[0].clueEditor,
+        clueDiscover:this.list[0].clueDiscover,
+        clueResponsible:this.list[0].clueResponsible,
         clueStatus:this.clueStatus,
         businessOpporitunityFlag:this.businessOpporitunityFlag,
       }
