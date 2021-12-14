@@ -299,7 +299,7 @@ export default {
             id: this.customerInfo.id
           }
         });
-       else if(this.$route.query.type == 1)
+       else
         this.$router.push('orderList');
       }
 

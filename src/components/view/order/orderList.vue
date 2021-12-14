@@ -39,15 +39,16 @@
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
               <van-row class="van-row1" @click="onDetail(item.orderNum)" >
-                <van-col span="5" offset="1">
+                <van-col class="pic1" span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0  ? 'null' : item.productList[0].productImage"
                     />
 <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
 <!--                  />-->
                 </van-col>
+<!--                {{item.customerName}}-->
                 <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
                 <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
                 <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
@@ -478,10 +479,7 @@ created(){
     ifShowDialog()
     {
       this.$router.push({
-        path: '/orderCreate',
-        query: {
-          type:1
-        }
+        path: '/orderCreate'
       });
     }
   },
@@ -567,9 +565,10 @@ created(){
   }
   .pprice {
     margin-top: 18px;
-    font-family: PingFangSC;
-    font-weight: 400;
     color: #3E3C3C;
+  }
+  .pic1{
+   height: 80%;
   }
   .pamount{
     margin-top: 19px;
@@ -579,8 +578,7 @@ created(){
     margin-top: 18px;
     //height: px;
     text-align: right;
-    font-family: PingFangSC;
-    //line-height: 50px;
+    line-height:20px;
     font-weight: 400;
     color: #3E3C3C;
     //text-overflow:ellipsis;
