@@ -1323,6 +1323,7 @@ export default {
         },
       });
       Toast("跳转订单界面");
+      this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,type:2,customerName:this.cusDetail.customerName} });
       // this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
     },
     // 更多操作-改跟进人

@@ -39,15 +39,16 @@
           >
             <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i" :title="item" >
               <van-row class="van-row1" @click="onDetail(item.orderNum)" >
-                <van-col span="5" offset="1">
+                <van-col class="pic1" span="5" offset="1">
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0  ? 'null' : item.productList[0].productImage"
                     />
 <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
 <!--                  />-->
                 </van-col>
+<!--                {{item.customerName}}-->
                 <van-col span="3" class="pprice" offset="1" >￥{{item.lastPrice}}</van-col>
                 <van-col span="3" class="pamount" offset="4">×{{item.productCount}}</van-col>
                 <van-col span="6"  class="second"><div class="van-ellipsis">{{item.customerName}}</div></van-col>
@@ -345,6 +346,7 @@ export default {
   },
 
 created(){
+  this.toJSON();
   this.active = parseInt(this.$route.query.active);
   if(this.active === 0) this.onClick(this.active,'全部');
   if(this.active === 1) this.onClick(this.active,'待付款');
@@ -386,11 +388,13 @@ created(){
       });
     },
     async onSearch() {
+      this.pageProps.pageNum=1;
+      this.list=[];
       let url = "/api/se/order/query";
       let postData = {
         currentPage: this.pageProps.pageNum++,
         pageCount: this.pageProps.pageSize,
-        // active:this.active,
+        keyword:this.searchValue,
         orderStatus: this.orderStatus
       }
       // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
@@ -424,7 +428,6 @@ created(){
         // active:this.active,
         orderStatus: this.orderStatus
       }
-      // const result = (await this.$http.post(url, qs.stringify(postData))).data.data
       const result = (await this.$http.get(url,{params:postData})).data.data;
       if (result.length == 0) {
         // 已加载全部数据
@@ -455,33 +458,28 @@ created(){
             message: '确定删除吗？'
           }).then(() => {
             instance.close();
-             this.deletefun(instance.$attrs.title.orderID);//此处需要刷新页面
+             this.deletefun(instance.$attrs.title.id);//此处需要刷新页面
           });
           break;
       }
     },
-   async deletefun(orderID){
-     let url = "/api/se/order/deleteOrder";
+    toJSON(){},
+   async deletefun(id){
+     let url = "/api/se/order/delete";
      let postData = {
-       orderID: orderID
+       id: id
      }
-     const result = (await this.$http.post(url, qs.stringify(postData))).data
-     if(result.code === 200) {
+     const result1 = (await this.$http.post(url,postData,{headers: {"Content-Type": "application/json" } })).data
+     if (result1.code === 200) {
        Toast('订单删除成功');
-       this.list=[];
-       this.onLoad();
-       // this.$router.push('orderList');
-     }
-     else
-       Toast('订单删除失败,错误码' + result.code);
+       this.$router.push('orderList');
+     } else
+       Toast('订单删除失败,' + result1.msg);
     },
     ifShowDialog()
     {
       this.$router.push({
-        path: '/orderCreate',
-        query: {
-          type:1
-        }
+        path: '/orderCreate'
       });
     }
   },
@@ -494,24 +492,7 @@ created(){
   //margin-bottom: 40px;
   background-color: #F3F4F8;
 }
-//.orderList_tab{
-//  height: 100%;
-//}
-///deep/ .vant-tab-wrap{
-//.van-tabs__wrap{
-//  width: 100%;
-//}
-//}
-///deep/ .van-tabs__content {
-//  height: 100%;
-//}
-///deep/ .van-tab__pane{
-//  height: 100%;
-//}
-///deep/ .van-list{
-//  height: 100%;
-//  margin-bottom: 50px;
-//}
+
 /deep/ .van-tab{
    width:33%;
 }
@@ -567,9 +548,10 @@ created(){
   }
   .pprice {
     margin-top: 18px;
-    font-family: PingFangSC;
-    font-weight: 400;
     color: #3E3C3C;
+  }
+  .pic1{
+   height: 80%;
   }
   .pamount{
     margin-top: 19px;
@@ -579,8 +561,7 @@ created(){
     margin-top: 18px;
     //height: px;
     text-align: right;
-    font-family: PingFangSC;
-    //line-height: 50px;
+    line-height:20px;
     font-weight: 400;
     color: #3E3C3C;
     //text-overflow:ellipsis;
