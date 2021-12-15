@@ -53,7 +53,7 @@ export function getUrl() {
 
   // 开发环境
   let development = {
-    baseUrl:'http://scrm.natapp1.cc/',
+    baseUrl:'http://scrm.lzljjt.cn:33333/',
     userInfo:{
       sendAppCode:'/api/cms/iuap/userInfo',
       yyConfig:'/api/cms/iuap/jsApi',
