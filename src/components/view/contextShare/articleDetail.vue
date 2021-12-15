@@ -10,12 +10,11 @@
       <div v-html="article" class="article"></div>
     </div>
     <van-share-sheet v-model="showShare" title="立即分享" :options="options" @select="shareArticleApp"/>
-    <BusinessCard v-if="loading === false" class="bsCard"
+    <BusinessCard v-if=" loading === false " class="bsCard"
                   :userImgUrl="sharePerImg"
                   :username="sharePerName"
                   :userCompany="sharePerCompany"
-                  :userPhone="sharePerPhone"
-                  v-show="showCard"/>
+                  :userPhone="sharePerPhone" v-show="showCard"/>
     <div v-show="!inWX" class="bottomTab">
       <div class="bottomTab-left">
         <div class="bottomTab-left-first">
@@ -72,6 +71,7 @@ export default {
       showCard: true,
       inWX: true,
       shareId: '',
+      wmId: '',
       sharePerImg: "",
       sharePerName: "",
       sharePerCompany: "",
@@ -103,13 +103,15 @@ export default {
       stompClient: '',
       ws_timer: '',
       distributeUrl: '',
-      productCount: 0
+      productCount: 0,
+      cardListener: ''
     }
   },
   created() {
     this.judgeEnv();
     this.articleId = this.$route.query.articleid;
     this.shareId = this.$route.query.shareid;
+    this.wmId = this.$route.query.wmid;
     if (this.$route.query.ifshowshareman === 'false' || this.$route.query.ifshowshareman === false) {
       this.showCard = false;
     } else {
@@ -134,6 +136,7 @@ export default {
         this.handleSend();
         if (this.readTime > 900) {// 后台Redis最大存储时间为20分钟，前台15分钟就关闭连接
           this.close();//关闭socket连接
+          clearInterval(this.timer)
         }
       }, 5000);
     }
@@ -227,8 +230,15 @@ export default {
         }
         this.inWX = true;
         document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-top:60px;padding-bottom:0px;');
-        document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
-        // 微信分享文章
+        if (this.showCard === true) {
+          // 微信分享文章
+          this.cardListener = setInterval(() => {
+            if (document.getElementsByClassName('bsCard')[0]) {
+              clearInterval(this.cardListener);
+              document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
+            }
+          }, 500);
+        }
         // 监听页面滚动事件
         window.addEventListener("scroll", this.scrolling)
       } else {
@@ -370,6 +380,7 @@ export default {
         query: {
           articleId: this.articleId,
           shareId: shareId,
+          wmId: this.wmId,
           ifShowShareMan: this.showCard
         }
       });
@@ -407,6 +418,7 @@ export default {
           type: '1',
           articleId: this.articleId,
           shareId: shareId,
+          wmId: this.wmId,
           ifShowShareMan: this.showCard
         }
       });
@@ -432,7 +444,7 @@ export default {
       let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
       // 微盟id要从url里进行截取
       let getData = {
-        id: 2785775511
+        id: this.wmId
       }
       const result = (await this.$http.get(url, {params: getData})).data.data;
       if (result.length > 0) {

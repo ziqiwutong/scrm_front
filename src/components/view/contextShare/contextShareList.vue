@@ -268,6 +268,7 @@ export default {
         query: {
           articleid: articleId,
           shareid: this.shareId,
+          wmid:this.$store.state.userMessage.wmId,
           ifshowshareman: true
         }
       });

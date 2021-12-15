@@ -124,6 +124,7 @@ export default {
     return {
       articleId: '',
       shareManId: '',
+      wmId: '',
       activeName: 'allShare',
       list: [],
       loading: false,
@@ -150,6 +151,7 @@ export default {
   created() {
     this.articleId = this.$route.query.articleId;
     this.shareManId = this.$route.query.shareId;
+    this.wmId = this.$route.query.wmId;
   },
   watch: {
     // 以下代码应用于上拉刷新
@@ -174,6 +176,7 @@ export default {
         query: {
           articleid: this.articleId,
           shareid: this.$route.query.shareId,
+          wmid: this.wmId,
           ifshowshareman: this.$route.query.ifShowShareMan
         }
       });

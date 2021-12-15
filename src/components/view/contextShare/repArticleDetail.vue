@@ -116,6 +116,7 @@ export default {
       frontPage: '',
       articleId: '',
       shareId: '',
+      wmId:'',
       ifShowShareMan: false,
       distributeUrl: '',
       productCount: 0,
@@ -128,6 +129,7 @@ export default {
     if (this.frontPage == '1') {
       this.articleId = this.$route.query.articleId;
       this.shareId = this.$route.query.shareId;
+      this.wmId = this.$route.query.wmId;
       this.ifShowShareMan = this.$route.query.ifShowShareMan;
     }
     this.getDistributeUrl();
@@ -181,6 +183,7 @@ export default {
           query: {
             articleid: this.articleId,
             shareid: this.shareId,
+            wmid:this.wmId,
             ifshowshareman: this.ifShowShareMan
           }
         });
@@ -385,6 +388,7 @@ export default {
             query: {
               articleid: this.articleId,
               shareid: this.shareId,
+              wmid:this.wmId,
               ifshowshareman: this.ifShowShareMan
             }
           });
@@ -412,7 +416,7 @@ export default {
     async getDistributeUrl() {
       let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
       let getData = {
-        id: 2785775511
+        id: this.$store.state.userMessage.wmId
       }
       const result = (await this.$http.get(url, {params: getData})).data.data;
       if (result.length > 0) {
