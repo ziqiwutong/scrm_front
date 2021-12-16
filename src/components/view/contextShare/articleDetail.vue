@@ -447,8 +447,8 @@ export default {
         id: this.wmId
       }
       const result = (await this.$http.get(url, {params: getData})).data;
-      if (result.code === 200|| result.code === '200') {
-        this.distributeUrl = result;
+      if (result.code === 200 || result.code === '200') {
+        this.distributeUrl = result.data;
       }
     },
     // 为产品绑定分销链接

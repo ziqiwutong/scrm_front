@@ -213,7 +213,7 @@ export default {
         pageCount: this.pageProps.pageSize
       }
       const result = (await this.$http.get(url, {params: getData})).data.data
-      if (result === []) {
+      if (this.list === [] && result.length === 0) {
         this.$toast('获取产品列表失败，请检查微盟ID是否有误');
         return;
       }
@@ -328,7 +328,7 @@ export default {
         productUrl[index].addEventListener('click', this.productClick);
       }
     },
-    // 为产品绑定分销链接
+    // 为产品绑定分销链接-页面初始用
     addUrlToProductInit() {
       let productUrl = document.querySelectorAll('.productDiv');
       for (let index = this.productCount; index < productUrl.length; index++) {
@@ -422,9 +422,9 @@ export default {
       let getData = {
         id: this.$store.state.userMessage.wmId
       }
-      const result = (await this.$http.get(url, {params: getData})).data.data;
-      if (result.length > 0) {
-        this.distributeUrl = result;
+      const result = (await this.$http.get(url, {params: getData})).data;
+      if (result.code === 200 || result.code === '200') {
+        this.distributeUrl = result.data;
       }
     },
   }
