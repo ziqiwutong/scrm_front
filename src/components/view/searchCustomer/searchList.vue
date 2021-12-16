@@ -104,7 +104,7 @@ export default {
           this.$router.push({
             name: 'perinfor',
             query: {
-              cuslist: item,
+              id: item.id,
               type: this.type,
               searchMessage: this.$route.params.searchMessage
             }

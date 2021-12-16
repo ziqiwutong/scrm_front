@@ -26,7 +26,7 @@
       <van-field autofocus="true" label="微盟ID" v-model="wmId"/>
     </van-cell-group>
     <div class='submitDiv'>
-      <van-button  type="primary" block color="#4876f1" @click="submitMsg">提交</van-button>
+      <van-button type="primary" block color="#4876f1" @click="submitMsg">提交</van-button>
     </div>
   </div>
 </template>
@@ -67,6 +67,10 @@ export default {
       this.$router.push('/home');
     },
     async submitMsg() {
+      if (!(/^\d+$/.test(this.wmId))) {
+        this.$toast('微盟ID输入有误！');
+        return;
+      }
       let url = JSON.parse(getUrl()).userInfo.saveAppendInfo;
       let postData = {
         id: this.$store.state.userMessage.userId,
@@ -75,7 +79,7 @@ export default {
       const result = (await this.$http.post(url, postData)).data
       if (result.code === 200) {
         this.$store.commit('updateWmId', this.wmId);
-        this.$toast('修改成功！');
+        this.$toast('修改成功！已绑定'+result.data);
         this.$router.push('/home');
       } else {
         this.$toast('修改失败，请再次尝试！');
@@ -142,7 +146,7 @@ export default {
   border-bottom: 1px solid #fafafa;
 }
 
-.submitDiv{
+.submitDiv {
   margin-top: 10vh;
   box-sizing: border-box;
   width: 100vw;

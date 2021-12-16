@@ -1,6 +1,6 @@
 <template>
   <!--底部标题栏-->
-  <van-tabbar v-model="active" active-color="#3333cc">
+  <van-tabbar v-model="active" active-color="#4876f1">
     <van-tabbar-item :icon="tabBarIcon[0].imgUrl" icon-prefix="icon-third" @click="toHome">首页</van-tabbar-item>
     <van-tabbar-item :icon="tabBarIcon[1].imgUrl" icon-prefix="icon-third" @click="toCustomer">客户</van-tabbar-item>
     <van-tabbar-item :icon="tabBarIcon[2].imgUrl" icon-prefix="icon-third" @click="toApplication">应用</van-tabbar-item>

@@ -241,7 +241,17 @@ export default {
        this.productPic1=result;
     },
     onClickLeft() {
-      this.$router.push('productList');
+      this.$router.push({
+        name: 'articleDetail',
+        query: {
+          articleid: this.$route.query.articleid,
+          shareid: this.$route.query.shareid,
+          wmid: this.$route.query.wmid,
+          ifshowshareman: this.$route.query.ifshowshareman,
+          source:this.$route.query.source,
+          productid:this.$route.query.productID
+        }
+      });
     },
 
   },

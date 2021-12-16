@@ -112,12 +112,12 @@ export default {
   },
   created: function () {
     // alert(this.$route.query.code);
-    // this.sendCode();
+    this.sendCode();
     // 为了测试，这里暂时写的是6，其实应该是从user里面获取
-    let userID = "4862341";
-    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-      this.getToken(userID);
-    }
+    // let userID = "4862341";
+    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+    //   this.getToken(userID);
+    // }
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -164,16 +164,16 @@ export default {
         wmId: ''
       }
       console.log('userid:' + userMessage.userId);
-      this.$store.commit('updateUserMessage', userMessage);
-      this.getToken(userMessage.userId);
-      this.getDistributeUrl();
+      await this.$store.commit('updateUserMessage', userMessage);
+      await this.getToken(userMessage.userId);
+      await this.getDistributeUrl();
     },
     // 获取分销链接
     async getDistributeUrl() {
       let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
       // 微盟id要从url里进行截取
       let getData = {
-        id: 2785775511
+        id: this.$store.state.userMessage.wmId
       }
       const result = (await this.$http.get(url, {params: getData})).data.data;
       if (result.length > 0) {
