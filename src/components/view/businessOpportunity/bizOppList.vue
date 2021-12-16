@@ -227,7 +227,7 @@ export default {
     },
 
     //swipe-cell右侧滑动删除按钮的点击事件
-    async beforeClose({position, instance}) {
+    async beforeClose({position, instance}, id) {
       switch (position) {
         case 'cell':
         case 'outside':
@@ -239,7 +239,7 @@ export default {
             message: '确定删除吗？'
           }).then(() => {
             instance.close();
-            this.deleteBo(instance.$attrs.title);//此处需要刷新页面
+            this.deleteBo(instance.$attrs.title);
           });
           break;
       }
@@ -251,7 +251,7 @@ export default {
       let postData = {
         id: id,
       }
-      const result = (await this.$http.get(url, qs.stringify(postData))).data;
+      const result = (await this.$http.post(url, qs.stringify(postData))).data;
       if (result.code === 200) {
         Toast('商机删除成功');
         this.refreshList();

@@ -178,29 +178,17 @@ export default {
         params: {
           from: '/clueDetail',
           clueName: this.list[0].clueName,
-          // clueResponsible:this.list[0].clueResponsible ,
-          // clueResponsibleId:'',
+          clueResponsible: this.list[0].clueResponsible,
+          //ToDo 之后传id
+          clueResponsibleId: '',
           clueId: this.clueId,
+          clueDate: this.list[0].clueDate,
+          clueEditor: this.list[0].clueEditor,
+          clueDiscover: this.list[0].clueDiscover,
+          clueStatus: this.list[0].clueStatus,
+          businessOpportunityFlag: this.list[0].businessOpportunityFlag,
         }
       });
-      let url = "/api/se/clue/editClue";
-      this.businessOpporitunityFlag=1;
-      this.clueStatus='转换为商机';
-      let postData = {
-        id: this.clueId,
-        clueName:this.list[0].clueName,
-        clueDate:this.list[0].clueDate,
-        clueEditor:this.list[0].clueEditor,
-        clueDiscover:this.list[0].clueDiscover,
-        clueResponsible:this.list[0].clueResponsible,
-        clueStatus:this.clueStatus,
-        businessOpporitunityFlag:this.businessOpporitunityFlag,
-      }
-      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
-      if (result.code === 200) {
-        Toast('线索转换商机成功');
-      } else
-        Toast('线索转换商机,错误码' + result.code);
     },
   },
   created() {
