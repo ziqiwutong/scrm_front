@@ -10,6 +10,7 @@ import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 import sweetTest from "../components/view/contextShare/sweetTest";
 import userInfo from "../components/view/userInfo/userInfo";
+import articleToAddForm from "../components/view/contextShare/articleToAddForm";
 import store from "../store";
 import {Toast} from "vant";
 import orderList from "../components/view/order/orderList";
@@ -204,6 +205,11 @@ const routes = [
     path: '/reArticleDes',
     name: 'reArticleDes',
     component: reArticleDes
+  },
+  {
+    path: '/articleToAddForm',
+    name:'articleToAddForm',
+    component: articleToAddForm
   },
   {
     path: '/product2poster',

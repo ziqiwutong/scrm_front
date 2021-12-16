@@ -61,7 +61,7 @@
     </div>
     <van-dialog v-model="showGuide" title='' confirm-button-color="#178bf6" @confirm="hideGuide">
       <div class="showGuideDiv">
-        <p>微盟ID为空 ! 添加产品需先绑定微盟ID !</p>
+        <p>微盟ID为空 ， 添加产品需先绑定微盟ID </p>
         <p>请在首页点击标题栏进入个人中心进行绑定:</p>
         <img src="@/assets/icon/toUserInfoPage.png">
         <p>ps:如果忘记微盟ID，可联系系统管理员进行咨询。</p>
@@ -116,7 +116,7 @@ export default {
       frontPage: '',
       articleId: '',
       shareId: '',
-      wmId:'',
+      wmId: '',
       ifShowShareMan: false,
       distributeUrl: '',
       productCount: 0,
@@ -126,7 +126,7 @@ export default {
   created() {
     this.renderPage();
     this.frontPage = this.$route.query.type;
-    if (this.frontPage == '1') {
+    if (this.frontPage === '1' || this.frontPage === 1) {
       this.articleId = this.$route.query.articleId;
       this.shareId = this.$route.query.shareId;
       this.wmId = this.$route.query.wmId;
@@ -183,7 +183,7 @@ export default {
           query: {
             articleid: this.articleId,
             shareid: this.shareId,
-            wmid:this.wmId,
+            wmid: this.wmId,
             ifshowshareman: this.ifShowShareMan
           }
         });
@@ -213,6 +213,10 @@ export default {
         pageCount: this.pageProps.pageSize
       }
       const result = (await this.$http.get(url, {params: getData})).data.data
+      if (this.list === [] && result.length === 0) {
+        this.$toast('获取产品列表失败，请检查微盟ID是否有误');
+        return;
+      }
       if (result.length < getData.pageCount) {
         // 已加载全部数据
         this.finished = true;
@@ -324,7 +328,7 @@ export default {
         productUrl[index].addEventListener('click', this.productClick);
       }
     },
-    // 为产品绑定分销链接
+    // 为产品绑定分销链接-页面初始用
     addUrlToProductInit() {
       let productUrl = document.querySelectorAll('.productDiv');
       for (let index = this.productCount; index < productUrl.length; index++) {
@@ -388,7 +392,7 @@ export default {
             query: {
               articleid: this.articleId,
               shareid: this.shareId,
-              wmid:this.wmId,
+              wmid: this.wmId,
               ifshowshareman: this.ifShowShareMan
             }
           });
@@ -418,9 +422,9 @@ export default {
       let getData = {
         id: this.$store.state.userMessage.wmId
       }
-      const result = (await this.$http.get(url, {params: getData})).data.data;
-      if (result.length > 0) {
-        this.distributeUrl = result;
+      const result = (await this.$http.get(url, {params: getData})).data;
+      if (result.code === 200 || result.code === '200') {
+        this.distributeUrl = result.data;
       }
     },
   }
