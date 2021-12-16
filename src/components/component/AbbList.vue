@@ -28,7 +28,7 @@
               @getValue="getValue($event)"
             />
           </van-col>
-          <van-col offset="1" span="4.5">
+          <van-col offset="0.5" span="4.5">
             <van-button @click="getUser" class="depart-confirm"
               >确定</van-button
             >
@@ -81,6 +81,7 @@
 <script>
 import SelectTree from "./SelectTree.vue";
 import { Toast } from "vant";
+
 export default {
   name: "AbbList",
   components: {
@@ -169,7 +170,7 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : ""; //给父级添加一个children属性，并赋值
         return father.parentId == 0; //返回第一层
       });
-      Toast("数据加载完毕");
+      Toast("用户选择数据加载完毕");
       return resData;
     },
     onFollowSearch() {
@@ -248,7 +249,6 @@ export default {
           if (tempList.length == 0) {
             // 已加载全部数据
             this.abbfinished = true;
-            Toast("已加载全部数据！");
           } else {
             for (let i = 0; i < tempList.length; i++) {
               this.followList.push(tempList[i]);
