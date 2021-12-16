@@ -485,7 +485,13 @@
       :overlay="false"
       duration="0"
     >
-      <AddForm :type="1" v-show="showform" @returnClick="addCancel" />
+      <AddForm
+        :type="1"
+        v-show="showform"
+        @returnClick="addCancel"
+        :fCusDetail="this.cusDetail"
+        :lq="this.lq"
+      />
     </van-popup>
 
     <!-- <van-popup
@@ -524,6 +530,53 @@ export default {
   },
   data() {
     return {
+      lq: false,
+      cusDetail: {
+        id: "",
+        customerType: "",
+        belongCompany: "",
+        potential: "",
+        customerName: "",
+        historyName: "",
+        customerIcon: "",
+        telephone: "",
+        city: "",
+        customerStatus: "未分配",
+        followStaffId: "",
+        followStaffName: "",
+        enterPoolDate: "",
+        origin: "",
+        orderAmount: "",
+        orderNumber: "",
+        customerLevel: "",
+        customizeField: "",
+        wx: "",
+        wxName: "",
+        sex: "",
+        ageRange: "",
+        birthday: "",
+        position: "",
+        hobby: "",
+        legalPerson: "",
+        operatingStatus: "",
+        establishDate: "",
+        approvalDate: "",
+        registeredCapital: "",
+        paidCapital: "",
+        companyType: "",
+        companySize: "",
+        industry: "",
+        industryCode: "",
+        address: "",
+        businessRange: "",
+        socialCreditCode: "",
+        organizationCode: "",
+        registrationAuthority: "",
+        potentialType: "",
+        creditStatus: "",
+        createTime: "",
+        updateTime: "",
+      },
       // 刷新
       refreshing: false,
       testtxt: "查找客户列表",
@@ -1255,7 +1308,7 @@ export default {
     // 客户列表-客户详情跳转
     onDetail(item) {
       // this.$router.replace("/perinfor");
-      this.$router.push({ name: "perinfor", query: { cuslist: item } });
+      this.$router.push({ name: "perinfor", query: { id: item.id } });
     },
     // 客户列表-滑动删除-弹出框
     detOn(val) {
@@ -1828,30 +1881,6 @@ export default {
           let url = "/api/file/pic/base64StrToPic";
           let picture;
           this.dealImage(str, 1000, this.userImg);
-          // console.log("压缩前：" + str);
-          // str = this.data64Comress;
-          // console.log("压缩后：" + str);
-          // this.data64Comress = "";
-          // console.log(str);
-
-          // if (type.length == 3) {
-          //   picture = str.slice(22);
-          // } else if (type.length == 4) {
-          //   picture = str.slice(23);
-          // }
-          // console.log(picture);
-          // let params = new FormData();
-          // params.append("picBase64Str", picture);
-          // params.append("picFormat", type);
-          // params.append("picType", "customerIcon");
-          // await this.$http
-          //   .post(url, params, {
-          //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          //   })
-          //   .then((res) => {
-          //   console.log(res.data.data);
-          //   this.addList.customerIcon = res.data.data;
-          // });
         } else {
           // 传输
           if (this.addList.customerType == "个人客户") {
@@ -2157,6 +2186,7 @@ export default {
       };
     },
     async userScrImg(base64) {
+      Toast("正在处理名片信息请稍后");
       let str = base64;
       let type = this.uploadPicType(str);
       let url = "/api/file/pic/base64StrToPic";
@@ -2177,7 +2207,6 @@ export default {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
         })
         .then((res) => {
-          console.log(res.data.data);
           //url
           scrIconUrl = res.data.data;
         });
@@ -2193,11 +2222,12 @@ export default {
           if (res.data.data == null) Toast("识别图片失败，请手动新建");
           else {
             let scrP = res.data.data;
-            this.addList.address = scrP.address;
-            this.addList.belongCompany = scrP.company;
-            this.addList.telephone = scrP.mobile;
-            this.addList.position = scrP.title;
-            this.addList.customerName = scrP.name;
+            this.cusDetail.address = scrP.address[0];
+            this.cusDetail.belongCompany = scrP.company[0];
+            this.cusDetail.telephone = scrP.mobile[0];
+            this.cusDetail.position = scrP.title[0];
+            this.cusDetail.customerName = scrP.name[0];
+            this.lq = !this.lq;
             this.showform = true;
           }
         });
@@ -2213,50 +2243,8 @@ export default {
         let url = "/api/file/pic/base64StrToPic";
         let picture;
         let scrIconUrl;
+
         this.dealImage(str, 1000, this.userScrImg);
-        // // console.log(str);
-        // // this.dealImage(str, 1000);
-        // // str = this.data64Comress;
-        // this.data64Comress = "";
-        // if (type.length == 3) {
-        //   picture = str.slice(22);
-        // } else if (type.length == 4) {
-        //   picture = str.slice(23);
-        // }
-
-        // let params = new FormData();
-        // params.append("picBase64Str", picture);
-        // params.append("picFormat", type);
-        // params.append("picType", "customerIcon");
-        // await this.$http
-        //   .post(url, params, {
-        //     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        //   })
-        //   .then((res) => {
-        //     console.log(res.data.data);
-        //     //url
-        //     scrIconUrl = res.data.data;
-        //   });
-        // url = "/api/se/customerRest/businessCard";
-
-        // await this.$http
-        //   .get(url, {
-        //     params: {
-        //       image: scrIconUrl,
-        //     },
-        //   })
-        //   .then((res) => {
-        //     if (res.data.data.name[0] == "") Toast("识别图片失败，请手动新建");
-        //     else {
-        //       let scrP = res.data.data;
-        //       this.addList.address = scrP.address;
-        //       this.addList.belongCompany = scrP.company;
-        //       this.addList.telephone = scrP.mobile;
-        //       this.addList.position = scrP.title;
-        //       this.addList.customerName = scrP.name;
-        //       this.showform = true;
-        //     }
-        //   });
       }
 
       this.pictureShow = false;

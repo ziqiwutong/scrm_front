@@ -67,6 +67,7 @@ import {getUserId} from "../../../network/getToken";
 import {getUrl} from "../../../utils/replaceUrl";
 import yyApi from "../../../utils/yyApi";
 import {ajax} from "../../../utils/ajax";
+import {debounce} from "../../../utils/debounce";
 
 export default {
   name: "contextShareList",
@@ -113,7 +114,12 @@ export default {
         imageUrl: '',
         desc: '点击查看详情->',
         pageUrl: ''
-      }
+      },
+      /*关键字搜索Api计时,用于防抖*/
+      searchApiTime: 0,
+      /*内容列表Api计时,用于防抖*/
+      listApiTime: 0,
+      timer: null
     };
   },
   created() {
@@ -137,9 +143,15 @@ export default {
       this.searchShow = true;
     },
     // 取消搜索
-    onSearchCancel() {
+    onSearchCancel: debounce(function () {
+      this.reloadList();
+    }, 1000, true),
+    reloadList() {
       this.searchShow = false;
       this.searchValue = '';
+      this.pageProps.pageNum = 1;
+      this.list = [];
+      this.onLoad();
     },
     // 关键字搜索
     async onSearch() {
@@ -221,12 +233,17 @@ export default {
       let imageUrl = item.articleImage.replace('/wxResource', 'http://mmbiz.qpic.cn');
       this.shareMsg.title = item.articleTitle;
       this.shareMsg.imageUrl = imageUrl;
-      this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl + 'articleDetail?articleid=' + item.id + '&shareid=' + this.shareId + '&ifshowshareman=true';
+      this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl
+        + 'articleDetail?articleid=' + item.id
+        + '&shareid=' + this.shareId
+        + '&wmid=' + this.$store.state.userMessage.wmId
+        + '&ifshowshareman=true'
+        + '&source=article';
       this.showShare = true;
     },
     async shareArticleApp(e) {
       // 先去后台拿用友的jsConfig，然后触发分享事件
-      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
       const result = (await this.$http.get(url)).data.data;
       let yyConfig = {
         appId: result.appid,
@@ -256,7 +273,9 @@ export default {
         query: {
           articleid: articleId,
           shareid: this.shareId,
-          ifshowshareman: true
+          wmid:this.$store.state.userMessage.wmId,
+          ifshowshareman: true,
+          source:'article'
         }
       });
     },
@@ -276,7 +295,7 @@ export default {
 
 /deep/ .van-tabs__line {
   width: 16vw;
-  background-color: #3333cc;
+  background-color: #4876f1;
 }
 
 /deep/ .van-tabs__content {
@@ -308,7 +327,7 @@ p {
   position: absolute;
   right: 10px;
   bottom: 10%;
-  background-color: #3333cc;
+  background-color: #4876f1;
   border: none;
 }
 

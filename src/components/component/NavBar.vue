@@ -1,6 +1,6 @@
 <template>
   <!--顶部导航栏-->
-  <div class="header">
+  <div class="header" @click="toUserInfo">
     <div class="left">
       <div class="userImg">
         <img v-if="hasImg" :src="userImgUrl"/>
@@ -34,7 +34,6 @@ export default {
         clearInterval(timer);
       }
     }, 500);
-    this.getUserMessage();
   },
   methods: {
     getUserMessage() {
@@ -49,6 +48,9 @@ export default {
       } else {
         this.hasImg = true;
       }
+    },
+    toUserInfo(){
+      this.$router.push('/userInfo');
     }
   }
 }
@@ -60,7 +62,7 @@ export default {
   top: 0;
   left: 0;
   z-index: 2;
-  background-color: #3333cc;
+  background-color: #4876f1;
   height: 60px;
   width: 100%;
   display: inline-flex;
@@ -81,7 +83,7 @@ export default {
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  background-color: #6600ff;
+  background-color: #2c60e8;
   color: white;
   text-align: center;
   line-height: 40px;

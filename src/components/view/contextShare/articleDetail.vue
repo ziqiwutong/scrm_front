@@ -10,13 +10,15 @@
       <div v-html="article" class="article"></div>
     </div>
     <van-share-sheet v-model="showShare" title="立即分享" :options="options" @select="shareArticleApp"/>
-    <BusinessCard class="bsCard" :userImgUrl="sharePerImg" :username="sharePerName" :userCompany="sharePerCompany"
-                  :userPhone="sharePerPhone"
-                  v-show="showCard"/>
+    <BusinessCard v-if=" loading === false " class="bsCard"
+                  :userImgUrl="sharePerImg"
+                  :username="sharePerName"
+                  :userCompany="sharePerCompany"
+                  :userPhone="sharePerPhone" v-show="showCard"/>
     <div v-show="!inWX" class="bottomTab">
       <div class="bottomTab-left">
         <div class="bottomTab-left-first">
-          <van-switch :value="showCard" @input="switchBtn" active-color="#645fd7" size="18px"/>
+          <van-switch :value="showCard" @input="switchBtn" active-color="#4876f1" size="18px"/>
           <p>展示名片</p>
         </div>
         <div class="bottomTab-left-second" @click="toReadRecord">
@@ -62,12 +64,14 @@ export default {
       navTitle: "文章详情",
       title: "",
       author: "",
+      loading: true,
       date: "",
       articleId: "123",
       article: "",
       showCard: true,
-      inWX: false,
+      inWX: true,
       shareId: '',
+      wmId: '',
       sharePerImg: "",
       sharePerName: "",
       sharePerCompany: "",
@@ -99,16 +103,20 @@ export default {
       stompClient: '',
       ws_timer: '',
       distributeUrl: '',
-      productCount: 0
+      productCount: 0,
+      cardListener: '',
+      source:''
     }
   },
   created() {
     this.judgeEnv();
     this.articleId = this.$route.query.articleid;
     this.shareId = this.$route.query.shareid;
-    if (this.$route.query.ifshowshareman === 'false' || this.$route.query.ifshowshareman === false){
+    this.wmId = this.$route.query.wmid;
+    this.source = this.$route.query.source;
+    if (this.$route.query.ifshowshareman === 'false' || this.$route.query.ifshowshareman === false) {
       this.showCard = false;
-    }else{
+    } else {
       this.showCard = true;
     }
     this.getArticle();
@@ -130,11 +138,15 @@ export default {
         this.handleSend();
         if (this.readTime > 900) {// 后台Redis最大存储时间为20分钟，前台15分钟就关闭连接
           this.close();//关闭socket连接
+          clearInterval(this.timer)
         }
       }, 5000);
     }
-    setTimeout(() => {
-      this.addUrlToProduct();
+    let timer = setInterval(() => {
+      if (document.querySelector('.productDiv')) {
+        this.addUrlToProduct();
+        clearInterval(timer);
+      }
     }, 500);
   },
   destroyed() {
@@ -200,7 +212,13 @@ export default {
             + this.$route.query.articleid
             + '&shareid='
             + this.$route.query.shareid
+            + '&wmid='
+            + this.$route.query.wmid
             + '&ifshowshareman=' + this.showCard;
+            + '&source=' + this.$route.query.source;
+          if (this.source === 'product') {
+            this.shareMsg.pageUrl += '&productid=' + this.$route.query.productid;
+          }
           let articleUrl = encodeURIComponent(url);
           let link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8cfd402efecab262&redirect_uri=" + articleUrl + "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
           location.href = link;
@@ -220,8 +238,15 @@ export default {
         }
         this.inWX = true;
         document.getElementsByClassName('article-container')[0].setAttribute('style', 'padding-top:60px;padding-bottom:0px;');
-        document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
-        // 微信分享文章
+        if (this.showCard === true) {
+          // 微信分享文章
+          this.cardListener = setInterval(() => {
+            if (document.getElementsByClassName('bsCard')[0]) {
+              clearInterval(this.cardListener);
+              document.getElementsByClassName('bsCard')[0].setAttribute('style', 'top:0px;');
+            }
+          }, 500);
+        }
         // 监听页面滚动事件
         window.addEventListener("scroll", this.scrolling)
       } else {
@@ -244,10 +269,10 @@ export default {
       }
       self.date = '';
       self.article = result.article.articleContext;
-      self.sharePerImg = result.user.userIcon;
-      self.sharePerName = result.user.username;
+      self.sharePerImg = result.user.avatar;
+      self.sharePerName = result.user.name;
       self.sharePerCompany = '泸州老窖集团有限责任公司';
-      self.sharePerPhone = result.user.telephone;
+      self.sharePerPhone = result.user.mobile;
 
       self.articleMsg.articleContext = result.article.articleContext;
       self.articleMsg.articleTitle = result.article.articleTitle;
@@ -255,21 +280,26 @@ export default {
       self.articleMsg.articleAccountName = result.article.articleAccountName;
       self.articleMsg.articlePower = result.article.articlePower;
       self.articleMsg.coverImg = result.article.articleImage;
+      this.loading = false;
       // 页面渲染完成后在执行
       self.$nextTick(() => {
         self.adjustSize();
       })
     },
     onClickLeft() {
-      this.$router.push("/contextShareList");
+      if (this.source === 'product'){
+        this.$router.push("/productList");
+      }else{
+        this.$router.push("/contextShareList");
+      }
     },
     // 删除文章
     deleteArticle() {
       let self = this;
       this.$dialog.confirm({
-        title: '温馨提示',
+        title: '',
         message: '您确定删除这篇文章吗',
-        confirmButtonColor: '#645fd7',
+        confirmButtonColor: '#4876f1',
       })
         .then(async () => {
           // 向后台发送删除文章的请求
@@ -279,8 +309,21 @@ export default {
           let url = JSON.parse(getUrl()).contextShare.deleteArticle;
           const result = (await this.$http.delete(url, {params: postData})).data;
           if (result.code == 200) {
-            Toast("删除成功！");
-            self.$router.push("/contextShareList");
+            if (this.source === 'product'){
+              let url = "/api/se/product/delete";
+              let postData = {
+                id:this.$route.query.productid
+              }
+              const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+              if (result.code === 200) {
+                Toast("删除成功！");
+                this.$router.push('/productList');
+              } else{
+                Toast('产品删除失败,错误码' + result.code);
+              }
+            }else{
+              self.$router.push("/contextShareList");
+            }
           } else {
             this.$toast('删除失败，请重试！');
           }
@@ -324,7 +367,7 @@ export default {
     },
     async shareArticleApp(e) {
       // 先去后台拿用友的jsConfig，然后触发分享事件
-      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
       const result = (await this.$http.get(url)).data.data;
       let yyConfig = {
         appId: result.appid,
@@ -362,7 +405,9 @@ export default {
         query: {
           articleId: this.articleId,
           shareId: shareId,
-          ifShowShareMan: this.showCard
+          wmId: this.wmId,
+          ifShowShareMan: this.showCard,
+          source:this.source
         }
       });
     },
@@ -390,17 +435,33 @@ export default {
     },
     // 编辑文章
     editArticle() {
-      let shareId = JSON.parse(getUserId()).userID;
-      this.$store.commit('updateEditReqArticle', this.articleMsg);
-      this.$router.push({
-        name: 'repArticleDetail',
-        query: {
-          type: '1',
-          articleId: this.articleId,
-          shareId: shareId,
-          ifShowShareMan: this.showCard
-        }
-      });
+      if (this.source === 'product'){
+        this.$router.push({
+          path: '/productEdit',
+          query: {
+            articleid: this.articleId,
+            shareid: JSON.parse(getUserId()).userID,
+            wmid:this.$store.state.userMessage.wmId,
+            ifshowshareman: true,
+            source:'product',
+            productID: this.$route.query.productid,
+          }})
+      }else{
+        let shareId = JSON.parse(getUserId()).userID;
+        this.$store.commit('updateEditReqArticle', this.articleMsg);
+        this.$store.commit('updateTempArticle', this.article);
+        this.$router.push({
+          name: 'repArticleDetail',
+          query: {
+            type: '1',
+            articleId: this.articleId,
+            shareId: shareId,
+            wmId: this.wmId,
+            ifShowShareMan: this.showCard,
+            source:this.source
+          }
+        });
+      }
     },
     scrolling() {
       // 滚动条距文档顶部的距离
@@ -421,12 +482,13 @@ export default {
     // 获取分销链接
     async getDistributeUrl() {
       let url = JSON.parse(getUrl()).contextShare.getDistributeUrl;
+      // 微盟id要从url里进行截取
       let getData = {
-        id: 2785775511
+        id: this.wmId
       }
-      const result = (await this.$http.get(url, {params: getData})).data.data;
-      if (result.length > 0) {
-        this.distributeUrl = result;
+      const result = (await this.$http.get(url, {params: getData})).data;
+      if (result.code === 200 || result.code === '200') {
+        this.distributeUrl = result.data;
       }
     },
     // 为产品绑定分销链接
@@ -465,6 +527,11 @@ export default {
 .article /deep/ * {
   max-width: 100% !important;
   box-sizing: border-box;
+}
+
+/deep/ p {
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
 h2 {
@@ -529,7 +596,7 @@ h2 {
   left: 0;
   margin: auto;
   border-radius: 5px;
-  background-color: #645fd7;
+  background-color: #4876f1;
   border: none;
   padding-left: 30px;
   padding-right: 30px;

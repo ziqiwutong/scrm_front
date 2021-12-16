@@ -9,8 +9,10 @@ import repArticleDetail from "../components/view/contextShare/repArticleDetail";
 import reArticleDes from "../components/view/contextShare/reArticleDes";
 import product2poster from "../components/component/Product2poster";
 import sweetTest from "../components/view/contextShare/sweetTest";
+import userInfo from "../components/view/userInfo/userInfo";
+import articleToAddForm from "../components/view/contextShare/articleToAddForm";
 import store from "../store";
-import { Toast } from "vant";
+import {Toast} from "vant";
 import orderList from "../components/view/order/orderList";
 import clueList from "../components/view/clue/clueList"
 import customer from "../components/customer/customer"
@@ -42,8 +44,9 @@ import bkIntroduce from "../components/view/searchCustomer/bkIntroduce";
 import searchCompanyDetail from "../components/view/searchCustomer/searchCompanyDetail";
 import communicationList from "../components/view/commuication/communicationList";
 import communicationDetail from "../components/view/commuication/communicationDetail";
-import addCommunicationLog  from "../components/view/commuication/addCommunicationLog"
+import addCommunicationLog from "../components/view/commuication/addCommunicationLog"
 import editCom from "../components/view/commuication/editCom"
+
 Vue.use(Router)
 
 const routes = [
@@ -204,6 +207,11 @@ const routes = [
     component: reArticleDes
   },
   {
+    path: '/articleToAddForm',
+    name:'articleToAddForm',
+    component: articleToAddForm
+  },
+  {
     path: '/product2poster',
     name: 'product2poster',
     component: product2poster
@@ -244,13 +252,18 @@ const routes = [
   },
   {
     path: '/addCommunicationLog',
-    name:'addCommunicationLog',
+    name: 'addCommunicationLog',
     component: addCommunicationLog,
   },
   {
     path: '/editCom',
     name: 'editCom',
     component: editCom,
+  },
+  {
+    path: '/userInfo',
+    name: 'userInfo',
+    component: userInfo
   }
 ];
 

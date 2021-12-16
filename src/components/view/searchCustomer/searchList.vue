@@ -88,7 +88,15 @@ export default {
         }
       }
       this.$toast.clear(loading);
-      this.$toast('请点击人物查看详情');
+      if (result[0].length > 0 || result[1].length > 0) {
+        if (this.type === 1 || this.type === '1') {
+          this.$toast('请点击企业查看详情');
+        } else {
+          this.$toast('请点击人物查看详情');
+        }
+      } else {
+        this.$toast('查询结果为空！');
+      }
     },
     toResultPage(item) {
       switch (item.source) {
@@ -96,16 +104,24 @@ export default {
           this.$router.push({
             name: 'perinfor',
             query: {
-              cuslist: item
+              id: item.id,
+              type: this.type,
+              searchMessage: this.$route.params.searchMessage
             }
           })
           break;
         case 'other':// 跳转到非企业客户查询结果页
           if (this.type === 1) {
+            let keyword = '';
+            if (item.registerNo !== ''){
+              keyword = item.registerNo
+            }else if (item.creditNo !== ''){
+              keyword = item.creditNo
+            }
             this.$router.push({
               name: 'searchCompanyDetail',
               params: {
-                registerNo: item.registerNo,
+                keyword: keyword,
                 searchMessage: this.$route.params.searchMessage
               }
             })

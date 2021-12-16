@@ -2,97 +2,167 @@
   <div>
     <!--返回按钮  -->
     <van-cell class="returnbtn" @click="onReturn">
-      <van-icon name="arrow-left" />返回
+      <van-icon name="arrow-left"/>
+      返回
     </van-cell>
     <!-- 客户姓名 -->
     <van-row class="busname">{{ this.cusDetail.customerName }}</van-row>
     <!-- 客户详情 -->
     <div class="busdetail">
       <van-row
-        ><van-col class="title">法定代表人</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.legalPerson
-        }}</van-col></van-row
+      >
+        <van-col class="title">法定代表人
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.legalPerson
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">注册资本</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.registeredCapital
-        }}</van-col></van-row
+      >
+        <van-col class="title">注册资本
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.registeredCapital
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">经营状态</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.operatingStatus
-        }}</van-col></van-row
+      >
+        <van-col class="title">经营状态
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.operatingStatus
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">实缴资本</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.paidCapital
-        }}</van-col></van-row
+      >
+        <van-col class="title">实缴资本
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.paidCapital
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">成立日期</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.establishDate
-        }}</van-col></van-row
+      >
+        <van-col class="title">成立日期
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.establishDate
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">批准日期</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.approvalDate
-        }}</van-col></van-row
+      >
+        <van-col class="title">批准日期
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.approvalDate
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">公司类型</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.companyType
-        }}</van-col></van-row
+      >
+        <van-col class="title">公司类型
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.companyType
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">所属行业</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.industry
-        }}</van-col></van-row
+      >
+        <van-col class="title">所属行业
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.industry
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">企业地址</van-col
-        ><van-col class="detail">{{ this.cusDetail.address }}</van-col></van-row
+      >
+        <van-col class="title">企业地址
+        </van-col
+        >
+        <van-col class="detail1">{{ this.cusDetail.address }}</van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">所属省市区</van-col
-        ><van-col class="detail">{{ this.cusDetail.city }}</van-col></van-row
+      >
+        <van-col class="title">所属省市区
+        </van-col
+        >
+        <van-col class="detail">{{ this.cusDetail.city }}</van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">统一社会信用代码</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.socialCreditCode
-        }}</van-col></van-row
+      >
+        <van-col class="title">统一社会信用代码
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.socialCreditCode
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">行业代码</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.industryCode
-        }}</van-col></van-row
+      >
+        <van-col class="title">工商注册号
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.industryCode
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">组织结构代码</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.organizationCode
-        }}</van-col></van-row
+      >
+        <van-col class="title">组织机构号
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.organizationCode
+          }}
+        </van-col>
+      </van-row
       >
       <van-row
-        ><van-col class="title">登记机关</van-col
-        ><van-col class="detail">{{
-          this.cusDetail.registrationAuthority
-        }}</van-col></van-row
+      >
+        <van-col class="title">所属工商局
+        </van-col
+        >
+        <van-col class="detail">{{
+            this.cusDetail.registrationAuthority
+          }}
+        </van-col>
+      </van-row
       >
     </div>
-    <div>
-      <van-button class="button-hang" @click="toAddCus">转化为客户</van-button>
-      <van-button class="button-hang1" @click="changeCusDetail"
-        >修改信息</van-button
+    <div class='btn-container'>
+      <van-button class="button-hang" round @click="toAddCus">转化为客户</van-button>
+      <van-button class="button-hang1" round @click="changeCusDetail"
+      >修改信息
+      </van-button
       >
       <div class="buttom"></div>
     </div>
@@ -115,7 +185,7 @@
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
-            <van-uploader multiple v-model="uploader" :max-count="1" />
+            <van-uploader multiple v-model="uploader" :max-count="1"/>
           </template>
         </van-field>
         <!-- 客户信息-姓名 -->
@@ -164,7 +234,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[5], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -183,7 +253,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
                 @click="cutTabClickOnly(addLabelList[6], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -202,7 +272,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[7], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -221,7 +291,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[10], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -292,7 +362,8 @@
             type="info"
             native-type="submit"
             @click="onClickSumbmit"
-            >提交</van-button
+          >提交
+          </van-button
           >
         </div>
       </van-form>
@@ -327,7 +398,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[8], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -336,7 +407,7 @@
         <!-- 客户信息-头像 -->
         <van-field name="uploader" label="头像">
           <template #input>
-            <van-uploader multiple v-model="uploader" :max-count="1" />
+            <van-uploader multiple v-model="uploader" :max-count="1"/>
           </template>
         </van-field>
         <!-- 客户信息-姓名 -->
@@ -400,7 +471,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[0], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -419,7 +490,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[1], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -438,7 +509,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[3], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -495,7 +566,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[4], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -514,7 +585,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[5], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -533,7 +604,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn2' : 'screen-btn2'"
                 @click="cutTabClickOnly(addLabelList[6], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -552,7 +623,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[7], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -571,7 +642,7 @@
                 :key="item.name"
                 :class="item.isSelected ? 'active-screen-btn1' : 'screen-btn1'"
                 @click="cutTabClickOnly(addLabelList[9], index)"
-                >{{ item.name }}
+              >{{ item.name }}
               </van-button>
             </van-cell>
           </template>
@@ -637,14 +708,16 @@
             type="info"
             native-type="submit"
             @click="onClickSumbmit1"
-            >提交</van-button
+          >提交
+          </van-button
           >
         </div>
       </van-form>
     </van-popup>
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
-      ><van-datetime-picker
+    >
+      <van-datetime-picker
         v-model="dateVal"
         type="date"
         title="选择年月日"
@@ -652,7 +725,8 @@
         :max-date="maxDate"
         @cancel="dateCancel"
         @confirm="dateConfirm"
-    /></van-popup>
+      />
+    </van-popup>
     <!-- 新建客户-地区弹窗 -->
     <van-popup v-model="showArea" position="bottom">
       <van-area
@@ -665,6 +739,7 @@
       v-model="dialogShow"
       title="是否转化为正式客户"
       show-cancel-button
+      confirm-button-color="#4876f1"
       @confirm="changeCusType"
     ></van-dialog>
     <!-- 新建客户-客户状态选择弹出框 -->
@@ -699,10 +774,11 @@
   </div>
 </template>
 <script>
-import { Toast } from "vant";
+import {Toast} from "vant";
 import qs from "qs"; // axios参数包
-import { areaList } from "@vant/area-data";
+import {areaList} from "@vant/area-data";
 import AbbList from "../component/AbbList.vue";
+
 export default {
   components: {
     AbbList,
@@ -720,9 +796,9 @@ export default {
       cusVal: 0,
       // 导航-客户类型-数组
       cusOpt: [
-        { text: "全部客户", value: 0 },
-        { text: "待分配客户", value: 1 },
-        { text: "跟进中客户", value: 2 },
+        {text: "全部客户", value: 0},
+        {text: "待分配客户", value: 1},
+        {text: "跟进中客户", value: 2},
       ],
       // 导航-客户数量
       cusNum: 0,
@@ -746,8 +822,8 @@ export default {
       addShow: false,
       // 点击加号-弹出层信息
       actions: [
-        { name: "新增潜在客户", callback: this.formClick },
-        { name: "扫描名片", callback: this.onPicture },
+        {name: "新增潜在客户", callback: this.formClick},
+        {name: "扫描名片", callback: this.onPicture},
       ],
       // 点击加号-扫描名片-弹出层
       pictureShow: false,
@@ -782,126 +858,126 @@ export default {
         {
           name: "性别",
           class: [
-            { name: "男", isSelected: false },
-            { name: "女", isSelected: false },
+            {name: "男", isSelected: false},
+            {name: "女", isSelected: false},
           ],
         },
         {
           name: "年龄范围",
           class: [
-            { name: "青少年", isSelected: false },
-            { name: "中青年", isSelected: false },
-            { name: "中老年", isSelected: false },
+            {name: "青少年", isSelected: false},
+            {name: "中青年", isSelected: false},
+            {name: "中老年", isSelected: false},
           ],
         },
         {
           name: "标签",
           class: [
-            { name: "高管客户", isSelected: false },
-            { name: "C端客户", isSelected: false },
-            { name: "B端客户", isSelected: false },
-            { name: "爱酒", isSelected: false },
-            { name: "慈善", isSelected: false },
-            { name: "科技公司", isSelected: false },
-            { name: "红酒", isSelected: false },
-            { name: "啤酒", isSelected: false },
-            { name: "集团合作客户", isSelected: false },
-            { name: "定制酒", isSelected: false },
-            { name: "旅游", isSelected: false },
-            { name: "其他", isSelected: false },
+            {name: "高管客户", isSelected: false},
+            {name: "C端客户", isSelected: false},
+            {name: "B端客户", isSelected: false},
+            {name: "爱酒", isSelected: false},
+            {name: "慈善", isSelected: false},
+            {name: "科技公司", isSelected: false},
+            {name: "红酒", isSelected: false},
+            {name: "啤酒", isSelected: false},
+            {name: "集团合作客户", isSelected: false},
+            {name: "定制酒", isSelected: false},
+            {name: "旅游", isSelected: false},
+            {name: "其他", isSelected: false},
           ],
         },
         {
           name: "来源",
           class: [
-            { name: "手动新建", isSelected: false },
-            { name: "高端推荐", isSelected: false },
-            { name: "内容营销", isSelected: false },
-            { name: "行业活动", isSelected: false },
-            { name: "启信宝", isSelected: false },
-            { name: "其他", isSelected: false },
+            {name: "手动新建", isSelected: false},
+            {name: "高端推荐", isSelected: false},
+            {name: "内容营销", isSelected: false},
+            {name: "行业活动", isSelected: false},
+            {name: "启信宝", isSelected: false},
+            {name: "其他", isSelected: false},
           ],
         },
         {
           name: "客户等级",
           class: [
-            { name: "一般", isSelected: false },
-            { name: "重要", isSelected: false },
-            { name: "核心", isSelected: false },
+            {name: "一般", isSelected: false},
+            {name: "重要", isSelected: false},
+            {name: "核心", isSelected: false},
           ],
         },
         {
           name: "企业类型",
           class: [
-            { name: "国企", isSelected: false },
-            { name: "民企", isSelected: false },
-            { name: "中国500强", isSelected: false },
-            { name: "世界500强", isSelected: false },
-            { name: "上市公司", isSelected: false },
-            { name: "其他", isSelected: false },
+            {name: "国企", isSelected: false},
+            {name: "民企", isSelected: false},
+            {name: "中国500强", isSelected: false},
+            {name: "世界500强", isSelected: false},
+            {name: "上市公司", isSelected: false},
+            {name: "其他", isSelected: false},
           ],
         },
         {
           name: "行业分类",
           class: [
-            { name: "食品制造业", isSelected: false },
-            { name: "酒", isSelected: false },
-            { name: "饮料", isSelected: false },
-            { name: "茶制造业", isSelected: false },
-            { name: "批发零售业", isSelected: false },
-            { name: "贸易业", isSelected: false },
-            { name: "金融业", isSelected: false },
-            { name: "建筑安装业", isSelected: false },
-            { name: "房地产业", isSelected: false },
-            { name: "交通运输仓储业", isSelected: false },
-            { name: "软件信息技术业", isSelected: false },
-            { name: "租赁与商业服务业", isSelected: false },
-            { name: "住宿和餐饮业", isSelected: false },
-            { name: "农副食品加工业", isSelected: false },
-            { name: "公共管理与社会保障", isSelected: false },
-            { name: "科学研究和技术服务业", isSelected: false },
-            { name: "农林牧渔业", isSelected: false },
-            { name: "文体旅游和卫生业", isSelected: false },
-            { name: "采矿业", isSelected: false },
-            { name: "其他制造业", isSelected: false },
-            { name: "其他行业", isSelected: false },
+            {name: "食品制造业", isSelected: false},
+            {name: "酒", isSelected: false},
+            {name: "饮料", isSelected: false},
+            {name: "茶制造业", isSelected: false},
+            {name: "批发零售业", isSelected: false},
+            {name: "贸易业", isSelected: false},
+            {name: "金融业", isSelected: false},
+            {name: "建筑安装业", isSelected: false},
+            {name: "房地产业", isSelected: false},
+            {name: "交通运输仓储业", isSelected: false},
+            {name: "软件信息技术业", isSelected: false},
+            {name: "租赁与商业服务业", isSelected: false},
+            {name: "住宿和餐饮业", isSelected: false},
+            {name: "农副食品加工业", isSelected: false},
+            {name: "公共管理与社会保障", isSelected: false},
+            {name: "科学研究和技术服务业", isSelected: false},
+            {name: "农林牧渔业", isSelected: false},
+            {name: "文体旅游和卫生业", isSelected: false},
+            {name: "采矿业", isSelected: false},
+            {name: "其他制造业", isSelected: false},
+            {name: "其他行业", isSelected: false},
           ],
         },
         {
           name: "注册资本",
           class: [
-            { name: "200万以下", isSelected: false },
-            { name: "500万以下", isSelected: false },
-            { name: "1000万以下", isSelected: false },
-            { name: "5000万以下", isSelected: false },
-            { name: "5000万以上", isSelected: false },
+            {name: "200万以下", isSelected: false},
+            {name: "500万以下", isSelected: false},
+            {name: "1000万以下", isSelected: false},
+            {name: "5000万以下", isSelected: false},
+            {name: "5000万以上", isSelected: false},
           ],
         },
         {
           name: "客户类型",
           class: [
-            { name: "个人客户", isSelected: true },
-            { name: "公司客户", isSelected: false },
+            {name: "个人客户", isSelected: true},
+            {name: "公司客户", isSelected: false},
           ],
         },
         {
           name: "员工数量",
           class: [
-            { name: "20人以下", isSelected: false },
-            { name: "100人以下", isSelected: false },
-            { name: "500人以下", isSelected: false },
-            { name: "1000人以下", isSelected: false },
-            { name: "1000人以上", isSelected: false },
+            {name: "20人以下", isSelected: false},
+            {name: "100人以下", isSelected: false},
+            {name: "500人以下", isSelected: false},
+            {name: "1000人以下", isSelected: false},
+            {name: "1000人以上", isSelected: false},
           ],
         },
         {
           name: "实缴资本",
           class: [
-            { name: "200万以下", isSelected: false },
-            { name: "500万以下", isSelected: false },
-            { name: "1000万以下", isSelected: false },
-            { name: "5000万以下", isSelected: false },
-            { name: "5000万以上", isSelected: false },
+            {name: "200万以下", isSelected: false},
+            {name: "500万以下", isSelected: false},
+            {name: "1000万以下", isSelected: false},
+            {name: "5000万以下", isSelected: false},
+            {name: "5000万以上", isSelected: false},
           ],
           ename: "paidCapital",
         },
@@ -1007,22 +1083,22 @@ export default {
         {
           name: "注册资本",
           class: [
-            { name: "200万以下", isSelected: false },
-            { name: "500万以下", isSelected: false },
-            { name: "1000万以下", isSelected: false },
-            { name: "5000万以下", isSelected: false },
-            { name: "5000万以上", isSelected: false },
+            {name: "200万以下", isSelected: false},
+            {name: "500万以下", isSelected: false},
+            {name: "1000万以下", isSelected: false},
+            {name: "5000万以下", isSelected: false},
+            {name: "5000万以上", isSelected: false},
           ],
           ename: "registeredCapital",
         },
         {
           name: "实缴资本",
           class: [
-            { name: "200万以下", isSelected: false },
-            { name: "500万以下", isSelected: false },
-            { name: "1000万以下", isSelected: false },
-            { name: "5000万以下", isSelected: false },
-            { name: "5000万以上", isSelected: false },
+            {name: "200万以下", isSelected: false},
+            {name: "500万以下", isSelected: false},
+            {name: "1000万以下", isSelected: false},
+            {name: "5000万以下", isSelected: false},
+            {name: "5000万以上", isSelected: false},
           ],
           ename: "paidCapital",
         },
@@ -1070,7 +1146,7 @@ export default {
       // 多选-记录选中客户的数量
       scrnum: 0,
       // 多选-短信-消息
-      ckShortMsg: { customerID: [], customerMsg: "" },
+      ckShortMsg: {customerID: [], customerMsg: ""},
       // 标签栏-绑定标识符
       barAct: 0,
       // 列表加载-分页
@@ -1084,7 +1160,7 @@ export default {
         pageSize: 10,
       },
       // 跟进人-选择列表
-      followChsVal: { name: "跟进人", val: "", id: "" },
+      followChsVal: {name: "跟进人", val: "", id: ""},
       // 客户排序-客户分类
       cusClass: "全部客户",
       // 客户排序-列表顺序
@@ -1097,10 +1173,10 @@ export default {
       cus_lable: require("../../assets/cusicon/cus_lable.png"),
       cus_msg: require("../../assets/cusicon/cus_msg.png"),
       // 商机负责人
-      oppoChsVal: { name: "商机负责人", val: "", id: "" },
+      oppoChsVal: {name: "商机负责人", val: "", id: ""},
       ifoppoChoose: true,
       // 创建人
-      bulidChsVal: { name: "创建人", val: "", id: "" },
+      bulidChsVal: {name: "创建人", val: "", id: ""},
       ifbulidChoose: true,
       //分类
       userType: 0,
@@ -1108,31 +1184,35 @@ export default {
   },
   created() {
     let cuslist = this.$route.query.cuslist;
-    this.getCusDetailByID(cuslist.id);
+    this.getCusDetailByID(cuslist.socialCreditCode);
   },
   methods: {
+    changeCusForm(res) {
+      console.log(res)
+      this.cusDetail = []
+      this.cusDetail.operatingStatus = res.engageStatus
+      this.cusDetail.establishDate = res.startDate
+      this.cusDetail.approvalDate = res.checkDate
+      this.cusDetail.legalPerson = res.legalPerson
+      this.cusDetail.customerName = res.companyName
+      this.cusDetail.socialCreditCode = res.creditNo
+      this.cusDetail.companyType = res.companyKind
+      this.cusDetail.address = res.address
+      this.cusDetail.registrationAuthority = res.belongOrg
+      this.cusDetail.organizationCode = res.orgNo
+      this.cusDetail.industryCode = res.registerNo
+    },
     // 根据id查询客户信息
     async getCusDetailByID(id) {
-      let url = "/api/se/customer/queryById";
+      let url = "/api/se/customerRest/companyDetail";
       const res = await this.$http.get(url, {
         params: {
-          id: id,
+          keyword: id,
         },
       });
       if (res.data.code == 200) {
-        this.cusDetail = res.data.data;
-        for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
-          if (i != this.cusDetail.customerLabels.length - 1) {
-            this.labelCusList +=
-              this.cusDetail.customerLabels[i].labelType +
-              ":" +
-              this.cusDetail.customerLabels[i].labelName +
-              "/ ";
-          } else
-            this.labelCusList +=
-              this.cusDetail.customerLabels[i].labelType +
-              ":" +
-              this.cusDetail.customerLabels[i].labelName;
+        this.changeCusForm(res.data.data)
+
       } else {
         Toast("加载失败");
       }
@@ -1284,6 +1364,7 @@ export default {
         this.cusDetail.followStaffId = "";
         this.cusDetail.followStaffName = "";
       }
+
       function removeEmptyField(obj) {
         var newObj = {};
         if (typeof obj === "string") {
@@ -1334,6 +1415,7 @@ export default {
           return newObj;
         }
       }
+
       this.cusDetail = removeEmptyField(this.cusDetail);
       // 传输
       url = "/api/se/customer/update";
@@ -1375,6 +1457,7 @@ export default {
             this.cusDetail.followStaffName = "";
           }
           this.cusDetail.potential = 0;
+
           function removeEmptyField(obj) {
             var newObj = {};
             if (typeof obj === "string") {
@@ -1426,6 +1509,7 @@ export default {
             }
             return newObj;
           }
+
           this.cusDetail = removeEmptyField(this.cusDetail);
           // 传输
           let url = "/api/se/customer/update";
@@ -1553,7 +1637,7 @@ export default {
     // 客户列表-客户详情跳转
     onDetail(item) {
       // this.$router.replace("/perinfor");
-      this.$router.push({ name: "potentialdetail", query: { cuslist: item } });
+      this.$router.push({name: "potentialdetail", query: {cuslist: item}});
     },
     // 客户列表-滑动删除-弹出框
     detOn(val) {
@@ -1564,7 +1648,7 @@ export default {
     async onDetOne() {
       // console.log(this.detId)
       let url = "/api/se/customer/delete";
-      const result = await this.$http.get(url, { params: { id: this.detId } });
+      const result = await this.$http.get(url, {params: {id: this.detId}});
       if (result.data.code == "200") {
         Toast("成功删除");
         this.cusList = [];
@@ -1753,7 +1837,7 @@ export default {
       for (i = 0; i < this.putLabelList.length; i++) {
         for (j = 0; j < this.putLabelList[i].class.length; j++) {
           if (this.putLabelList[i].class[j].isSelected == false) {
-            let temp = { class: { id: "" } };
+            let temp = {class: {id: ""}};
             temp.class.id = this.putLabelList[i].class[j].id;
             console.log(temp.class.id);
             this.putLabelVal.push(temp.class.id);
@@ -2057,6 +2141,7 @@ export default {
         this.cusDetail.followStaffId = "";
         this.cusDetail.followStaffName = "";
       }
+
       function removeEmptyField(obj) {
         var newObj = {};
         if (typeof obj === "string") {
@@ -2107,6 +2192,7 @@ export default {
           return newObj;
         }
       }
+
       this.cusDetail = removeEmptyField(this.cusDetail);
       // 传输
       url = "/api/se/customer/update";
@@ -2146,6 +2232,7 @@ export default {
             this.cusDetail.followStaffId = "";
             this.cusDetail.followStaffName = "";
           }
+
           function removeEmptyField(obj) {
             var newObj = {};
             if (typeof obj === "string") {
@@ -2197,6 +2284,7 @@ export default {
             }
             return newObj;
           }
+
           this.cusDetail = removeEmptyField(this.cusDetail);
           let url = "/api/se/customer/update";
           let postData = this.cusDetail;
@@ -2324,6 +2412,7 @@ export default {
   z-index: 1;
   overflow: auto;
 }
+
 //客户详情
 .cuscont {
   background-color: #ffffff;
@@ -2336,6 +2425,7 @@ export default {
   z-index: 2;
   overflow: auto;
 }
+
 //头像样式
 .cusimg {
   position: absolute;
@@ -2357,20 +2447,24 @@ export default {
   color: #ffffff;
   border: none;
 }
+
 .detailnm {
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 10px;
 }
+
 .cusfont {
   font-size: 10pt;
   margin-bottom: 5px;
 }
+
 .cusfont2 {
   font-size: 10pt;
   margin-bottom: 5px;
   color: #4876f1;
 }
+
 //订单标题
 .orderTitle {
   background-color: #faf3e6;
@@ -2379,9 +2473,11 @@ export default {
   margin-bottom: 10px;
   font-weight: 550;
 }
+
 .ordercell {
   color: #201e2b;
 }
+
 //新建用户-标题样式
 .addcustit {
   background-color: #f8f8f8;
@@ -2391,6 +2487,7 @@ export default {
   height: 30px;
   font-size: 14px;
 }
+
 // 筛选按钮
 .screen-btn {
   margin: 5px 2% 10px 5%;
@@ -2428,6 +2525,7 @@ export default {
   font-size: 12px;
   color: #ffffff;
 }
+
 // 新增筛选
 // 筛选按钮
 .screen-btn1 {
@@ -2448,9 +2546,11 @@ export default {
   font-size: 12px;
   color: #ffffff;
 }
+
 .add-van-cell {
   padding: 0;
 }
+
 .wx-btn {
 }
 
@@ -2461,6 +2561,7 @@ export default {
   background-color: #4876f1;
   color: #ffffff;
 }
+
 // 客户关系字体设置
 .state-font {
   color: #201e2b;
@@ -2494,6 +2595,7 @@ export default {
   border-style: solid;
   border-color: #ffffff;
 }
+
 .list-img-none1 {
   width: 40px;
   height: 40px;
@@ -2510,22 +2612,28 @@ export default {
   height: 80%;
   overflow: auto;
 }
+
 .list-tab-fa {
   height: 300px;
 }
+
 .wx-img {
   margin-left: 8px;
 }
+
 //跟进人-取消
 .follow-cancel-btn {
   border: none;
 }
+
 .list-step {
   height: 50px;
 }
+
 .nav-margin {
   margin-top: 20px;
 }
+
 //搜索框
 .nav-search-btn {
   // margin: 5px 2% 5px 0%;
@@ -2534,19 +2642,23 @@ export default {
   margin-right: 2%;
   margin-bottom: 5px;
 }
+
 .nav-search-box {
   height: 48px;
 }
+
 //分割线
 .nav-separate {
   margin: 10px 2% 5px 5%;
   opacity: 0.5;
 }
+
 //添加按钮
 .nav-add-btn {
   margin: 5px 2% 5px 0%;
   // padding: 2px;
 }
+
 //最近浏览-选项
 .nav-option {
   margin: 5px 2% 10px 2%;
@@ -2555,6 +2667,7 @@ export default {
   width: 95px;
   background-color: #f5f5f5;
 }
+
 .nav-cusnum-font {
   font-size: 10px;
   // margin-top: 5%;
@@ -2562,50 +2675,60 @@ export default {
   margin-top: 15px;
   color: #bbbcbe;
 }
+
 // 标签栏颜色改变
 .nav-icon-colorful {
-  filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
-    brightness(97%) contrast(95%);
+  filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg) brightness(97%) contrast(95%);
 }
+
 // 标签栏边距
 .nav-tabar {
   margin-top: 2%;
   margin-bottom: 2%;
 }
+
 .van-hairline--top-bottom::after,
 .van-hairline-unset--top-bottom::after {
   border-width: 0px 0;
 }
+
 // 列表容器
 .list {
   margin-top: 25px;
 }
+
 //列表内容
 .list-content {
   margin-bottom: 10px;
 }
+
 //客户姓名
 .list-content-name {
   font-size: 15px;
 }
+
 //客户时间
 .list-content-time {
   font-size: 11px;
   color: #6e6f74;
 }
+
 .list-content-msg {
   font-size: 12px;
   color: #6e6f74;
   margin-top: 4px;
 }
+
 .list-content-tag {
   margin-right: 0.5px;
   margin-left: 3%;
 }
+
 //弹出层布局
 .screen {
   width: 90%;
 }
+
 // 筛选按钮
 .screen-btn {
   margin: 5px 2% 10px 5%;
@@ -2643,6 +2766,7 @@ export default {
   font-size: 12px;
   color: #ffffff;
 }
+
 // 新增筛选
 // 筛选按钮
 .screen-btn1 {
@@ -2663,9 +2787,11 @@ export default {
   font-size: 12px;
   color: #ffffff;
 }
+
 .add-van-cell {
   padding: 0;
 }
+
 //筛选分类name
 .screen-name {
   margin-top: 2px;
@@ -2674,6 +2800,7 @@ export default {
   font-size: 15px;
   margin-bottom: 6px;
 }
+
 //筛选提交按钮
 .screen-confirm-btn {
   border-radius: 5px;
@@ -2681,16 +2808,19 @@ export default {
   width: 40%;
   background-color: #4876f1;
 }
+
 //筛选重置按钮
 .screen-reset-btn {
   border-radius: 5px;
   margin: 20px 2% 10px 5%;
   width: 40%;
 }
+
 //多选弹出层
 .check {
   height: 100%;
 }
+
 //多选列表
 .check-list {
   margin-bottom: 10px;
@@ -2701,14 +2831,17 @@ export default {
   color: #4876f1;
   font-size: 10pt;
 }
+
 //跟进人-取消
 .follow-cancel-btn {
   border: none;
 }
+
 //短信模板-导航
 .shortmsg-nar {
   margin-top: 20px;
 }
+
 //新建用户-标题样式
 .add-title {
   background-color: #f8f8f8;
@@ -2718,6 +2851,7 @@ export default {
   height: 30px;
   font-size: 14px;
 }
+
 //最近浏览-容器
 .browse-container {
   height: 100%;
@@ -2728,6 +2862,7 @@ export default {
   z-index: 1;
   overflow: hidden;
 }
+
 //最近浏览-内容
 .browse-content {
   height: 20%;
@@ -2748,6 +2883,7 @@ export default {
   z-index: 0;
   position: fixed;
 }
+
 //最近浏览-阴影补充
 .browse-shady-other {
   height: 10%;
@@ -2758,25 +2894,30 @@ export default {
   // opacity: 0;
   position: fixed;
 }
+
 //最近浏览-激活效果
 .browse-active-btn {
   color: #4876f1;
 }
+
 // 新增-调用手机相册扫描名片
 .add-choose-font {
   margin-left: 5%;
   margin-top: 10%;
 }
+
 // 新增-手动新增客户
 .add-choose-hand-font {
   margin-left: 5%;
   height: 50px;
 }
+
 // 新增-页面边距
 .add-choose-margin {
   margin-top: 5%;
   margin-left: 20%;
 }
+
 .main-fix {
   position: fixed;
   width: 100%;
@@ -2789,6 +2930,7 @@ export default {
   border: 1px solid #f6f6f6;
   // background: #cc1d60;
 }
+
 .list-img-none {
   width: 40px;
   height: 40px;
@@ -2800,6 +2942,7 @@ export default {
   text-align: center;
   line-height: 40px;
 }
+
 .returnbtn {
   padding: auto;
 }
@@ -2809,9 +2952,11 @@ export default {
   padding: 5%;
   font-weight: bold;
 }
+
 .busdetail {
   padding: 3%;
 }
+
 .title {
   background-color: #f0f4fe;
   width: 35%;
@@ -2820,7 +2965,21 @@ export default {
   padding: 5%;
   color: #1f2752;
 }
+
 .detail {
+  background-color: #ffffff;
+  width: 65%;
+  height: 60px;
+  text-align: center;
+  padding: 5%;
+  color: #1f2752;
+  border-color: #f5f5f5;
+  border-style: solid;
+  border-width: 1px;
+
+}
+
+.detail1 {
   background-color: #ffffff;
   width: 65%;
   height: 60px;
@@ -2832,23 +2991,33 @@ export default {
   border-width: 1px;
   overflow: auto;
 }
+
+.btn-container {
+  width: 100vw;
+  display: inline-flex;
+  justify-content: space-around;
+  box-sizing: border-box;
+  padding-left: 5vw;
+  padding-bottom: 1rem;
+}
+
 .button-hang {
   height: 50px;
   width: 120px;
-  margin-left: 3%;
   font-size: 15px;
   color: #ffffff;
-  background-color: #6487e0;
+  background-color: #4876f1;
 }
+
 .buttom {
   height: 20px;
 }
+
 .button-hang1 {
   height: 50px;
   width: 120px;
-  margin-left: 28%;
   font-size: 15px;
   color: #ffffff;
-  background-color: #6487e0;
+  background-color: #4876f1;
 }
 </style>

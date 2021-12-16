@@ -10,13 +10,17 @@
       <div
         v-for="(item, index) in displayData.stageResult"
         class="stage">
-        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-left"></div>
+        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]"
+             class="active-stage-left"></div>
         <div v-else class="stage-left"></div>
 
-        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-middle"> {{ item }}</div>
+        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-middle">
+          {{ item }}
+        </div>
         <div v-else class="stage-middle"> {{ item }}</div>
 
-        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]" class="active-stage-right"></div>
+        <div v-if="displayData.followStageList[index] === displayData.stageResult[index]"
+             class="active-stage-right"></div>
         <div v-else class="stage-right"></div>
       </div>
     </div>
@@ -125,7 +129,6 @@
             @onCh="getCustomerInfo"
           />
         </van-popup>
-
 
 
         <!-- 点击选择负责人 -->
@@ -306,7 +309,7 @@ export default {
   },
   data() {
     return {
-      displayData : {
+      displayData: {
         customerId: "",
         customerName: "",
         boName: "",
@@ -344,7 +347,6 @@ export default {
       boResponsibleId: "",
       boResponsible: "",
       boNotes: "",
-
 
 
       //下面都是弹出编辑页面的变量
@@ -409,7 +411,7 @@ export default {
 
       //将商机详情信息填入 要编辑的变量 和displayData(展示用的变量，展示用的变量不会变化)
       this.customerId = result.customerId;
-      this.displayData.customerId =result.customerId;
+      this.displayData.customerId = result.customerId;
 
       this.customerName = result.customerName;
       this.displayData.customerName = result.customerName;
@@ -492,7 +494,7 @@ export default {
     },
 
     //点击返回键跳转回商机列表
-    toBoList(){
+    toBoList() {
       this.$router.push('/bizOppList');
     },
 
@@ -511,6 +513,7 @@ export default {
 
     deleteBo() {
       Dialog.confirm({
+        confirmButtonColor: '#5252cc',
         title: '删除商机',
         message: '删除后无法恢复',
       })
@@ -548,6 +551,7 @@ export default {
     returnFromEdit() {
       if (this.ifEdit === true) {
         Dialog.confirm({
+          confirmButtonColor: '#5252cc',
           title: '退出编辑',
           message: '信息修改后未提交',
         })

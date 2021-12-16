@@ -36,8 +36,9 @@
       <van-col class="add-button" span="2" v-if="isSearch">
         <van-icon name="plus" size="25" @click="toAdd"/>
       </van-col>
-      <div class="divider"></div>
     </van-row>
+
+    <div class="divider"></div>
 
     <!--线索表单区域-->
     <div class="list">
@@ -145,10 +146,6 @@ export default {
     toAdd() {
       this.$router.push({
         name: "addBizOpp",
-        query: {
-          id: "",
-          customerName: ""
-        }
       });
     },
 
@@ -230,7 +227,7 @@ export default {
     },
 
     //swipe-cell右侧滑动删除按钮的点击事件
-    async beforeClose({position, instance}) {
+    async beforeClose({position, instance}, id) {
       switch (position) {
         case 'cell':
         case 'outside':
@@ -242,7 +239,7 @@ export default {
             message: '确定删除吗？'
           }).then(() => {
             instance.close();
-            this.deleteBo(instance.$attrs.title);//此处需要刷新页面
+            this.deleteBo(instance.$attrs.title);
           });
           break;
       }
@@ -254,7 +251,7 @@ export default {
       let postData = {
         id: id,
       }
-      const result = (await this.$http.get(url, qs.stringify(postData))).data;
+      const result = (await this.$http.post(url, qs.stringify(postData))).data;
       if (result.code === 200) {
         Toast('商机删除成功');
         this.refreshList();
@@ -285,6 +282,16 @@ export default {
   width: 100%;
   background-color: white;
   z-index: 99;
+}
+
+/*
+一条灰色的装饰分割线
+*/
+.divider {
+  position: relative;
+  top: 12vw;
+  background: #f8f8f8;
+  height: 2vw;
 }
 
 // 商机下拉选择框样式
@@ -321,15 +328,7 @@ export default {
   padding: 2px;
 }
 
-/*
-一条灰色的装饰分割线
-*/
-.divider {
-  position: relative;
-  top: 12vw;
-  background: #f8f8f8;
-  height: 2vw;
-}
+
 
 .list {
   margin-top: 17vw;

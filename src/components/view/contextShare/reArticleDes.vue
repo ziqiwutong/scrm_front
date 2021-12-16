@@ -93,7 +93,7 @@ export default {
         return;
       }
       this.$dialog.confirm({
-        title: '温馨提示',
+        title: '',
         message: '确定发布文章吗？',
         confirmButtonColor: '#1989fa'
       })

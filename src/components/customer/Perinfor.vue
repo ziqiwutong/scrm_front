@@ -16,7 +16,10 @@
       v-if="cusDetail.customerIcon"
     />
     <div v-if="!cusDetail.customerIcon" class="list-img-none">
-      {{ cusDetail.customerName[0] }}
+      <div v-if="!cusDetail.customerName">某</div>
+      <div v-if="cusDetail.customerName">
+        {{ cusDetail.customerName[0] }}
+      </div>
     </div>
     <van-row class="cuscont">
       <!-- 共有-客户姓名 -->
@@ -269,77 +272,86 @@
         </van-tab>
         <!-- 订单总览 -->
         <van-tab title="订单">
-          <van-row class="orderTitle">
-            <van-col span="8"
-              >成交订单：<span style="color: #ff5b5b">{{
-                this.cusDetail.orderNumber
-              }}</span
-              >个</van-col
-            >
-            <van-col span="15"
-              >成交订单金额：<span style="color: #ff5b5b"
-                >￥{{ this.cusDetail.orderAmount }}</span
-              ></van-col
-            >
-          </van-row>
-          <!-- 订单列表 -->
-          <van-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-          >
-            <!-- 订单详情 -->
-            <van-cell v-for="item in orderList" :key="item.orderID">
-              <div class="ordercell">
-                <van-row>
-                  <van-col span="1"><van-icon :name="monImg" /></van-col>
+          <div class="list-tab-fa">
+            <div class="list-tab-content">
+              <van-row class="orderTitle">
+                <van-col span="8"
+                  >成交订单：<span style="color: #ff5b5b">{{
+                    this.cusDetail.orderNumber
+                  }}</span
+                  >个</van-col
+                >
+                <van-col span="15"
+                  >成交订单金额：<span style="color: #ff5b5b"
+                    >￥{{ this.cusDetail.orderAmount }}</span
+                  ></van-col
+                >
+              </van-row>
+              <!-- 订单列表 -->
+              <van-list
+                v-model="loading"
+                :finished="finished"
+                finished-text="没有更多了"
+              >
+                <!-- 订单详情 -->
+                <van-cell v-for="item in orderList" :key="item.orderID">
+                  <div class="ordercell">
+                    <van-row>
+                      <van-col span="1"><van-icon :name="monImg" /></van-col>
 
-                  <van-col offset="1">订单号：{{ item.orderID }}</van-col>
-                  <van-col span="1" offset="2"
-                    ><van-icon name="edit"
-                  /></van-col>
-                  <van-col span="1"><van-icon name="revoke" /></van-col>
-                </van-row>
-                <van-row>
-                  <van-col
-                    ><span style="color: #bbbcbe">订单状态：</span
-                    >{{ item.orderType }}</van-col
-                  >
-                </van-row>
-                <van-row>
-                  <van-col
-                    ><span style="color: #bbbcbe">实收金额：</span
-                    >{{ item.receivedAmount }}</van-col
-                  >
-                </van-row>
-                <van-row>
-                  <van-col
-                    ><span style="color: #bbbcbe">成交员工：</span
-                    >{{ item.orderStaff }}</van-col
-                  >
-                </van-row>
-                <van-row>
-                  <van-col
-                    ><span style="color: #bbbcbe">备注：</span>{{ item.notes }}
-                  </van-col>
-                  <van-col offset="1"><van-icon name="edit" /></van-col>
-                </van-row>
-                <van-row>
-                  <van-col
-                    ><span style="color: #bbbcbe">成交时间：</span
-                    >{{ item.orderFinish }}</van-col
-                  >
-                </van-row>
-                <van-row>
-                  <van-col
-                    ><span style="color: #bbbcbe">订单来源：</span
-                    >{{ item.orderSource }}</van-col
-                  >
-                </van-row>
-              </div>
-            </van-cell>
-          </van-list></van-tab
-        >
+                      <van-col offset="1">订单号：{{ item.orderNum }}</van-col>
+                      <van-col span="1" offset="2"
+                        ><van-icon name="edit"
+                      /></van-col>
+                      <van-col span="1"><van-icon name="revoke" /></van-col>
+                    </van-row>
+                    <van-row>
+                      <van-col
+                        ><span style="color: #bbbcbe">订单状态：</span
+                        ><span v-if="item.orderStatus == -1">撤销</span>
+                        <span v-if="item.orderStatus == 0">待付款</span>
+                        <span v-if="item.orderStatus == 1">待收货</span>
+                        <span v-if="item.orderStatus == 2">交易成功</span>
+                        <span v-if="item.orderStatus == 3">退款成功</span>
+                      </van-col>
+                    </van-row>
+                    <van-row>
+                      <van-col
+                        ><span style="color: #bbbcbe">实收金额：</span
+                        >{{ item.receivedAmount }}</van-col
+                      >
+                    </van-row>
+                    <van-row>
+                      <van-col
+                        ><span style="color: #bbbcbe">成交员工：</span
+                        >{{ item.orderStaff }}</van-col
+                      >
+                    </van-row>
+                    <!-- <van-row>
+                      <van-col
+                        ><span style="color: #bbbcbe">备注：</span
+                        >{{ item.notes }}
+                      </van-col>
+                      <van-col offset="1"><van-icon name="edit" /></van-col>
+                    </van-row> -->
+                    <van-row>
+                      <van-col
+                        ><span style="color: #bbbcbe">建立时间：</span
+                        >{{ item.createTime }}</van-col
+                      >
+                    </van-row>
+                    <van-row>
+                      <van-col
+                        ><span style="color: #bbbcbe">订单来源：</span
+                        >{{ item.orderSource }}</van-col
+                      >
+                    </van-row>
+                  </div>
+                </van-cell>
+              </van-list>
+            </div>
+          </div>
+        </van-tab>
       </van-tabs>
       <div class="label-temp"></div>
     </div>
@@ -1047,16 +1059,22 @@ export default {
         pageNum: 1,
         pageSize: 10,
       },
+      // 列表加载-分页
+      pageProps: {
+        pageNum: 1,
+        pageSize: 10,
+      },
       //
       showCus: false,
       showCusType: "",
     };
   },
   created() {
-    let cuslist = this.$route.query.cuslist;
-    this.cusDetail.customerName = cuslist.customerName;
-    this.getCusDetailByID(cuslist.id);
+    let cuslist = this.$route.query.id;
+    // this.cusDetail.customerName = cuslist.customerName;
+    this.getCusDetailByID(cuslist);
     console.log(this.cusDetail);
+    console.log(cuslist);
   },
   methods: {
     // 根据id查询客户信息
@@ -1234,7 +1252,17 @@ export default {
     },
     // 客户详情-返回
     onClickLeft() {
-      this.$router.back("/customer");
+      if (this.$route.query.type){
+        this.$router.push({
+          name: 'searchList',
+          params: {
+            searchMessage: this.$route.query.searchMessage,
+            type: this.$route.query.type
+          }
+        });
+      }else{
+        this.$router.back("/customer");
+      }
     },
     // 多选-发短信-弹窗
     toShrtMsg() {
@@ -1295,9 +1323,10 @@ export default {
       // Toast("跳转商机界面");
       this.$router.push({
         name: "addBizOpp",
-        query: {
-          id: this.cusDetail.id,
+        params: {
+          customerId: this.cusDetail.id,
           customerName: this.cusDetail.customerName,
+          from: "/perinfor",
         },
       });
     },
@@ -1309,8 +1338,12 @@ export default {
         query: {
           id: this.cusDetail.id,
           customerName: this.cusDetail.customerName,
+          type: 2,
         },
       });
+      Toast("跳转订单界面");
+      this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,type:2,customerName:this.cusDetail.customerName} });
+      // this.$router.push({ path: "/orderCreate", query: { id:this.cusDetail.id,customerName:this.cusDetail.customerName} });
     },
     // 更多操作-改跟进人
     changeFollow() {
@@ -1779,17 +1812,33 @@ export default {
     },
     // 标签页-订单请求
     async getCusOrder() {
-      Toast("获取订单请求");
-      let url = "/api/se/order/queryOrderByCustomerID";
-      let postData = {
-        customerID: this.cusDetail.id,
-      };
-      const result = await this.$http.post(url, qs.stringify(postData));
-      if (result.data.code == "200") {
-        Toast("订单加载成功");
-        this.orderList = result.data.data;
+      if (this.pageProps.pageNum == 1) {
+        this.orderList = [];
+      }
+      let url = "/api/se/order/query";
+      const res = await this.$http.get(url, {
+        params: {
+          customerId: this.cusDetail.id,
+          currentPage: this.pageProps.pageNum++,
+          pageCount: this.pageProps.pageSize,
+        },
+      });
+      console.log(res.data);
+      this.loading = false;
+      const tempList = res.data.data;
+      this.cusDetail.orderNumber = res.data.totalCount;
+      if (res.data.data == "") {
+        // 已加载全部数据
         this.finished = true;
-      } else this.finished = true;
+        this.pageProps.pageNum = 1;
+        Toast("已加载全部数据！");
+      } else {
+        for (let i = 0; i < tempList.length; i++) {
+          this.orderList.push(tempList[i]);
+        }
+        console.log(this.pageProps.pageNum);
+        this.getCusOrder();
+      }
     },
     // 标签页-客户关系请求
     getCusStatus() {
@@ -1868,6 +1917,7 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
+    console.log(from, "beforeRouteEnter");
     if (to.path == "/customer") {
       to.meta.keepAlive = true;
     } else {

@@ -4,7 +4,7 @@
     <div class="left">
       <div class="userImg">
         <img v-if="hasImg" :src="getUserImgUrl"/>
-        <p v-else>{{ getUserImgUrl }}</p>
+        <p class="imgText" v-else>{{ getUserImgUrl }}</p>
       </div>
     </div>
     <div class="center">
@@ -29,7 +29,7 @@ export default {
   ],
   data() {
     return {
-      hasImg: false
+      hasImg: false,
     }
   },
   computed: {
@@ -39,17 +39,19 @@ export default {
     getUserCompany() {
       return this.userCompany;
     },
-    getUserImgUrl() {
-      if (this.userImgUrl === '') {
-        let lastWord = this.username.slice(-1);
-        this.userImgUrl = lastWord;
-      } else {
-        this.hasImg = true;
-      }
-      return this.userImgUrl;
-    },
     getUserPhone() {
       return this.userPhone;
+    },
+    getUserImgUrl() {
+      let imgUrl;
+      if (this.userImgUrl === '') {
+        let lastWord = this.getUserName.slice(-1);
+        imgUrl = lastWord;
+      } else {
+        imgUrl = this.userImgUrl
+        this.hasImg = true;
+      }
+      return imgUrl
     }
   },
   methods: {
@@ -74,6 +76,13 @@ export default {
   z-index: 99;
 }
 
+.imgText {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
 .left {
   width: 60px;
   position: relative;
@@ -89,7 +98,7 @@ export default {
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  background-color: #645fd7;
+  background-color: #4876f1;
   border: none;
   color: white;
   text-align: center;

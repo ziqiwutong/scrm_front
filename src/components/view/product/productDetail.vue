@@ -2,21 +2,33 @@
   <div>
     <HeaderNavBar :title="navTitle" @returnClick="onClickLeft" v-show="!inWX"/>
 
-    <div class="article-container">
-      <img class="productPic1" :src=productPic  width="100%" />
+    <div  style=" padding-top: 45px;
+  padding-bottom: 60px;">
+      <img  :src=productPic  width="100%" style=" display: table-cell;
+  text-align:center;
+  margin: 0 auto" />
       <div>
- <van-row class="content1">
-   <van-col class="price" offset="2" span="16">￥{{productPrice}}</van-col>
-   <van-col offset="2" span="16">{{productName}}</van-col>
- </van-row>
-        <div class="detail">
-      <div class="productIntro">{{productIntro}}</div>
+        <div style=" color: #F74A4A;
+    font-weight: bold;
+    margin-left:15px;
+    margin-bottom: 3px;
+    margin-top: 10px;">￥{{productPrice}}</div>
+   <div  style="margin-left:15px;">{{productName}}</div>
+
+        <div  style="width: 90%;
+  margin: 0 auto;
+  margin-top: 10px;
+  text-align: justify;
+  //border:2px solid black;
+  border-radius: 10px;">y
+      <div  style="margin-left: 5px;
+  margin-right: 5px;
+  font-size: 1rem;
+  line-height: 25px;
+  text-indent:35px;
+  letter-spacing:1px;">{{productIntro}}</div>
         </div>
       </div>
-
-      <div class="article-msg">
-      </div>
-      <div v-html="article" class="article"></div>
     </div>
 
     <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
@@ -77,7 +89,7 @@ export default {
       productID:this.$route.query.productID,
       productPrice:"",
       productName:"",
-      productIntro:"瑞丽集团旗下的锁唇国际酒业主营进口葡萄酒业务，与全球知名的葡萄酒集团合作，为消费者提供源自澳大利亚的高品质佳酿。",
+      productIntro:"",
       articleId: "123",
       article: "",
       showCard: false,
@@ -114,6 +126,7 @@ export default {
     }
   },
   created() {
+
     this.articleId = this.$route.query.articleId;
     // this.shareId = this.$store.state.userMessage.userId;
      this.shareId = 1; //此为测试代码
@@ -198,14 +211,14 @@ export default {
     },
     async getProduct() {
       let self = this;
-      let url = "/api/se/product/productDetail"
+      let url = "/api/se/product/queryById"
       let postData = {
-        productID: this.$route.query.productID,
-        shareID: self.shareId
+        id: this.$route.query.productID,
+        // shareID: self.shareId
       }
       // console.log(this.shareId)
       // const result = (await self.$http.get(url, {params: postData})).data.data;
-      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      const result = (await this.$http.get(url,{params:postData})).data.data;
       // self.title = result.article.articleTitle;
       // if (result.article.articleType === 1) {
       //   self.author = result.article.articleOriginAuthor;
@@ -214,11 +227,11 @@ export default {
       // }
       self.date = '';
       // self.article = result.article.articleContext;
-      this.productType = result.productType
+      // this.productType = result.productType
       this.productName = result.productName
       this.productPrice = result.productPrice
       this.productIntro = result.productIntro
-      this.productPic = result.productPic
+      this.productPic = result.productImage
       let lastWord = result.sharePerName.slice(-1);
        // self.sharePerImg = this.productPic2;
       self.sharePerImg = result.sharePerIcon;
@@ -306,16 +319,17 @@ export default {
         confirmButtonColor: '#645fd7',
       })
         .then(async () => {
-          let url = "/api/se/product/deleteProduct";
+          let url = "/api/se/product/delete";
           let postData = {
-            productID: this.productID
+            id:this.productID
           }
-          const result1 = (await this.$http.post(url, qs.stringify(postData))).data;
-          if (result1.code === 200) {
+          // const result = (await this.$http.post(url, qs.stringify(postData))).data
+          const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+          if (result.code === 200) {
             Toast('产品删除成功');
             this.$router.push('productList');
           } else
-            Toast('订单删除失败,错误码' + result1.code);
+            Toast('产品删除失败,错误码' + result.code);
         })
         .catch(() => {
         });
@@ -369,49 +383,6 @@ export default {
         }
       });
     },
-    // 调整文章尺寸
-    // adjustSize() {
-    //   let bodyWidth = document.body.clientWidth;
-    //   let sectionArray = document.getElementsByTagName('section');
-    //   let pArray = document.getElementsByTagName('p');
-    //   let imgArray = document.getElementsByTagName('img');
-    //   if (document.querySelector('#js_pc_qr_code')) {
-    //     let qrCodeEle = document.querySelector('#js_pc_qr_code');
-    //     qrCodeEle.setAttribute('style', 'display:none;');
-    //   }
-    //   for (let index = 0; index < sectionArray.length; index++) {
-    //     let eleWidth = parseInt(getComputedStyle(sectionArray[index], null).getPropertyValue('width'));
-    //     // 如果元素宽度大于页面宽度，则需要进行自适应
-    //     if (eleWidth > bodyWidth) {
-    //       sectionArray[index].setAttribute('style', 'max-width:98% !important');
-    //     }
-    //   }
-    //   for (let index = 0; index < pArray.length; index++) {
-    //     let eleWidth = parseInt(getComputedStyle(pArray[index], null).getPropertyValue('width'));
-    //     if (eleWidth > bodyWidth) {
-    //       pArray[index].setAttribute('style', 'max-width:98% !important');
-    //     }
-    //   }
-    //   for (let index = 0; index < imgArray.length; index++) {
-    //     if (imgArray[index].src.startsWith("https://mmbiz.qpic.cn")) {
-    //       let dataSrc = imgArray[index].getAttribute('data-src');
-    //       let newValue = dataSrc.replace("https://mmbiz.qpic.cn", "/wxResource");
-    //       imgArray[index].setAttribute('data-src', newValue);
-    //       imgArray[index].src = newValue;
-    //     }
-    //     if (imgArray[index].src.startsWith("http://mmbiz.qpic.cn")) {
-    //       let dataSrc = imgArray[index].getAttribute('data-src');
-    //       let newValue = dataSrc.replace("http://mmbiz.qpic.cn", "/wxResource");
-    //       imgArray[index].setAttribute('data-src', newValue);
-    //       imgArray[index].src = newValue;
-    //     }
-    //     let eleWidth = parseInt(getComputedStyle(imgArray[index], null).getPropertyValue('width'));
-    //     // eleWidth为0表示图片未显示在页面上（图片懒加载的原因），因此也需要添加最大宽度
-    //     if (eleWidth > bodyWidth || eleWidth == 0) {
-    //       imgArray[index].setAttribute('style', 'max-width:98% !important');
-    //     }
-    //   }
-    // },
     // 编辑文章
     editArticle() {
       let shareId = JSON.parse(getUserId()).userID;

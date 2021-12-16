@@ -42,7 +42,7 @@ export default {
   },
   created() {
     this.$store.commit('updateTabBarActive', 2);
-    if (this.$route.params.type === 1) {
+    if (this.$route.params.type === 1 || this.$route.params.type === '1') {
       this.type = 1;
       this.searchTips = '请输入想要查询的企业名...';
     } else {
@@ -108,8 +108,13 @@ export default {
     width: 100%;
     height: 3rem;
     line-height: 3rem;
-    border: 1px solid #3333cc;
+    border-top: 0px  solid #e6e6e6;
+    border-left: 0px  solid #e6e6e6;
+    border-right: 0px  solid #e6e6e6;
+    border-bottom:1px solid #e6e6e6;
     border-radius: 6px;
+    outline: none;
+    //border: none;
     box-sizing: border-box;
     padding: 5px;
   }
@@ -132,15 +137,4 @@ export default {
     margin: auto;
   }
 }
-
-/deep/ .van-button--info {
-  color: #fff;
-  background-color: #3333cc;
-  border: 1px solid #3333cc;
-}
-
-/deep/ .van-button--round {
-  border-radius: 6px;
-}
-
 </style>
