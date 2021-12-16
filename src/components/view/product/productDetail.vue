@@ -4,7 +4,7 @@
 
     <div  style=" padding-top: 45px;
   padding-bottom: 60px;">
-      <img  :src=productImage  width="100%" style=" display: table-cell;
+      <img  :src=productPic  width="100%" style=" display: table-cell;
   text-align:center;
   margin: 0 auto" />
       <div>
