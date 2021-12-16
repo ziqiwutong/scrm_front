@@ -98,7 +98,7 @@ export default {
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  background-color: #645fd7;
+  background-color: #4876f1;
   border: none;
   color: white;
   text-align: center;

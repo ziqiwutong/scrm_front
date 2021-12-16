@@ -20,7 +20,8 @@ export default {
           articleId: this.$route.query.articleId,
           shareId: this.$route.query.shareId,
           wmId: this.$route.query.wmId,
-          ifShowShareMan: this.$route.query.ifShowShareMan
+          ifShowShareMan: this.$route.query.ifShowShareMan,
+          source:this.$route.query.source
         }
       });
     }

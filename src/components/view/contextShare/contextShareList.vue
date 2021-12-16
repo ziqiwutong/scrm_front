@@ -233,7 +233,12 @@ export default {
       let imageUrl = item.articleImage.replace('/wxResource', 'http://mmbiz.qpic.cn');
       this.shareMsg.title = item.articleTitle;
       this.shareMsg.imageUrl = imageUrl;
-      this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl + 'articleDetail?articleid=' + item.id + '&shareid=' + this.shareId + '&ifshowshareman=true';
+      this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl
+        + 'articleDetail?articleid=' + item.id
+        + '&shareid=' + this.shareId
+        + '&wmid=' + this.$store.state.userMessage.wmId
+        + '&ifshowshareman=true'
+        + '&source=article';
       this.showShare = true;
     },
     async shareArticleApp(e) {
@@ -269,7 +274,8 @@ export default {
           articleid: articleId,
           shareid: this.shareId,
           wmid:this.$store.state.userMessage.wmId,
-          ifshowshareman: true
+          ifshowshareman: true,
+          source:'article'
         }
       });
     },
@@ -289,7 +295,7 @@ export default {
 
 /deep/ .van-tabs__line {
   width: 16vw;
-  background-color: #3333cc;
+  background-color: #4876f1;
 }
 
 /deep/ .van-tabs__content {
@@ -321,7 +327,7 @@ p {
   position: absolute;
   right: 10px;
   bottom: 10%;
-  background-color: #3333cc;
+  background-color: #4876f1;
   border: none;
 }
 

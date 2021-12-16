@@ -62,8 +62,8 @@
         </div>
       </div>
       <div class="filterBottom">
-        <van-button plain hairline type="info" color="#8c3fff" @click="cancelBtn">重置</van-button>
-        <van-button plain hairline type="info" color="white" style="background-color: #8c3fff" @click="sureBtn">确定
+        <van-button plain hairline type="info" color="#4876f1" @click="cancelBtn">重置</van-button>
+        <van-button plain hairline type="info" color="white" style="background-color: #4876f1" @click="sureBtn">确定
         </van-button>
       </div>
     </van-popup>
@@ -103,7 +103,7 @@
     </van-checkbox-group>
     <div class="checkReader" v-show="!mainPage">
       <!--      <van-checkbox v-model="allChecked" @click="checkAllReader(0)" checked-color="#6600ff">全选</van-checkbox>-->
-      <van-button color="#7232dd" @click="batchAddCustomer">导入到客户池</van-button>
+      <van-button color="#4876f1" @click="batchAddCustomer">导入到客户池</van-button>
     </div>
   </div>
 </template>
@@ -171,7 +171,8 @@ export default {
           articleid: this.articleId,
           shareid: this.$route.query.shareId,
           wmid: this.wmId,
-          ifshowshareman: this.$route.query.ifShowShareMan
+          ifshowshareman: this.$route.query.ifShowShareMan,
+          source:this.$route.query.source
         }
       });
     },
@@ -345,7 +346,8 @@ export default {
           articleId: this.articleId,
           shareId: this.$route.query.shareId,
           wmId: this.wmId,
-          ifShowShareMan: this.$route.query.ifShowShareMan
+          ifShowShareMan: this.$route.query.ifShowShareMan,
+          source:this.$route.query.source
         }
       });
     },
@@ -458,12 +460,12 @@ export default {
   top: 13px;
   right: 10px;
   font-size: 13px;
-  color: #8c3fff;
+  color: #4876f1;
 }
 
 /deep/ .van-tabs__line {
   width: 10vw;
-  background-color: #3333cc;
+  background-color: #4876f1;
 }
 
 .readStatistics {
@@ -559,7 +561,7 @@ p {
 .readerLabel {
   background-color: rgba(191, 155, 241, 0.2);
   padding: 0px 5px;
-  color: #6600ff;
+  color: #4876f1;
   font-size: 10px;
   overflow: hidden;
   text-overflow: ellipsis;

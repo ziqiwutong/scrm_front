@@ -13,7 +13,7 @@
       <div v-html="article" class="article"></div>
     </div>
     <van-dialog v-model="showDialog" title="请选择商品" show-cancel-button
-                @confirm="insertProduct" confirm-button-color="#178bf6">
+                @confirm="insertProduct" confirm-button-color="#4876f1">
       <van-list
         v-model="loading"
         :finished="finished"
@@ -184,7 +184,8 @@ export default {
             articleid: this.articleId,
             shareid: this.shareId,
             wmid: this.wmId,
-            ifshowshareman: this.ifShowShareMan
+            ifshowshareman: this.ifShowShareMan,
+            source:this.$route.query.source
           }
         });
       }
@@ -393,7 +394,8 @@ export default {
               articleid: this.articleId,
               shareid: this.shareId,
               wmid: this.wmId,
-              ifshowshareman: this.ifShowShareMan
+              ifshowshareman: this.ifShowShareMan,
+              source:this.$route.query.source
             }
           });
         } else {

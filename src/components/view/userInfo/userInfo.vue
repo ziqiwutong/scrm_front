@@ -68,7 +68,7 @@ export default {
     },
     async submitMsg() {
       if (!(/^\d+$/.test(this.wmId))) {
-        this.$toast('微盟Id输入有误！');
+        this.$toast('微盟ID输入有误！');
         return;
       }
       let url = JSON.parse(getUrl()).userInfo.saveAppendInfo;
@@ -79,7 +79,7 @@ export default {
       const result = (await this.$http.post(url, postData)).data
       if (result.code === 200) {
         this.$store.commit('updateWmId', this.wmId);
-        this.$toast('修改成功！');
+        this.$toast('修改成功！已绑定'+result.data);
         this.$router.push('/home');
       } else {
         this.$toast('修改失败，请再次尝试！');
