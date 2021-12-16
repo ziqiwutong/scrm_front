@@ -91,7 +91,7 @@
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0 ? 'null' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
@@ -137,7 +137,7 @@
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0 ? 'null' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
@@ -184,7 +184,7 @@
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0 ? 'null' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
@@ -234,7 +234,7 @@
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0 ? 'null' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->
@@ -281,7 +281,7 @@
                   <van-image
                     width="70"
                     height="70"
-                    :src="item.productList.length === 0 ? 'https://img01.yzcdn.cn/vant/cat.jpeg' : item.productList[0].productImage"
+                    :src="item.productList.length === 0 ? 'null' : item.productList[0].productImage"
                   />
                   <!--                    src="https://img01.yzcdn.cn/vant/cat.jpeg"-->
                   <!--                  />-->

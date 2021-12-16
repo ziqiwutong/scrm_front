@@ -76,7 +76,7 @@
                 <!--                  </van-col>-->
               </div>
               <div class="button">
-                <van-button class="button-edit" block @click="showShareDialog" color="#4876F1" type="info">立即分享
+                <van-button class="button-edit" block @click="showShareDialog(item)" color="#4876F1" type="info">立即分享
                 </van-button>
               </div>
             </van-row>
@@ -237,8 +237,22 @@ export default {
       this.showShare = true;
     },
     async shareArticleApp(e) {
+      // // 先去后台拿用友的jsConfig，然后触发分享事件
+      // let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      // const result = (await this.$http.get(url)).data.data;
+      // let yyConfig = {
+      //   appId: result.appid,
+      //   timestamp: result.timestamp,
+      //   signature: result.signature
+      // }
+      // let shareMsg = this.shareMsg;
+      // if (e.name === '朋友圈') {
+      //   shareMsg.type = '3';
+      // }
+      // await yyApi.yyRegister(yyConfig, shareMsg);
+      // this.showShare = false;
       // 先去后台拿用友的jsConfig，然后触发分享事件
-      let url = JSON.parse(getUrl()).contextShare.yyConfig;
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
       const result = (await this.$http.get(url)).data.data;
       let yyConfig = {
         appId: result.appid,
@@ -249,8 +263,10 @@ export default {
       if (e.name === '朋友圈') {
         shareMsg.type = '3';
       }
+      console.log(shareMsg);
       await yyApi.yyRegister(yyConfig, shareMsg);
       this.showShare = false;
+
     },
 
     //以上为筛选内容
@@ -336,14 +352,7 @@ export default {
         else if (this.selectList[i] === 2) bet_productPrice = '1000' + '▓' + '2000';
         else if (this.selectList[i] === 3) bet_productPrice = '2000' + '▓' + '3000';
         else if (this.selectList[i] === 4) bet_productPrice = '3000' + '▓' + '99999';
-          //多区间模糊查询
-          // for (let i = 1; i < this.selectList.length; i++){
-          //   if(this.selectList[i].substr(0,4) === '产品类型') {
-          //     if(i === 1) in_productName=in_productName.concat(this.selectList[i].substr(5));
-          //     else
-          //     in_productName = in_productName.concat('▓', this.selectList[i].substr(5));
-          //   }
-        // }
+
         else
           like_productName = this.selectList[i].substr(5);
       }
@@ -539,6 +548,9 @@ export default {
     },
     ifShowDialog() {
       this.$router.push('productCreate')
+    },
+    showShareArticle(){
+      this.showShare = true;
     }
   },
 }
@@ -554,7 +566,9 @@ export default {
 .scrpop {
   //width: 90%;
 }
-
+/deep/ .van-share-sheet__options {
+  justify-content: space-around;
+}
 // 筛选按钮
 .scrbtn {
   margin: 5px 2% 10px 5%;

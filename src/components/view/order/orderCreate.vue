@@ -12,28 +12,45 @@
     <!--  提交栏-->
     <div class="commit">
       <van-form @submit="onSubmit">
+
+
         <van-field
-          v-model="productName"
-          name="产品名称"
-          label="产品名称"
-          placeholder="产品名称"
-          :rules="[{ required: true, message: '请填写产品名' }]"
+          v-model="originPrice"
+          name="订单原价"
+          label="订单原价"
+          placeholder="订单原价"
+          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"
+        />
+        <van-field
+          v-model="changePrice"
+          name="变动价格"
+          label="变动价格"
+          placeholder="变动价格"
+          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"
         />
 
         <van-field
-          v-model="productPrice"
-          type="productPrice"
-          name="产品售价"
-          label="产品售价"
-          placeholder="产品售价"
-          :rules="[{ required: true, message: '请填写产品售价' }]"
+          v-model="lastPrice"
+          name="最终价格"
+          label="最终价格"
+          placeholder="最终价格"
+          :rules="[{ required: false, message: '请填写订单最终价格' },{ pattern, message: '请输入正确内容' }]"
         />
 
-        <van-field name="productPic" label="产品图片">
-          <template #input>
-            <van-uploader :after-read="afterRead" v-model="productPic"  multiple/>
-          </template>
-        </van-field>
+        <van-field
+          v-model="receivedAmount"
+          name="实收金额"
+          label="实收金额"
+          placeholder="实收金额"
+          :rules="[{ required: false, message: '请填写订单实收金额' },{ pattern, message: '请输入正确内容' }]"
+        />
+        <van-field
+          v-model="saleChannel"
+          name="渠道类型"
+          label="渠道类型"
+          placeholder="渠道类型"
+          :rules="[{ required: false, message: '请填写订单渠道类型' }]"
+        />
 
         <van-field
           @click="chooseBuyer"
@@ -72,23 +89,6 @@
         />
 
         <van-field
-          v-model="productBuyAmount"
-          type="productBuyAmount"
-          name="产品购买数量"
-          label="产品购买数量"
-          placeholder="产品购买数量"
-          :rules="[{ required: false, message: '请填写产品购买数量' }]"
-        />
-
-        <!--    <van-field-->
-        <!--      v-model="orderType"-->
-        <!--      type="orderType"-->
-        <!--      name="订单状态"-->
-        <!--      label="订单状态"-->
-        <!--      placeholder="订单状态"-->
-        <!--      :rules="[{ required: true, message: '请填写订单状态' }]"-->
-        <!--    />-->
-        <van-field
           readonly
           clickable
           name="picker"
@@ -103,32 +103,48 @@
           name="订单来源"
           label="订单来源"
           placeholder="订单来源"
-          :rules="[{ required: true, message: '请填写订单来源' }]"
+          :rules="[{ required: false, message: '请填写订单来源' }]"
         />
         <van-field
-          v-model="notes"
-          type="notes"
-          name="备注"
-          label="备注"
-          placeholder="备注"
-          :rules="[{ required: false}]"
+          @click="addProduct"
+          v-model="addProduct1"
+          readonly
+          type="addProduct"
+          name="产品列表"
+          label="产品列表"
+          placeholder="点击添加产品"
+          :rules="[{ required: false, message: '请选择买家' }]"
         />
 
-        <van-field
-          v-model="priceChange"
-          type="priceChange"
-          name="改价"
-          label="改价"
-          placeholder="改价"
-          :rules="[{ required: false}]"
-        />
-
-
-
-        <div style="margin: 16px;">
-          <van-button round block type="info" native-type="submit">提交</van-button>
-        </div>
       </van-form>
+      <!--以下为产品表单-->
+      <div class="productList">
+        <van-swipe-cell :before-close="beforeClose" v-for="(item,i) in list" :key="i"  :title="item">
+          <van-row class="van-row1">
+            <div >
+              <van-col span="5" offset="1">
+                <van-image
+                  width="100%"
+                  height="60px"
+                  :src=item.productImage
+                />
+              </van-col>
+              <van-col class="productName" span="11" offset="2"><div class="van-ellipsis">{{item.productName}}</div></van-col>
+              <van-col class="price" span="5" offset="0"><span class="pricecolor">￥{{item.originPrice}}</span></van-col>
+              <van-col class="stock" span="4" offset="13">×{{item.productAmount}}</van-col>
+              <!--                  <van-col  class="button" span="6" offset="4">-->
+              <!--                  </van-col>-->
+            </div>
+          </van-row>
+          <template #right>
+            <van-button square text="删除" type="danger" class="delete-button" />
+          </template>
+        </van-swipe-cell>
+      </div>
+      <!---->
+      <div style="margin: 16px;">
+        <van-button round block @click="onSubmit" type="info" native-type="submit">提交</van-button>
+      </div>
     </div>
 
     <van-popup v-model="showPicker" position="bottom">
@@ -139,9 +155,48 @@
         @cancel="showPicker = false"
       />
     </van-popup>
+<!--以下为产品列表弹窗-->
+    <van-popup
+      v-model="productShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+      :overlay="false"
+      duration="0"
+    >
+      <van-button class="product-cancel-btn" @click="folCancel">取消</van-button>
+      <van-search
+        v-model="productVal"
+        placeholder="请输入搜索关键词"
+        @search="onProductSearch"
+        @cancel="onProductSearchCancel"
+      />
+      <van-cell  class="van-cell"
+        v-for="item in productList"
+        :key="item.id"
+        @click="productConfirm(item)"
+      >
+        <!-- 跟进人-跟进人信息 -->
+        <van-row class="van-row2">
+          <van-col span="5" offset="1">
+            <van-image
+              width="100%"
+              height="60px"
+              :src=item.productImage
+            />
+          </van-col>
+          <van-col class="productName" span="11" offset="2"><div class="van-ellipsis">{{item.productName}}</div></van-col>
+          <van-col class="price" span="5" offset="0"><span class="pricecolor">￥{{item.productPrice}}</span></van-col>
+          <van-col class="stock1" span="8" offset="10">库存{{item.productInventory}}件</van-col>
+        </van-row>
+      </van-cell>
+    </van-popup>
 
-
-
+    <van-dialog  @confirm="diaConfirm" v-model="showchoose" :title=this.productToPush.productName show-cancel-button>
+     <div style=" display: flex; margin-bottom: 10px; margin-top: 30px">
+       <span style=" margin-left: 40px; margin-right: 40px; margin-bottom: 10px; width:30%;">请选择数量</span>
+      <van-stepper   v-model="value1" integer />
+     </div>
+    </van-dialog>
   </div>
 
 
@@ -162,6 +217,24 @@ export default {
 
   data() {
     return {
+      pName:'',
+      value1:1,
+      showchoose:false,
+      list:[
+        {id:1,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
+        {id:2,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
+        {id:3,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
+        {id:4,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
+        {id:5,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
+        {id:6,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"}
+      ],
+       productToPush: {
+         id: '',
+         originPrice: '',
+         productImage: '',
+         productName: '',
+         productAmount: ''
+       },
       // showform:false,
       userShow:false,
       testVal:false,
@@ -169,32 +242,39 @@ export default {
         id: '',
         customerName: ''
       },
-      followVal: '',
-      followShow: false,
+      productVal: '',
+      productShow: false,
       columns: ['撤销', '待付款', '待收货', '交易成功', '退款成功'],
       showPicker: false,
       orderStatus: '',
-      productName: '',
-      productPrice: '',
+      changePrice: '',
+      originPrice: '',
+      lastPrice:'',
+      receivedAmount:'',
+      saleChannel:'',
+      pattern:/\d/,
+      addProduct1:'',
       orderBuyer: '',
       orderType: '',
       orderStaff: '',
       productBuyAmount: '',
       orderSource: '',
-      notes: '',
-      priceChange: '',
       productPic: [],
       productPic1: '',
 
 
-      //  以上为新建客户弹出框
+      //  以下为产品列表
+      productPageProps:{
+        pageNum: 1,
+        pageSize: 10
+      },
+      productList:[]
     };
   },
   watch: {
     $route: {
       immediate: true,
       handler: function (to, from) {
-        //拿到目标参数 to.query.id 去再次请求数据接口
         this.customerInfo.id = to.query.id;
         this.customerInfo.customerName = to.query.customerName;
          this.orderBuyer=to.query.customerName;
@@ -203,9 +283,23 @@ export default {
   },
 
   methods: {
-
-
-
+    diaConfirm(){
+      this.productToPush.productAmount=this.value1;
+      console.log(this.list, 'list改变前');
+      this.list.push({
+        id:this.productToPush.id,
+        originPrice:this.productToPush.originPrice,
+        productName:this.productToPush.productName,
+        productImage:this.productToPush.productImage,
+        productAmount:this.productToPush.productAmount
+      });
+      console.log(this.list,'list改变后');
+      this.showchoose=false;
+      this.productShow = false;
+    },
+    showPopup(){
+      this.showpop=true;
+    },
     onConfirm(value) {
       this. orderType = value;
       this.showPicker = false;
@@ -215,8 +309,10 @@ export default {
       this.userShow = false;
     },
     onUserAdd (val) {
-      this.customerInfo.name = val.name;
+      console.log(val)
+      this.customerInfo.customerName = val.name;
       this.customerInfo.id = val.id;
+      this.orderBuyer=this.customerInfo.customerName;
     },
 
     onTestCancel(){
@@ -228,18 +324,15 @@ export default {
       this.customerInfo.id=val.id;
       this.orderBuyer=this.customerInfo.customerName;
     },
-    returnClick(){
-      // this.orderBuyer=this.customerInfo.customerName;
-    },
-//
-    onFollowSearchCancel() {
-      this.followVal = '';
+
+    onproductSearchCancel() {
+      this.productVal = '';
     },
 
 
       folCancel()
       {
-        this.followShow = false;
+        this.productShow = false;
       },
       chooseBuyer()
       {
@@ -248,6 +341,8 @@ export default {
 
       async onSubmit()
       {
+        console.log(1);
+        console.log(this.orderBuyer);
         let url = "/api/se/order/addOrder";
         if (this.orderType === '撤销')
           this.orderStatus = '-1';
@@ -260,15 +355,16 @@ export default {
         if (this.orderType === '退款成功')
           this.orderStatus = '3';
         let postData = {
-          productName: this.productName,
-          productPrice: this.productPrice,
+          saleChannel:this.saleChannel,
+          receivedAmount:this.receivedAmount,
+          lastPrice:this.lastPrice,
+          changePrice: this.changePrice,
+          originPrice: this.originPrice,
           orderBuyer: this.orderBuyer,
           customerID:this.customerInfo.id,
           orderStaff: this.orderStaff,
           productBuyAmount: this.productBuyAmount,
           orderSource: this.orderSource,
-          notes: this.notes,
-          priceChange: this.priceChange,
           productPic: this.productPic1,
           orderStatus: this.orderStatus,
         }
@@ -295,28 +391,164 @@ export default {
         this.productPic1 = result;
       },
       onClickLeft(){
-      if(this.$route.query.type == 2)
-        this.$router.push({
+      if(this.$route.query.type == 2) {
+        this.$router.replace({
           path: '/perinfor',
           query: {
             id: this.customerInfo.id
           }
         });
+      this.$router.go(-1);
+      }
        else
         this.$router.push('orderList');
+      },
+    beforeClose({position, instance}) {
+      switch (position) {
+        case 'cell':
+        case 'outside':
+          instance.close();
+          break;
+        case 'right':
+          // console.log(instance.$attrs.title.orderID);
+          console.log(instance);
+          this.$dialog.confirm({
+            confirmButtonColor:'#5252cc',
+            message: '确定删除吗？'
+          }).then(() => {
+         for(let i=0;i<this.list.length;i++){
+           if(instance.$attrs.title.id === this.list[i].id)
+             this.list.splice(i, 1);
+           Toast('产品删除成功');
+         }
+            console.log(this.list)
+          });
+          break;
       }
+    },
+    addProduct(){
+      this.getProductList();
+    this.productShow=true;
+    },
+//以下为列表
+    // 产品搜素
+    onProductSearch() {
+      this.productList = [];
+      this.productPageProps.pageNum = 1;
+      this.getProductList();
+    },
+    // 产品搜索取消
+    onProductSearchCancel() {
+      this.productVal = "";
+      this.productList = [];
+      this.productPageProps.pageNum = 1;
+      this.getProductList();
+    },
+  async  getProductList(){
+    let url = "/api/se/product/query";
+    let postData = {
+      currentPage: this.productPageProps.pageNum++,
+      pageCount: this.productPageProps.pageSize,
+      like_productName:this.productVal
+    }
+    const result = (await this.$http.get(url,{params:postData})).data.data;
+    if (result.length == 0) {
+      // 已加载全部数据
+      this.finished = true;
+      Toast('已加载全部数据！');
+    }
+    for (let i = 0; i < result.length; i++) {
+      this.productList.push(result[i]);
+    }
+    console.log(this.list);
+    // 加载状态结束
+    this.loading = false;
+    },
+    productConfirm(item){
+      this.value1=1;
+      this.productToPush.productName=item.productName;
+      this.productToPush.id=item.id;
+      this.productToPush.productImage=item.productImage;
+      this.productToPush.originPrice=item.productPrice;
+      this.showchoose=true;
 
-
+      console.log(2)
+      // this.list.push({})
+    }
   },
 }
 </script>
 
 <style lang="less" scoped>
-.navbar1{
-  border-style:none;
-  display: flex; /* 弹性布局 */
-  margin-top: 10px;
-  justify-content: space-between; /* 横向中间自动空间 */
+.scrfirbtn {
+  border-radius: 5px;
+  margin: 20px 2% 10px 5%;
+  width: 40%;
+  background-color: #4876f1;
+}
+//筛选重置按钮
+.scrresbtn {
+  border-radius: 5px;
+  margin: 20px 2% 10px 5%;
+  width: 40%;
+}
+.productList{
+  background-color: #F3F4F8;
+  margin-bottom: 10px;
+  max-height:400px;
+  overflow: auto
+}
+/deep/ .van-row1 {
+  height: 80px;
+  //justify-content: center;
+  background-color: white;
+  //border: 1px solid lightgray;
+  margin-top: 7px;
+  //margin-bottom: 4px;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-radius: 5px;
+  //border-bottom: whitesmoke 1px;
+  .van-col {
+    margin-top: 12px;
+  }
+
+  .price{
+    font-size: 14px;
+  }
+  .stock{
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  .productName{
+    .van-ellipsis{
+      font-size: 1rem;
+    }
+    //height: 40px;
+  }
+}
+/deep/ .van-cell{
+  //background-color: whitesmoke;
+}
+/deep/ .van-row2 {
+  //justify-content: center;
+  //background-color: white;
+  border-bottom: 1px solid lightgray;
+  //padding-top: 7px;
+  ////margin-bottom: 4px;
+  //padding-left: 8px;
+  //padding-right: 8px;
+  //border-radius: 5px;
+
+  .price{
+    text-align: right;
+    font-size: 14px;
+  }
+  .stock1 {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: right;
+  }
 }
 /deep/ .nav-bar{
   height: 50px;
@@ -326,458 +558,11 @@ export default {
     height:50px;
   }
 }
-
+.delete-button{
+  height:100%;
+}
 .orderCreate_container{
   padding-top: 52px;
-}
-//以下为弹出框
-/deep/.van-dropdown-menu__title {
-  color: #1e1c27;
-  font-size: 13px;
-}
-/deep/.van-dropdown-menu__bar {
-  box-shadow: unset !important;
-}
-//搜索框
-.nav-search-btn {
-  // margin: 5px 2% 5px 0%;
-  // padding: 2px;
-  margin-top: 5px;
-  margin-right: 2%;
-  margin-bottom: 5px;
-}
-.nav-search-box {
-  height: 48px;
-}
-//分割线
-.nav-separate {
-  margin: 10px 2% 5px 5%;
-  opacity: 0.5;
-}
-//添加按钮
-.nav-add-btn {
-  margin: 5px 2% 5px 0%;
-  // padding: 2px;
-}
-//最近浏览-选项
-.nav-option {
-  margin: 5px 2% 10px 2%;
-  padding: 0px;
-  height: 30px;
-  width: 95px;
-  background-color: #f5f5f5;
-}
-.nav-cusnum-font {
-  font-size: 10px;
-  // margin-top: 5%;
-  margin-left: 5%;
-  margin-top: 15px;
-  color: #bbbcbe;
-}
-// 标签栏颜色改变
-.nav-icon-colorful {
-  filter: invert(43%) sepia(65%) saturate(2735%) hue-rotate(208deg)
-  brightness(97%) contrast(95%);
-}
-// 标签栏边距
-.nav-tabar {
-  margin-top: 2%;
-  margin-bottom: 2%;
-}
-.van-hairline--top-bottom::after,
-.van-hairline-unset--top-bottom::after {
-  border-width: 0px 0;
-}
-// 列表容器
-.list {
-  margin-top: 25px;
-}
-//列表内容
-.list-content {
-  margin-bottom: 10px;
-}
-//客户姓名
-.list-content-name {
-  font-size: 15px;
-}
-//客户时间
-.list-content-time {
-  font-size: 11px;
-  color: #6e6f74;
-}
-.list-content-msg {
-  font-size: 12px;
-  color: #6e6f74;
-  margin-top: 4px;
-}
-.list-content-tag {
-  margin-right: 0.5px;
-  margin-left: 3%;
-}
-//弹出层布局
-.screen {
-  width: 90%;
-}
-// 筛选按钮
-.screen-btn {
-  margin: 5px 2% 10px 5%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  background-color: #f5f5f5;
-}
-
-.active-screen-btn {
-  background-color: #4876f1;
-  margin: 5px 2% 10px 5%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  color: #ffffff;
-}
-
-// 新增筛选按钮-可自适应
-.screen-btn2 {
-  margin: 5px 2% 10px 0%;
-  padding: 5px;
-  height: 30px;
-  font-size: 12px;
-  background-color: #f5f5f5;
-}
-
-.active-screen-btn2 {
-  background-color: #4876f1;
-  margin: 5px 2% 10px 0%;
-  padding: 5px;
-  height: 30px;
-  font-size: 12px;
-  color: #ffffff;
-}
-// 新增筛选
-// 筛选按钮
-.screen-btn1 {
-  margin: 5px 2% 10px 0%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  background-color: #f5f5f5;
-}
-
-.active-screen-btn1 {
-  background-color: #4876f1;
-  margin: 5px 2% 10px 0%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  color: #ffffff;
-}
-.add-van-cell {
-  padding: 0;
-}
-//筛选分类name
-.screen-name {
-  margin-left: 20px;
-  font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-//筛选提交按钮
-.screen-confirm-btn {
-  border-radius: 5px;
-  margin: 20px 2% 10px 5%;
-  width: 40%;
-  background-color: #4876f1;
-}
-//筛选重置按钮
-.screen-reset-btn {
-  border-radius: 5px;
-  margin: 20px 2% 10px 5%;
-  width: 40%;
-}
-//多选弹出层
-.check {
-  height: 100%;
-}
-//多选列表
-.check-list {
-  margin-bottom: 10px;
-}
-
-.follow-choose {
-  margin-left: 10%;
-  color: #4876f1;
-  font-size: 10pt;
-}
-//跟进人-取消
-.follow-cancel-btn {
-  border: none;
-}
-.follow-newCustomer-btn{
-  border: none;
-}
-//短信模板-导航
-.shortmsg-nar {
-  margin-top: 20px;
-}
-//新建用户-标题样式
-.add-title {
-  background-color: #f8f8f8;
-  color: #bbbcbe;
-  padding-left: 15px;
-  padding-top: 5px;
-  height: 30px;
-  font-size: 14px;
-}
-//最近浏览-容器
-.browse-container {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-
-  top: 110px;
-  z-index: 1;
-  overflow: hidden;
-}
-//最近浏览-内容
-.browse-content {
-  height: 20%;
-  width: 100%;
-  position: absolute;
-  z-index: 1;
-  position: fixed;
-}
-
-//最近浏览-阴影
-.browse-shady {
-  background-color: #232228;
-  position: absolute;
-  height: 1200px;
-  width: 100%;
-  top: 180px;
-  opacity: 0.8;
-  z-index: 0;
-  position: fixed;
-}
-//最近浏览-阴影补充
-.browse-shady-other {
-  height: 10%;
-  width: 100%;
-  top: 0%;
-  position: absolute;
-  z-index: 500;
-  // opacity: 0;
-  position: fixed;
-}
-//最近浏览-激活效果
-.browse-active-btn {
-  color: #4876f1;
-}
-// 新增-调用手机相册扫描名片
-.add-choose-font {
-  margin-left: 5%;
-  margin-top: 10%;
-}
-// 新增-手动新增客户
-.add-choose-hand-font {
-  margin-left: 5%;
-  height: 50px;
-}
-// 新增-页面边距
-.add-choose-margin {
-  margin-top: 5%;
-  margin-left: 20%;
-}
-.main-fix {
-  position: fixed;
-  width: 100%;
-}
-
-.main {
-  margin: 5px 2% 5px 2%;
-  padding: 200px;
-  border-radius: 15px;
-  border: 1px solid #f6f6f6;
-  // background: #cc1d60;
-}
-.list-img-none {
-  width: 40px;
-  height: 40px;
-  background-color: #4876f1;
-  border-radius: 50%;
-  // -moz-border-radius: 50%;
-  // -webkit-border-radius: 50%;
-  color: #ffffff;
-  text-align: center;
-  line-height: 40px;
-}
-//以下为新建客户
-
-
-.nav-cusnum-font {
-  font-size: 10px;
-  // margin-top: 5%;
-  margin-left: 5%;
-  margin-top: 15px;
-  color: #bbbcbe;
-}
-
-//客户时间
-.list-content-time {
-  font-size: 11px;
-  color: #6e6f74;
-}
-.list-content-msg {
-  font-size: 12px;
-  color: #6e6f74;
-  margin-top: 4px;
-}
-.list-content-tag {
-  margin-right: 0.5px;
-  margin-left: 3%;
-}
-//弹出层布局
-.screen {
-  width: 90%;
-}
-// 筛选按钮
-.screen-btn {
-  margin: 5px 2% 10px 5%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  background-color: #f5f5f5;
-}
-
-.active-screen-btn {
-  background-color: #4876f1;
-  margin: 5px 2% 10px 5%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  color: #ffffff;
-}
-
-// 新增筛选按钮-可自适应
-.screen-btn2 {
-  margin: 5px 2% 10px 0%;
-  padding: 5px;
-  height: 30px;
-  font-size: 12px;
-  background-color: #f5f5f5;
-}
-
-.active-screen-btn2 {
-  background-color: #4876f1;
-  margin: 5px 2% 10px 0%;
-  padding: 5px;
-  height: 30px;
-  font-size: 12px;
-  color: #ffffff;
-}
-// 新增筛选
-// 筛选按钮
-.screen-btn1 {
-  margin: 5px 2% 10px 0%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  background-color: #f5f5f5;
-}
-
-.active-screen-btn1 {
-  background-color: #4876f1;
-  margin: 5px 2% 10px 0%;
-  padding: 0px;
-  height: 30px;
-  width: 85px;
-  font-size: 12px;
-  color: #ffffff;
-}
-.add-van-cell {
-  padding: 0;
-}
-//筛选分类name
-.screen-name {
-  margin-left: 20px;
-  font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-//筛选提交按钮
-.screen-confirm-btn {
-  border-radius: 5px;
-  margin: 20px 2% 10px 5%;
-  width: 40%;
-  background-color: #4876f1;
-}
-//筛选重置按钮
-.screen-reset-btn {
-  border-radius: 5px;
-  margin: 20px 2% 10px 5%;
-  width: 40%;
-}
-
-
-.follow-choose {
-  margin-left: 10%;
-  color: #4876f1;
-  font-size: 10pt;
-}
-//跟进人-取消
-.follow-cancel-btn {
-  border: none;
-}
-
-//新建用户-标题样式
-.add-title {
-  background-color: #f8f8f8;
-  color: #bbbcbe;
-  padding-left: 15px;
-  padding-top: 5px;
-  height: 30px;
-  font-size: 14px;
-}
-
-// 新增-手动新增客户
-.add-choose-hand-font {
-  margin-left: 5%;
-  height: 50px;
-}
-// 新增-页面边距
-.add-choose-margin {
-  margin-top: 5%;
-  margin-left: 20%;
-}
-.main-fix {
-  position: fixed;
-  width: 100%;
-}
-
-.main {
-  margin: 5px 2% 5px 2%;
-  padding: 200px;
-  border-radius: 15px;
-  border: 1px solid #f6f6f6;
-  // background: #cc1d60;
-}
-.list-img-none {
-  width: 40px;
-  height: 40px;
-  background-color: #4876f1;
-  border-radius: 50%;
-  // -moz-border-radius: 50%;
-  // -webkit-border-radius: 50%;
-  color: #ffffff;
-  text-align: center;
-  line-height: 40px;
-  font-size: 15px;
 }
 
 </style>
