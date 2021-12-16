@@ -330,7 +330,7 @@ export default {
       this.returnData.clueDiscover = this.$route.params.clueDiscover;
       this.returnData.clueResponsibleId = this.$route.params.clueResponsibleId;
       this.returnData.clueResponsible = this.$route.params.clueResponsible;
-
+      this.returnData.clueStatus=this.$route.params.clueStatus;
 
       this.boName = this.$route.params.clueName;
       console.log(this.returnData)
@@ -511,8 +511,10 @@ export default {
             clueResponsible: this.returnData.clueResponsible,
             // ToDo 后端未完成id字段
             // clueResponsibleId: this.returnData.clueResponsibleId,
-            clueStatus: this.returnData.clueStatus,
-            businessOpporitunityFlag: this.returnData.businessOpportunityFlag,
+            clueStatus: "转换为商机",
+            businessOpporitunityFlag: 1,
+            // clueStatus: this.returnData.clueStatus,
+            // businessOpporitunityFlag: this.returnData.businessOpportunityFlag,
           }
           console.log(this.returnData);
           console.log(postData);
