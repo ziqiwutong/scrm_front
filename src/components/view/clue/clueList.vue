@@ -36,8 +36,8 @@
       <van-col class="addbtn" span="2" v-if="isSearch"
       ><van-icon name="plus" size="25" @click="toAdd" />
       </van-col>
-      <div class="divider"></div>
     </van-row>
+    <div class="divider"></div>
     <!--线索表单区域-->
     <div class="list" >
       <van-list
@@ -107,6 +107,9 @@ export  default  {
       value1: 0,
       show:false,
     };
+  },
+  created() {
+    this.onLoad();
   },
   methods: {
     //clueList线索分类选择
@@ -226,6 +229,7 @@ export  default  {
       if(result.code === 200) {
         Toast('线索删除成功');
         this.list=[];
+        this.pageProps.currentPage=1;
         this.onLoad();
       }
       else

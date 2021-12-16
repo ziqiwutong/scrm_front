@@ -134,6 +134,7 @@ export default {
       console.log(this.clueId)
       console.log("clueName:")
       console.log(this.list[0].clueName)
+      console.log(this.list[0])
     },
     showShareDialog() {
       this.showShare = true
