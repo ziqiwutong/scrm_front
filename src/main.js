@@ -8,7 +8,7 @@ import store from "./store/index"
 import Vant from 'vant'
 import preview from 'vue-photo-preview'
 
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole'
 // import './plugins/vant.js'
 
 import './plugins/element.js'
@@ -23,8 +23,8 @@ import './assets/css/global.css'
 import $ from 'jquery'
 
 
-let vConsole = new Vconsole()
-Vue.use(vConsole)
+// let vConsole = new Vconsole()
+// Vue.use(vConsole)
 Vue.use(Vant)
 Vue.use(VueClipboard)
 Vue.use(preview)

@@ -20,7 +20,7 @@
   margin-top: 10px;
   text-align: justify;
   //border:2px solid black;
-  border-radius: 10px;">
+  border-radius: 10px;">y
       <div  style="margin-left: 5px;
   margin-right: 5px;
   font-size: 1rem;

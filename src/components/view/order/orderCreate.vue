@@ -191,10 +191,10 @@
       </van-cell>
     </van-popup>
 
-    <van-dialog  @confirm="diaConfirm" v-model="showchoose" :title=this.pName show-cancel-button>
-     <div style="display: flex; margin-bottom: 10px;margin-top: 10px">
-       <span style="width:20%;">请选择数量</span>
-      <van-stepper style="width:70%;  theme:round"; v-model="value1" integer />
+    <van-dialog  @confirm="diaConfirm" v-model="showchoose" :title=this.productToPush.productName show-cancel-button>
+     <div style=" display: flex; margin-bottom: 10px; margin-top: 30px">
+       <span style=" margin-left: 40px; margin-right: 40px; margin-bottom: 10px; width:30%;">请选择数量</span>
+      <van-stepper   v-model="value1" integer />
      </div>
     </van-dialog>
   </div>
@@ -218,7 +218,7 @@ export default {
   data() {
     return {
       pName:'',
-      value1:0,
+      value1:1,
       showchoose:false,
       list:[
         {id:1,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
@@ -228,7 +228,13 @@ export default {
         {id:5,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
         {id:6,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"}
       ],
-
+       productToPush: {
+         id: '',
+         originPrice: '',
+         productImage: '',
+         productName: '',
+         productAmount: ''
+       },
       // showform:false,
       userShow:false,
       testVal:false,
@@ -278,7 +284,18 @@ export default {
 
   methods: {
     diaConfirm(){
+      this.productToPush.productAmount=this.value1;
+      console.log(this.list, 'list改变前');
+      this.list.push({
+        id:this.productToPush.id,
+        originPrice:this.productToPush.originPrice,
+        productName:this.productToPush.productName,
+        productImage:this.productToPush.productImage,
+        productAmount:this.productToPush.productAmount
+      });
+      console.log(this.list,'list改变后');
       this.showchoose=false;
+      this.productShow = false;
     },
     showPopup(){
       this.showpop=true;
@@ -374,13 +391,15 @@ export default {
         this.productPic1 = result;
       },
       onClickLeft(){
-      if(this.$route.query.type == 2)
-        this.$router.push({
+      if(this.$route.query.type == 2) {
+        this.$router.replace({
           path: '/perinfor',
           query: {
             id: this.customerInfo.id
           }
         });
+      this.$router.go(-1);
+      }
        else
         this.$router.push('orderList');
       },
@@ -446,7 +465,11 @@ export default {
     this.loading = false;
     },
     productConfirm(item){
-      this.pName=item.productName;
+      this.value1=1;
+      this.productToPush.productName=item.productName;
+      this.productToPush.id=item.id;
+      this.productToPush.productImage=item.productImage;
+      this.productToPush.originPrice=item.productPrice;
       this.showchoose=true;
 
       console.log(2)
