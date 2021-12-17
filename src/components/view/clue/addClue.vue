@@ -140,8 +140,11 @@ export default {
         clueEditor:this.clueEditor,
         clueDiscover:this.clueDiscover,
         clueResponsible:this.clueResponsible,
+        clueEditorId:this.clueEditorId,
+        clueDiscoverId:this.clueDiscoverId,
+        clueResponsibleId:this.clueResponsibleId,
         clueStatus:this.radio,
-        businessOpporitunityFlag:this.switchChecked,
+        bizOppFlag:this.switchChecked,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
@@ -172,11 +175,20 @@ export default {
     },
     onFollowAdd(val){
       if(this.userType==1)
-       this.clueEditor=val.name;
+      {
+        this.clueEditor=val.name;
+        this.clueEditorId=val.id;
+      }
       if(this.userType==2)
+      {
         this.clueDiscover=val.name;
+        this.clueDiscoverId=val.id;
+      }
       if(this.userType==3)
+      {
         this.clueResponsible=val.name;
+        this.clueResponsibleId=val.id;
+      }
     },
     // 时间-时间录入处理
     dateConfirm(date) {
