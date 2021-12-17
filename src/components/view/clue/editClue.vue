@@ -123,6 +123,9 @@ export default {
       clueEditor:'',
       clueDiscover:'',
       clueResponsible:'',
+      clueEditorId:'',
+      clueDiscoverId:'',
+      clueResponsibleId:'',
       //线索状态单选框
       radio: '',
       //转换成商机按钮
@@ -164,8 +167,11 @@ export default {
       this.clueEditor=result[0].clueEditor;
       this.clueDiscover=result[0].clueDiscover;
       this.clueResponsible=result[0].clueResponsible;
+      this.clueEditorId=result[0].clueEditorId;
+      this.clueDiscoverId=result[0].clueDiscoverId;
+      this.clueResponsibleId=result[0].clueResponsibleId;
       this.radio=result[0].clueStatus;
-      this.switchChecked=result[0].businessOpporitunityFlag;
+      this.switchChecked=result[0].bizOppFlag;
     },
     async onSubmit() {
       let url = "/api/se/clue/editClue";
@@ -176,8 +182,11 @@ export default {
         clueEditor:this.clueEditor,
         clueDiscover:this.clueDiscover,
         clueResponsible:this.clueResponsible,
+        clueEditorId: this.clueEditorId,
+        clueDiscoverId: this.clueDiscoverId,
+        clueResponsibleId:this.clueResponsibleId,
         clueStatus:this.radio,
-        businessOpporitunityFlag:this.switchChecked,
+        bizOppFlag:this.switchChecked,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
@@ -248,16 +257,19 @@ export default {
       // 筛选-跟进人
       if (this.userType == 0) {
         this.clueEditor = item.username;
+        this.clueEditorId = item.id;
         this.ifChoose = false;
       }
       // 筛选-商机负责人
       else if (this.userType == 1) {
         this.clueDiscover = item.username;
+        this.clueDiscoverId = item.id;
         this.ifoppoChoose = false;
       }
       // 筛选-创建人
       else if (this.userType == 2) {
         this.clueResponsible = item.username;
+        this.clueResponsibleId = item.id;
         this.ifbulidChoose = false;
       }
     },
@@ -309,11 +321,19 @@ export default {
     },
     onFollowAdd(val){
       if(this.userType==1)
+      {
         this.clueEditor=val.name;
+        this.clueEditorId=val.id;
+      }
       if(this.userType==2)
+      {
         this.clueDiscover=val.name;
-      if(this.userType==3)
+        this.clueDiscoverId=val.id;
+      }
+      if(this.userType==3){
         this.clueResponsible=val.name;
+        this.clueResponsibleId=val.id;
+      }
     },
   },
 }

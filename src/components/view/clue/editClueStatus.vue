@@ -86,6 +86,7 @@ export default {
       console.log(result);
       this.clueNotes=result.clueNotes;
       this.clueEditor=result.clueEditor;
+      this.clueEditorId=result.clueEditorId;
       this.clueId=result.clueId;
     },
     async Submit() {
@@ -95,6 +96,7 @@ export default {
         id:this.id,
         clueNotes:this.clueNotes,
         clueEditor:this.clueEditor,
+        clueEditorId:this.clueEditorId,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
@@ -135,7 +137,10 @@ export default {
     },
     onFollowAdd(val){
       if(this.userType==1)
+      {
         this.clueEditor=val.name;
+        this.clueEditorId=val.id;
+      }
     },
   },
 }
