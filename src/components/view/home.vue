@@ -3,51 +3,62 @@
     <NavBar/>
     <div class="mainArea">
       <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
+        <div class="title">客户管理</div>
+        <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
                          to="/customer"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
                          to="/potential"/>
+          <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
+                         to="/relationship"/>
         </van-grid>
-        <van-grid clickable :column-num="2" :border="false">
+        <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[2]" style="color:#5b99ff;" :text="textArray[2]"
                          :to="{name:'searchCustomer',params:{type:1}}"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[3]" style="color:#1296db;" :text="textArray[3]"
                          :to="{name:'searchCustomer',params:{type:2}}"/>
-        </van-grid>
-        <van-grid clickable :column-num="2" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
-                         to="/relationship"/>
           <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
+<!--        <van-grid clickable :column-num="2" :border="false">-->
+<!--          <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"-->
+<!--                         to="/relationship"/>-->
+<!--          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>-->
+<!--        </van-grid>-->
       </div>
       <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
+        <div class="title">资源管理</div>
+        <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
                          to="/clueList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
                          to="/bizOppList"/>
-        </van-grid>
-        <van-grid clickable :column-num="2" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
                          to="/communicationList"/>
-          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
+<!--        <van-grid clickable :column-num="2" :border="false">-->
+<!--          <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"-->
+<!--                         to="/communicationList"/>-->
+<!--          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>-->
+<!--        </van-grid>-->
       </div>
       <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
+        <div class="title">内容管理</div>
+        <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
                          to="/contextShareList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[9]" style="color:#ebdb9c;" :text="textArray[9]"
                          @click="toShop"/>
+          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
       </div>
       <div class="main">
-        <van-grid clickable :column-num="2" :border="false">
+        <div class="title">产品管理</div>
+        <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
                          to="/productList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[11]" style="color:#f1af6b;" :text="textArray[11]"
                          to="/orderList"/>
+          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
       </div>
     </div>
@@ -106,18 +117,20 @@ export default {
       ],
       autoHeight: {
         height: ""
-      },
-      distributeUrl: ''
+      }
     }
   },
-  created: function () {
+  created() {
     // alert(this.$route.query.code);
-    // this.sendCode();
-    // 为了测试，这里暂时写的是6，其实应该是从user里面获取
-    let userID = "4862341";
-    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-      this.getToken(userID);
+    if (this.$route.query.code) {
+      this.sendCode();
     }
+    //为了测试，这里暂时写的是6，其实应该是从user里面获取
+    // let userID = "4862341";
+    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+    //   this.getToken(userID);
+    // }
+    // this.getDistributeUrl();
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -166,6 +179,7 @@ export default {
       console.log('userid:' + userMessage.userId);
       await this.$store.commit('updateUserMessage', userMessage);
       await this.getToken(userMessage.userId);
+      await this.getWmId(userMessage.userId);
       await this.getDistributeUrl();
     },
     // 获取分销链接
@@ -177,11 +191,22 @@ export default {
       }
       const result = (await this.$http.get(url, {params: getData})).data.data;
       if (result.length > 0) {
-        this.distributeUrl = result;
+        this.$store.commit('updateDistributeUrl', result);
       }
     },
-    toShop(){
-      location.href = this.distributeUrl;
+    // 获取微盟ID
+    async getWmId(userId) {
+      let url = JSON.parse(getUrl()).userInfo.getWmId;
+      let getData = {
+        id: userId
+      }
+      const result = (await this.$http.get(url, {params: getData})).data.data;
+      if (result) {
+        this.$store.commit('updateWmId', result.weimobId);
+      }
+    },
+    toShop() {
+      location.href = this.$store.state.distributeUrl;
     }
   }
 }
@@ -200,4 +225,14 @@ export default {
   border: 1px solid #f6f6f6;
 }
 
+.title {
+  width: 100%;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  background-color: white;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  border-bottom: 1px solid #f6f6f6;
+  color: #5f6368;
+}
 </style>

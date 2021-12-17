@@ -41,13 +41,17 @@ export default {
     return {
       navTitle: '查询结果',
       type: '',
-      list: []
+      list: [],
+      loading:''
     }
   },
   created() {
     let searchValue = this.$route.params.searchMessage;
     this.type = this.$route.params.type;
     this.searchByKey(searchValue, this.type);
+  },
+  beforeDestroy() {
+    this.$toast.clear(loading);
   },
   methods: {
     onClickLeft() {
@@ -59,7 +63,7 @@ export default {
       })
     },
     async searchByKey(searchValue, type) {
-      const loading = this.$toast.loading({
+      this.loading = this.$toast.loading({
         duration: 0,
         forbidClick: true,
         message: '加载中...'
@@ -87,7 +91,7 @@ export default {
           }
         }
       }
-      this.$toast.clear(loading);
+      this.$toast.clear(this.loading);
       if (result[0].length > 0 || result[1].length > 0) {
         if (this.type === 1 || this.type === '1') {
           this.$toast('请点击企业查看详情');

@@ -105,7 +105,7 @@ export default {
       distributeUrl: '',
       productCount: 0,
       cardListener: '',
-      source:''
+      source: ''
     }
   },
   created() {
@@ -162,7 +162,7 @@ export default {
       if (typeof (WebSocket) === "undefined") {
         alert("您的浏览器不支持socket")
       } else {
-        let url = "ws://www.fzk-tx.top/mk/article/ws?articleId=" + this.articleId
+        let url = "ws://" + JSON.parse(getUrl()).websocketUrl + "?articleId=" + this.articleId
           + '&shareId=' + this.shareId
           + '&openid=' + openid;
         // let url = "ws://127.0.0.1:4000";
@@ -215,7 +215,7 @@ export default {
             + '&wmid='
             + this.$route.query.wmid
             + '&ifshowshareman=' + this.showCard;
-            + '&source=' + this.$route.query.source;
+          +'&source=' + this.$route.query.source;
           if (this.source === 'product') {
             this.shareMsg.pageUrl += '&productid=' + this.$route.query.productid;
           }
@@ -287,9 +287,9 @@ export default {
       })
     },
     onClickLeft() {
-      if (this.source === 'product'){
+      if (this.source === 'product') {
         this.$router.push("/productList");
-      }else{
+      } else {
         this.$router.push("/contextShareList");
       }
     },
@@ -309,19 +309,19 @@ export default {
           let url = JSON.parse(getUrl()).contextShare.deleteArticle;
           const result = (await this.$http.delete(url, {params: postData})).data;
           if (result.code == 200) {
-            if (this.source === 'product'){
+            if (this.source === 'product') {
               let url = "/api/se/product/delete";
               let postData = {
-                id:this.$route.query.productid
+                id: this.$route.query.productid
               }
-              const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+              const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
               if (result.code === 200) {
                 Toast("删除成功！");
                 this.$router.push('/productList');
-              } else{
+              } else {
                 Toast('产品删除失败,错误码' + result.code);
               }
-            }else{
+            } else {
               self.$router.push("/contextShareList");
             }
           } else {
@@ -407,7 +407,7 @@ export default {
           shareId: shareId,
           wmId: this.wmId,
           ifShowShareMan: this.showCard,
-          source:this.source
+          source: this.source
         }
       });
     },
@@ -435,18 +435,19 @@ export default {
     },
     // 编辑文章
     editArticle() {
-      if (this.source === 'product'){
+      if (this.source === 'product') {
         this.$router.push({
           path: '/productEdit',
           query: {
             articleid: this.articleId,
             shareid: JSON.parse(getUserId()).userID,
-            wmid:this.$store.state.userMessage.wmId,
+            wmid: this.$store.state.userMessage.wmId,
             ifshowshareman: true,
-            source:'product',
+            source: 'product',
             productID: this.$route.query.productid,
-          }})
-      }else{
+          }
+        })
+      } else {
         let shareId = JSON.parse(getUserId()).userID;
         this.$store.commit('updateEditReqArticle', this.articleMsg);
         this.$store.commit('updateTempArticle', this.article);
@@ -458,7 +459,7 @@ export default {
             shareId: shareId,
             wmId: this.wmId,
             ifShowShareMan: this.showCard,
-            source:this.source
+            source: this.source
           }
         });
       }
@@ -625,7 +626,7 @@ h2 {
   border: 1px solid #DDD;
 }
 
-/deep/ h1{
+/deep/ h1 {
   display: none;
 }
 </style>

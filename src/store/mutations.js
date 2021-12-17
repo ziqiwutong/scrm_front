@@ -15,6 +15,10 @@ export default {
   updateWmId(state, wmId) {
     state.userMessage.wmId = wmId;
   },
+  // 更新分销链接
+  updateDistributeUrl(state, distributeUrl) {
+    state.distributeUrl = distributeUrl;
+  },
   // 更新转载的公众号内容
   updateEditReqArticle(state, articleMessage) {
     state.repArticleDetail = articleMessage;

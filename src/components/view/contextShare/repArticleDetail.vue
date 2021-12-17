@@ -176,6 +176,7 @@ export default {
     // 返回按钮
     onClickLeft() {
       if (this.frontPage == '0') {
+        // this.$store.commit('updateTempArticle', this.$store.state.repArticleDetail.articleContext);
         this.$router.push("/reArticleDes");
       } else {
         this.$router.push({
@@ -185,7 +186,7 @@ export default {
             shareid: this.shareId,
             wmid: this.wmId,
             ifshowshareman: this.ifShowShareMan,
-            source:this.$route.query.source
+            source: this.$route.query.source
           }
         });
       }
@@ -395,7 +396,7 @@ export default {
               shareid: this.shareId,
               wmid: this.wmId,
               ifshowshareman: this.ifShowShareMan,
-              source:this.$route.query.source
+              source: this.$route.query.source
             }
           });
         } else {
@@ -580,7 +581,7 @@ h2 {
   border: 1px solid #DDD;
 }
 
-/deep/ h1{
+/deep/ h1 {
   display: none;
 }
 
