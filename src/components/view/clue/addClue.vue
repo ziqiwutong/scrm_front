@@ -144,7 +144,7 @@ export default {
         clueDiscoverId:this.clueDiscoverId,
         clueResponsibleId:this.clueResponsibleId,
         clueStatus:this.radio,
-        bizOppFlag:this.switchChecked,
+        bizOppFlag:false,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
 
