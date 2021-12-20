@@ -253,6 +253,8 @@ export default {
       let shareMsg = this.shareMsg;
       if (e.name === '朋友圈') {
         shareMsg.type = '3';
+      } else {
+        shareMsg.type = '2';
       }
       console.log(shareMsg);
       await yyApi.yyRegister(yyConfig, shareMsg);
@@ -273,9 +275,9 @@ export default {
         query: {
           articleid: articleId,
           shareid: this.shareId,
-          wmid:this.$store.state.userMessage.wmId,
+          wmid: this.$store.state.userMessage.wmId,
           ifshowshareman: true,
-          source:'article'
+          source: 'article'
         }
       });
     },

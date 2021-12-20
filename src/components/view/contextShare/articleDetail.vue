@@ -383,6 +383,8 @@ export default {
       }
       if (e.name === '朋友圈') {
         shareMsg.type = '3';
+      } else {
+        shareMsg.type = '2';
       }
       await yyApi.yyRegister(yyConfig, shareMsg);
       this.showShare = false;

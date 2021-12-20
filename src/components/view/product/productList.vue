@@ -228,7 +228,7 @@ export default {
       this.shareMsg.title = item.productName;
       this.shareMsg.imageUrl = imageUrl;
       this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl
-        + 'articleDetail?articleid=' + item.id
+        + 'articleDetail?articleid=' + item.articleId
         + '&shareid=' + this.shareId
         + '&wmid=' + this.$store.state.userMessage.wmId
         + '&ifshowshareman=true'
@@ -262,6 +262,8 @@ export default {
       let shareMsg = this.shareMsg;
       if (e.name === '朋友圈') {
         shareMsg.type = '3';
+      } else {
+        shareMsg.type = '2';
       }
       console.log(shareMsg);
       await yyApi.yyRegister(yyConfig, shareMsg);
@@ -549,7 +551,7 @@ export default {
     ifShowDialog() {
       this.$router.push('productCreate')
     },
-    showShareArticle(){
+    showShareArticle() {
       this.showShare = true;
     }
   },
@@ -566,9 +568,11 @@ export default {
 .scrpop {
   //width: 90%;
 }
+
 /deep/ .van-share-sheet__options {
   justify-content: space-around;
 }
+
 // 筛选按钮
 .scrbtn {
   margin: 5px 2% 10px 5%;
