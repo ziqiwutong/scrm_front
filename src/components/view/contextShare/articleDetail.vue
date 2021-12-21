@@ -386,7 +386,7 @@ export default {
       } else {
         shareMsg.type = '2';
       }
-      await yyApi.yyRegister(yyConfig, shareMsg);
+      await yyApi.yyRegister(yyConfig, shareMsg, 2);
       this.showShare = false;
     },
     switchBtn(showCard) {
