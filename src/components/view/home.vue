@@ -19,11 +19,11 @@
                          :to="{name:'searchCustomer',params:{type:2}}"/>
           <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>
         </van-grid>
-<!--        <van-grid clickable :column-num="2" :border="false">-->
-<!--          <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"-->
-<!--                         to="/relationship"/>-->
-<!--          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>-->
-<!--        </van-grid>-->
+        <!--        <van-grid clickable :column-num="2" :border="false">-->
+        <!--          <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"-->
+        <!--                         to="/relationship"/>-->
+        <!--          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>-->
+        <!--        </van-grid>-->
       </div>
       <div class="main">
         <div class="title">资源管理</div>
@@ -35,11 +35,11 @@
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
                          to="/communicationList"/>
         </van-grid>
-<!--        <van-grid clickable :column-num="2" :border="false">-->
-<!--          <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"-->
-<!--                         to="/communicationList"/>-->
-<!--          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>-->
-<!--        </van-grid>-->
+        <!--        <van-grid clickable :column-num="2" :border="false">-->
+        <!--          <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"-->
+        <!--                         to="/communicationList"/>-->
+        <!--          <van-grid-item icon-prefix="icon-third" icon="" text="" url="/"/>-->
+        <!--        </van-grid>-->
       </div>
       <div class="main">
         <div class="title">内容管理</div>
@@ -122,6 +122,7 @@ export default {
   },
   created() {
     // alert(this.$route.query.code);
+    this.hideNavBar();
     if (this.$route.query.code) {
       this.sendCode();
     }
@@ -207,7 +208,18 @@ export default {
     },
     toShop() {
       location.href = this.$store.state.distributeUrl;
-    }
+    },
+    async hideNavBar() {
+      // 先去后台拿用友的jsConfig，然后触发分享事件
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
+      const result = (await this.$http.get(url)).data.data;
+      let yyConfig = {
+        appId: result.appid,
+        timestamp: result.timestamp,
+        signature: result.signature
+      }
+      await yyApi.yyRegister(yyConfig, null, 1);
+    },
   }
 }
 </script>

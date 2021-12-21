@@ -257,7 +257,7 @@ export default {
         shareMsg.type = '2';
       }
       console.log(shareMsg);
-      await yyApi.yyRegister(yyConfig, shareMsg);
+      await yyApi.yyRegister(yyConfig, shareMsg, 2);
       this.showShare = false;
     },
     onCancel() {
