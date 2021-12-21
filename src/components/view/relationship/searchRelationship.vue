@@ -230,4 +230,10 @@ export default {
   }
 }
 
+/deep/.van-button--info {
+  color: #fff;
+  background-color: #3333cc;
+  border: 1px solid #3333cc;
+}
+
 </style>

@@ -13,16 +13,28 @@ const state = {
   token: "",
   secret: "scrm",
   tabBarActive: 0,
+  // userMessage: {
+  //   username: '张楠',
+  //   userCompany: '泸州老窖集团有限责任公司',
+  //   userImgUrl: 'https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg',
+  //   userId: '',
+  //   userPhone: '18256895659',
+  //   email: '123456789@qq.com',
+  //   sex: '保密',
+  //   duty: '总经理',
+  //   deptName: '组织部',
+  //   wmId: '11',
+  // },
   userMessage: {
-    username: '张楠',
-    userCompany: '泸州老窖集团有限责任公司',
-    userImgUrl: 'https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg',
-    userId: '6',
-    userPhone: '18256895659',
-    email: '123456789@qq.com',
-    sex: '保密',
-    duty: '总经理',
-    deptName: '组织部',
+    username: '',
+    userCompany: '',
+    userImgUrl: '',
+    userId: '',
+    userPhone: '',
+    email: '',
+    sex: '',
+    duty: '',
+    deptName: '',
     wmId: '11',
   },
   repArticleDetail: {
@@ -41,7 +53,8 @@ const state = {
     nickName: '1234444'
   },
   hasOAuth: 'false',
-  articleType: 1
+  articleType: 1,
+  distributeUrl:''
 }
 
 // 2. 创建对象
@@ -64,7 +77,8 @@ const store = new Vuex.Store({
         hasOAuth: val.hasOAuth,
         wxUser: val.wxUser,
         articleType: val.articleType,
-        articleContextTemp: val.articleContextTemp
+        articleContextTemp: val.articleContextTemp,
+        distributeUrl:val.distributeUrl
       }
     }
   })]

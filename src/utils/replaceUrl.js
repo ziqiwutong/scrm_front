@@ -54,10 +54,12 @@ export function getUrl() {
   // 开发环境
   let development = {
     baseUrl:'http://scrm.lzljjt.cn:33333/',
+    websocketUrl:'scrm.lzljjt.cn:33333/mk/article/ws',
     userInfo:{
       sendAppCode:'/api/cms/iuap/userInfo',
       yyConfig:'/api/cms/iuap/jsApi',
-      saveAppendInfo:'/api/cms/user/saveAppendInfo'
+      saveAppendInfo:'/api/cms/user/saveAppendInfo',
+      getWmId:'/api/cms/user/queryById'
     },
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',

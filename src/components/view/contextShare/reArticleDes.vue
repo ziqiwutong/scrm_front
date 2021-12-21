@@ -25,8 +25,8 @@
         <van-field name="radio" label="所属文件夹">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal">
-              <van-radio name="1" icon-size="16px">个人素材库</van-radio>
-              <van-radio name="2" icon-size="16px">企业素材库</van-radio>
+              <van-radio name="0" icon-size="16px">个人素材库</van-radio>
+              <van-radio name="1" icon-size="16px">企业素材库</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -63,7 +63,7 @@ export default {
       source: '来源/作者',
       uploader: [],
       coverImg: '',
-      radio: '1'
+      radio: '0'
     }
   },
   mounted() {
@@ -122,7 +122,7 @@ export default {
         materialType: this.radio
       }
       const result = (await this.$http.post(url, postData)).data
-      if (result.code == '200') {
+      if (result.code === 200 || result.code === '200') {
         this.$toast('创建成功！');
         this.clearArticleMsg();
         this.$router.push('/contextShareList');
@@ -153,7 +153,7 @@ export default {
         articlePower: '',
         coverImg: '',
         productIds: [],
-        materialType: '1'
+        materialType: '0'
       }
       // 清理vuex
       this.$store.commit('updateEditReqArticle', repArticleDetail);

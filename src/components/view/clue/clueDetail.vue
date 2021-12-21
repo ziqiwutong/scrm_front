@@ -134,6 +134,7 @@ export default {
       console.log(this.clueId)
       console.log("clueName:")
       console.log(this.list[0].clueName)
+      console.log(this.list[0])
     },
     showShareDialog() {
       this.showShare = true
@@ -179,14 +180,15 @@ export default {
           from: '/clueDetail',
           clueName: this.list[0].clueName,
           clueResponsible: this.list[0].clueResponsible,
-          //ToDo 之后传id
-          clueResponsibleId: '',
+          clueEditorId: this.list[0].clueEditorId,
+          clueDiscoverId: this.list[0].clueDiscoverId,
+          clueResponsibleId:this.list[0].clueResponsibleId,
           clueId: this.clueId,
           clueDate: this.list[0].clueDate,
           clueEditor: this.list[0].clueEditor,
           clueDiscover: this.list[0].clueDiscover,
           clueStatus: this.list[0].clueStatus,
-          businessOpportunityFlag: this.list[0].businessOpportunityFlag,
+          bizOppFlag: this.list[0].bizOppFlag,
         }
       });
     },
