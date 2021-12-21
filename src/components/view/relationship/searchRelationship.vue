@@ -137,7 +137,7 @@ export default {
 
           cb(callBackArr)
 
-        }, 2000)
+        }, 1000)
       }
     },
 

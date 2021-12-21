@@ -228,15 +228,15 @@ export default {
         //客户详情跳转来要用的
         customerId: "",
 
-        //线索跳转过来要用的参数
+        //线索跳转过来要用的参数,businessOpportunityFlag和clueStatus为默认值
         clueId: "",
         clueName: "",
-        clueStatus:"转化为商机",
         clueDate:"",
         clueDiscover: "",
         clueResponsible: "",
         clueEditor: "",
         businessOpportunityFlag: 1,
+        clueStatus:"转化为商机",
 
       },
 
