@@ -58,9 +58,9 @@
         <van-tabs title-active-color="#121922" @click="onClick" color="#4876F1" v-model="active" animated>
           <van-tab title="全部">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
                 <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
+                  <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
                 </template>
                 <div class="edit" @click="toEditCom(item.id)">
                   <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
@@ -70,9 +70,9 @@
           </van-tab>
           <van-tab title="线下">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
                 <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
+                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
                 </template>
                 <div class="edit" @click="toEditCom(item.id)">
                   <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
@@ -82,9 +82,9 @@
           </van-tab>
           <van-tab title="电话">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
                 <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
+                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
                 </template>
                 <div class="edit" @click="toEditCom(item.id)">
                   <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
@@ -94,9 +94,9 @@
           </van-tab>
           <van-tab title="短信">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
                 <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
+                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
                 </template>
                 <div class="edit" @click="toEditCom(item.id)">
                   <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
@@ -106,9 +106,9 @@
           </van-tab>
           <van-tab title="微信">
             <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(2)" :key="i">
+              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
                 <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="iconArray[item.communicationWay]" color="#3490f4"/>
+                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
                 </template>
                 <div class="edit" @click="toEditCom(item.id)">
                   <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
@@ -211,7 +211,8 @@ export default {
       id: '',
       customerId: '',
       cuslist: [],
-      communicationWay: 4,
+      relationType: '',
+      ComType:'',
       visitTimes: '',
       wxShow: false,
       //短信
@@ -237,8 +238,8 @@ export default {
       },
       list: [
         {
-          communicationWay: '',
-          communicationContent: '',
+          relationType: '',
+          relationDetail: '',
           communicationTime: '',
         }
       ],
@@ -255,8 +256,7 @@ export default {
   },
   created() {
     this.cuslist = this.$route.query.cuslist;
-    this.onLoad();
-    // this.test();
+    this.test();
     console.log(this.cuslist)
   },
   methods: {
@@ -267,53 +267,93 @@ export default {
       this.pageProps.pageNum = 1;
       this.list = [];
       if (title === '全部')
-        this.communicationWay = 4;
-      if (title === '线下')
-        this.communicationWay = 0;
+        this.test();
+      if (title === '线下'){
+        this.relationType = '线下沟通';
+        this.onLoad();
+      }
       if (title === '电话')
-        this.communicationWay = 1;
-      if (title === '短信')
-        this.communicationWay = 2;
-      if (title === '微信')
-        this.communicationWay = 3;
-      this.onLoad();
-    },
-    // async test(){
-    //   let url = "/api/se/customer/query";
-    //   let postData = {
-    //     customerId:this.customerId
-    //   }
-    //   const res = await this.$http.get(url,{params:postData});
-    // },
-    async onLoad() {
-      let url = "/api/se/communication/queryCommunicationLog";
-      console.log('h:' + this.cuslist.id);
-      let temp = this.cuslist.id;
-      console.log('t:' + temp);
-      let postData = {
-        customerId: temp,
-        communicationWay: this.communicationWay,
-      };
-      const result = (await this.$http.get(url, {params: postData}));
-      const tempList=result.data.data;
-      const res=result.data;
-      this.array = [];
-      this.list = [];
-      // console.log(this.array)
-      // console.log("tempList:");
-      // console.log(tempList);
-      // console.log(res)
-      // console.log(res.data)
-      if(tempList[0]==null)
       {
-        console.log(1);
+        this.relationType = '打电话';
+        this.onLoad();
+      }
+      if (title === '短信')
+      {
+        this.relationType = '发短信';
+        this.onLoad();
+      }
+      if (title === '微信')
+      {
+        this.relationType = '发微信';
+        this.onLoad();
+      }
+    },
+    async test(){
+      let url = "/api/se/communication/queryCustomerRelation";
+      let postData = {
+        customerId:this.cuslist.id
+      }
+      const res = (await this.$http.get(url,{params:postData})).data.data;
+      if(res[0]==null)
+      {
         this.array.visitTimes=0;
         this.array.callTimes=0;
         this.array.msgTimes=0;
         this.array.wxTimes=0;
       }
-      else this.array = tempList[1];
+      else this.array = res[0];
+      for (let i = 0; i < res.length; i++) {
+        let a =res[i];
+        if(a.relationType=='线下沟通'){
+          a.comType=0;
+        }else if(a.relationType=='打电话'){
+          a.comType=1;
+        }else if(a.relationType=='发短信'){
+          a.comType=2;
+        }else if(a.relationType=='发微信'){
+          a.comType=3;
+        }
+        this.list.push(res[i]);
+      }
+    },
+    async onLoad() {
+      let url = "/api/se/communication/queryCustomerRelation";
+      console.log('h:' + this.cuslist.id);
+      let temp = this.cuslist.id;
+      console.log('t:' + temp);
+      let postData = {
+        customerId: temp,
+        relationType: this.relationType,
+      };
+      const result = (await this.$http.get(url, {params: postData}));
+      const tempList=result.data.data;
+      this.array = [];
+      this.list = [];
+      console.log(this.array)
+      console.log("tempList:");
+      console.log(tempList);
+      console.log(result);
+      console.log(result.data);
+      if(tempList[0]==null)
+      {
+        // console.log(1);
+        this.array.visitTimes=0;
+        this.array.callTimes=0;
+        this.array.msgTimes=0;
+        this.array.wxTimes=0;
+      }
+      else this.array = tempList[0];
       for (let i = 0; i < tempList.length; i++) {
+        let a = tempList[i];
+       if(a.relationType=='线下沟通'){
+         a.comType='visit';
+       }else if(a.relationType=='打电话'){
+         a.comType='call';
+       }else if(a.relationType=='发短信'){
+         a.comType='message';
+       }else if(a.relationType=='发微信'){
+         a.comType='wechat';
+       }
         this.list.push(tempList[i]);
       }
       console.log("this.array:")
@@ -327,7 +367,7 @@ export default {
       this.cusRelation = [];
       // this.newCusRelation(this.cusDetail.id, "打电话", "");
       // this.getCusRelation();
-      this.newCommunicationLog(1);
+      this.newCommunicationLog('打电话');
     },
     // 复制电话号码
     copyCode() {
@@ -344,10 +384,10 @@ export default {
       // this.newCusRelation(this.cusDetail.id, "发微信", "");
       // this.getCusRelation();
       // this.getCusRelation();
-      this.newCommunicationLog(3);
+      this.newCommunicationLog('发微信');
       console.log(123)
       this.list=[];
-      this.onLoad();
+      this.test();
     },
     //发微信
     sendWx() {
@@ -389,7 +429,7 @@ export default {
         // this.newCusRelation(this.cusDetail.id, "发短信", "");
         //
         // this.getCusRelation();
-        this.newCommunicationLog(2);
+        this.newCommunicationLog('发短信');
         this.message = "";
       }
     },
@@ -407,10 +447,10 @@ export default {
     //   }
     // },
     async newCommunicationLog(radio){
-      let url = "/api/se/communication/addCommunicationLog";
+      let url = "/api/se/communication/addCustomerRelation";
       let postData = {
         customerId: this.cuslist.id ,
-        communicationWay:radio,
+        relationType:radio,
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
       if (result.code == "200") {
