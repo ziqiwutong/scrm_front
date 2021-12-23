@@ -11,31 +11,31 @@
     />
     <!--  提交栏-->
     <div class="commit">
-      <van-form @submit="onSubmit">
+      <van-form @submit="onSubmit" ref="submit1">
 
 
-        <van-field
-          v-model="originPrice"
-          name="订单原价"
-          label="订单原价"
-          placeholder="订单原价"
-          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"
-        />
-        <van-field
-          v-model="changePrice"
-          name="变动价格"
-          label="变动价格"
-          placeholder="变动价格"
-          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"
-        />
+<!--        <van-field-->
+<!--          v-model="originPrice"-->
+<!--          name="订单原价"-->
+<!--          label="订单原价"-->
+<!--          placeholder="订单原价"-->
+<!--          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"-->
+<!--        />-->
+<!--        <van-field-->
+<!--          v-model="changePrice"-->
+<!--          name="变动价格"-->
+<!--          label="变动价格"-->
+<!--          placeholder="变动价格"-->
+<!--          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"-->
+<!--        />-->
 
-        <van-field
-          v-model="lastPrice"
-          name="最终价格"
-          label="最终价格"
-          placeholder="最终价格"
-          :rules="[{ required: false, message: '请填写订单最终价格' },{ pattern, message: '请输入正确内容' }]"
-        />
+<!--        <van-field-->
+<!--          v-model="lastPrice"-->
+<!--          name="最终价格"-->
+<!--          label="最终价格"-->
+<!--          placeholder="最终价格"-->
+<!--          :rules="[{ required: false, message: '请填写订单最终价格' },{ pattern, message: '请输入正确内容' }]"-->
+<!--        />-->
 
         <van-field
           v-model="receivedAmount"
@@ -96,6 +96,7 @@
           label="订单状态"
           placeholder="点击选择订单状态"
           @click="showPicker = true"
+          :rules="[{ required: true, message: '请填写订单状态' }]"
         />
         <van-field
           v-model="orderSource"
@@ -130,7 +131,7 @@
                 />
               </van-col>
               <van-col class="productName" span="11" offset="2"><div class="van-ellipsis">{{item.productName}}</div></van-col>
-              <van-col class="price" span="5" offset="0"><span class="pricecolor">￥{{item.originPrice}}</span></van-col>
+              <van-col class="price" span="5" offset="0"><span class="pricecolor">￥{{item.lastPrice}}</span></van-col>
               <van-col class="stock" span="4" offset="13">×{{item.productAmount}}</van-col>
               <!--                  <van-col  class="button" span="6" offset="4">-->
               <!--                  </van-col>-->
@@ -143,7 +144,7 @@
       </div>
       <!---->
       <div style="margin: 16px;">
-        <van-button round block @click="onSubmit" type="info" native-type="submit">提交</van-button>
+        <van-button round block @click="submit3" type="info" native-type="submit">提交</van-button>
       </div>
     </div>
 
@@ -192,10 +193,21 @@
     </van-popup>
 
     <van-dialog  @confirm="diaConfirm" v-model="showchoose" :title=this.productToPush.productName show-cancel-button>
-     <div style=" display: flex; margin-bottom: 10px; margin-top: 30px">
-       <span style=" margin-left: 40px; margin-right: 40px; margin-bottom: 10px; width:30%;">请选择数量</span>
+     <div style="width: 100%;text-align: center;margin-top: 5px">原价￥{{this.productToPush.originPrice}}</div>
+      <div style=" display: flex; margin-bottom: 5px; margin-top: 10px">
+       <span style=" margin-left: 40px; margin-right: 40px;  width:30%;">请选择数量</span>
       <van-stepper   v-model="value1" integer />
+
      </div>
+      <div style="margin-left:25px">
+        <van-field
+          v-model="productChangePrice"
+          name="产品变动价格"
+          label="产品变动价格"
+          placeholder="请填写产品变动价格"
+          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"
+        />
+      </div>
     </van-dialog>
   </div>
 
@@ -217,23 +229,29 @@ export default {
 
   data() {
     return {
+      productChangePrice:'',
       pName:'',
       value1:1,
+      // title1:this.productToPush.productName+'￥'+this.productToPush.originPrice,
       showchoose:false,
       list:[
-        {id:1,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
-        {id:2,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
-        {id:3,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
-        {id:4,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
-        {id:5,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"},
-        {id:6,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99, productName: "必炫·浓香型白酒"}
+        // {id:1,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'', productName: "必炫·浓香型白酒"},
+        // {id:2,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'', productName: "必炫·浓香型白酒"},
+        // {id:3,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,   productChangePrice:'',productName: "必炫·浓香型白酒"},
+        // {id:4,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'', productName: "必炫·浓香型白酒"},
+        // {id:5,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'', productName: "必炫·浓香型白酒"},
+        // {id:6,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'',productName: "必炫·浓香型白酒"}
       ],
        productToPush: {
          id: '',
          originPrice: '',
          productImage: '',
          productName: '',
-         productAmount: ''
+         productAmount: '',
+         changePrice:'',
+         lastPrice:'',
+         // receivedAmount:'',
+         // orderNotes:'',
        },
       // showform:false,
       userShow:false,
@@ -242,6 +260,7 @@ export default {
         id: '',
         customerName: ''
       },
+      submitCount:0,
       productVal: '',
       productShow: false,
       columns: ['撤销', '待付款', '待收货', '交易成功', '退款成功'],
@@ -281,21 +300,35 @@ export default {
       },
     },
   },
-
+  // mounted() {
+  //   this.$refs.submit1.submit();
+  // },
   methods: {
+
+    submit3(){
+      this.$refs.submit1.submit()
+    },
     diaConfirm(){
       this.productToPush.productAmount=this.value1;
       console.log(this.list, 'list改变前');
-      this.list.push({
-        id:this.productToPush.id,
-        originPrice:this.productToPush.originPrice,
-        productName:this.productToPush.productName,
-        productImage:this.productToPush.productImage,
-        productAmount:this.productToPush.productAmount
-      });
-      console.log(this.list,'list改变后');
-      this.showchoose=false;
-      this.productShow = false;
+      if(this.productChangePrice === '') this.productChangePrice=0;
+      if(parseInt(this.productChangePrice)+parseInt(this.productToPush.originPrice) < 0)
+        this.$toast('变动价格低于原价，请重新选择')
+      else {
+        this.list.push({
+          productId: this.productToPush.id,
+          originPrice: parseInt(this.productToPush.originPrice),
+          changePrice: parseInt(this.productChangePrice),
+          lastPrice: parseInt(this.productChangePrice) + parseInt(this.productToPush.originPrice),
+          productName: this.productToPush.productName,
+          productImage: this.productToPush.productImage,
+          productAmount: parseInt(this.productToPush.productAmount),
+          orderNotes: ''
+        });
+        console.log(this.list, 'list改变后');
+        this.showchoose = false;
+        this.productShow = false;
+      }
     },
     showPopup(){
       this.showpop=true;
@@ -341,42 +374,49 @@ export default {
 
       async onSubmit()
       {
-        console.log(1);
-        console.log(this.orderBuyer);
-        let url = "/api/se/order/addOrder";
-        if (this.orderType === '撤销')
-          this.orderStatus = '-1';
-        if (this.orderType === '代收款')
-          this.orderStatus = '0';
-        if (this.orderType === '待收货')
-          this.orderStatus = '1';
-        if (this.orderType === '交易成功')
-          this.orderStatus = '2';
-        if (this.orderType === '退款成功')
-          this.orderStatus = '3';
-        let postData = {
-          saleChannel:this.saleChannel,
-          receivedAmount:this.receivedAmount,
-          lastPrice:this.lastPrice,
-          changePrice: this.changePrice,
-          originPrice: this.originPrice,
-          orderBuyer: this.orderBuyer,
-          customerID:this.customerInfo.id,
-          orderStaff: this.orderStaff,
-          productBuyAmount: this.productBuyAmount,
-          orderSource: this.orderSource,
-          productPic: this.productPic1,
-          orderStatus: this.orderStatus,
-        }
+         if(this.submitCount++ ===0) {
+           console.log(1);
+           console.log(this.orderBuyer);
+           let url = "/api/se/order/insert";
+           if (this.orderType === '撤销')
+             this.orderStatus = -1;
+           if (this.orderType === '待付款')
+             this.orderStatus = 0;
+           if (this.orderType === '待收货')
+             this.orderStatus = 1;
+           if (this.orderType === '交易成功')
+             this.orderStatus = 2;
+           if (this.orderType === '退款成功')
+             this.orderStatus = 3;
+           let changePrice = 0;
+           let lastPrice = 0;
+           let originPrice = 0;
+           for (let i = 0; i < this.list.length; i++) {
+             originPrice += this.list[i].originPrice * this.list[i].productAmount;
+             changePrice += this.list[i].changePrice * this.list[i].productAmount;
+             lastPrice += this.list[i].lastPrice * this.list[i].productAmount;
+           }
+           let postData = {
+             customerId: this.customerInfo.id,
+             customerName: this.orderBuyer,
+             orderStaff: this.orderStaff,
+             originPrice: originPrice,
+             changePrice: changePrice,
+             lastPrice: lastPrice,
+             saleChannel: this.saleChannel,
+             receivedAmount: this.receivedAmount,
+             orderSource: this.orderSource,
+             orderStatus: this.orderStatus,
+             productList: this.list
+           }
+           const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
 
-        const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
-
-        if (result.code === 200) {
-          Toast('订单创建成功');
-          this.$router.push('orderList');
-        } else
-          Toast('订单创建失败,错误码' + result.code);
-
+           if (result.code === 200) {
+             Toast('订单创建成功');
+             this.$router.push('orderList');
+           } else
+             Toast('订单创建失败,错误码' + result.code);
+         }
       },
       async afterRead(file)
       {
@@ -466,6 +506,7 @@ export default {
     },
     productConfirm(item){
       this.value1=1;
+      this.productChangePrice='';
       this.productToPush.productName=item.productName;
       this.productToPush.id=item.id;
       this.productToPush.productImage=item.productImage;

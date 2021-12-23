@@ -154,7 +154,7 @@
                 />
               </van-col>
               <van-col class="productName" span="11" offset="2"><div class="van-ellipsis">{{item.productName}}</div></van-col>
-              <van-col class="price" span="5" offset="1"><span class="pricecolor">￥{{item.originPrice}}</span></van-col>
+              <van-col class="price" span="5" offset="1"><span class="pricecolor">￥{{item.lastPrice}}</span></van-col>
               <van-col class="stock" span="4" offset="19">×{{item.productAmount}}</van-col>
               <!--                  <van-col  class="button" span="6" offset="4">-->
               <!--                  </van-col>-->

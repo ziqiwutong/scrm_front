@@ -152,6 +152,7 @@ export default {
   data() {
     return {
       //客户表弹出框
+      submitCount:0,
       productID:'',
       followShow:'',
       productName: '',
@@ -173,33 +174,33 @@ export default {
   },
   methods: {
     async onSubmit() {
-      let url = "/api/se/product/insert";
-      let postData = {
-        productName: this.productName,
-        productPrice: this.productPrice,
-        productInventory: this.productInventory,
-        typeName:this.productType,
-        certificate: this.productCertificate,
-        // notes:this.notes,
-        priceChange:this.priceChange,
-        productImage: this.productPic1,
-        retailPrice:this.retailPrice,
-        wholesalePrice:this.wholesalePrice,
-        priceDescribe:this.priceDescribe,
-        productIntro:this.productIntro,
-        brand:this.brandIntro
-      }
-      const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
-          this.productID=result.productID;
-      if(result.code === 200) {
-        Toast('产品创建成功');
-      this.createArticle();
-        this.$router.push('productList');
-      }
-      else
-        Toast('产品创建失败,错误码' + result.code);
+     if(this.submitCount++ === 0) {
+       let url = "/api/se/product/insert";
+       let postData = {
+         productName: this.productName,
+         productPrice: this.productPrice,
+         productInventory: this.productInventory,
+         typeName: this.productType,
+         certificate: this.productCertificate,
+         // notes:this.notes,
+         priceChange: this.priceChange,
+         productImage: this.productPic1,
+         retailPrice: this.retailPrice,
+         wholesalePrice: this.wholesalePrice,
+         priceDescribe: this.priceDescribe,
+         productIntro: this.productIntro,
+         brand: this.brandIntro
+       }
+       const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
+       this.productID = result.productID;
+       if (result.code === 200) {
+         Toast('产品创建成功');
+         this.createArticle();
+         this.$router.push('productList');
+       } else
+         Toast('产品创建失败,错误码' + result.code);
 
-
+     }
     },
     createArticle(){
 

@@ -153,7 +153,7 @@ export default {
     return {
       //客户表弹出框
       followShow:'',
-
+      submitCount:0,
       productName: '',
       productPrice: '',
       productInventory: '',
@@ -204,31 +204,31 @@ export default {
 
     },
     async onSubmit() {
-      let url = "/api/se/product/update";
-      let postData = {
-        productName: this.productName,
-        productPrice: this.productPrice,
-        productInventory: this.productInventory,
-        typeName:this.productType,
-        certificate: this.productCertificate,
-        id:this.productID,
-        priceChange:this.priceChange,
-        productImage: this.productPic1,
-        retailPrice:this.retailPrice,
-        wholesalePrice:this.wholesalePrice,
-        priceDescribe:this.priceDescribe,
-        productIntro:this.productIntro,
-        brand:this.brandIntro
-      }
-      const result = (await this.$http.post(url,JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
+      if(this.submitCount++ === 0) {
+        let url = "/api/se/product/update";
+        let postData = {
+          productName: this.productName,
+          productPrice: this.productPrice,
+          productInventory: this.productInventory,
+          typeName: this.productType,
+          certificate: this.productCertificate,
+          id: this.productID,
+          priceChange: this.priceChange,
+          productImage: this.productPic1,
+          retailPrice: this.retailPrice,
+          wholesalePrice: this.wholesalePrice,
+          priceDescribe: this.priceDescribe,
+          productIntro: this.productIntro,
+          brand: this.brandIntro
+        }
+        const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
 
-      if(result.code === 200) {
-        Toast('产品修改成功');
-        this.$router.push('productList');
+        if (result.code === 200) {
+          Toast('产品修改成功');
+          this.$router.push('productList');
+        } else
+          Toast('产品修改失败,错误码' + result.code);
       }
-      else
-        Toast('产品修改失败,错误码' + result.code);
-
     },
     async afterRead(file) {
       let url="/fzk/file/pic/base64StrToPic"

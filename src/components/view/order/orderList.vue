@@ -472,7 +472,9 @@ created(){
      const result1 = (await this.$http.post(url,postData,{headers: {"Content-Type": "application/json" } })).data
      if (result1.code === 200) {
        Toast('订单删除成功');
-       this.$router.push('orderList');
+       this.pageProps.pageNum=1;
+       this.list=[];
+       this.onLoad();
      } else
        Toast('订单删除失败,' + result1.msg);
     },

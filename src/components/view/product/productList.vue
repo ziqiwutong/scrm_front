@@ -228,7 +228,7 @@ export default {
       this.shareMsg.title = item.productName;
       this.shareMsg.imageUrl = imageUrl;
       this.shareMsg.pageUrl = JSON.parse(getUrl()).baseUrl
-        + 'articleDetail?articleid=' + item.id
+        + 'articleDetail?articleid=' + item.articleId
         + '&shareid=' + this.shareId
         + '&wmid=' + this.$store.state.userMessage.wmId
         + '&ifshowshareman=true'
@@ -237,21 +237,6 @@ export default {
       this.showShare = true;
     },
     async shareArticleApp(e) {
-      // // 先去后台拿用友的jsConfig，然后触发分享事件
-      // let url = JSON.parse(getUrl()).contextShare.yyConfig;
-      // const result = (await this.$http.get(url)).data.data;
-      // let yyConfig = {
-      //   appId: result.appid,
-      //   timestamp: result.timestamp,
-      //   signature: result.signature
-      // }
-      // let shareMsg = this.shareMsg;
-      // if (e.name === '朋友圈') {
-      //   shareMsg.type = '3';
-      // }
-      // await yyApi.yyRegister(yyConfig, shareMsg);
-      // this.showShare = false;
-      // 先去后台拿用友的jsConfig，然后触发分享事件
       let url = JSON.parse(getUrl()).userInfo.yyConfig;
       const result = (await this.$http.get(url)).data.data;
       let yyConfig = {
