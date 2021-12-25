@@ -42,16 +42,16 @@ export default {
       navTitle: '查询结果',
       type: '',
       list: [],
-      loading:''
+      loading: ''
     }
   },
   created() {
-    let searchValue = this.$route.params.searchMessage;
-    this.type = this.$route.params.type;
+    let searchValue = this.$route.query.searchMessage;
+    this.type = this.$route.query.type;
     this.searchByKey(searchValue, this.type);
   },
   beforeDestroy() {
-    this.$toast.clear(loading);
+    this.$toast.clear(this.loading);
   },
   methods: {
     onClickLeft() {
@@ -110,31 +110,31 @@ export default {
             query: {
               id: item.id,
               type: this.type,
-              searchMessage: this.$route.params.searchMessage
+              searchMessage: this.$route.query.searchMessage
             }
           })
           break;
         case 'other':// 跳转到非企业客户查询结果页
           if (this.type === 1) {
             let keyword = '';
-            if (item.registerNo !== ''){
+            if (item.registerNo !== '') {
               keyword = item.registerNo
-            }else if (item.creditNo !== ''){
+            } else if (item.creditNo !== '') {
               keyword = item.creditNo
             }
             this.$router.push({
               name: 'searchCompanyDetail',
-              params: {
+              query: {
                 keyword: keyword,
-                searchMessage: this.$route.params.searchMessage
+                searchMessage: this.$route.query.searchMessage
               }
             })
           } else {
             this.$router.push({
               name: 'bkIntroduce',
-              params: {
+              query: {
                 url: item.url,
-                searchMessage: this.$route.params.searchMessage
+                searchMessage: this.$route.query.searchMessage
               }
             })
           }

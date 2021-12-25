@@ -88,8 +88,8 @@ export default {
     sendSearchMessage() {
       if (this.value1 !== "" && this.value2 !== "") {
         this.$router.push({
-          name:'relationshipDetail',
-          query:{
+          name: 'relationshipDetail',
+          query: {
             searchData1: this.value1,
             searchData2: this.value2
           }
@@ -118,8 +118,6 @@ export default {
             keyword: queryString
           }
           const result = (await this.$http.get(url, {params: getData})).data.data
-          console.log(result);
-
           if (result.length > 0) {
             if (result[0].length > 0) {
               callBackArr.push({"value": result[0].customerName});
@@ -131,13 +129,13 @@ export default {
                 callBackArr.push({"value": data[i].name});
               }
             }
+            cb(callBackArr);
           } else {
             cb([{value: "暂无数据"}]);
           }
-
-          cb(callBackArr)
-
-        }, 1000)
+        }, 1000);
+      } else {
+        cb([]);
       }
     },
 
@@ -230,10 +228,14 @@ export default {
   }
 }
 
-/deep/.van-button--info {
+/deep/ .van-button--info {
   color: #fff;
-  background-color: #3333cc;
-  border: 1px solid #3333cc;
+  background-color: #1989fa;
+  border: 1px solid #1989fa;
 }
 
+
+.hidden {
+  display: none;
+}
 </style>

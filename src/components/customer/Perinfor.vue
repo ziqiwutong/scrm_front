@@ -1255,7 +1255,7 @@ export default {
       if (this.$route.query.type){
         this.$router.push({
           name: 'searchList',
-          params: {
+          query: {
             searchMessage: this.$route.query.searchMessage,
             type: this.$route.query.type
           }

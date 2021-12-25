@@ -57,7 +57,7 @@ export default {
       }
       this.$router.push({
         name: 'searchList',
-        params: {
+        query: {
           searchMessage: this.value,
           type: this.type
         }

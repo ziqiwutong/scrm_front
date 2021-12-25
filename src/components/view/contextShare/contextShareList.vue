@@ -21,31 +21,33 @@
         </van-dropdown-menu>
       </div>
     </div>
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
-    >
-      <div class="list" v-for="(item,i) in list">
-        <div class="left" @click="toArticleDetail(item.id)">
-          <van-image
-            width="50"
-            height="50"
-            :src="item.articleImage"
-          />
-        </div>
-        <div class="right" @click="toArticleDetail(item.id)">
-          <div class="right-top">
-            <p>{{ item.articleTitle }}</p>
+    <van-pull-refresh v-model="loading" @refresh="refreshList">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div class="list" id="list" v-for="(item,i) in list">
+          <div class="left" @click="toArticleDetail(item.id)">
+            <van-image
+              width="50"
+              height="50"
+              :src="item.articleImage"
+            />
           </div>
-          <div class="right-bottom">
-            <p class="readers">浏览量:{{ item.articleViewTimes }}次</p>
+          <div class="right" @click="toArticleDetail(item.id)">
+            <div class="right-top">
+              <p>{{ item.articleTitle }}</p>
+            </div>
+            <div class="right-bottom">
+              <p class="readers">浏览量:{{ item.articleViewTimes }}次</p>
+            </div>
           </div>
+          <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog(item)">立即分享</van-button>
         </div>
-        <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog(item)">立即分享</van-button>
-      </div>
-    </van-list>
+      </van-list>
+    </van-pull-refresh>
     <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
     <van-action-sheet v-if="show"
                       v-model="show"
@@ -132,6 +134,7 @@ export default {
       handler() {
         this.$store.commit('updateContextListArticleType', this.dropdownValue);
         this.pageProps.pageNum = 1;
+        this.finished = false;
         this.list = [];
         this.onLoad();
       }
@@ -151,6 +154,7 @@ export default {
       this.searchValue = '';
       this.pageProps.pageNum = 1;
       this.list = [];
+      this.finished = false;
       this.onLoad();
     },
     // 关键字搜索
@@ -180,8 +184,20 @@ export default {
       this.finished = true;
       Toast('已加载全部数据！');
     },
+    refreshList() {
+      this.searchShow = false;
+      this.searchValue = '';
+      this.pageProps.pageNum = 1;
+      this.finished = false;
+      this.list = [];
+      this.onLoad();
+    },
     // 列表加载
     async onLoad() {
+      if (this.finished === true) {
+        Toast('已加载全部数据');
+        return;
+      }
       let url = JSON.parse(getUrl()).contextShare.queryList;
       let postData = {
         pageNum: this.pageProps.pageNum++,
