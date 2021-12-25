@@ -924,9 +924,10 @@ export default {
         return newObj;
       }
       this.addList = removeEmptyField(this.addList);
-      console.log(this.addList);
+    
       url = "/api/se/customer/insert";
       let postData = this.addList;
+        console.log(postData);
       const result = (await this.$http.post(url, postData)).data;
       if (result.code == "200") {
         Toast("成功添加客户");
@@ -1065,6 +1066,7 @@ export default {
           let url = "/api/se/customer/insert";
           let postData = this.addList;
           const result = (await this.$http.post(url, postData)).data;
+          console.log(result.data)
           if (result.code == "200") {
             Toast("成功添加客户");
             console.log(result.data);

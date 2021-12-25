@@ -1085,6 +1085,7 @@ export default {
           id: id,
         },
       });
+      console.log(res.data.data)
       if (res.data.code == 200) {
         this.cusDetail = res.data.data;
         for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
