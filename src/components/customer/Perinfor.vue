@@ -1315,7 +1315,6 @@ export default {
     },
     // 更多操作-新建商机
     toBusOpprtunity() {
-      // Toast("跳转商机界面");
       this.$router.push({
         name: "addBizOpp",
         params: {
@@ -1809,7 +1808,7 @@ export default {
       let url = "/api/se/order/query";
       const res = await this.$http.get(url, {
         params: {
-          customerId: this.cusDetail.id,
+          // customerId: this.cusDetail.id,
           currentPage: this.pageProps.pageNum++,
           pageCount: this.pageProps.pageSize,
         },

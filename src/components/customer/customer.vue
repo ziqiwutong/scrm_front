@@ -491,7 +491,12 @@
         :lq="this.lq"
       />
     </van-popup>
-
+    <van-dialog
+      v-model="returnHome"
+      title="是否返回登陆界面"
+      show-cancel-button
+      @confirm="onHome"
+    ></van-dialog>
     <!-- <van-popup
       v-model="testVal"
       position="bottom"
@@ -505,7 +510,7 @@
         @onCh="testConsole"
       />
     </van-popup> -->
-    <TabBar />
+    <!-- <TabBar /> -->
   </div>
 </template>
 
@@ -528,6 +533,7 @@ export default {
   },
   data() {
     return {
+      returnHome:false,
       lq: false,
       cusDetail: {
         id: "",
@@ -1114,6 +1120,14 @@ export default {
     //   console.log(res.data.data)
     // },
     // 组件关闭后的处理函数
+    onReturnHome() {
+      this.returnHome = true
+    },
+    onHome(){
+      this.returnHome = false
+      console.log(this.returnHome)
+      this.$router.push("/home")
+    },
     onFollowCancel() {
       this.followShow = false;
     },
@@ -2314,10 +2328,9 @@ export default {
   margin: 10px 2% 5px 5%;
   opacity: 0.5;
 }
-//添加按钮
+//添加按钮z
 .nav-add-btn {
   margin: 5px 2% 5px 0%;
-  // padding: 2px;
 }
 //最近浏览-选项
 .nav-option {

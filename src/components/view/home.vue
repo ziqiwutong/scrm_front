@@ -56,10 +56,9 @@
 </template>
 
 <script>
+import { Toast } from "vant";
 import NavBar from "../component/NavBar";
 import TabBar from "../component/TabBar";
-// import {getToken} from "@/network/getToken";
-
 export default {
   name: "home",
   components: {
@@ -150,7 +149,6 @@ export default {
   padding-top: 65px;
   padding-bottom: 50px;
 }
-
 .main {
   margin: 5px 2% 5px 2%;
   padding: 2px;
