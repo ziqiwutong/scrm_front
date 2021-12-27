@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "16364326",
+      "name": "钱包",
+      "font_class": "purchase",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "2569880",
+      "name": "阅读",
+      "font_class": "readData",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "2742645",
+      "name": "客户",
+      "font_class": "customers",
+      "unicode": "e66f",
+      "unicode_decimal": 58991
+    },
+    {
+      "icon_id": "3920045",
+      "name": "记录",
+      "font_class": "articleRecord",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "20393051",
+      "name": "微信用户-32",
+      "font_class": "wx-user",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "20573315",
+      "name": "产品订单",
+      "font_class": "productRead",
+      "unicode": "e6eb",
+      "unicode_decimal": 59115
+    },
+    {
       "icon_id": "2811144",
       "name": "地址管理",
       "font_class": "dizhiguanli",

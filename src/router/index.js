@@ -46,6 +46,8 @@ import communicationList from "../components/view/commuication/communicationList
 import communicationDetail from "../components/view/commuication/communicationDetail";
 import addCommunicationLog from "../components/view/commuication/addCommunicationLog"
 import editCom from "../components/view/commuication/editCom"
+import articleList from "../components/view/dataStatistics/articleStatistics/articleList";
+import singleArticleStats from "../components/view/dataStatistics/articleStatistics/singleArticleStats";
 
 Vue.use(Router)
 
@@ -57,24 +59,9 @@ const routes = [
     component: home
   },
   {
-    path: '/searchCustomer',
-    name: 'searchCustomer',
-    component: searchCustomer
-  },
-  {
-    path: '/searchList',
-    name: 'searchList',
-    component: searchList
-  },
-  {
     path: '/contextShareList',
     name: 'contextShareList',
     component: contextShareList
-  },
-  {
-    path:'/bkIntroduce',
-    name:'bkIntroduce',
-    component: bkIntroduce
   },
   {
     path: '/orderList',
@@ -279,6 +266,16 @@ const routes = [
     path: '/userInfo',
     name: 'userInfo',
     component: userInfo
+  },
+  {
+    path: '/articleList',
+    name: 'articleList',
+    component: articleList
+  },
+  {
+    path:'/singleArticleStats',
+    name: 'singleArticleStats',
+    component: singleArticleStats
   }
 ];
 

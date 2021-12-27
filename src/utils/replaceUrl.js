@@ -21,11 +21,11 @@ export function getUrl() {
 
   // 开发环境
   let developmentT = {
-    baseUrl:'http://scrm.natapp1.cc/',
-    userInfo:{
-      sendAppCode:'/api/cms/iuap/userInfo',
-      yyConfig:'/api/cms/iuap/jsApi',
-      saveAppendInfo:'/api/cms/user/saveAppendInfo'
+    baseUrl: 'http://scrm.natapp1.cc/',
+    userInfo: {
+      sendAppCode: '/api/cms/iuap/userInfo',
+      yyConfig: '/api/cms/iuap/jsApi',
+      saveAppendInfo: '/api/cms/user/saveAppendInfo'
     },
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',
@@ -36,30 +36,30 @@ export function getUrl() {
       readRecordList: '/fzk/mk/article/shareRecord',
       queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
-      wxConfig:'/fzk/mk/wx/jsApi',
-      editArticle:'/fzk/mk/article/update',
-      getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
-      saveWxUserMsg:'/fzk/mk/article/addReadRecord',
-      queryProductList:'/api/queryProductList',
-      getWmProduct:'/wm/se/weimob/queryProduct',
-      getDistributeUrl:'/wm/se/weimob/distributeUrl'
+      wxConfig: '/fzk/mk/wx/jsApi',
+      editArticle: '/fzk/mk/article/update',
+      getWxUserMsg: '/fzk/mk/wx/getWxUserInfo',
+      saveWxUserMsg: '/fzk/mk/article/addReadRecord',
+      queryProductList: '/api/queryProductList',
+      getWmProduct: '/wm/se/weimob/queryProduct',
+      getDistributeUrl: '/wm/se/weimob/distributeUrl'
     },
     searchCustomer: {
       personal: '/api/se/customerRest/personal',
       company: '/api/se/customerRest/company',
-      companyDetail:'/api/se/customerRest/companyDetail'
+      companyDetail: '/api/se/customerRest/companyDetail'
     }
   };
 
   // 开发环境
   let development = {
-    baseUrl:'http://scrm.lzljjt.cn:33333/',
-    websocketUrl:'scrm.lzljjt.cn:33333/mk/article/ws',
-    userInfo:{
-      sendAppCode:'/api/cms/iuap/userInfo',
-      yyConfig:'/api/cms/iuap/jsApi',
-      saveAppendInfo:'/api/cms/user/saveAppendInfo',
-      getWmId:'/api/cms/user/queryById'
+    baseUrl: 'http://scrm.lzljjt.cn:33333/',
+    websocketUrl: 'scrm.lzljjt.cn:33333/mk/article/ws',
+    userInfo: {
+      sendAppCode: '/api/cms/iuap/userInfo',
+      yyConfig: '/api/cms/iuap/jsApi',
+      saveAppendInfo: '/api/cms/user/saveAppendInfo',
+      getWmId: '/api/cms/user/queryById'
     },
     contextShare: {
       queryList: '/fzk/mk/article/queryPage',
@@ -70,29 +70,34 @@ export function getUrl() {
       readRecordList: '/fzk/mk/article/shareRecord',
       queryShareMan: '/fzk/mk/article/sharePerson',
       batchAddCustomer: '/api/batchAddReader',
-      wxConfig:'/fzk/mk/wx/jsApi',
-      editArticle:'/fzk/mk/article/update',
-      getWxUserMsg:'/fzk/mk/wx/getWxUserInfo',
-      saveWxUserMsg:'/fzk/mk/article/addReadRecord',
-      queryProductList:'/api/queryProductList',
-      getWmProduct:'/wm/se/weimob/queryProduct',
-      getDistributeUrl:'/wm/se/weimob/distributeUrl'
+      wxConfig: '/fzk/mk/wx/jsApi',
+      editArticle: '/fzk/mk/article/update',
+      getWxUserMsg: '/fzk/mk/wx/getWxUserInfo',
+      saveWxUserMsg: '/fzk/mk/article/addReadRecord',
+      queryProductList: '/api/queryProductList',
+      getWmProduct: '/wm/se/weimob/queryProduct',
+      getDistributeUrl: '/wm/se/weimob/distributeUrl'
     },
     searchCustomer: {
       personal: '/api/se/customerRest/personal',
       company: '/api/se/customerRest/company',
-      companyDetail:'/api/se/customerRest/companyDetail'
+      companyDetail: '/api/se/customerRest/companyDetail'
     },
     bizOppManager: {
       queryBo: '/api/se/businessOpportunity/queryBizOpportunity',
       queryBoByKey: '/api/se/businessOpportunity/queryBizOppByKey',
-      editBo:'/api/se/businessOpportunity/editBizOpp',
+      editBo: '/api/se/businessOpportunity/editBizOpp',
       deleteBo: '/api/se/businessOpportunity/deleteBizOpp',
       addBo: '/api/se/businessOpportunity/addBizOpp',
       queryBoDetail: '/api/se/businessOpportunity/queryBizOpportunityDetail',
     },
     searchRelationship: {
       queryRelation: '/api/se/customerRest/relation',
+    },
+    statistics: {
+      articleList: '/api/mk/statistics/articleRead',
+      articleShareList: '/api/mk/statistics/artSharePerson',
+      articleRead: '/api/mk/statistics/articleRead',
     }
   };
 
