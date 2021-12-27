@@ -14,28 +14,28 @@
       <van-form @submit="onSubmit" ref="submit1">
 
 
-<!--        <van-field-->
-<!--          v-model="originPrice"-->
-<!--          name="订单原价"-->
-<!--          label="订单原价"-->
-<!--          placeholder="订单原价"-->
-<!--          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"-->
-<!--        />-->
-<!--        <van-field-->
-<!--          v-model="changePrice"-->
-<!--          name="变动价格"-->
-<!--          label="变动价格"-->
-<!--          placeholder="变动价格"-->
-<!--          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"-->
-<!--        />-->
+        <!--        <van-field-->
+        <!--          v-model="originPrice"-->
+        <!--          name="订单原价"-->
+        <!--          label="订单原价"-->
+        <!--          placeholder="订单原价"-->
+        <!--          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"-->
+        <!--        />-->
+        <!--        <van-field-->
+        <!--          v-model="changePrice"-->
+        <!--          name="变动价格"-->
+        <!--          label="变动价格"-->
+        <!--          placeholder="变动价格"-->
+        <!--          :rules="[{ required: false, message: '请填写订单变动价格' },{ pattern, message: '请输入正确内容' }]"-->
+        <!--        />-->
 
-<!--        <van-field-->
-<!--          v-model="lastPrice"-->
-<!--          name="最终价格"-->
-<!--          label="最终价格"-->
-<!--          placeholder="最终价格"-->
-<!--          :rules="[{ required: false, message: '请填写订单最终价格' },{ pattern, message: '请输入正确内容' }]"-->
-<!--        />-->
+        <!--        <van-field-->
+        <!--          v-model="lastPrice"-->
+        <!--          name="最终价格"-->
+        <!--          label="最终价格"-->
+        <!--          placeholder="最终价格"-->
+        <!--          :rules="[{ required: false, message: '请填写订单最终价格' },{ pattern, message: '请输入正确内容' }]"-->
+        <!--        />-->
 
         <van-field
           v-model="receivedAmount"
@@ -156,7 +156,7 @@
         @cancel="showPicker = false"
       />
     </van-popup>
-<!--以下为产品列表弹窗-->
+    <!--以下为产品列表弹窗-->
     <van-popup
       v-model="productShow"
       position="bottom"
@@ -172,9 +172,9 @@
         @cancel="onProductSearchCancel"
       />
       <van-cell  class="van-cell"
-        v-for="item in productList"
-        :key="item.id"
-        @click="productConfirm(item)"
+                 v-for="item in productList"
+                 :key="item.id"
+                 @click="productConfirm(item)"
       >
         <!-- 跟进人-跟进人信息 -->
         <van-row class="van-row2">
@@ -193,12 +193,12 @@
     </van-popup>
 
     <van-dialog  @confirm="diaConfirm" v-model="showchoose" :title=this.productToPush.productName show-cancel-button>
-     <div style="width: 100%;text-align: center;margin-top: 5px">原价￥{{this.productToPush.originPrice}}</div>
+      <div style="width: 100%;text-align: center;margin-top: 5px">原价￥{{this.productToPush.originPrice}}</div>
       <div style=" display: flex; margin-bottom: 5px; margin-top: 10px">
-       <span style=" margin-left: 40px; margin-right: 40px;  width:30%;">请选择数量</span>
-      <van-stepper   v-model="value1" integer />
+        <span style=" margin-left: 40px; margin-right: 40px;  width:30%;">请选择数量</span>
+        <van-stepper   v-model="value1" integer />
 
-     </div>
+      </div>
       <div style="margin-left:25px">
         <van-field
           v-model="productChangePrice"
@@ -242,17 +242,17 @@ export default {
         // {id:5,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'', productName: "必炫·浓香型白酒"},
         // {id:6,productImage: 'https://image-c.weimobwmc.com/saas-wxbiz/35b9afaac0174df0af99e62f8da64f1e.png', productAmount: 1, originPrice: 99,  productChangePrice:'',productName: "必炫·浓香型白酒"}
       ],
-       productToPush: {
-         id: '',
-         originPrice: '',
-         productImage: '',
-         productName: '',
-         productAmount: '',
-         changePrice:'',
-         lastPrice:'',
-         // receivedAmount:'',
-         // orderNotes:'',
-       },
+      productToPush: {
+        id: '',
+        originPrice: '',
+        productImage: '',
+        productName: '',
+        productAmount: '',
+        changePrice:'',
+        lastPrice:'',
+        // receivedAmount:'',
+        // orderNotes:'',
+      },
       // showform:false,
       userShow:false,
       testVal:false,
@@ -296,7 +296,7 @@ export default {
       handler: function (to, from) {
         this.customerInfo.id = to.query.id;
         this.customerInfo.customerName = to.query.customerName;
-         this.orderBuyer=to.query.customerName;
+        this.orderBuyer=to.query.customerName;
       },
     },
   },
@@ -363,74 +363,74 @@ export default {
     },
 
 
-      folCancel()
-      {
-        this.productShow = false;
-      },
-      chooseBuyer()
-      {
-        this.userShow = true
-      },
+    folCancel()
+    {
+      this.productShow = false;
+    },
+    chooseBuyer()
+    {
+      this.userShow = true
+    },
 
-      async onSubmit()
-      {
-         if(this.submitCount++ ===0) {
-           console.log(1);
-           console.log(this.orderBuyer);
-           let url = "/api/se/order/insert";
-           if (this.orderType === '撤销')
-             this.orderStatus = -1;
-           if (this.orderType === '待付款')
-             this.orderStatus = 0;
-           if (this.orderType === '待收货')
-             this.orderStatus = 1;
-           if (this.orderType === '交易成功')
-             this.orderStatus = 2;
-           if (this.orderType === '退款成功')
-             this.orderStatus = 3;
-           let changePrice = 0;
-           let lastPrice = 0;
-           let originPrice = 0;
-           for (let i = 0; i < this.list.length; i++) {
-             originPrice += this.list[i].originPrice * this.list[i].productAmount;
-             changePrice += this.list[i].changePrice * this.list[i].productAmount;
-             lastPrice += this.list[i].lastPrice * this.list[i].productAmount;
-           }
-           let postData = {
-             customerId: this.customerInfo.id,
-             customerName: this.orderBuyer,
-             orderStaff: this.orderStaff,
-             originPrice: originPrice,
-             changePrice: changePrice,
-             lastPrice: lastPrice,
-             saleChannel: this.saleChannel,
-             receivedAmount: this.receivedAmount,
-             orderSource: this.orderSource,
-             orderStatus: this.orderStatus,
-             productList: this.list
-           }
-           const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
-
-           if (result.code === 200) {
-             Toast('订单创建成功');
-             this.$router.push('orderList');
-           } else
-             Toast('订单创建失败,错误码' + result.code);
-         }
-      },
-      async afterRead(file)
-      {
-        console.log(file);
-        let url = "/fzk/file/pic/base64StrToPic"
-        let postData = {
-          picBase64Str: file.content,
-          picType: 'productImage',
-          isCompress:'true'
+    async onSubmit()
+    {
+      if(this.submitCount++ ===0) {
+        console.log(1);
+        console.log(this.orderBuyer);
+        let url = "/api/se/order/insert";
+        if (this.orderType === '撤销')
+          this.orderStatus = -1;
+        if (this.orderType === '待付款')
+          this.orderStatus = 0;
+        if (this.orderType === '待收货')
+          this.orderStatus = 1;
+        if (this.orderType === '交易成功')
+          this.orderStatus = 2;
+        if (this.orderType === '退款成功')
+          this.orderStatus = 3;
+        let changePrice = 0;
+        let lastPrice = 0;
+        let originPrice = 0;
+        for (let i = 0; i < this.list.length; i++) {
+          originPrice += this.list[i].originPrice * this.list[i].productAmount;
+          changePrice += this.list[i].changePrice * this.list[i].productAmount;
+          lastPrice += this.list[i].lastPrice * this.list[i].productAmount;
         }
-        const result = (await this.$http.post(url, qs.stringify(postData))).data.data
-        this.productPic1 = result;
-      },
-      onClickLeft(){
+        let postData = {
+          customerId: this.customerInfo.id,
+          customerName: this.orderBuyer,
+          orderStaff: this.orderStaff,
+          originPrice: originPrice,
+          changePrice: changePrice,
+          lastPrice: lastPrice,
+          saleChannel: this.saleChannel,
+          receivedAmount: this.receivedAmount,
+          orderSource: this.orderSource,
+          orderStatus: this.orderStatus,
+          productList: this.list
+        }
+        const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
+
+        if (result.code === 200) {
+          Toast('订单创建成功');
+          this.$router.push('orderList');
+        } else
+          Toast('订单创建失败,错误码' + result.code);
+      }
+    },
+    async afterRead(file)
+    {
+      console.log(file);
+      let url = "/fzk/file/pic/base64StrToPic"
+      let postData = {
+        picBase64Str: file.content,
+        picType: 'productImage',
+        isCompress:'true'
+      }
+      const result = (await this.$http.post(url, qs.stringify(postData))).data.data
+      this.productPic1 = result;
+    },
+    onClickLeft(){
       if(this.$route.query.type == 2) {
         this.$router.replace({
           path: '/perinfor',
@@ -438,11 +438,11 @@ export default {
             id: this.customerInfo.id
           }
         });
-      this.$router.go(-1);
+        this.$router.go(-1);
       }
-       else
+      else
         this.$router.push('orderList');
-      },
+    },
     beforeClose({position, instance}) {
       switch (position) {
         case 'cell':
@@ -456,11 +456,11 @@ export default {
             confirmButtonColor:'#5252cc',
             message: '确定删除吗？'
           }).then(() => {
-         for(let i=0;i<this.list.length;i++){
-           if(instance.$attrs.title.id === this.list[i].id)
-             this.list.splice(i, 1);
-           Toast('产品删除成功');
-         }
+            for(let i=0;i<this.list.length;i++){
+              if(instance.$attrs.title.id === this.list[i].id)
+                this.list.splice(i, 1);
+              Toast('产品删除成功');
+            }
             console.log(this.list)
           });
           break;
@@ -468,7 +468,7 @@ export default {
     },
     addProduct(){
       this.getProductList();
-    this.productShow=true;
+      this.productShow=true;
     },
 //以下为列表
     // 产品搜素
@@ -484,25 +484,25 @@ export default {
       this.productPageProps.pageNum = 1;
       this.getProductList();
     },
-  async  getProductList(){
-    let url = "/api/se/product/query";
-    let postData = {
-      currentPage: this.productPageProps.pageNum++,
-      pageCount: this.productPageProps.pageSize,
-      like_productName:this.productVal
-    }
-    const result = (await this.$http.get(url,{params:postData})).data.data;
-    if (result.length == 0) {
-      // 已加载全部数据
-      this.finished = true;
-      Toast('已加载全部数据！');
-    }
-    for (let i = 0; i < result.length; i++) {
-      this.productList.push(result[i]);
-    }
-    console.log(this.list);
-    // 加载状态结束
-    this.loading = false;
+    async  getProductList(){
+      let url = "/api/se/product/query";
+      let postData = {
+        currentPage: this.productPageProps.pageNum++,
+        pageCount: this.productPageProps.pageSize,
+        like_productName:this.productVal
+      }
+      const result = (await this.$http.get(url,{params:postData})).data.data;
+      if (result.length == 0) {
+        // 已加载全部数据
+        this.finished = true;
+        Toast('已加载全部数据！');
+      }
+      for (let i = 0; i < result.length; i++) {
+        this.productList.push(result[i]);
+      }
+      console.log(this.list);
+      // 加载状态结束
+      this.loading = false;
     },
     productConfirm(item){
       this.value1=1;

@@ -524,7 +524,8 @@ created(){
   margin: 8px;
 }
 .tab-list1{
-  height: 100%;
+  height: 80vh;
+  overflow-y: auto;
   //background-color: rgba(215, 215, 215, 0.129411764705882);
   background-color: #F3F4F8
 }

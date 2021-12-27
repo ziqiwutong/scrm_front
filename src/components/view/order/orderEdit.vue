@@ -300,9 +300,9 @@ export default {
       },
     },
   },
- created(){
+  created(){
     this.test();
- },
+  },
   methods: {
     async test(){
       this.productID=this.$route.query.productID;
@@ -315,14 +315,14 @@ export default {
       this.customerInfo.id=result.customerId;
       this.orderBuyer=result.customerName;
       this.orderStaff=result.orderStaff;
-        // this.originPrice=result.originPrice,
-        //  this.changePrice=result.changePrice,
-        this.saleChannel=result.saleChannel;
-        this.receivedAmount=result.receivedAmount;
-       this.orderSource= result.orderSource;
-        this.orderStatus=result.orderStatus;
-        this.productId1=result.id;
-        this.list= result.productList;
+      // this.originPrice=result.originPrice,
+      //  this.changePrice=result.changePrice,
+      this.saleChannel=result.saleChannel;
+      this.receivedAmount=result.receivedAmount;
+      this.orderSource= result.orderSource;
+      this.orderStatus=result.orderStatus;
+      this.productId1=result.id;
+      this.list= result.productList;
       if(this.orderStatus === -1)
         this.orderType = '撤销'
       if(this.orderStatus === 0)
@@ -469,12 +469,12 @@ export default {
     },
     onClickLeft(){
 
-        this.$router.push({
-          path: '/orderDetail',
-          query: {
-            orderID: this.$route.query.orderID
-          }
-        });
+      this.$router.push({
+        path: '/orderDetail',
+        query: {
+          orderID: this.$route.query.orderID
+        }
+      });
     },
     beforeClose({position, instance}) {
       switch (position) {
