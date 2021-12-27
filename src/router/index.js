@@ -37,7 +37,6 @@ import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
 import productEdit from "../components/view/product/productEdit";
-import procustomer from "../components/customer/procustomer"
 import searchList from "../components/view/searchCustomer/searchList";
 import searchCustomer from "../components/view/searchCustomer/searchCustomer";
 import bkIntroduce from "../components/view/searchCustomer/bkIntroduce";
@@ -46,6 +45,8 @@ import communicationList from "../components/view/commuication/communicationList
 import communicationDetail from "../components/view/commuication/communicationDetail";
 import addCommunicationLog from "../components/view/commuication/addCommunicationLog"
 import editCom from "../components/view/commuication/editCom"
+import procustomer from "../components/customer/procustomer";
+import UserList from "../components/component/UserList"
 
 Vue.use(Router)
 
@@ -279,7 +280,17 @@ const routes = [
     path: '/userInfo',
     name: 'userInfo',
     component: userInfo
-  }
+  },
+  // {
+  //   path: '/sweetTest',
+  //   name:'sweetTest',
+  //   component: sweetTest
+  // }
+  {
+    path:"/userList",
+    name:"userList",
+    component:UserList
+  },
 ];
 
 const router = new Router({

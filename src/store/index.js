@@ -54,7 +54,13 @@ const state = {
   },
   hasOAuth: 'false',
   articleType: 1,
-  distributeUrl:''
+  distributeUrl:'',
+  cusUser:{
+    id:"",
+    name:"",
+  },
+
+
 }
 
 // 2. 创建对象

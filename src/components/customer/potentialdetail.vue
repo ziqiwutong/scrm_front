@@ -98,12 +98,10 @@
       </van-row
       >
       <van-row
-      >
-        <van-col class="title">企业地址
-        </van-col
-        >
-        <van-col class="detail1">{{ this.cusDetail.address }}</van-col>
-      </van-row
+        ><van-col class="title">企业地址</van-col
+        ><van-col class="detail1">{{
+          this.cusDetail.address
+        }}</van-col></van-row
       >
       <van-row
       >
@@ -985,7 +983,7 @@ export default {
       // 新建客户-表单
       addList: {
         id: "",
-        customerType: "",
+        customerType: "个人客户",
         belongCompany: "",
         potential: "",
         customerName: "",
@@ -1032,7 +1030,7 @@ export default {
       // 新建客户表单-刷新模板
       addListTemp: {
         id: "",
-        customerType: "",
+        customerType: "个人客户",
         potential: "",
         belongCompany: "",
         customerName: "",
@@ -1188,19 +1186,19 @@ export default {
   },
   methods: {
     changeCusForm(res) {
-      console.log(res)
-      this.cusDetail = []
-      this.cusDetail.operatingStatus = res.engageStatus
-      this.cusDetail.establishDate = res.startDate
-      this.cusDetail.approvalDate = res.checkDate
-      this.cusDetail.legalPerson = res.legalPerson
-      this.cusDetail.customerName = res.companyName
-      this.cusDetail.socialCreditCode = res.creditNo
-      this.cusDetail.companyType = res.companyKind
-      this.cusDetail.address = res.address
-      this.cusDetail.registrationAuthority = res.belongOrg
-      this.cusDetail.organizationCode = res.orgNo
-      this.cusDetail.industryCode = res.registerNo
+      console.log(res);
+      this.cusDetail = this.addList;
+      this.cusDetail.operatingStatus = res.engageStatus;
+      this.cusDetail.establishDate = res.startDate;
+      this.cusDetail.approvalDate = res.checkDate;
+      this.cusDetail.legalPerson = res.legalPerson;
+      this.cusDetail.customerName = res.companyName;
+      this.cusDetail.socialCreditCode = res.creditNo;
+      this.cusDetail.companyType = res.companyKind;
+      this.cusDetail.address = res.address;
+      this.cusDetail.registrationAuthority = res.belongOrg;
+      this.cusDetail.organizationCode = res.orgNo;
+      this.cusDetail.industryCode = res.registerNo;
     },
     // 根据id查询客户信息
     async getCusDetailByID(id) {
@@ -1211,8 +1209,7 @@ export default {
         },
       });
       if (res.data.code == 200) {
-        this.changeCusForm(res.data.data)
-
+        this.changeCusForm(res.data.data);
       } else {
         Toast("加载失败");
       }
@@ -1350,11 +1347,12 @@ export default {
             this.cusDetail.customerIcon = res.data.data;
           });
       }
-
-      if (this.cusDetail.customerType == "个人客户") {
-        this.cusDetail.customerType = 0;
-      } else if (this.cusDetail.customerType == "公司客户") {
-        this.cusDetail.customerType = 1;
+      this.cusDetail.establishDate = "";
+      this.cusDetail.approvalDate = "";
+      if (this.cusDetail.customerType == "0") {
+        this.cusDetail.customerType = 0 * 1;
+      } else if (this.cusDetail.customerType == "1") {
+        this.cusDetail.customerType = 1 * 1;
       }
       this.cusDetail.potential = 0;
       if (
@@ -1416,10 +1414,11 @@ export default {
         }
       }
 
-      this.cusDetail = removeEmptyField(this.cusDetail);
+      this.addList = removeEmptyField(this.cusDetail);
+      this.getCurrentTime();
       // 传输
-      url = "/api/se/customer/update";
-      let postData = this.cusDetail;
+      url = "/api/se/customer/insert";
+      let postData = this.addList;
       console.log(postData);
       const result = (await this.$http.post(url, postData)).data;
       // console.log(result)
@@ -1444,10 +1443,12 @@ export default {
           let picture;
           this.dealImage(str, 1000, this.userImg1);
         } else {
-          if (this.cusDetail.customerType == "个人客户") {
-            this.cusDetail.customerType = 0;
-          } else if (this.cusDetail.customerType == "公司客户") {
-            this.cusDetail.customerType = 1;
+          this.cusDetail.establishDate = "";
+          this.cusDetail.approvalDate = "";
+          if (this.cusDetail.customerType == "0") {
+            this.cusDetail.customerType = 0 * 1;
+          } else if (this.cusDetail.customerType == "1") {
+            this.cusDetail.customerType = 1 * 1;
           }
           if (
             this.cusDetail.customerStatus == "未分配" ||
@@ -1509,11 +1510,12 @@ export default {
             }
             return newObj;
           }
-
-          this.cusDetail = removeEmptyField(this.cusDetail);
+          console.log(this.cusDetail);
+          this.addList = removeEmptyField(this.cusDetail);
+          this.getCurrentTime();
           // 传输
-          let url = "/api/se/customer/update";
-          let postData = this.cusDetail;
+          let url = "/api/se/customer/insert";
+          let postData = this.addList;
           console.log(postData);
           const result = (await this.$http.post(url, postData)).data;
           // console.log(result)
@@ -1981,6 +1983,7 @@ export default {
       if (key == "实缴资本") this.cusDetail.paidCapital = val;
       if (key == "客户类型") {
         this.cusDetail.customerType = val;
+        console.log(this.cusDetail.customerType);
       }
     },
     // 新建客户-头像-大小限制
@@ -2134,6 +2137,8 @@ export default {
         this.cusDetail.customerType = 1;
       }
       this.cusDetail.potential = 1;
+      console.log(2);
+      console.log(this.cusDetail.customerType);
       if (
         this.cusDetail.customerStatus == "未分配" ||
         this.cusDetail.customerStatus == "潜在客户"
@@ -2225,6 +2230,8 @@ export default {
             this.cusDetail.customerType = 1;
           }
           this.cusDetail.potential = 1;
+          console.log(1);
+          console.log(this.cusDetail.customerType);
           if (
             this.cusDetail.customerStatus == "未分配" ||
             this.cusDetail.customerStatus == "潜在客户"
@@ -2976,7 +2983,6 @@ export default {
   border-color: #f5f5f5;
   border-style: solid;
   border-width: 1px;
-
 }
 
 .detail1 {

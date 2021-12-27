@@ -1085,6 +1085,7 @@ export default {
           id: id,
         },
       });
+      console.log(res.data.data)
       if (res.data.code == 200) {
         this.cusDetail = res.data.data;
         for (let i = 0; i < this.cusDetail.customerLabels.length; i++)
@@ -1320,7 +1321,6 @@ export default {
     },
     // 更多操作-新建商机
     toBusOpprtunity() {
-      // Toast("跳转商机界面");
       this.$router.push({
         name: "addBizOpp",
         params: {

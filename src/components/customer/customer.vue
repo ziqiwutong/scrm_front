@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <div>123{{this.$store.state.cusUser.name}}</div> -->
     <div :class="this.sortShow ? 'main-fix' : ''">
       <!-- <van-button @click="test">测试1</van-button> -->
       <!-- <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
@@ -493,7 +494,12 @@
         :lq="this.lq"
       />
     </van-popup>
-
+    <van-dialog
+      v-model="returnHome"
+      title="是否返回登陆界面"
+      show-cancel-button
+      @confirm="onHome"
+    ></van-dialog>
     <!-- <van-popup
       v-model="testVal"
       position="bottom"
@@ -516,7 +522,6 @@ import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
 import TabBar from "../component/TabBar";
-// import AbbList from "../component/AbbList";
 import AddForm from "../component/AddForm";
 import AbbCusList from "../component/AbbCusList.vue";
 import AbbList from "../component/AbbList.vue";
@@ -530,6 +535,7 @@ export default {
   },
   data() {
     return {
+      returnHome:false,
       lq: false,
       cusDetail: {
         id: "",
@@ -1116,6 +1122,14 @@ export default {
     //   console.log(res.data.data)
     // },
     // 组件关闭后的处理函数
+    onReturnHome() {
+      this.returnHome = true
+    },
+    onHome(){
+      this.returnHome = false
+      console.log(this.returnHome)
+      this.$router.push("/home")
+    },
     onFollowCancel() {
       this.followShow = false;
     },
@@ -1426,6 +1440,7 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
+      // this.$router.push("/userList")
       this.userType = 1;
     },
     // 筛选-商机列表-弹窗
@@ -2317,10 +2332,9 @@ export default {
   margin: 10px 2% 5px 5%;
   opacity: 0.5;
 }
-//添加按钮
+//添加按钮z
 .nav-add-btn {
   margin: 5px 2% 5px 0%;
-  // padding: 2px;
 }
 //最近浏览-选项
 .nav-option {
