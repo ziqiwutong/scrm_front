@@ -1,17 +1,14 @@
 <template>
   <div>
-    <div class="communicationdetail">
+    <div class="container">
       <div class="background">
-        <van-button icon="arrow-left" size="40" class="renav" @click="onClickLeft">
-        </van-button>
-        <div class="title">沟通管理</div>
-        <div class="backgroundImg">
+        <HeaderNavBar @returnClick="onClickLeft" title="沟通管理" class="NavBar"/>
           <van-image
-            width="375.2"
+            width="414.4"
             height="200"
             :src="require('./background.png')"
+            class="backgroundImg"
           />
-        </div>
         <div class="name">{{ cuslist.customerName }}</div>
         <div class="company">{{ cuslist.belongCompany }}</div>
         <van-image
@@ -29,7 +26,7 @@
       <div class="telephone">
         <van-row>
           <van-col span="3.5" offset="1">电话：</van-col>
-          <van-col span="8" class="phoneNumber">{{ cuslist.telephone }}</van-col>
+          <van-col span="8" class="phoneNumber">{{ cuslist.telephone=== null ?'—' : cuslist.telephone }}</van-col>
         </van-row>
       </div>
       <div class="count_title">
@@ -54,92 +51,102 @@
       <div class="record_title">
         <p>沟通记录:</p>
       </div>
-      <div class="record_detail">
+      <div class="record_detail" >
         <van-tabs title-active-color="#121922" @click="onClick" color="#4876F1" v-model="active" animated>
-          <van-tab title="全部">
-            <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
-                <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
-                </template>
-                <div class="edit" @click="toEditCom(item.id)">
-                  <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
-                </div>
-              </van-cell>
-            </van-cell-group>
+          <van-tab title="全部" >
+           <div class="communicationRecord">
+             <van-cell-group >
+               <van-cell :title="item.communicationTime" v-for="(item,i) in list" :key="i">
+                 <template #right-icon>
+                   <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
+                 </template>
+                 <div class="edit" @click="toEditCom(item.id)">
+                   <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
+                 </div>
+               </van-cell>
+             </van-cell-group>
+           </div>
           </van-tab>
           <van-tab title="线下">
-            <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
-                <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
-                </template>
-                <div class="edit" @click="toEditCom(item.id)">
-                  <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
-                </div>
-              </van-cell>
-            </van-cell-group>
+            <div class="communicationRecord">
+              <van-cell-group >
+                <van-cell :title="item.communicationTime" v-for="(item,i) in list" :key="i">
+                  <template #right-icon>
+                    <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
+                  </template>
+                  <div class="edit" @click="toEditCom(item.id)">
+                    <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
+                  </div>
+                </van-cell>
+              </van-cell-group>
+            </div>
           </van-tab>
           <van-tab title="电话">
-            <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
-                <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
-                </template>
-                <div class="edit" @click="toEditCom(item.id)">
-                  <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
-                </div>
-              </van-cell>
-            </van-cell-group>
+            <div class="communicationRecord">
+              <van-cell-group >
+                <van-cell :title="item.communicationTime" v-for="(item,i) in list" :key="i">
+                  <template #right-icon>
+                    <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
+                  </template>
+                  <div class="edit" @click="toEditCom(item.id)">
+                    <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
+                  </div>
+                </van-cell>
+              </van-cell-group>
+            </div>
           </van-tab>
           <van-tab title="短信">
-            <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
-                <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
-                </template>
-                <div class="edit" @click="toEditCom(item.id)">
-                  <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
-                </div>
-              </van-cell>
-            </van-cell-group>
+            <div class="communicationRecord">
+              <van-cell-group >
+                <van-cell :title="item.communicationTime" v-for="(item,i) in list" :key="i">
+                  <template #right-icon>
+                    <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
+                  </template>
+                  <div class="edit" @click="toEditCom(item.id)">
+                    <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
+                  </div>
+                </van-cell>
+              </van-cell-group>
+            </div>
           </van-tab>
           <van-tab title="微信">
-            <van-cell-group>
-              <van-cell :title="item.communicationTime" v-for="(item,i) in list.slice(1)" :key="i">
-                <template #right-icon>
-                  <van-icon class-prefix="icon-third" :name="item.ComType" color="#3490f4"/>
-                </template>
-                <div class="edit" @click="toEditCom(item.id)">
-                  <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
-                </div>
-              </van-cell>
-            </van-cell-group>
+            <div class="communicationRecord">
+              <van-cell-group >
+                <van-cell :title="item.communicationTime" v-for="(item,i) in list" :key="i">
+                  <template #right-icon>
+                    <van-icon class-prefix="icon-third" :name="iconArray[item.comType]" color="#3490f4"/>
+                  </template>
+                  <div class="edit" @click="toEditCom(item.id)">
+                    <van-button plain type="info" size="mini" class="editBtn1">编辑</van-button>
+                  </div>
+                </van-cell>
+              </van-cell-group>
+            </div>
           </van-tab>
         </van-tabs>
-      </div>
-      <!-- 标签栏 -->
-      <div class="nav-margin">
-        <van-tabbar active-color="#7d7e80">
-          <van-tabbar-item :icon="callImg" @click="onCallPhone">打电话</van-tabbar-item>
-          <van-tabbar-item
-            :icon="wchatImg"
-            @click="sendWx"
-            v-clipboard:copy="cusDetail.telephone"
-            v-clipboard:success="copyCode"
-            v-clipboard:error="copyCodeError"
-          >发微信
-          </van-tabbar-item
-          >
-          <van-tabbar-item :icon="msgImg" @click="toShrtMsg"
-          >发短信
-          </van-tabbar-item
-          >
-          <van-tabbar-item :icon="contImg" @click="toMore"
-          >更多操作
-          </van-tabbar-item
-          >
-        </van-tabbar>
+        <!-- 标签栏 -->
+        <div class="nav-margin">
+          <van-tabbar active-color="#7d7e80">
+            <van-tabbar-item :icon="callImg" @click="onCallPhone">打电话</van-tabbar-item>
+            <van-tabbar-item
+              :icon="wchatImg"
+              @click="sendWx"
+              v-clipboard:copy="cusDetail.telephone"
+              v-clipboard:success="copyCode"
+              v-clipboard:error="copyCodeError"
+            >发微信
+            </van-tabbar-item
+            >
+            <van-tabbar-item :icon="msgImg" @click="toShrtMsg"
+            >发短信
+            </van-tabbar-item
+            >
+            <van-tabbar-item :icon="contImg" @click="toMore"
+            >更多操作
+            </van-tabbar-item
+            >
+          </van-tabbar>
+        </div>
       </div>
       <!-- 发微信 -->
       <van-popup v-model="wxShow" position="bottom" :style="{ height: '40%' }">
@@ -197,12 +204,14 @@ import NavBar from "../../component/NavBar";
 import TabBar from "../../component/TabBar";
 import qs from 'qs'
 import {Toast} from "vant";
+import HeaderNavBar from "../../component/HeaderNavBar";
 // axios参数包
 export default {
   name: "communicationDetail",
   components: {
     NavBar,
-    TabBar
+    TabBar,
+    HeaderNavBar
   },
   data() {
     return {
@@ -294,72 +303,73 @@ export default {
         customerId:this.cuslist.id
       }
       const res = (await this.$http.get(url,{params:postData})).data.data;
-      if(res[0]==null)
+      console.log("res:");
+      console.log(res);
+      let b =res[1];
+      if((b.callTimes||b.visitTimes||b.msgTimes||b.wxTimes)==0)
       {
         this.array.visitTimes=0;
         this.array.callTimes=0;
         this.array.msgTimes=0;
         this.array.wxTimes=0;
       }
-      else this.array = res[0];
+      else this.array = res[1];
       for (let i = 0; i < res.length; i++) {
         let a =res[i];
-        if(a.relationType=='线下沟通'){
-          a.comType=0;
-        }else if(a.relationType=='打电话'){
-          a.comType=1;
-        }else if(a.relationType=='发短信'){
-          a.comType=2;
-        }else if(a.relationType=='发微信'){
-          a.comType=3;
+        if(a.relationType=='线下沟通'||a.relationType=='打电话'||a.relationType=='发短信'||a.relationType=='发微信')
+        {
+          if(a.relationType=='线下沟通'){
+            a.comType=0;
+          }else if(a.relationType=='打电话'){
+            a.comType=1;
+          }else if(a.relationType=='发短信'){
+            a.comType=2;
+          }else if(a.relationType=='发微信'){
+            a.comType=3;
+          }
+          if(a.communicationTime==null)
+            a.communicationTime=a.createTime;
+          this.list.push(res[i]);
         }
-        this.list.push(res[i]);
       }
     },
     async onLoad() {
       let url = "/api/se/communication/queryCustomerRelation";
-      console.log('h:' + this.cuslist.id);
-      let temp = this.cuslist.id;
-      console.log('t:' + temp);
       let postData = {
-        customerId: temp,
-        relationType: this.relationType,
-      };
-      const result = (await this.$http.get(url, {params: postData}));
-      const tempList=result.data.data;
-      this.array = [];
-      this.list = [];
-      console.log(this.array)
-      console.log("tempList:");
-      console.log(tempList);
-      console.log(result);
-      console.log(result.data);
-      if(tempList[0]==null)
+        customerId:this.cuslist.id,
+        relationType:this.relationType,
+      }
+      const res = (await this.$http.get(url,{params:postData})).data.data;
+      console.log("res:");
+      console.log(res);
+      let b =res[1];
+      if((b.callTimes||b.visitTimes||b.msgTimes||b.wxTimes)==0)
       {
-        // console.log(1);
         this.array.visitTimes=0;
         this.array.callTimes=0;
         this.array.msgTimes=0;
         this.array.wxTimes=0;
       }
-      else this.array = tempList[0];
-      for (let i = 0; i < tempList.length; i++) {
-        let a = tempList[i];
-       if(a.relationType=='线下沟通'){
-         a.comType='visit';
-       }else if(a.relationType=='打电话'){
-         a.comType='call';
-       }else if(a.relationType=='发短信'){
-         a.comType='message';
-       }else if(a.relationType=='发微信'){
-         a.comType='wechat';
-       }
-        this.list.push(tempList[i]);
+      else this.array = res[1];
+      for (let i = 0; i < res.length; i++) {
+        let a =res[i];
+        if(a.relationType=='线下沟通'||a.relationType=='打电话'||a.relationType=='发短信'||a.relationType=='发微信')
+        {
+          if(a.relationType=='线下沟通'){
+            a.comType=0;
+          }else if(a.relationType=='打电话'){
+            a.comType=1;
+          }else if(a.relationType=='发短信'){
+            a.comType=2;
+          }else if(a.relationType=='发微信'){
+            a.comType=3;
+          }
+          if(a.communicationTime==null)
+            a.communicationTime=a.createTime;
+          this.list.push(res[i]);
+        }
       }
-      console.log("this.array:")
-      console.log(this.array);
     },
-
     // 打电话
    onCallPhone() {
       let tel = "tel:" + this.cusDetail.telephone;
@@ -386,8 +396,6 @@ export default {
       // this.getCusRelation();
       this.newCommunicationLog('发微信');
       console.log(123)
-      this.list=[];
-      this.test();
     },
     //发微信
     sendWx() {
@@ -456,7 +464,8 @@ export default {
       if (result.code == "200") {
         // Toast("成功插入");
         console.log(1222)
-        this.onLoad();
+        this.list=[];
+        this.test();
       }
     },
     // 获取客户关系
@@ -476,7 +485,6 @@ export default {
       this.getCusRelation();
     },
     toAddCommunicationLog() {
-      Toast("跳转新增沟通记录界面");
       this.$router.push({name: "addCommunicationLog", query: {cuslist: this.cuslist}});
     },
     toEditCom(id) {
@@ -487,55 +495,44 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.container {
+  width: 100vw;
+  padding-bottom: 1rem;
+  height: 90vh;
+}
+
 //背景样式
 .background {
   background-color: #4881F2;
-  width: 100%;
-  height: 210px;
-  //对象可层叠
-  position: absolute;
-  z-index: 1;
+  padding-top:10px ;
+  width:100%;
+  height:30vh;
 }
 
-.title {
-  position: absolute;
-  top: 19px;
-  left: 150px;
-  color: #ffffff;
-  font-size: 18px;
-}
+.NavBar {
 
-//返回按钮
-.renav {
-  position: absolute;
-  background-color: #4881F2;
-  color: #ffffff;
-  border: none;
-  top: 10px;
-  left: 15px;
-  z-index: 130;
 }
 
 .backgroundImg {
-  position: absolute;
-  z-index: 120;
-  top: 50px;
+  width:100%;
+  top:10vw;
+  z-index: 1;
 }
 
 .name {
   position: absolute;
-  top: 140px;
-  left: 15px;
   color: #ffffff;
   font-size: 20px;
+  margin-left: 18px;
+  top:40vw;
 }
 
 .company {
   position: absolute;
-  top: 170px;
-  left: 15px;
   color: #ffffff;
   font-size: 16px;
+  margin-left: 18px;
+  top:47vw;
 }
 
 .list-img-none {
@@ -551,25 +548,23 @@ export default {
   position: absolute;
   z-index: 120;
   left: 70%;
-  top: 40%;
+  top: 11%;
   font-size: 25px;
   border: 2px solid #78a1f2;
 }
 
 .cusimg {
-  position: absolute;
+  position: fixed;
   z-index: 120;
   left: 76%;
-  top: 50%;
+  top: 15%;
 }
 
 .telephone {
-  position: absolute;
-  top: 215px;
+  margin-top: 2.5px;
   width: 100%;
   font-weight: bold;
   font-size: 14px;
-  margin-top: 4px;
 }
 
 .phoneNumber {
@@ -578,10 +573,8 @@ export default {
 }
 
 .count {
-  position: absolute;
   margin-top: 5px;
-  top: 280px;
-  left: 15px;
+  margin-left: 18px;
   width: 90%;
   height: 50px;
 }
@@ -610,35 +603,33 @@ td {
 }
 
 .count_title {
-  position: absolute;
-  top: 32%;
-  left: 15px;
   font-size: 14px;
   margin-top: 5px;
+  margin-left: 16px;
   color: #918F8F;
   font-weight: 550;
 }
 
 .record_title {
-  position: absolute;
-  top: 50%;
-  left: 15px;
   font-size: 14px;
-  margin-top: 5px;
+  margin-top: 30px;
+  margin-left: 16px;
   color: #918F8F;
   font-weight: 550;
 }
 
 .record_detail {
-  position: absolute;
-  top: 56%;
-  width: 90%;
+  width: 95%;
   height: 30%;
-  left: 10px;
+ margin-left: 6px;
   font-size: 14px;
-  margin-top: 5px;
-}
+  margin-bottom: 23px;
 
+}
+.communicationRecord {
+  height: 30vh;
+  overflow-y:auto ;
+}
 .screen-confirm-btn {
   border-radius: 5px;
   width: 100%;
@@ -651,5 +642,8 @@ td {
   top: 15%;
   right: 10px;
   height: 20px;
+}
+.nav-margin {
+
 }
 </style>
