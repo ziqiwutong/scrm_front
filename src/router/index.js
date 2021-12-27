@@ -37,7 +37,8 @@ import productList from "../components/view/product/productList";
 import productCreate from "../components/view/product/productCreate";
 import productDetail from "../components/view/product/productDetail";
 import productEdit from "../components/view/product/productEdit";
-import procustomer from "../components/customer/procustomer"
+import procustomer from "../components/customer/procustomer";
+import UserList from "../components/component/UserList"
 Vue.use(Router)
 
 const routes = [
@@ -213,6 +214,11 @@ const routes = [
   //   name:'sweetTest',
   //   component: sweetTest
   // }
+  {
+    path:"/userList",
+    name:"userList",
+    component:UserList
+  },
 ];
 
 

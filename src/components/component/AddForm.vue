@@ -354,13 +354,20 @@
         </div>
       </van-form>
     </div>
-    <AbbList
-      :type="1"
-      v-show="followShow"
-      @returnClick="onFollowCancel"
-      @onCh="onFollowAdd"
-    />
-
+    <van-popup
+      v-model="followShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+      :overlay="false"
+      duration="0"
+    >
+      <AbbList
+        :type="1"
+        v-show="followShow"
+        @returnClick="onFollowCancel"
+        @onCh="onFollowAdd"
+      />
+    </van-popup>
     <!-- 新建客户-时间弹窗 -->
     <van-popup v-model="dateShow" position="bottom" :style="{ height: '30%' }"
       ><van-datetime-picker
@@ -423,6 +430,7 @@ export default {
   },
   data() {
     return {
+      followShow1:true,
       cusLock: false,
       // 监听页面变化
       lisState: true,
@@ -924,10 +932,10 @@ export default {
         return newObj;
       }
       this.addList = removeEmptyField(this.addList);
-    
+
       url = "/api/se/customer/insert";
       let postData = this.addList;
-        console.log(postData);
+      console.log(postData);
       const result = (await this.$http.post(url, postData)).data;
       if (result.code == "200") {
         Toast("成功添加客户");
@@ -1066,7 +1074,7 @@ export default {
           let url = "/api/se/customer/insert";
           let postData = this.addList;
           const result = (await this.$http.post(url, postData)).data;
-          console.log(result.data)
+          console.log(result.data);
           if (result.code == "200") {
             Toast("成功添加客户");
             console.log(result.data);

@@ -1808,7 +1808,7 @@ export default {
       let url = "/api/se/order/query";
       const res = await this.$http.get(url, {
         params: {
-          // customerId: this.cusDetail.id,
+          customerId: this.cusDetail.id,
           currentPage: this.pageProps.pageNum++,
           pageCount: this.pageProps.pageSize,
         },

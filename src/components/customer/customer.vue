@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <div>123{{this.$store.state.cusUser.name}}</div> -->
     <div :class="this.sortShow ? 'main-fix' : ''">
       <!-- <van-button @click="test">测试1</van-button> -->
       <!-- <AddForm :type=1 v-show="testVal" @returnClick="onTestCancel"/> -->
@@ -510,7 +511,7 @@
         @onCh="testConsole"
       />
     </van-popup> -->
-    <!-- <TabBar /> -->
+    <TabBar />
   </div>
 </template>
 
@@ -519,7 +520,6 @@ import qs from "qs"; // axios参数包
 import { areaList } from "@vant/area-data";
 import { Toast } from "vant";
 import TabBar from "../component/TabBar";
-// import AbbList from "../component/AbbList";
 import AddForm from "../component/AddForm";
 import AbbCusList from "../component/AbbCusList.vue";
 import AbbList from "../component/AbbList.vue";
@@ -1437,6 +1437,7 @@ export default {
     // 筛选-跟进人列表-弹窗
     toFollow() {
       this.followShow = true;
+      // this.$router.push("/userList")
       this.userType = 1;
     },
     // 筛选-商机列表-弹窗
