@@ -48,7 +48,7 @@
         <van-field name="radio" label="沟通方式" label-width="6em">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal" class="clueType">
-              <van-radio name="线下拜访">线下</van-radio>
+              <van-radio name="线下沟通">线下</van-radio>
               <van-radio name="打电话">电话</van-radio>
               <van-radio name="发短信">短信</van-radio>
               <van-radio name="发微信">微信</van-radio>
