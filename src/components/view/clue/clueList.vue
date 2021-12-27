@@ -108,6 +108,9 @@ export  default  {
       show:false,
     };
   },
+  created() {
+    this.onLoad();
+  },
   methods: {
     //clueList线索分类选择
     onOrderList(clueVal) {
@@ -226,6 +229,7 @@ export  default  {
       if(result.code === 200) {
         Toast('线索删除成功');
         this.list=[];
+        this.pageProps.currentPage=1;
         this.onLoad();
       }
       else

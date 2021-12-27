@@ -134,6 +134,7 @@ export default {
       console.log(this.clueId)
       console.log("clueName:")
       console.log(this.list[0].clueName)
+      console.log(this.list[0])
     },
     showShareDialog() {
       this.showShare = true
@@ -178,29 +179,18 @@ export default {
         params: {
           from: '/clueDetail',
           clueName: this.list[0].clueName,
-          // clueResponsible:this.list[0].clueResponsible ,
-          // clueResponsibleId:'',
+          clueResponsible: this.list[0].clueResponsible,
+          clueEditorId: this.list[0].clueEditorId,
+          clueDiscoverId: this.list[0].clueDiscoverId,
+          clueResponsibleId:this.list[0].clueResponsibleId,
           clueId: this.clueId,
+          clueDate: this.list[0].clueDate,
+          clueEditor: this.list[0].clueEditor,
+          clueDiscover: this.list[0].clueDiscover,
+          clueStatus: this.list[0].clueStatus,
+          bizOppFlag: this.list[0].bizOppFlag,
         }
       });
-      let url = "/api/se/clue/editClue";
-      this.businessOpporitunityFlag=1;
-      this.clueStatus='转换为商机';
-      let postData = {
-        id: this.clueId,
-        clueName:this.list[0].clueName,
-        clueDate:this.list[0].clueDate,
-        clueEditor:this.list[0].clueEditor,
-        clueDiscover:this.list[0].clueDiscover,
-        clueResponsible:this.list[0].clueResponsible,
-        clueStatus:this.clueStatus,
-        businessOpporitunityFlag:this.businessOpporitunityFlag,
-      }
-      const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
-      if (result.code === 200) {
-        Toast('线索转换商机成功');
-      } else
-        Toast('线索转换商机,错误码' + result.code);
     },
   },
   created() {

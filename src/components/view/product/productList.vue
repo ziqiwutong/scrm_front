@@ -247,9 +247,11 @@ export default {
       let shareMsg = this.shareMsg;
       if (e.name === '朋友圈') {
         shareMsg.type = '3';
+      } else {
+        shareMsg.type = '2';
       }
       console.log(shareMsg);
-      await yyApi.yyRegister(yyConfig, shareMsg);
+      await yyApi.yyRegister(yyConfig, shareMsg, 2);
       this.showShare = false;
 
     },
@@ -534,7 +536,7 @@ export default {
     ifShowDialog() {
       this.$router.push('productCreate')
     },
-    showShareArticle(){
+    showShareArticle() {
       this.showShare = true;
     }
   },
@@ -551,9 +553,11 @@ export default {
 .scrpop {
   //width: 90%;
 }
+
 /deep/ .van-share-sheet__options {
   justify-content: space-around;
 }
+
 // 筛选按钮
 .scrbtn {
   margin: 5px 2% 10px 5%;

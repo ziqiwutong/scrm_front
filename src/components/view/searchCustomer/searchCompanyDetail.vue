@@ -29,94 +29,95 @@ export default {
       msg: [
         {
           title: '法定代表人',
-          detail: ''
+          detail: '-'
         },
         {
           title: '公司类型',
-          detail: ''
+          detail: '-'
         },
         {
           title: '经营状态',
-          detail: ''
+          detail: '-'
         },
         {
           title: '注册资本',
-          detail: ''
+          detail: '-'
         },
         {
           title: '实缴资本',
-          detail: ''
+          detail: '-'
         },
         {
           title: '成立日期',
-          detail: ''
+          detail: '-'
         },
         {
           title: '批准日期',
-          detail: ''
+          detail: '-'
         },
         {
           title: '所属行业',
-          detail: ''
+          detail: '-'
         },
         {
           title: '企业地址',
-          detail: ''
+          detail: '-'
         },
         {
           title: '统一社会信用代码',
-          detail: ''
+          detail: '-'
         },
         {
           title: '组织结构代码',
-          detail: ''
+          detail: '-'
         },
         {
           title: '登记机关',
-          detail: ''
+          detail: '-'
         },
         {
           title: '经营范围',
-          detail: ''
+          detail: '-'
         },
       ]
     }
   },
-  async created() {
-    let url = JSON.parse(getUrl()).searchCustomer.companyDetail;
-    let getData = {
-      keyword: this.$route.params.keyword
-    }
-    const result = (await this.$http.get(url, {params: getData})).data.data
-    this.companyName = result.companyName;
-    this.msg[0].detail = result.legalPerson;
-    this.msg[1].detail = result.companyKind;
-    this.msg[2].detail = result.statusNew;
-    this.msg[3].detail = result.registerCapital;
-    this.msg[4].detail = result.actualCapital;
-    this.msg[5].detail = result.startDate;
-    this.msg[6].detail = result.termStart;
-    this.msg[7].detail = result.domain;
-    this.msg[8].detail = result.address;
-    this.msg[9].detail = result.creditNo;
-    this.msg[10].detail = result.orgNo;
-    this.msg[11].detail = result.belongOrg;
-    this.msg[12].detail = result.scope;
-  },
-  mounted() {
-    setTimeout(() => {
-      this.adjustSize();
-    }, 1000);
+  created() {
+    this.loadingPage();
   },
   methods: {
     onClickLeft() {
       this.$router.push({
         name: 'searchList',
-        params: {
+        query: {
           type: 1,
-          searchMessage: this.$route.params.searchMessage,
+          searchMessage: this.$route.query.searchMessage,
         }
       })
+    },
+    async loadingPage() {
+      let url = JSON.parse(getUrl()).searchCustomer.companyDetail;
+      let getData = {
+        keyword: this.$route.query.keyword
+      }
+      const result = (await this.$http.get(url, {params: getData})).data.data
+      this.companyName = result.companyName;
+      this.msg[0].detail = result.legalPerson;
+      this.msg[1].detail = result.companyKind;
+      this.msg[2].detail = result.statusNew;
+      this.msg[3].detail = result.registerCapital;
+      this.msg[4].detail = result.actualCapital;
+      this.msg[5].detail = result.startDate;
+      this.msg[6].detail = result.termStart;
+      this.msg[7].detail = result.domain;
+      this.msg[8].detail = result.address;
+      this.msg[9].detail = result.creditNo;
+      this.msg[10].detail = result.orgNo;
+      this.msg[11].detail = result.belongOrg;
+      this.msg[12].detail = result.scope;
+      this.$nextTick(() => {
+        this.adjustSize();
+      });
     },
     adjustSize() {
       let detailDiv = document.querySelectorAll('.detail');
@@ -146,11 +147,14 @@ export default {
 }
 
 .title {
-  background-color: #f0f4fe;
+  display: flex;
   width: 35%;
   height: 60px;
   text-align: center;
-  padding: 5%;
+  justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+  background-color: #f0f4fe;
   color: #1f2752;
 }
 

@@ -48,10 +48,10 @@
         <van-field name="radio" label="沟通方式" label-width="6em">
           <template #input>
             <van-radio-group v-model="radio" direction="horizontal" class="clueType">
-              <van-radio name="0">线下</van-radio>
-              <van-radio name="1">电话</van-radio>
-              <van-radio name="2">短信</van-radio>
-              <van-radio name="3">微信</van-radio>
+              <van-radio name="线下拜访">线下</van-radio>
+              <van-radio name="打电话">电话</van-radio>
+              <van-radio name="发短信">短信</van-radio>
+              <van-radio name="发微信">微信</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -77,7 +77,7 @@
           />
         </van-popup>
         <van-field
-          v-model="comContent"
+          v-model="relationDetail"
           rows="2"
           autosize
           label="沟通内容"
@@ -116,8 +116,8 @@ export default {
       telephone:'',
       companyName:'',
       customerId:1,
-      communicationWay:1,
-      comContent:'',
+      relationType:1,
+      relationDetail:'',
       //线索状态单选框
       radio: '',
       //转换成商机按钮
@@ -151,34 +151,33 @@ export default {
       this.id=this.$route.query.id;
       let temp = this.cuslist.id;
 // 实例已经创建完成之后被调用。在这一步，实例已完成以下的配置：数据观测(data observer)，属性和方法的运算， watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。不需要写fun
-      let url = "/api/se/communication/queryCommunicationLogDetail";
+      let url = "/api/se/communication/queryCustomerRelationDetail";
       let postData = {
         id:this.id,
-        customerId:temp,
-        communicationWay:this.communicationWay,
+        // customerId:temp,
+        // relationType:this.relationType,
       }
       const result = (await this.$http.get(url, {params:postData})).data.data;
       console.log(result);
-      // console.log(result);
-      var a= result[1].communicationTime;
+      var a= result.communicationTime;
       var b =a.lastIndexOf(':');
       a=a.substring(0,b);
-      this.customer=result[0].customerName;
-      this.telephone=result[0].telephone;
-      this.companyName=result[0].belongCompany;
-      this.radio=result[1].communicationWay.toString();
+      // this.customer=result.customerName;
+      // this.telephone=result.telephone;
+      // this.companyName=result.belongCompany;
+      this.radio=result.relationType;
       this.value=a;
-      this.comContent=result[1].communicationContent;
+      this.relationDetail=result.relationDetail;
     },
     async Submit() {
-      let url = "/api/se/communication/editCommunicationLog";
+      let url = "/api/se/communication/editCustomerRelation";
       let postData = {
         customerId:this.cuslist.id,
         id: this.id,
-        customerName:this.customerName,
-        telephone:this.telephone,
-        communicationWay:this.radio,
-        communicationContent:this.comContent,
+        // customerName:this.customerName,
+        // telephone:this.telephone,
+        relationType:this.radio,
+        relationDetail:this.relationDetail,
         communicationTime:this.value+":"+"00",
       }
       const result = (await this.$http.post(url, JSON.stringify(postData),{headers: {"Content-Type": "application/json" } })).data
@@ -192,10 +191,10 @@ export default {
     },
 
     async clueDelete() {
-      let url = "/api/se/communication/deleteCommunicationLog";
+      let url = "/api/se/communication/deleteCustomerRelation";
       let postData = {
-        communicationWay:this.radio,
-        customerId:this.cuslist.id,
+        // relationType:this.radio,
+        // customerId:this.cuslist.id,
         id:this.id,
       }
       const result = (await this.$http.post(url, qs.stringify(postData))).data;

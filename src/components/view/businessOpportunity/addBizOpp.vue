@@ -228,8 +228,16 @@ export default {
         //客户详情跳转来要用的
         customerId: "",
 
-        //线索跳转过来要用的参数
+        //线索跳转过来要用的参数,businessOpportunityFlag和clueStatus为默认值
         clueId: "",
+        clueName: "",
+        clueDate:"",
+        clueDiscover: "",
+        clueResponsible: "",
+        clueEditor: "",
+        businessOpportunityFlag: 1,
+        clueStatus:"转化为商机",
+
       },
 
       customerId: "",
@@ -316,27 +324,37 @@ export default {
     } else if (this.returnData.returnPath === "/clueDetail") {  //线索列表页面跳转来的
       this.returnData.returnPath = this.$route.params.from;
       this.returnData.clueId = this.$route.params.clueId;
+      this.returnData.clueName = this.$route.params.clueName;
+      this.returnData.clueDate = this.$route.params.clueDate;
+      this.returnData.clueStatus=this.$route.params.clueStatus;
+      this.returnData.clueEditor = this.$route.params.clueEditor;
+      this.returnData.clueDiscover = this.$route.params.clueDiscover;
+      this.returnData.clueResponsible = this.$route.params.clueResponsible;
+      this.returnData.clueResponsibleId = this.$route.params.clueResponsibleId;
+      this.returnData.clueEditorId = this.$route.params.clueEditorId;
+      this.returnData.clueDiscoverId = this.$route.params.clueDiscoverId;
 
       this.boName = this.$route.params.clueName;
-      this.boResponsibleId = this.$route.params.clueResponsibleId;
-      this.boResponsible = this.$route.params.clueResponsible;
+      console.log(this.returnData)
     }
   },
   methods: {
     //点击返回键跳转来源的页面
     returnBack() {
-      if (this.returnData.returnPath === "/perinfor") {   //
-        this.$router.push({
+      if (this.returnData.returnPath === "/perinfor") {   //回到客户详情
+        //这里使用replace是为了方式点击返回的时候页面循环跳转，如果go不设置-1，客户详情页的返回需要点击2次
+        this.$router.replace({
           name: 'perinfor',
           query: {
             id: this.returnData.customerId,
           }
-        }
-      );
+        })
+        this.$router.go(-1);
+
 
       } else if (this.returnData.returnPath === "/clueDetail") {  //回到线索
         this.$router.push({
-          name: '/clueDetail',
+          path: '/clueDetail',
           query: {
             clueId: this.returnData.clueId,
           }
@@ -483,14 +501,42 @@ export default {
       const result = (await this.$http.post(url, qs.stringify(postData))).data;
 
       if (result.code === 200) {
-        Toast("商机提交成功");
-        await this.$router.push("/bizOppList");
+
+        if (this.returnData.returnPath === "/clueDetail") { //改变线索状态，变成“已转化为商机”
+          let url = "/api/se/clue/editClue";
+          let postData = {
+            id: this.returnData.clueId,
+            clueName: this.returnData.clueName,
+            clueDate: this.returnData.clueDate,
+            clueEditor: this.returnData.clueEditor,
+            clueDiscover: this.returnData.clueDiscover,
+            clueResponsible: this.returnData.clueResponsible,
+            // ToDo 后端未完成id字段
+            clueResponsibleId: this.returnData.clueResponsibleId,
+            clueEditorId:this.returnData.clueEditorId,
+            clueDiscoverId: this.returnData.clueDiscoverId,
+            clueStatus: "转换为商机",
+            bizOppFlag: 1,
+            // clueStatus: this.clueStatus,
+            // bizOppFlag: this.businessOpportunityFlag,
+          }
+          console.log(this.returnData);
+          console.log(postData);
+
+          const result = (await this.$http.post(url, JSON.stringify(postData), {headers: {"Content-Type": "application/json"}})).data
+          this.returnBack();
+
+        }else { //其它页面不需要特殊操作，直接调用返回方法返回
+          Toast("商机提交成功");
+          this.returnBack();
+        }
+
       } else {
         Toast("商机提交失败,错误码" + result.code);
       }
     },
-  },
-};
+  }
+}
 </script>
 
 <style lang="less" scoped>

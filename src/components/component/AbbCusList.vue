@@ -53,7 +53,11 @@
           :accordion="isAccordion"
           @getValue="getValue($event)"
         />
-        <van-button @click="getUser" class="depart-confirm">确定</van-button>
+        <van-button
+          @click="getUser"
+          class="depart-confirm"
+          native-type="button"
+        >确定</van-button>
       </van-cell>
       <van-list
         v-model="abbloading"

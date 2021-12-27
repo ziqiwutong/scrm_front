@@ -5,7 +5,6 @@
     <div class="company_logo_block">
       <img class="company_logo" src="@/assets/icon/company_logo.png">
     </div>
-
     <div class="search1_block">
       <input class="search-input" :placeholder="searchTips" v-model="value" v-on:keyup.enter='sendSearchMessage'/>
     </div>
@@ -58,7 +57,7 @@ export default {
       }
       this.$router.push({
         name: 'searchList',
-        params: {
+        query: {
           searchMessage: this.value,
           type: this.type
         }

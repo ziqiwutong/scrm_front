@@ -23,15 +23,15 @@ export default {
     }
   },
   created() {
-    this.url = this.$route.params.url;
+    this.url = this.$route.query.url;
   },
   methods: {
     onClickLeft() {
       this.$router.push({
         name: 'searchList',
-        params: {
+        query: {
           type: 2,
-          searchMessage:this.$route.params.searchMessage
+          searchMessage:this.$route.query.searchMessage
         }
       })
     }

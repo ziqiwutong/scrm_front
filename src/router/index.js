@@ -57,9 +57,24 @@ const routes = [
     component: home
   },
   {
+    path: '/searchCustomer',
+    name: 'searchCustomer',
+    component: searchCustomer
+  },
+  {
+    path: '/searchList',
+    name: 'searchList',
+    component: searchList
+  },
+  {
     path: '/contextShareList',
     name: 'contextShareList',
     component: contextShareList
+  },
+  {
+    path:'/bkIntroduce',
+    name:'bkIntroduce',
+    component: bkIntroduce
   },
   {
     path: '/orderList',
