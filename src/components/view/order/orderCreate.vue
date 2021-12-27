@@ -515,12 +515,16 @@ export default {
 
       console.log(2)
       // this.list.push({})
-    }
+    },
+
   },
 }
 </script>
 
 <style lang="less" scoped>
+/deep/ .product-cancel-btn{
+  border: none;
+}
 .scrfirbtn {
   border-radius: 5px;
   margin: 20px 2% 10px 5%;
