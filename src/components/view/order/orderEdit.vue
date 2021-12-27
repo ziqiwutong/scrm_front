@@ -635,6 +635,9 @@ export default {
 .delete-button{
   height:100%;
 }
+/deep/ .product-cancel-btn{
+  border: none;
+}
 .orderCreate_container{
   padding-top: 52px;
 }
