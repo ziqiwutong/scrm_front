@@ -696,7 +696,8 @@ h3 {
 }
 
 .tab-list1 {
-  height: 100%;
+  height: 82vh;
+  overflow-y: auto;
   background-color: rgba(215, 215, 215, 0.129411764705882);
 
 }
