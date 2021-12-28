@@ -3,12 +3,12 @@
     <NavBar/>
     <div class="mainArea">
       <div class="main">
-        <div class="title">客户管理</div>
+<!--        <div class="title">客户管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
                          to="/customer"/>
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
-                         to="/communicationList"/>
+          <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
+                         to="/potential"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[4]" style="color:#e2b127;" :text="textArray[4]"
                          to="/relationship"/>
         </van-grid>
@@ -26,10 +26,10 @@
         <!--        </van-grid>-->
       </div>
       <div class="main">
-        <div class="title">资源管理</div>
+<!--        <div class="title">资源管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
-          <van-grid-item icon-prefix="icon-third" :icon="iconArray[1]" style="color:#3585f9;" :text="textArray[1]"
-                         to="/potential"/>
+          <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
+                         to="/communicationList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[5]" style="color:#06b4fe;" :text="textArray[5]"
                          to="/clueList"/>
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[6]" style="color:#3683f7;" :text="textArray[6]"
@@ -42,7 +42,7 @@
         <!--        </van-grid>-->
       </div>
       <div class="main">
-        <div class="title">内容管理</div>
+<!--        <div class="title">内容管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
                          to="/contextShareList"/>
@@ -52,7 +52,7 @@
         </van-grid>
       </div>
       <div class="main">
-        <div class="title">产品管理</div>
+<!--        <div class="title">产品管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
                          to="/productList"/>
@@ -124,16 +124,16 @@ export default {
   },
   created() {
     // alert(this.$route.query.code);
-    // this.hideNavBar();
-    // if (this.$route.query.code) {
-    //   this.sendCode();
-    // }
-    //为了测试，这里暂时写的是6，其实应该是从user里面获取
-    let userID = "4862341";
-    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-      this.getToken(userID);
+    this.hideNavBar();
+    if (this.$route.query.code) {
+      this.sendCode();
     }
-    this.getDistributeUrl();
+    //为了测试，这里暂时写的是6，其实应该是从user里面获取
+    // let userID = "4862341";
+    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+    //   this.getToken(userID);
+    // }
+    // this.getDistributeUrl();
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },

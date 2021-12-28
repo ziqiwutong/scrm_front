@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2849451 */
-  src: url('iconfont.woff2?t=1637831707785') format('woff2'),
-       url('iconfont.woff?t=1637831707785') format('woff'),
-       url('iconfont.ttf?t=1637831707785') format('truetype');
+  src: url('iconfont.woff2?t=1640514259947') format('woff2'),
+       url('iconfont.woff?t=1640514259947') format('woff'),
+       url('iconfont.ttf?t=1640514259947') format('truetype');
 }
 [class^="icon-third"], [class*="icon-third"]/*这里有空格*/
 .iconfont {
@@ -11,6 +11,30 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-third-purchase:before {
+  content: "\e633";
+}
+
+.icon-third-readData:before {
+  content: "\e67e";
+}
+
+.icon-third-customers:before {
+  content: "\e66f";
+}
+
+.icon-third-articleRecord:before {
+  content: "\e60d";
+}
+
+.icon-third-wx-user:before {
+  content: "\e64e";
+}
+
+.icon-third-productRead:before {
+  content: "\e6eb";
 }
 
 .icon-third-dizhiguanli:before {
@@ -25,19 +49,7 @@
   content: "\e606";
 }
 
-.icon-third-visit:before {
-  content: "\e63f";
-}
-
-.icon-third-wechat:before {
-  content: "\e605";
-}
-
-.icon-third-call:before {
-  content: "\e606";
-}
-
-.icon-third-message:before {
+.icon-third-duanxin:before {
   content: "\e607";
 }
 

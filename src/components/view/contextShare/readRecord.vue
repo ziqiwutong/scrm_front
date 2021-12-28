@@ -32,7 +32,7 @@
       @load="onLoad"
       v-show="mainPage"
     >
-      <div class="list" v-for="(item,i) in list">
+      <div class="list" v-for="(item,index) in list" :key="index">
         <div class="left">
           <van-image
             width="50"
@@ -56,9 +56,9 @@
                :overlay-style="{backgroundColor:'rgba(0,0,0,.5)'}" @close="closeDialog">
       <p class="filterTitle">分享人</p>
       <div class="shareMan">
-        <div v-for="item in shareManList" class="shareManItem" :id="item.id"
+        <div v-for="(item,index) in shareManList" :key="index" class="shareManItem" :id="item.id"
              @click="personShare(item.id)">
-          {{ item.username }}
+          {{ item.name.substring(0,6) }}
         </div>
       </div>
       <div class="filterBottom">
@@ -517,7 +517,7 @@ export default {
   position: relative;
   display: inline-flex;
   width: calc(100% - 20px);
-  height: 50px;
+  //height: 50px;
   padding: 10px;
   border-bottom: 1px solid #f7f8fa;
 }

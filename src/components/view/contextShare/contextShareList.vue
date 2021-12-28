@@ -1,62 +1,67 @@
 <template>
-  <div>
+  <div class="context-container">
     <div class="header">
       <van-tabs v-model="activeName" class="scrm-tab">
         <van-tab title="内容营销" name="article">内容营销</van-tab>
         <van-tab title="数据统计" name="statistics">数据统计</van-tab>
       </van-tabs>
-      <van-search
-        v-if="searchShow"
-        v-model="searchValue"
-        show-action
-        placeholder="请输入搜索关键词"
-        autofocus="true"
-        @search="onSearch"
-        @cancel="onSearchCancel"
-      />
-      <div v-else style="display: inline-flex;width: 100%;">
-        <van-search style="width: 70%;" v-model="searchValue" placeholder="请输入搜索关键词" @click="ifShowSearch"/>
-        <van-dropdown-menu style="width: 30%;" active-color="#3333cc">
-          <van-dropdown-item v-model="dropdownValue" :options="dropdownOption"/>
-        </van-dropdown-menu>
+      <div v-show="showArticle">
+        <van-search
+          v-if="searchShow"
+          v-model="searchValue"
+          show-action
+          placeholder="请输入搜索关键词"
+          autofocus="true"
+          @search="onSearch"
+          @cancel="onSearchCancel"
+        />
+        <div v-else style="display: inline-flex;width: 100%;">
+          <van-search style="width: 70%;" v-model="searchValue" placeholder="请输入搜索关键词" @click="ifShowSearch"/>
+          <van-dropdown-menu style="width: 30%;" active-color="#3333cc">
+            <van-dropdown-item v-model="dropdownValue" :options="dropdownOption"/>
+          </van-dropdown-menu>
+        </div>
       </div>
     </div>
-    <van-pull-refresh v-model="loading" @refresh="refreshList">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <div class="list" id="list" v-for="(item,i) in list">
-          <div class="left" @click="toArticleDetail(item.id)">
-            <van-image
-              width="50"
-              height="50"
-              :src="item.articleImage"
-            />
-          </div>
-          <div class="right" @click="toArticleDetail(item.id)">
-            <div class="right-top">
-              <p>{{ item.articleTitle }}</p>
+    <div v-show="showArticle" class="article-list">
+      <van-pull-refresh v-model="loading" @refresh="refreshList">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <div class="list" id="list" v-for="(item,index) in list" :key="index">
+            <div class="left" @click="toArticleDetail(item.id)">
+              <van-image
+                width="50"
+                height="50"
+                :src="item.articleImage"
+              />
             </div>
-            <div class="right-bottom">
-              <p class="readers">浏览量:{{ item.articleViewTimes }}次</p>
+            <div class="right" @click="toArticleDetail(item.id)">
+              <div class="right-top">
+                <p>{{ item.articleTitle }}</p>
+              </div>
+              <div class="right-bottom">
+                <p class="readers">浏览量:{{ item.articleViewTimes }}次</p>
+              </div>
             </div>
+            <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog(item)">立即分享</van-button>
           </div>
-          <van-button type="primary" size="small" class="shareBtn" @click="showShareDialog(item)">立即分享</van-button>
-        </div>
-      </van-list>
-    </van-pull-refresh>
-    <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
-    <van-action-sheet v-if="show"
-                      v-model="show"
-                      :actions="actions"
-                      cancel-text="取消"
-                      @select="reprintArticle"
-                      @cancel="onCancel"
-    />
-    <CreateContext @ifShow="ifShowDialog" :text="createText" v-else/>
+        </van-list>
+      </van-pull-refresh>
+      <van-share-sheet v-model="showShare" :options="options" @select="shareArticleApp"/>
+      <van-action-sheet v-if="show"
+                        v-model="show"
+                        :actions="actions"
+                        cancel-text="取消"
+                        @select="reprintArticle"
+                        @cancel="onCancel"
+      />
+      <CreateContext @ifShow="ifShowDialog" :text="createText" v-else/>
+    </div>
+    <dataHome v-show="!showArticle"/>
     <TabBar/>
   </div>
 </template>
@@ -64,6 +69,7 @@
 <script>
 import TabBar from "../..//component/TabBar";
 import CreateContext from "../../component/CreateContext";
+import dataHome from "../dataStatistics/dataHome";
 import {Toast} from "vant";
 import {getUserId} from "../../../network/getToken";
 import {getUrl} from "../../../utils/replaceUrl";
@@ -75,7 +81,8 @@ export default {
   name: "contextShareList",
   components: {
     CreateContext,
-    TabBar
+    TabBar,
+    dataHome
   },
   data() {
     return {
@@ -121,7 +128,8 @@ export default {
       searchApiTime: 0,
       /*内容列表Api计时,用于防抖*/
       listApiTime: 0,
-      timer: null
+      timer: null,
+      showArticle: true
     };
   },
   created() {
@@ -137,6 +145,21 @@ export default {
         this.finished = false;
         this.list = [];
         this.onLoad();
+      }
+    },
+    activeName: {
+      handler() {
+        let contextContainer = document.querySelector('.context-container');
+        switch (this.activeName) {
+          case 'article':
+            this.showArticle = true;
+            contextContainer.classList.remove('hide-overflow');// 添加页面滚动
+            break;
+          case 'statistics':
+            this.showArticle = false;
+            contextContainer.classList.add('hide-overflow');// 取消页面滚动
+            break;
+        }
       }
     }
   },
@@ -180,7 +203,7 @@ export default {
         this.list.push(result[i]);
       }
       // 加载状态结束
-      this.loading = true;
+      this.loading = false;
       this.finished = true;
       Toast('已加载全部数据！');
     },
@@ -324,7 +347,7 @@ export default {
   position: relative;
   display: inline-flex;
   width: calc(100% - 20px);
-  height: 50px;
+  //height: 50px;
   padding: 10px;
   border-bottom: 1px solid #f7f8fa;
 }
@@ -408,5 +431,13 @@ p {
   height: 3rem;
   background-color: #fff;
   box-shadow: none;
+}
+
+.hide-overflow{
+  overflow: hidden;
+}
+
+.article-list{
+  width: 100vw;
 }
 </style>

@@ -47,6 +47,9 @@ import addCommunicationLog from "../components/view/commuication/addCommunicatio
 import editCom from "../components/view/commuication/editCom"
 import procustomer from "../components/customer/procustomer";
 import UserList from "../components/component/UserList"
+import articleList from "../components/view/dataStatistics/articleStatistics/articleList";
+import singleArticleStats from "../components/view/dataStatistics/articleStatistics/singleArticleStats";
+import articleReaderList from "../components/view/dataStatistics/articleStatistics/articleReaderList";
 
 Vue.use(Router)
 
@@ -58,24 +61,9 @@ const routes = [
     component: home
   },
   {
-    path: '/searchCustomer',
-    name: 'searchCustomer',
-    component: searchCustomer
-  },
-  {
-    path: '/searchList',
-    name: 'searchList',
-    component: searchList
-  },
-  {
     path: '/contextShareList',
     name: 'contextShareList',
     component: contextShareList
-  },
-  {
-    path:'/bkIntroduce',
-    name:'bkIntroduce',
-    component: bkIntroduce
   },
   {
     path: '/orderList',
@@ -281,20 +269,29 @@ const routes = [
     name: 'userInfo',
     component: userInfo
   },
-  // {
-  //   path: '/sweetTest',
-  //   name:'sweetTest',
-  //   component: sweetTest
-  // }
   {
     path:"/userList",
     name:"userList",
     component:UserList
   },
+  {
+    path: '/articleList',
+    name: 'articleList',
+    component: articleList
+  },
+  {
+    path:'/singleArticleStats',
+    name: 'singleArticleStats',
+    component: singleArticleStats
+  },
+  {
+    path:'/articleReaderList',
+    name: 'articleReaderList',
+    component: articleReaderList
+  }
 ];
 
 const router = new Router({
-
   mode: 'history',
   routes,
   scrollBehavior(to, from, savedPosition) {
