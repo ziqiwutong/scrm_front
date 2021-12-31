@@ -57,28 +57,26 @@ export default {
       let url = JSON.parse(getUrl()).contextShare.readRecordList;
       let getData = {
         articleId: this.$route.query.articleId,
-        shareId:this.$route.query.shareId
+        shareId: this.$route.query.shareId
       };
       const resultMsg = (await this.$http.get(url, {params: getData})).data;
       const result = resultMsg.data;
       this.readPeople = result.readPeople;
       this.readTimes = result.readTimes;
       let readRecord = result.wxReadRecords;
-      for (let i = 0; i < readRecord.length; i++) {
-        this.list.push(readRecord[i]);
-      }
+      this.list.push(...readRecord);
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-.container{
+.container {
   width: 100%;
   height: 100vh;
 }
 
-.list-container{
+.list-container {
   padding-top: 44px;
   overflow-y: auto;
 }

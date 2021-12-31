@@ -59,8 +59,11 @@ const state = {
     id:"",
     name:"",
   },
-
-
+  searchRel:{
+    first:'',
+    second:''
+  },
+  searchCompany:''
 }
 
 // 2. 创建对象
@@ -84,7 +87,9 @@ const store = new Vuex.Store({
         wxUser: val.wxUser,
         articleType: val.articleType,
         articleContextTemp: val.articleContextTemp,
-        distributeUrl:val.distributeUrl
+        distributeUrl:val.distributeUrl,
+        searchRel: val.searchRel,
+        searchCompany: val.searchCompany
       }
     }
   })]

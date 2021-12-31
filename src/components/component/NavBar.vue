@@ -24,9 +24,13 @@ export default {
       userImgUrl: '',
       hasImg: false,
     }
-
   },
   mounted() {
+    let url = this.$route.path;
+    if (url.includes('home')){
+      let header = document.querySelector('.header');
+      header.classList.add('newTop');
+    }
     let timer = setInterval(() => {
       if (this.username === '') {
         this.getUserMessage();
@@ -49,7 +53,7 @@ export default {
         this.hasImg = true;
       }
     },
-    toUserInfo(){
+    toUserInfo() {
       this.$router.push('/userInfo');
     }
   }
@@ -66,6 +70,10 @@ export default {
   height: 60px;
   width: 100%;
   display: inline-flex;
+}
+
+.newTop {
+  top: 2rem;
 }
 
 .left {

@@ -85,6 +85,9 @@ export default {
         case '单篇文章':
           this.$router.push('/articleList');
           break;
+        case '微信阅读':
+          this.$router.push('/wxUserList');
+          break;
       }
     }
   }

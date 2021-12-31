@@ -95,10 +95,16 @@ export function getUrl() {
       queryRelation: '/api/se/customerRest/relation',
     },
     statistics: {
-      articleList: '/api/mk/statistics/articleRead',
-      articleShareList: '/api/mk/statistics/artSharePerson',
-      articleRead: '/api/mk/statistics/articleRead',
-      queryReader:'/api/mk/statistics/artSharePerson'
+      article: {
+        articleList: '/api/mk/statistics/articleRead',
+        articleShareList: '/api/mk/statistics/artSharePerson',
+        articleRead: '/api/mk/statistics/articleRead'
+      },
+      wxRead: {
+        userList: '/api/mk/statistics/wx/read',
+        userReadDetail: '',
+        userReadArticleList: ''
+      }
     }
   };
 

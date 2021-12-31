@@ -1,9 +1,12 @@
 <template>
   <div>
+    <div class="closePage">
+      <van-icon name="cross" @click="closeScrm()"/>
+    </div>
     <NavBar/>
     <div class="mainArea">
       <div class="main">
-<!--        <div class="title">客户管理</div>-->
+        <!--        <div class="title">客户管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[0]" style="color:#ff8a5c;" :text="textArray[0]"
                          to="/customer"/>
@@ -26,7 +29,7 @@
         <!--        </van-grid>-->
       </div>
       <div class="main">
-<!--        <div class="title">资源管理</div>-->
+        <!--        <div class="title">资源管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[7]" style="color:#5295e7;" :text="textArray[7]"
                          to="/communicationList"/>
@@ -42,7 +45,7 @@
         <!--        </van-grid>-->
       </div>
       <div class="main">
-<!--        <div class="title">内容管理</div>-->
+        <!--        <div class="title">内容管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[8]" style="color:#fdd110;" :text="textArray[8]"
                          to="/contextShareList"/>
@@ -52,7 +55,7 @@
         </van-grid>
       </div>
       <div class="main">
-<!--        <div class="title">产品管理</div>-->
+        <!--        <div class="title">产品管理</div>-->
         <van-grid clickable :column-num="3" :border="false">
           <van-grid-item icon-prefix="icon-third" :icon="iconArray[10]" style="color:#ff9600;" :text="textArray[10]"
                          to="/productList"/>
@@ -67,7 +70,7 @@
 </template>
 
 <script>
-import { Toast } from "vant";
+import {Toast} from "vant";
 import NavBar from "../component/NavBar";
 import TabBar from "../component/TabBar";
 import {getUrl} from "../../utils/replaceUrl";
@@ -124,16 +127,16 @@ export default {
   },
   created() {
     // alert(this.$route.query.code);
-    this.hideNavBar();
-    if (this.$route.query.code) {
-      this.sendCode();
-    }
-    //为了测试，这里暂时写的是6，其实应该是从user里面获取
-    // let userID = "4862341";
-    // if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
-    //   this.getToken(userID);
+    // this.hideNavBar();
+    // if (this.$route.query.code) {
+    //   this.sendCode();
     // }
-    // this.getDistributeUrl();
+    //为了测试，这里暂时写的是6，其实应该是从user里面获取
+    let userID = "4862341";
+    if (userID) {// userID 不为空时才获取，这里的userID是从URL里获取的
+      this.getToken(userID);
+    }
+    this.getDistributeUrl();
     // 修改tabbar被选中状态
     this.$store.commit('updateTabBarActive', 0);
   },
@@ -222,15 +225,37 @@ export default {
       }
       await yyApi.yyRegister(yyConfig, null, 1);
     },
+    async closeScrm(){
+      // 先去后台拿用友的jsConfig，然后触发分享事件
+      let url = JSON.parse(getUrl()).userInfo.yyConfig;
+      const result = (await this.$http.get(url)).data.data;
+      let yyConfig = {
+        appId: result.appid,
+        timestamp: result.timestamp,
+        signature: result.signature
+      }
+      await yyApi.yyRegister(yyConfig, null, 3);
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.closePage {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  padding-left: 10px;
+  height: 2rem;
+  border: none;
+}
+
 .mainArea {
   padding-top: 65px;
   padding-bottom: 50px;
 }
+
 .main {
   margin: 5px 2% 5px 2%;
   padding: 2px;

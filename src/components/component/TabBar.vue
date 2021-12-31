@@ -25,12 +25,18 @@ export default {
   },
   methods:{
     toHome(){
+      this.$store.commit('updateSearchCompany','');
+      this.$store.commit('updateSearchRel','');
       this.$router.push("/home")
     },
     toCustomer(){
+      this.$store.commit('updateSearchCompany','');
+      this.$store.commit('updateSearchRel','');
       this.$router.push("/customer")
     },
     toApplication(){
+      // this.$store.commit('updateSearchCompany','');
+      // this.$store.commit('updateSearchRel','');
       this.$router.push("/contextShareList")
     }
   }

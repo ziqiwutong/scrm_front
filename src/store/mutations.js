@@ -50,5 +50,13 @@ export default {
   // 更新文章的临时页面
   updateTempArticle(state, articleContextTemp) {
     state.articleContextTemp = articleContextTemp;
+  },
+  // 缓存查企业,和查个人共用一个方法
+  updateSearchCompany(state, searchCompany) {
+    state.searchCompany = searchCompany;
+  },
+  // 缓存查关系
+  updateSearchRel(state, searchRel){
+    state.searchRel = searchRel;
   }
 }

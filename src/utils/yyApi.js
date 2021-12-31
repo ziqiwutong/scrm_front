@@ -43,6 +43,19 @@ const yyApi = {
             }
           });
           break;
+        case 3:
+          YYEsnBridge.do('closeCurrentWebview', {
+            'success': function () {
+              alert('调用成功');
+            },
+            'fail': function () {
+              alert('调用失败');
+            },
+            'complete': function () {
+              alert('调用完成后执行');
+            }
+          });
+          break;
       }
     });
   }

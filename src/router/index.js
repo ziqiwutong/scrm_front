@@ -50,6 +50,8 @@ import UserList from "../components/component/UserList"
 import articleList from "../components/view/dataStatistics/articleStatistics/articleList";
 import singleArticleStats from "../components/view/dataStatistics/articleStatistics/singleArticleStats";
 import articleReaderList from "../components/view/dataStatistics/articleStatistics/articleReaderList";
+import wxUserList from "../components/view/dataStatistics/wxStatistics/wxUserList";
+import wxReadDetail from "../components/view/dataStatistics/wxStatistics/wxReadDetail";
 
 Vue.use(Router)
 
@@ -288,6 +290,16 @@ const routes = [
     path:'/articleReaderList',
     name: 'articleReaderList',
     component: articleReaderList
+  },
+  {
+    path:'/wxUserList',
+    name: 'wxUserList',
+    component: wxUserList
+  },
+  {
+    path:'/wxReadDetail',
+    name: 'wxReadDetail',
+    component: wxReadDetail
   }
 ];
 

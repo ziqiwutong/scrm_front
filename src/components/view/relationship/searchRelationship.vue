@@ -69,11 +69,9 @@ export default {
   },
   data() {
     return {
-      value1: '',
-      value2: '',
-
+      value1: this.$store.state.searchRel.first,
+      value2: this.$store.state.searchRel.second,
       ifEdit: false,
-
       //搜索自动补全防抖 储存计时器用的
       timer: '',
 
@@ -87,6 +85,11 @@ export default {
   methods: {
     sendSearchMessage() {
       if (this.value1 !== "" && this.value2 !== "") {
+        let searchRel = {
+          first: this.value1,
+          second: this.value2
+        }
+        this.$store.commit('updateSearchRel', searchRel);
         this.$router.push({
           name: 'relationshipDetail',
           query: {

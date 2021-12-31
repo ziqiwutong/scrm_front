@@ -138,7 +138,7 @@ export default {
     },
     async getShareManList(sevenFlag) {
       this.shareManList = [];//没有分页请求，因此每次需要置空
-      let url = JSON.parse(getUrl()).statistics.articleShareList;
+      let url = JSON.parse(getUrl()).statistics.article.articleShareList;
       let postData = {
         articleId: this.$route.query.articleId,
         sevenFlag: sevenFlag
@@ -231,7 +231,7 @@ export default {
         // 获取当前月份有多少天
         dayNumber = new Date(data.getFullYear(), data.getMonth() + 1, 0).getDate();
       }
-      let url = JSON.parse(getUrl()).statistics.articleRead;
+      let url = JSON.parse(getUrl()).statistics.article.articleRead;
       let postData = {
         articleId: this.$route.query.articleId,
         sevenFlag: sevenFlag

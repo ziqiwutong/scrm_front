@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      value: '',
+      value: this.$store.state.searchCompany,
       searchTips: '',
       type: 1
     };
@@ -55,6 +55,7 @@ export default {
         this.$toast('查询内容不能为空！');
         return;
       }
+      this.$store.commit('updateSearchCompany',this.value);
       this.$router.push({
         name: 'searchList',
         query: {

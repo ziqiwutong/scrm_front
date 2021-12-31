@@ -50,7 +50,7 @@ export default {
       this.$router.push('/contextShareList');
     },
     async onLoad() {
-      let url = JSON.parse(getUrl()).statistics.articleList;
+      let url = JSON.parse(getUrl()).statistics.article.articleList;
       let postData = {
         pageNum: this.pageProps.pageNum++,
         pageSize: this.pageProps.pageSize,
